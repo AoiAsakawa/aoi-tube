@@ -48,17 +48,15 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	const setVideoPlaying = useSetIsVideoPlaying();
 	const clockSkew = useClockSkew();
 
-	// Manual quality (rendition) selection. VHS auto-ABR can pin playback to a
-	// low rendition or hop to the heavy source-passthrough (occasionally
-	// desyncing A/V), so viewers get an explicit Auto / 1080p / 720p / 360p menu
-	// on top of ABR. Levels are the distinct rendition heights advertised by the
-	// master playlist; 'auto' re-enables every rendition.
-	const [qualityLevels, setQualityLevels] = React.useState<{ height: number; label: string }[]>([]);
-	const [selectedQuality, setSelectedQuality] = React.useState<string>(
-		() => getLocalStorage(PLAYER_QUALITY) || 'auto',
-	);
-	const [qualityMenuOpen, setQualityMenuOpen] = React.useState(false);
-	const qualityMenuRef = React.useRef<HTMLDivElement | null>(null);
+	// Manual quality (rendition) selection, presented as a "Quality" menu button
+	// in the video.js control bar next to volume/fullscreen (YouTube-style). VHS
+	// auto-ABR can pin playback to a low rendition or hop to the heavy
+	// source-passthrough (occasionally desyncing A/V), so viewers get explicit
+	// Auto / 1080p / 720p / 360p choices on top of ABR. The selection lives in a
+	// ref (read from inside the video.js component, avoiding stale closures) and
+	// persists to localStorage; 'auto' re-enables every rendition.
+	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
+	const qualityButtonRef = React.useRef<{ update: () => void } | null>(null);
 
 	// Read the VHS representation list off the active tech, tolerating the
 	// pre-metadata window where it is not yet populated.
@@ -74,6 +72,16 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		}
 	};
 
+	// Distinct rendition heights advertised by the master playlist, high to low.
+	const getQualityHeights = (): number[] => {
+		const seen = new Set<number>();
+		return getRepresentations()
+			.map(r => r.height)
+			.filter((h): h is number => typeof h === 'number' && h > 0)
+			.sort((a, b) => b - a)
+			.filter(h => (seen.has(h) ? false : seen.add(h)));
+	};
+
 	// Enable only the representation(s) matching the chosen height, or all of
 	// them for 'auto'. Persist the choice so a pinned quality survives reloads.
 	const applyQuality = (value: string) => {
@@ -84,29 +92,62 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 			const height = Number(value);
 			reps.forEach(r => r.enabled(r.height === height));
 		}
-		setSelectedQuality(value);
+		selectedQualityRef.current = value;
 		setLocalStorage(PLAYER_QUALITY, value);
-		setQualityMenuOpen(false);
+		qualityButtonRef.current?.update();
 	};
 
-	// Rebuild the menu from the master playlist and re-assert a pinned choice
-	// (the representation objects are recreated when the manifest reloads).
+	// Re-assert a pinned choice after a manifest reload (the representation
+	// objects are recreated) and rebuild the control-bar menu from the current
+	// levels.
 	const refreshQualityLevels = () => {
-		const reps = getRepresentations();
-		const seen = new Set<number>();
-		const levels = reps
-			.map(r => r.height)
-			.filter((h): h is number => typeof h === 'number' && h > 0)
-			.sort((a, b) => b - a)
-			.filter(h => (seen.has(h) ? false : seen.add(h)))
-			.map(h => ({ height: h, label: `${h}p` }));
-		setQualityLevels(levels);
-
-		const pinned = getLocalStorage(PLAYER_QUALITY) || 'auto';
-		if (pinned !== 'auto' && levels.some(l => String(l.height) === pinned)) {
+		const pinned = selectedQualityRef.current;
+		if (pinned !== 'auto') {
 			const height = Number(pinned);
-			reps.forEach(r => r.enabled(r.height === height));
+			const reps = getRepresentations();
+			if (reps.some(r => r.height === height)) {
+				reps.forEach(r => r.enabled(r.height === height));
+			}
 		}
+		qualityButtonRef.current?.update();
+	};
+
+	// Add a "Quality" menu button to the control bar, just before the fullscreen
+	// toggle, so it sits alongside volume/fullscreen like YouTube's gear.
+	const setupQualityMenu = (player, videojs) => {
+		const MenuButton = videojs.getComponent('MenuButton');
+		const MenuItem = videojs.getComponent('MenuItem');
+		const autoLabel = t('video.qualitySelector.auto');
+		const menuLabel = t('video.qualitySelector.label');
+
+		class QualityMenuButton extends MenuButton {
+			constructor() {
+				super(player, {});
+				this.addClass('vjs-quality-menu');
+				this.addClass('vjs-icon-cog');
+				this.controlText(menuLabel);
+			}
+
+			createItems() {
+				const current = selectedQualityRef.current;
+				const makeItem = (value: string, label: string) => {
+					const item = new MenuItem(player, { label, selectable: true, multiSelectable: false });
+					item.selected(value === current);
+					item.handleClick = () => applyQuality(value);
+					return item;
+				};
+				const items = [makeItem('auto', autoLabel)];
+				getQualityHeights().forEach(h => items.push(makeItem(String(h), `${h}p`)));
+				return items;
+			}
+		}
+
+		const button = new QualityMenuButton();
+		qualityButtonRef.current = button as unknown as { update: () => void };
+		const { controlBar } = player;
+		const fsToggle = controlBar.getChild('fullscreenToggle');
+		const index = fsToggle ? controlBar.children().indexOf(fsToggle) : undefined;
+		controlBar.addChild(button, {}, index);
 	};
 	// Pre-play cover: the operator's live poster. /liveposter is pure
 	// branding — ungated and independent of thumbnail generation — so it can
@@ -262,10 +303,10 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		// (the native controls then offer one-tap unmute). If both are
 		// blocked the click-to-play poster remains as the fallback.
 		autoplay: 'any',
-		// The video.js chrome is disabled in favor of the browser's native
-		// <video controls> UI so live playback looks identical to the WebRTC
-		// player (operator preference). video.js still drives HLS via VHS.
-		controls: false,
+		// Use the video.js control bar (not the browser's native controls) so the
+		// quality selector can sit inline with volume/fullscreen like YouTube;
+		// native controls can't host a custom button.
+		controls: true,
 		bigPlayButton: false,
 		responsive: true,
 		fluid: false,
@@ -312,16 +353,14 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		playerRef.current = player;
 		setSavedVolume();
 
-		// Native browser controls on the underlying <video>, matching the
-		// WebRTC player's lightweight look (play/pause, volume, fullscreen,
-		// PiP all come from the browser).
+		// Keep a handle on the underlying <video> for the resolution/fps probe.
 		const videoEl = player.el()?.querySelector('video');
 		if (videoEl) {
-			videoEl.setAttribute('controls', '');
 			videoElRef.current = videoEl as HTMLVideoElement;
 		}
 
 		setupAirplay(player, videojs);
+		setupQualityMenu(player, videojs);
 
 		// Populate the quality menu once the master playlist is parsed, and keep
 		// it in sync as VHS swaps the active media playlist.
@@ -371,20 +410,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		}
 	}, [clockSkew]);
 
-	// Close the quality menu when clicking anywhere outside it.
-	useEffect(() => {
-		if (!qualityMenuOpen) {
-			return undefined;
-		}
-		const onDown = (e: MouseEvent) => {
-			if (qualityMenuRef.current && !qualityMenuRef.current.contains(e.target as Node)) {
-				setQualityMenuOpen(false);
-			}
-		};
-		document.addEventListener('mousedown', onDown);
-		return () => document.removeEventListener('mousedown', onDown);
-	}, [qualityMenuOpen]);
-
 	useEffect(
 		() => () => {
 			playbackMetrics?.stop();
@@ -415,55 +440,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 						<div className={styles.player}>
 							<VideoJS options={videoJsOptions} onReady={handlePlayerReady} aria-label={title} />
 							<ProtocolBadge protocol={badgeProtocol} />
-							{videoPlaying && qualityLevels.length > 1 && (
-								<div className={styles.qualityMenu} ref={qualityMenuRef}>
-									<button
-										type="button"
-										className={styles.qualityButton}
-										aria-haspopup="menu"
-										aria-expanded={qualityMenuOpen}
-										aria-label={t('video.qualitySelector.label')}
-										onClick={() => setQualityMenuOpen(open => !open)}
-									>
-										{selectedQuality === 'auto'
-											? t('video.qualitySelector.auto')
-											: `${selectedQuality}p`}
-									</button>
-									{qualityMenuOpen && (
-										<ul className={styles.qualityList} role="menu">
-											<li role="none">
-												<button
-													type="button"
-													role="menuitemradio"
-													aria-checked={selectedQuality === 'auto'}
-													className={classNames(styles.qualityItem, {
-														[styles.qualityItemActive]: selectedQuality === 'auto',
-													})}
-													onClick={() => applyQuality('auto')}
-												>
-													{t('video.qualitySelector.auto')}
-												</button>
-											</li>
-											{qualityLevels.map(level => (
-												<li role="none" key={level.height}>
-													<button
-														type="button"
-														role="menuitemradio"
-														aria-checked={selectedQuality === String(level.height)}
-														className={classNames(styles.qualityItem, {
-															[styles.qualityItemActive]:
-																selectedQuality === String(level.height),
-														})}
-														onClick={() => applyQuality(String(level.height))}
-													>
-														{level.label}
-													</button>
-												</li>
-											))}
-										</ul>
-									)}
-								</div>
-							)}
 						</div>
 					</>
 				)}
