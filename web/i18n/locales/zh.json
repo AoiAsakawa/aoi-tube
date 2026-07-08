@@ -110,6 +110,10 @@
 		"lowLatencyToggle": {
 			"enable": "尝试低延迟模式（WebRTC）",
 			"disable": "返回标准播放"
+		},
+		"qualitySelector": {
+			"label": "画质",
+			"auto": "自动"
 		}
 	},
 	"chat": {

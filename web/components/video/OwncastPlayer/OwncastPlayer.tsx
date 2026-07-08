@@ -1,11 +1,17 @@
 import React, { FC, useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
 import { VideoJS } from '../VideoJS/VideoJS';
 import ViewerPing from '../viewer-ping';
 import { VideoPoster } from '../VideoPoster/VideoPoster';
-import { getLocalStorage, setLocalStorage, PLAYER_VOLUME } from '../../../utils/localStorage';
+import {
+	getLocalStorage,
+	setLocalStorage,
+	PLAYER_VOLUME,
+	PLAYER_QUALITY,
+} from '../../../utils/localStorage';
 import { useIsVideoPlaying, useSetIsVideoPlaying, useClockSkew } from '../../stores/zustand-store';
 import PlaybackMetrics from '../metrics/playback';
 import styles from './OwncastPlayer.module.scss';
@@ -35,11 +41,73 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	embedded = false,
 	protocol,
 }) => {
+	const { t } = useTranslation();
 	const playerRef = React.useRef(null);
 	const videoElRef = React.useRef<HTMLVideoElement | null>(null);
 	const videoPlaying = useIsVideoPlaying();
 	const setVideoPlaying = useSetIsVideoPlaying();
 	const clockSkew = useClockSkew();
+
+	// Manual quality (rendition) selection. VHS auto-ABR can pin playback to a
+	// low rendition or hop to the heavy source-passthrough (occasionally
+	// desyncing A/V), so viewers get an explicit Auto / 1080p / 720p / 360p menu
+	// on top of ABR. Levels are the distinct rendition heights advertised by the
+	// master playlist; 'auto' re-enables every rendition.
+	const [qualityLevels, setQualityLevels] = React.useState<{ height: number; label: string }[]>([]);
+	const [selectedQuality, setSelectedQuality] = React.useState<string>(
+		() => getLocalStorage(PLAYER_QUALITY) || 'auto',
+	);
+	const [qualityMenuOpen, setQualityMenuOpen] = React.useState(false);
+	const qualityMenuRef = React.useRef<HTMLDivElement | null>(null);
+
+	// Read the VHS representation list off the active tech, tolerating the
+	// pre-metadata window where it is not yet populated.
+	const getRepresentations = (): {
+		height?: number;
+		enabled: (value?: boolean) => boolean;
+	}[] => {
+		try {
+			const tech = playerRef.current?.tech?.({ IWillNotUseThisInPlugins: true });
+			return tech?.vhs?.representations?.() || [];
+		} catch {
+			return [];
+		}
+	};
+
+	// Enable only the representation(s) matching the chosen height, or all of
+	// them for 'auto'. Persist the choice so a pinned quality survives reloads.
+	const applyQuality = (value: string) => {
+		const reps = getRepresentations();
+		if (value === 'auto') {
+			reps.forEach(r => r.enabled(true));
+		} else {
+			const height = Number(value);
+			reps.forEach(r => r.enabled(r.height === height));
+		}
+		setSelectedQuality(value);
+		setLocalStorage(PLAYER_QUALITY, value);
+		setQualityMenuOpen(false);
+	};
+
+	// Rebuild the menu from the master playlist and re-assert a pinned choice
+	// (the representation objects are recreated when the manifest reloads).
+	const refreshQualityLevels = () => {
+		const reps = getRepresentations();
+		const seen = new Set<number>();
+		const levels = reps
+			.map(r => r.height)
+			.filter((h): h is number => typeof h === 'number' && h > 0)
+			.sort((a, b) => b - a)
+			.filter(h => (seen.has(h) ? false : seen.add(h)))
+			.map(h => ({ height: h, label: `${h}p` }));
+		setQualityLevels(levels);
+
+		const pinned = getLocalStorage(PLAYER_QUALITY) || 'auto';
+		if (pinned !== 'auto' && levels.some(l => String(l.height) === pinned)) {
+			const height = Number(pinned);
+			reps.forEach(r => r.enabled(r.height === height));
+		}
+	};
 	// Pre-play cover: the operator's live poster. /liveposter is pure
 	// branding — ungated and independent of thumbnail generation — so it can
 	// never fall back to the logo the way the auth-gated /thumbnail.jpg did.
@@ -255,6 +323,11 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 
 		setupAirplay(player, videojs);
 
+		// Populate the quality menu once the master playlist is parsed, and keep
+		// it in sync as VHS swaps the active media playlist.
+		player.on('loadedmetadata', refreshQualityLevels);
+		player.on('loadedplaylist', refreshQualityLevels);
+
 		// You can handle player events here, for example:
 		player.on('waiting', () => {
 			console.debug('player is waiting');
@@ -298,6 +371,20 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		}
 	}, [clockSkew]);
 
+	// Close the quality menu when clicking anywhere outside it.
+	useEffect(() => {
+		if (!qualityMenuOpen) {
+			return undefined;
+		}
+		const onDown = (e: MouseEvent) => {
+			if (qualityMenuRef.current && !qualityMenuRef.current.contains(e.target as Node)) {
+				setQualityMenuOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', onDown);
+		return () => document.removeEventListener('mousedown', onDown);
+	}, [qualityMenuOpen]);
+
 	useEffect(
 		() => () => {
 			playbackMetrics?.stop();
@@ -328,6 +415,55 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 						<div className={styles.player}>
 							<VideoJS options={videoJsOptions} onReady={handlePlayerReady} aria-label={title} />
 							<ProtocolBadge protocol={badgeProtocol} />
+							{videoPlaying && qualityLevels.length > 1 && (
+								<div className={styles.qualityMenu} ref={qualityMenuRef}>
+									<button
+										type="button"
+										className={styles.qualityButton}
+										aria-haspopup="menu"
+										aria-expanded={qualityMenuOpen}
+										aria-label={t('video.qualitySelector.label')}
+										onClick={() => setQualityMenuOpen(open => !open)}
+									>
+										{selectedQuality === 'auto'
+											? t('video.qualitySelector.auto')
+											: `${selectedQuality}p`}
+									</button>
+									{qualityMenuOpen && (
+										<ul className={styles.qualityList} role="menu">
+											<li role="none">
+												<button
+													type="button"
+													role="menuitemradio"
+													aria-checked={selectedQuality === 'auto'}
+													className={classNames(styles.qualityItem, {
+														[styles.qualityItemActive]: selectedQuality === 'auto',
+													})}
+													onClick={() => applyQuality('auto')}
+												>
+													{t('video.qualitySelector.auto')}
+												</button>
+											</li>
+											{qualityLevels.map(level => (
+												<li role="none" key={level.height}>
+													<button
+														type="button"
+														role="menuitemradio"
+														aria-checked={selectedQuality === String(level.height)}
+														className={classNames(styles.qualityItem, {
+															[styles.qualityItemActive]:
+																selectedQuality === String(level.height),
+														})}
+														onClick={() => applyQuality(String(level.height))}
+													>
+														{level.label}
+													</button>
+												</li>
+											))}
+										</ul>
+									)}
+								</div>
+							)}
 						</div>
 					</>
 				)}

@@ -110,6 +110,10 @@
 		"lowLatencyToggle": {
 			"enable": "저지연 모드 사용 (WebRTC)",
 			"disable": "일반 재생으로 돌아가기"
+		},
+		"qualitySelector": {
+			"label": "화질",
+			"auto": "자동"
 		}
 	},
 	"chat": {

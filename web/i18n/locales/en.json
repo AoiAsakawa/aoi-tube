@@ -110,6 +110,10 @@
 		"lowLatencyToggle": {
 			"enable": "Try low latency (WebRTC)",
 			"disable": "Back to standard playback"
+		},
+		"qualitySelector": {
+			"label": "Quality",
+			"auto": "Auto"
 		}
 	},
 	"chat": {

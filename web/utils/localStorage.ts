@@ -2,6 +2,10 @@
 // players so switching playback modes keeps the same audio level.
 export const PLAYER_VOLUME = 'owncast_volume';
 
+// Preferred HLS playback quality: 'auto' or a rendition height like '720'.
+// Persisted so a viewer who pins a quality keeps it across reloads.
+export const PLAYER_QUALITY = 'owncast_quality';
+
 export const LOCAL_STORAGE_KEYS = {
 	username: 'username',
 	hasDisplayedNotificationModal: 'HAS_DISPLAYED_NOTIFICATION_MODAL',
