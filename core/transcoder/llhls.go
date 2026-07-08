@@ -119,6 +119,16 @@ func (t *LLHLSTranscoder) getLLHLSString() string {
 	segmentDuration := 1
 	log.Infof("LL-HLS forcing segment duration to %ds for low latency", segmentDuration)
 
+	// Align the per-variant keyframe interval with the forced 1s segments.
+	// getVideoQualityString derives each transcoded variant's GOP from
+	// currentLatencyLevel.SecondsPerSegment, whose classic-HLS default (e.g. 3s)
+	// would emit i-frames every 3s while LL-HLS cuts 1s segments. The transcoded
+	// renditions' segments would then not start on a keyframe, so the player has
+	// to buffer back to the previous keyframe and 720p/360p lag several seconds
+	// behind the (1s-keyframe) source passthrough. The passthrough is unaffected
+	// because it copies the encoder's own 1s keyframes.
+	t.currentLatencyLevel.SecondsPerSegment = segmentDuration
+
 	// GOP size for low latency: very short GOPs (0.5 seconds = 15 frames at 30fps)
 	// Each keyframe interval should match segment duration for optimal streaming
 	gopSize := segmentDuration * 30
