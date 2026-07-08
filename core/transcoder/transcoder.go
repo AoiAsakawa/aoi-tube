@@ -39,6 +39,12 @@ type Transcoder struct {
 	isEvent                     bool
 	startNumber                 int64
 
+	// keyframeIntervalSeconds, when > 0, overrides the per-variant GOP length
+	// (normally derived from currentLatencyLevel.SecondsPerSegment, an int).
+	// LL-HLS sets it to the sub-second segment duration so keyframes stay
+	// aligned with fractional segments.
+	keyframeIntervalSeconds float64
+
 	TranscoderCompleted func(error)
 }
 
@@ -408,7 +414,16 @@ func (v *HLSVariant) getVideoQualityString(t *Transcoder) string {
 		return fmt.Sprintf("-map v:0 -c:v:%d copy", v.index)
 	}
 
-	gop := v.framerate * t.currentLatencyLevel.SecondsPerSegment // force an i-frame every segment
+	// Force an i-frame every segment. Use the fractional keyframe interval when
+	// set (LL-HLS sub-second segments), otherwise the integer seconds-per-segment.
+	segLenSeconds := float64(t.currentLatencyLevel.SecondsPerSegment)
+	if t.keyframeIntervalSeconds > 0 {
+		segLenSeconds = t.keyframeIntervalSeconds
+	}
+	gop := int(float64(v.framerate)*segLenSeconds + 0.5)
+	if gop < 1 {
+		gop = 1
+	}
 	cmd := []string{
 		"-map v:0",
 		fmt.Sprintf("-c:v:%d %s", v.index, t.codec.Name()),                // Video codec used for this variant

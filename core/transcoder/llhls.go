@@ -113,27 +113,27 @@ func (t *LLHLSTranscoder) getLLHLSString() string {
 		hlsOptionsString = "-hls_flags " + strings.Join(hlsOptionFlags, "+")
 	}
 
-	// Force very short segment duration for low latency (1 second)
-	// This is the key to reducing latency with standard ffmpeg
-	// Override the configured value to ensure low latency
-	segmentDuration := 1
-	log.Infof("LL-HLS forcing segment duration to %ds for low latency", segmentDuration)
+	// Force a very short segment duration for low latency. Sub-second segments
+	// roughly halve the HLS latency floor (the player syncs N segments behind
+	// the live edge, so shorter segments mean less lag) at the cost of more
+	// keyframes and more segment files.
+	segmentDurationSeconds := 0.5
+	log.Infof("LL-HLS forcing segment duration to %.3fs for low latency", segmentDurationSeconds)
 
-	// Align the per-variant keyframe interval with the forced 1s segments.
-	// getVideoQualityString derives each transcoded variant's GOP from
-	// currentLatencyLevel.SecondsPerSegment, whose classic-HLS default (e.g. 3s)
-	// would emit i-frames every 3s while LL-HLS cuts 1s segments. The transcoded
-	// renditions' segments would then not start on a keyframe, so the player has
-	// to buffer back to the previous keyframe and 720p/360p lag several seconds
-	// behind the (1s-keyframe) source passthrough. The passthrough is unaffected
-	// because it copies the encoder's own 1s keyframes.
-	t.currentLatencyLevel.SecondsPerSegment = segmentDuration
+	// Align the per-variant keyframe interval with the (sub-second) segments.
+	// getVideoQualityString derives each transcoded variant's GOP from this
+	// override; without it the GOP would come from currentLatencyLevel
+	// .SecondsPerSegment (the classic-HLS value, e.g. 3s), placing i-frames far
+	// apart while segments are cut every 0.5s — the transcoded renditions'
+	// segments would then not start on a keyframe and would lag seconds behind
+	// the source passthrough (which copies the encoder's own keyframes).
+	t.keyframeIntervalSeconds = segmentDurationSeconds
 
-	// GOP size for low latency: very short GOPs (0.5 seconds = 15 frames at 30fps)
-	// Each keyframe interval should match segment duration for optimal streaming
-	gopSize := segmentDuration * 30
-	if gopSize < 15 {
-		gopSize = 15
+	// GOP size: one keyframe per segment. Floor at a few frames so a slow input
+	// framerate can't produce a degenerate GOP of 0.
+	gopSize := int(segmentDurationSeconds*30 + 0.5)
+	if gopSize < 5 {
+		gopSize = 5
 	}
 
 	// Low-latency tuning is only valid for libx264. Hardware encoders (nvenc,
@@ -162,9 +162,11 @@ func (t *LLHLSTranscoder) getLLHLSString() string {
 
 		// LL-HLS Output with very short segments
 		"-f", "hls",
-		"-hls_time", strconv.Itoa(segmentDuration),
-		// Keep 10 segments (10s at 1s each) + monotonic media sequence (see NewTranscoder)
-		"-hls_list_size 10" + t.getStartNumberString(),
+		"-hls_time", strconv.FormatFloat(segmentDurationSeconds, 'f', -1, 64),
+		// Keep ~10s of segments (20 at 0.5s each) so a briefly-stalled player
+		// doesn't fall off the sliding window + monotonic media sequence (see
+		// NewTranscoder).
+		"-hls_list_size 20" + t.getStartNumberString(),
 
 		// LL-HLS specific options
 		"-hls_segment_type", "fmp4", // Use fragmented MP4 for LL-HLS
