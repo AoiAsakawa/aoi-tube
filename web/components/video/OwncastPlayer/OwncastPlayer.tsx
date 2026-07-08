@@ -113,19 +113,37 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	};
 
 	// Add a "Quality" menu button to the control bar, just before the fullscreen
-	// toggle, so it sits alongside volume/fullscreen like YouTube's gear.
+	// toggle, so it sits alongside volume/fullscreen like YouTube. The button
+	// shows the current quality as a visible text label (a bare cog glyph proved
+	// too small to notice) e.g. "Auto" / "720p".
 	const setupQualityMenu = (player, videojs) => {
 		const MenuButton = videojs.getComponent('MenuButton');
 		const MenuItem = videojs.getComponent('MenuItem');
 		const autoLabel = t('video.qualitySelector.auto');
 		const menuLabel = t('video.qualitySelector.label');
 
+		const qualityText = () =>
+			selectedQualityRef.current === 'auto' ? autoLabel : `${selectedQualityRef.current}p`;
+
 		class QualityMenuButton extends MenuButton {
+			labelEl_: HTMLElement | null = null;
+
 			constructor() {
 				super(player, {});
 				this.addClass('vjs-quality-menu');
-				this.addClass('vjs-icon-cog');
 				this.controlText(menuLabel);
+				const placeholder = this.el().querySelector('.vjs-icon-placeholder');
+				this.labelEl_ = videojs.dom.createEl('span', {
+					className: 'vjs-quality-menu-value',
+					textContent: qualityText(),
+				});
+				(placeholder || this.el()).appendChild(this.labelEl_);
+			}
+
+			refreshLabel() {
+				if (this.labelEl_) {
+					this.labelEl_.textContent = qualityText();
+				}
 			}
 
 			createItems() {
@@ -143,7 +161,12 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		}
 
 		const button = new QualityMenuButton();
-		qualityButtonRef.current = button as unknown as { update: () => void };
+		qualityButtonRef.current = {
+			update: () => {
+				button.update();
+				button.refreshLabel();
+			},
+		};
 		const { controlBar } = player;
 		const fsToggle = controlBar.getChild('fullscreenToggle');
 		const index = fsToggle ? controlBar.children().indexOf(fsToggle) : undefined;

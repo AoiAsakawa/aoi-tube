@@ -31,6 +31,34 @@
 		position: relative;
 	}
 
+	// Quality menu button in the video.js control bar: show a readable text
+	// value (Auto / 720p) instead of a tiny icon, sized to the control bar.
+	:global(.vjs-quality-menu) {
+		width: auto !important;
+		min-width: 3.2em;
+		padding: 0 0.4em;
+		cursor: pointer;
+	}
+
+	:global(.vjs-quality-menu .vjs-icon-placeholder) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+
+		&::before {
+			content: none;
+		}
+	}
+
+	:global(.vjs-quality-menu-value) {
+		display: inline-block;
+		font-size: 1.2em;
+		font-weight: 600;
+		line-height: 1;
+		color: #fff;
+	}
+
 	.poster {
 		// Absolutely cover the whole player area: sizing via the grid cell
 		// proved fragile (auto heights collapsed the image to zero, intrinsic
