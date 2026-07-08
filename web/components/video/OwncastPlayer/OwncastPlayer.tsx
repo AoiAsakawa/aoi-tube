@@ -208,10 +208,19 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		muted: initiallyMuted,
 		html5: {
 			vhs: {
-				// used to select the lowest bitrate playlist initially. This helps to decrease playback start time. This setting is false by default.
-				enableLowInitialPlaylist: true,
-				experimentalBufferBasedABR: true,
-				useNetworkInformationApi: true,
+				// Start at a bandwidth-appropriate rendition rather than forcing the
+				// lowest one: with the tiny low-latency buffer below, buffer-based ABR
+				// never gained enough headroom to up-switch, so playback got stuck at
+				// 360p. Bandwidth-based ABR (the VHS default) climbs correctly with a
+				// shallow live buffer.
+				enableLowInitialPlaylist: false,
+				// Don't cap the rendition by the player's rendered pixel size, so 720p
+				// and source (1080p) are reachable on a large player.
+				limitRenditionByPlayerDimensions: false,
+				// Measure real segment-download bandwidth instead of trusting the
+				// browser's Network Information estimate, which can report a low
+				// downlink and pin quality low.
+				useNetworkInformationApi: false,
 				maxPlaylistRetries: 30,
 				// Low-latency settings
 				llhls: true,
