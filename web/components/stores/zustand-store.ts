@@ -12,6 +12,16 @@ import { AppStateOptions, makeEmptyAppState } from './application-state';
 import WebsocketService from '../../services/websocket-service';
 import { DisplayableError } from '../../types/displayable-error';
 import { SocketEvent } from '../../interfaces/socket-events';
+import { ChatService } from '../../services/chat-service';
+import { setLocalStorage } from '../../utils/localStorage';
+
+// LocalStorage key for the anonymous chat access token. Must match the key
+// ClientConfigStore uses to restore the session on load.
+const ACCESS_TOKEN_KEY = 'accessToken';
+
+// In-flight registration promise, shared by concurrent ensureRegistered()
+// callers so only one anonymous user is ever created per session.
+let inFlightRegistration: Promise<string | null> | null = null;
 
 // Chat messages are either ChatMessage or a type derived from SocketEvent
 type ChatMessageType = ChatMessage | SocketEvent;
@@ -37,6 +47,11 @@ interface AppStore {
 	// Access token
 	accessToken: string | null;
 	setAccessToken: (token: string | null) => void;
+	// Lazily registers an anonymous chat user on first genuine intent (chat
+	// input focus, opening the login modal) so passive viewers who only watch
+	// never create a persistent user. Returns the current token if one already
+	// exists, otherwise registers and returns the new token (null on failure).
+	ensureRegistered: () => Promise<string | null>;
 
 	// Current user
 	currentUser: CurrentUser | null;
@@ -118,6 +133,40 @@ export const useAppStore = create<AppStore>()(
 		// Access token
 		accessToken: null,
 		setAccessToken: token => set({ accessToken: token }),
+		ensureRegistered: async () => {
+			const existing = get().accessToken;
+			if (existing) {
+				return existing;
+			}
+			// Deduplicate concurrent callers (e.g. chat focus + modal open) so a
+			// single registration is shared instead of creating two users.
+			if (!inFlightRegistration) {
+				inFlightRegistration = (async () => {
+					try {
+						const res = await ChatService.registerUser('');
+						if (res?.accessToken) {
+							setLocalStorage(ACCESS_TOKEN_KEY, res.accessToken);
+							set({
+								accessToken: res.accessToken,
+								currentUser: {
+									id: res.id,
+									displayName: res.displayName,
+									displayColor: res.displayColor,
+									isModerator: false,
+								},
+							});
+							return res.accessToken;
+						}
+					} catch (e) {
+						console.error('ensureRegistered failed:', e);
+					} finally {
+						inFlightRegistration = null;
+					}
+					return null;
+				})();
+			}
+			return inFlightRegistration;
+		},
 
 		// Current user
 		currentUser: null,
@@ -217,6 +266,7 @@ export const useSetClientConfig = () => useAppStore(state => state.setClientConf
 
 export const useAccessToken = () => useAppStore(state => state.accessToken);
 export const useSetAccessToken = () => useAppStore(state => state.setAccessToken);
+export const useEnsureRegistered = () => useAppStore(state => state.ensureRegistered);
 
 export const useCurrentUser = () => useAppStore(state => state.currentUser);
 export const useSetCurrentUser = () => useAppStore(state => state.setCurrentUser);

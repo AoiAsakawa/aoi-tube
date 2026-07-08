@@ -1,5 +1,5 @@
-// Crypto price state for the donation form: fetches the JPY price of the
-// selected token from the backend with retry logic and a local cache.
+// Crypto price state for the donation form: fetches the base-currency price of
+// the selected token from the backend with retry logic and a local cache.
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fetchData, CRYPTO_PRICE } from '../../../../utils/apis';
@@ -9,6 +9,9 @@ export const useCryptoPrices = () => {
 
 	// Price state
 	const [cryptoPrice, setCryptoPrice] = useState<number>(0);
+	// The base currency the fetched price is quoted in (defaults to JPY until a
+	// response arrives).
+	const [priceCurrency, setPriceCurrency] = useState<string>('JPY');
 	const [isPriceLoading, setIsPriceLoading] = useState<boolean>(false);
 	const [priceError, setPriceError] = useState<string>('');
 
@@ -17,7 +20,7 @@ export const useCryptoPrices = () => {
 	const PRICE_CACHE_DURATION = 30 * 1000; // 30 seconds local cache
 
 	// Fetch crypto price with retry logic and caching
-	// Note: No fallback prices - if API fails, JPY conversion will not be shown
+	// Note: No fallback prices - if API fails, the conversion will not be shown
 	const fetchCryptoPrice = useCallback(async (coinGeckoId: string, retryCount = 0) => {
 		if (!coinGeckoId) {
 			setCryptoPrice(0);
@@ -43,9 +46,12 @@ export const useCryptoPrices = () => {
 			const response = await fetchData(`${CRYPTO_PRICE}?coin=${coinGeckoId}`, {
 				auth: false,
 			});
-			if (response.success && response.priceJpy) {
-				const price = response.priceJpy;
+			// `price` is the base-currency field; `priceJpy` is the deprecated
+			// JPY-only alias kept for older servers.
+			const price = response.price ?? response.priceJpy;
+			if (response.success && price) {
 				setCryptoPrice(price);
+				setPriceCurrency(response.currency || 'JPY');
 				setPriceError('');
 				// Update local cache
 				priceCacheRef.current.set(coinGeckoId, { price, timestamp: Date.now() });
@@ -74,6 +80,7 @@ export const useCryptoPrices = () => {
 	return {
 		cryptoPrice,
 		setCryptoPrice,
+		priceCurrency,
 		isPriceLoading,
 		priceError,
 		fetchCryptoPrice,

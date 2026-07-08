@@ -2,7 +2,7 @@
 // connection, network and token selection, balance fetching, network switching
 // and native / ERC-20 transfers. Cross-chain values owned by the Bitcoin and
 // Solana hooks are passed in from the component.
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { decimalToBigInt } from '../cryptoAmount';
@@ -247,35 +247,42 @@ export const useEvmWallet = ({
 		}
 	}, [visible, paymentMethod, detectCurrentNetwork, fetchAllBalances]);
 
-	// Listen for network changes (only update currentChainId, don't force selectedNetwork)
+	// Keep the latest selected network in a ref so the wallet-event listeners
+	// (registered once below) can read it without being re-registered on every
+	// change. MetaMask misses account/chain events when its listeners are torn
+	// down and re-added on each render; Trust Wallet is more forgiving, which is
+	// why only MetaMask stopped syncing the address on account switch.
+	const selectedNetworkRef = useRef(selectedNetwork);
 	useEffect(() => {
-		if (!window.ethereum || !walletConnected) return;
+		selectedNetworkRef.current = selectedNetwork;
+	}, [selectedNetwork]);
+
+	// Register wallet event listeners exactly once (stable across renders).
+	useEffect(() => {
+		if (!window.ethereum) return undefined;
 
 		const handleChainChanged = async (chainId: string) => {
 			const networkId = parseInt(chainId, 16);
 			setCurrentChainId(networkId);
-			// Only show message, don't auto-change selectedNetwork
-			// This allows users to select a different network than what MetaMask is on
+			// Only show a message; don't auto-change the user's selected network.
 			const network = AVAILABLE_NETWORKS.find(n => n.id === networkId);
 			if (network) {
 				message.info(t('donation.metamaskSwitchedNetwork', { network: network.name }));
-				// Fetch balances for the new network if it matches selected
-				if (selectedNetwork?.id === networkId && walletAddress) {
-					await fetchAllBalances(networkId, walletAddress);
-				}
 			}
 		};
 
 		const handleAccountsChanged = async (accounts: unknown) => {
 			const accs = accounts as string[];
-			if (accs.length === 0) {
+			if (!accs || accs.length === 0) {
 				setWalletConnected(false);
 				setWalletAddress('');
-			} else {
-				setWalletAddress(accs[0]);
-				if (selectedNetwork) {
-					await fetchAllBalances(selectedNetwork.id, accs[0]);
-				}
+				return;
+			}
+			setWalletConnected(true);
+			setWalletAddress(accs[0]);
+			const net = selectedNetworkRef.current;
+			if (net) {
+				await fetchAllBalances(net.id, accs[0]);
 			}
 		};
 
@@ -286,7 +293,7 @@ export const useEvmWallet = ({
 			window.ethereum?.removeListener('chainChanged', handleChainChanged);
 			window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
 		};
-	}, [walletConnected, walletAddress, selectedNetwork, fetchAllBalances]);
+	}, [fetchAllBalances]);
 
 	const connectWallet = async () => {
 		if (typeof window.ethereum === 'undefined') {

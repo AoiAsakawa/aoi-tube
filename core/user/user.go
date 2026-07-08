@@ -25,6 +25,24 @@ const (
 	minSuggestedUsernamePoolLength = 10
 )
 
+// AuthDetail is one linked social account: the provider type and the
+// human-readable handle of the external account (e.g. an X @handle or a GitHub
+// login). Surfaced in the admin user list and the viewer's own account panel;
+// never used as the public chat display name.
+type AuthDetail struct {
+	Type   string `json:"type"`
+	Handle string `json:"handle,omitempty"`
+	// Revoked marks an unlinked (soft-deleted) account. Kept as history so the
+	// provenance of a purchase is never lost and the link can be recovered.
+	// Only surfaced to the operator (admin list); the self-view lists active
+	// links only.
+	Revoked bool `json:"revoked,omitempty"`
+	// Token is the provider identity token (e.g. "google:123"), populated only
+	// in the admin view so the operator can reactivate a specific revoked link.
+	// Never included in the viewer's own self-view.
+	Token string `json:"token,omitempty"`
+}
+
 // User represents a single chat user.
 type User struct {
 	ID              string     `json:"id"`
@@ -40,6 +58,9 @@ type User struct {
 	Authenticated   bool       `json:"authenticated"`
 	AuthType        string     `json:"authType,omitempty"`
 	AuthTypes       []string   `json:"authTypes,omitempty"`
+	// AuthDetails lists the linked social accounts with their handles. Admin
+	// list and the viewer's own account panel only.
+	AuthDetails []AuthDetail `json:"authDetails,omitempty"`
 }
 
 // IsEnabled will return if this single user is enabled.
@@ -269,6 +290,27 @@ func SetUserAsAuthenticated(userID string) error {
 	return errors.Wrap(_datastore.GetQueries().SetUserAsAuthenticated(context.Background(), userID), "unable to set user as authenticated")
 }
 
+// SetUserAsUnauthenticated clears a user's authenticated status. Called when
+// the last linked social account is unlinked, so the user reverts to an
+// anonymous session. Raw SQL (no sqlc query exists for clearing the field).
+func SetUserAsUnauthenticated(userID string) error {
+	_, err := _datastore.DB.Exec(`UPDATE users SET authenticated_at = NULL WHERE id = ?`, userID)
+	return errors.Wrap(err, "unable to set user as unauthenticated")
+}
+
+// IsAPIUser reports whether the user is a service (external-API) account
+// rather than a chat viewer. Used to keep account-merge from touching service
+// accounts.
+func IsAPIUser(userID string) bool {
+	var userType string
+	if err := _datastore.DB.QueryRow(
+		`SELECT COALESCE(type, 'STANDARD') FROM users WHERE id = ?`, userID,
+	).Scan(&userType); err != nil {
+		return false
+	}
+	return userType == "API"
+}
+
 // SetModerator will add or remove moderator status for a single user by ID.
 func SetModerator(userID string, isModerator bool) error {
 	if isModerator {
@@ -342,7 +384,7 @@ func GetUserByID(id string) *User {
 	_datastore.DbLock.Lock()
 	defer _datastore.DbLock.Unlock()
 
-	query := "SELECT id, display_name, display_color, created_at, disabled_at, previous_names, namechanged_at, scopes FROM users WHERE id = ?"
+	query := "SELECT id, display_name, display_color, created_at, disabled_at, previous_names, namechanged_at, scopes, authenticated_at FROM users WHERE id = ?"
 	row := _datastore.DB.QueryRow(query, id)
 	if row == nil {
 		log.Errorln(row)
@@ -537,8 +579,9 @@ func getUserFromRow(row *sql.Row) *User {
 	var previousUsernames string
 	var userNameChangedAt *time.Time
 	var scopesString *string
+	var authenticatedAt *time.Time
 
-	if err := row.Scan(&id, &displayName, &displayColor, &createdAt, &disabledAt, &previousUsernames, &userNameChangedAt, &scopesString); err != nil {
+	if err := row.Scan(&id, &displayName, &displayColor, &createdAt, &disabledAt, &previousUsernames, &userNameChangedAt, &scopesString, &authenticatedAt); err != nil {
 		return nil
 	}
 
@@ -556,5 +599,10 @@ func getUserFromRow(row *sql.Row) *User {
 		PreviousNames: strings.Split(previousUsernames, ","),
 		NameChangedAt: userNameChangedAt,
 		Scopes:        scopes,
+		// Populate authenticated status so callers that reload the user (e.g.
+		// SendConnectedClientInfoToUser) don't drop it, which would log an
+		// authenticated viewer out.
+		AuthenticatedAt: authenticatedAt,
+		Authenticated:   authenticatedAt != nil,
 	}
 }

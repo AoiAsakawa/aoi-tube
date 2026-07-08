@@ -308,7 +308,14 @@
 			"privacyNote": "这仅用于认证目的，不会访问或存储任何个人信息。"
 		},
 		"auth": {
-			"tab": "{{provider}}认证"
+			"tab": "{{provider}}认证",
+			"linkedAccountsTitle": "已关联的账户",
+			"unlink": "解除关联",
+			"unlinkCancel": "取消",
+			"unlinkConfirm": "要解除 {{provider}} 的关联吗?随时可以重新关联。",
+			"unlinkSuccess": "已解除关联。",
+			"unlinkFailed": "解除关联失败。",
+			"unlinkBlockedPurchases": "您有已购买的存档,因此无法解除最后的登录方式(否则在其他设备上将无法访问)。请先关联其他账户,或联系运营方。"
 		},
 		"browserNotify": {
 			"notSupported": "您的浏览器不支持浏览器通知。",
@@ -696,6 +703,9 @@
 				"contentRequired": "请输入标示内容",
 				"enableLabel": "启用基于《特定商业交易法》的标示页面",
 				"intro": "提供超级留言（付费服务）时，需要基于《特定商业交易法》进行标示。可使用Markdown格式自由编辑。",
+				"pageTitleLabel": "页面标题",
+				"pageTitleHelp": "可选。覆盖公开页面和页脚链接的默认标题(例如\"法律声明\"\"Impressum\")。留空则使用标准标签。",
+				"pageTitlePlaceholder": "商业交易法披露(Tokushoho)",
 				"legalAlertTitle": "关于法律要求",
 				"legalBody1": "在日本国内提供支付服务时，法律要求依据《特定商业交易法》进行标示。详情请查看",
 				"legalBody2": "。",
@@ -847,6 +857,12 @@
 			"donations": {
 				"title": "购买管理",
 				"intro": "观众购买（超级留言、画面特效）的销售仪表盘和购买记录。可通过外部支付服务的Webhook自动登记，也可手动登记。测试支付（沙盒）不计入销售统计。",
+				"baseCurrency": {
+					"label": "基准货币",
+					"help": "加密货币购买金额换算及收入统计所使用的货币。各支付服务商各自保留其货币设置。",
+					"saved": "已更新基准货币。",
+					"saveFailed": "更新基准货币失败。"
+				},
 				"addManually": "手动添加",
 				"anonymous": "匿名",
 				"show": "显示",
@@ -1172,6 +1188,7 @@
 				},
 				"columns": {
 					"displayName": "显示名称",
+					"auth": "认证",
 					"status": "状态",
 					"createdAt": "创建时间",
 					"authenticatedAt": "认证时间",
@@ -1181,7 +1198,8 @@
 					"authenticated": "已认证",
 					"blocked": "屏蔽",
 					"moderator": "版主",
-					"unauthenticated": "未认证"
+					"unauthenticated": "未认证",
+					"unlinked": "已解除"
 				},
 				"deleteUserConfirm": {
 					"title": "确定要删除此用户吗？",
@@ -1203,6 +1221,44 @@
 					"selectUsers": "请选择要删除的用户",
 					"allDeleted": "已删除全部用户",
 					"deleteAllFailed": "删除全部用户失败"
+				},
+				"governance": {
+					"history": "历史",
+					"merge": "合并",
+					"reactivate": "恢复",
+					"reactivateSuccess": "已恢复账户。",
+					"reactivateFailed": "恢复账户失败。",
+					"auditTitle": "认证历史 — {{name}}",
+					"auditLoadFailed": "加载审计日志失败。",
+					"auditEmpty": "没有认证事件。",
+					"auditWhen": "时间",
+					"auditAction": "操作",
+					"auditActor": "执行者",
+					"mergeTitle": "合并账户",
+					"mergeConfirm": "合并",
+					"mergeIntro": "将“{{name}}”的关联、历史、购买和设备全部移至所选账户。原账户随后被停用。",
+					"mergeTargetPlaceholder": "选择要保留的账户",
+					"mergeWarning": "无法自动撤销。原账户被停用但保留为历史。",
+					"mergeSuccess": "已合并账户。",
+					"mergeFailed": "合并账户失败。",
+					"actions": {
+						"linked": "关联",
+						"unlinked": "解除",
+						"reactivated": "恢复",
+						"overwritten": "替换",
+						"merged": "合并"
+					},
+					"actors": {
+						"self": "用户",
+						"admin": "运营者"
+					},
+					"moderatorGrantAction": "设为版主",
+					"moderatorRevokeAction": "解除版主",
+					"moderatorGrantConfirm": "要授予“{{name}}”版主权限吗?",
+					"moderatorRevokeConfirm": "要解除“{{name}}”的版主权限吗?",
+					"moderatorGranted": "已授予版主权限。",
+					"moderatorRevoked": "已解除版主权限。",
+					"moderatorFailed": "更改版主状态失败。"
 				}
 			},
 			"viewerInfo": {

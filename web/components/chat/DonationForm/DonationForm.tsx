@@ -35,7 +35,7 @@ import {
 	SCREEN_EFFECT_TYPES,
 	ScreenEffectType,
 } from '../../../interfaces/donation.model';
-import { cryptoAmountForJpy, decimalToBigInt } from './cryptoAmount';
+import { cryptoAmountForFiat, decimalToBigInt } from './cryptoAmount';
 import {
 	AVAILABLE_NETWORKS,
 	EFFECT_CRYPTO_MARGIN_PERCENT,
@@ -134,8 +134,10 @@ export const DonationForm: FC<DonationFormProps> = ({
 	// Metamask specific state
 	const [metamaskConfig, setMetamaskConfig] = useState<MetamaskConfig | null>(null);
 
-	// Crypto price state and fetching (retry + local cache)
-	const { cryptoPrice, setCryptoPrice, isPriceLoading, priceError, fetchCryptoPrice } =
+	// Crypto price state and fetching (retry + local cache). The price is quoted
+	// in the server's base currency (priceCurrency), which crypto purchases are
+	// converted to and verified against.
+	const { cryptoPrice, setCryptoPrice, priceCurrency, isPriceLoading, priceError, fetchCryptoPrice } =
 		useCryptoPrices();
 
 	// Bitcoin wallet state and actions (btcsnap connection, balance, PSBT send)
@@ -272,13 +274,15 @@ export const DonationForm: FC<DonationFormProps> = ({
 	// Currency that screen effect prices are charged in for the selected
 	// payment method: PayPay always charges JPY; PayPal / Stripe use their
 	// configured currency; crypto purchases are verified by the server against
-	// the JPY price. Must match the server-enforced price lookup.
+	// the base-currency price. Must match the server-enforced price lookup.
 	const effectPriceCurrency =
-		paymentMethod === 'paypay' || paymentMethod === 'metamask'
+		paymentMethod === 'paypay'
 			? 'JPY'
-			: paymentMethod === 'paypal'
-				? paypalConfig?.currencyCode || 'USD'
-				: stripeConfig?.currencyCode || 'JPY';
+			: paymentMethod === 'metamask'
+				? priceCurrency
+				: paymentMethod === 'paypal'
+					? paypalConfig?.currencyCode || 'USD'
+					: stripeConfig?.currencyCode || 'JPY';
 
 	// Fixed price label for a screen effect, e.g. "¥200" or "$2".
 	const formatEffectPrice = (effect: ScreenEffectType): string =>
@@ -286,20 +290,21 @@ export const DonationForm: FC<DonationFormProps> = ({
 
 	// --- Screen effects paid in crypto ---
 	// The server confirms an effect purchase when the on-chain amount converts
-	// to at least 95% of the effect's JPY price, so the form quotes the JPY
-	// price at the current token rate plus a +2% market-movement margin
+	// to at least 95% of the effect's base-currency price, so the form quotes
+	// that price at the current token rate plus a +2% market-movement margin
 	// (EFFECT_CRYPTO_MARGIN_PERCENT).
 	const isEffectCrypto = isEffectPurchase && paymentMethod === 'metamask';
 
-	// Tokens without a CoinGecko price feed (VBC, VBCG, ...) cannot be
-	// converted to JPY, so they cannot buy fixed-JPY-price effects.
+	// Tokens without a price feed (VBCG, ...) cannot be converted to fiat, so
+	// they cannot buy fixed-fiat-price effects.
 	const effectTokenSupported = !!selectedToken?.coinGeckoId;
 
 	// Token amount (decimal string) needed for one effect at the current rate,
-	// or '' while the rate is unknown.
+	// or '' while the rate is unknown. Quoted against the base-currency price
+	// so it matches the server's verification currency.
 	const effectCryptoAmountFor = (effect: ScreenEffectType): string =>
-		cryptoAmountForJpy(
-			getEffectPrice(effect, 'JPY'),
+		cryptoAmountForFiat(
+			getEffectPrice(effect, priceCurrency),
 			cryptoPrice,
 			selectedToken?.decimals ?? 8,
 			EFFECT_CRYPTO_MARGIN_PERCENT,
@@ -573,6 +578,18 @@ export const DonationForm: FC<DonationFormProps> = ({
 
 	const formatAmountJPY = (val: number) => {
 		return `¥${val.toLocaleString()}`;
+	};
+
+	// Formats a major-unit amount in the server's base currency (used for the
+	// crypto→fiat conversion display). Zero-decimal currencies (JPY, KRW) show
+	// no fractional part; others show two decimals.
+	const formatBaseAmount = (val: number) => {
+		const zeroDecimal = priceCurrency === 'JPY' || priceCurrency === 'KRW';
+		const symbol = getFiatSymbol(priceCurrency);
+		const formatted = zeroDecimal
+			? Math.round(val).toLocaleString()
+			: val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+		return `${symbol}${formatted}`;
 	};
 
 	const formatAmountCrypto = (val: number | string) => {
@@ -1351,7 +1368,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 							{/* Preset amounts */}
 							<div className={styles.presetAmounts}>
 								{inputMode === 'jpy' && !isStablecoin()
-									? // JPY tier presets (for both regular crypto and Bitcoin)
+									? // Base-currency tier presets (for both regular crypto and Bitcoin)
 										PRESET_AMOUNTS_JPY_TIERS.map(preset => (
 											<Button
 												key={preset}
@@ -1364,7 +1381,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 													backgroundColor: jpyAmount === preset ? '#667eea' : '#2a2d38',
 												}}
 											>
-												{formatAmountJPY(preset)}
+												{formatBaseAmount(preset)}
 											</Button>
 										))
 									: // Token-specific presets (stablecoin / BTC / VBC / ETH / altcoin / BNB / other)
@@ -1394,7 +1411,9 @@ export const DonationForm: FC<DonationFormProps> = ({
 										min={1}
 										max={10000000}
 										className={styles.amountInput}
-										addonBefore={<span style={{ color: '#e2e8f0' }}>¥</span>}
+										addonBefore={
+											<span style={{ color: '#e2e8f0' }}>{getFiatSymbol(priceCurrency)}</span>
+										}
 									/>
 								) : (
 									<InputNumber<string>
@@ -1477,16 +1496,16 @@ export const DonationForm: FC<DonationFormProps> = ({
 											{inputMode === 'jpy' && !isStablecoin() ? (
 												<span>
 													≈ {formatAmountCrypto(jpyToCrypto(jpyAmount))} (
-													{formatAmountJPY(jpyAmount)})
+													{formatBaseAmount(jpyAmount)})
 												</span>
 											) : (
 												<span>
 													{formatAmountCrypto(cryptoAmount)} ≈{' '}
-													{formatAmountJPY(cryptoToJpy(cryptoAmount))}
+													{formatBaseAmount(cryptoToJpy(cryptoAmount))}
 												</span>
 											)}
 											<Tooltip
-												title={`1 ${getCurrencySymbol()} = ${formatAmountJPY(cryptoPrice)}${priceError ? ` (${priceError})` : ''}`}
+												title={`1 ${getCurrencySymbol()} = ${formatBaseAmount(cryptoPrice)}${priceError ? ` (${priceError})` : ''}`}
 											>
 												<InfoCircleOutlined
 													style={{
@@ -1578,7 +1597,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 											{formatAmountCrypto(cryptoAmount)}
 											{cryptoPrice > 0 && (
 												<span style={{ fontWeight: 'normal', color: '#666', marginLeft: 8 }}>
-													(≈ {formatAmountJPY(cryptoToJpy(cryptoAmount))})
+													(≈ {formatBaseAmount(cryptoToJpy(cryptoAmount))})
 												</span>
 											)}
 										</>

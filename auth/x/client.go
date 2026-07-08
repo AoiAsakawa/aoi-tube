@@ -154,8 +154,10 @@ func HandleCallback(code, state string) (*Request, *XUser, error) {
 	body, _ := io.ReadAll(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
-		log.Errorln("X token response:", resp.StatusCode, string(body))
-		return nil, nil, fmt.Errorf("Xトークンの取得に失敗しました: %s", string(body))
+		// Never log or surface the raw token-endpoint body — it can contain
+		// issued tokens.
+		log.Errorln("X token request failed with status", resp.StatusCode)
+		return nil, nil, fmt.Errorf("Xトークンの取得に失敗しました (status %d)", resp.StatusCode)
 	}
 
 	var tokenResp struct {

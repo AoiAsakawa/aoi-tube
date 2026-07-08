@@ -17,7 +17,7 @@ export interface ChatStaticService {
 	registerUser(username: string): Promise<UserRegistrationResponse>;
 }
 
-class ChatService {
+export class ChatService {
 	public static async getChatHistory(accessToken: string): Promise<ChatMessage[]> {
 		try {
 			const response = await getUnauthedData(`${ENDPOINT}?accessToken=${accessToken}`);

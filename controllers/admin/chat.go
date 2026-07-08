@@ -192,18 +192,36 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	users := user.GetAllUsers()
 
-	// Add auth types for each user
+	// Add auth types and per-account handles for each user. The admin view
+	// includes revoked (unlinked) links as history, so it is populated even for
+	// users who unlinked their last account and are no longer authenticated —
+	// their past links (and the provenance of any purchase) stay visible.
 	for _, u := range users {
 		if u.Authenticated {
 			u.AuthTypes = auth.GetUserAuthTypes(u.ID)
 			u.AuthType = auth.GetPrimaryAuthType(u.ID)
 		}
+		u.AuthDetails = auth.GetUserAuthDetailsForAdmin(u.ID)
 	}
 
 	controllers.WriteResponse(w, users)
 }
 
 // DeleteUser will permanently delete a user and their associated data.
+// recordUserDeletionAudit appends a terminal "deleted" event for each of the
+// user's linked accounts (active or previously revoked) so the append-only
+// audit log retains the identity's provenance after the auth rows are gone.
+func recordUserDeletionAudit(userID string) {
+	links := auth.GetUserAuthDetailsForAdmin(userID)
+	if len(links) == 0 {
+		auth.RecordAuthEvent(userID, "", "", auth.ActionDeleted, auth.ActorAdmin)
+		return
+	}
+	for _, l := range links {
+		auth.RecordAuthEvent(userID, auth.Type(l.Type), l.Handle, auth.ActionDeleted, auth.ActorAdmin)
+	}
+}
+
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	type deleteUserRequest struct {
 		UserID string `json:"userId"`
@@ -228,6 +246,12 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Record the destruction in the append-only audit log BEFORE the auth rows
+	// are hard-deleted, so the identity's provenance survives the deletion.
+	// (Purchase rows in donations are deliberately kept as the financial record;
+	// they outlive the user, matching how archive purchases persist.)
+	recordUserDeletionAudit(request.UserID)
+
 	// Delete the user
 	if err := user.DeleteUser(request.UserID); err != nil {
 		log.Errorln("error deleting user", err)
@@ -249,6 +273,7 @@ func DeleteAllUsers(w http.ResponseWriter, r *http.Request) {
 	deletedCount := 0
 
 	for _, u := range allUsers {
+		recordUserDeletionAudit(u.ID)
 		if err := user.DeleteUser(u.ID); err != nil {
 			log.Errorln("error deleting user", u.ID, err)
 			continue

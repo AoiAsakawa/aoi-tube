@@ -17,6 +17,7 @@ import {
 	useAppState,
 	useChatAuthenticated,
 	useAccessToken,
+	useEnsureRegistered,
 } from '../../stores/zustand-store';
 import { DONATIONS_RECENT, getUnauthedData } from '../../../utils/apis';
 import { MessageType, DonationSocketEvent } from '../../../interfaces/socket-events';
@@ -88,6 +89,7 @@ export const Main: FC = () => {
 	const appState = useAppState();
 	const chatAuthenticated = useChatAuthenticated();
 	const accessToken = useAccessToken();
+	const ensureRegistered = useEnsureRegistered();
 	const layoutRef = useRef<HTMLDivElement>(null);
 	const { chatDisabled } = clientConfig;
 	const { videoAvailable } = appState;
@@ -186,6 +188,7 @@ export const Main: FC = () => {
 								amount: recentDonation.amount,
 								currency: recentDonation.currency,
 								amountJpy: recentDonation.amountJpy,
+								fiatCurrency: recentDonation.fiatCurrency,
 								message: recentDonation.message || '',
 								displayName: recentDonation.displayName,
 								isAnonymous: recentDonation.isAnonymous,
@@ -239,6 +242,10 @@ export const Main: FC = () => {
 		twitterAuthEnabled ||
 		googleAuthEnabled ||
 		githubAuthEnabled;
+	// Note: this no longer requires an access token. With lazy registration a
+	// passive viewer has no token yet; the forced-auth modal must still appear
+	// so they are prompted to log in, and the auth handlers mint the token on
+	// demand when a provider is chosen.
 	const showSocialAuthRequired =
 		authCheckReady &&
 		nsfwConfirmed &&
@@ -246,8 +253,7 @@ export const Main: FC = () => {
 		online &&
 		requireTwitterAuth &&
 		anySocialAuthEnabled &&
-		!chatAuthenticated &&
-		accessToken;
+		!chatAuthenticated;
 
 	// Unauthenticated visitors get a login button in place of the user menu
 	// (the auth modal is only forced while the stream is live).
@@ -257,18 +263,20 @@ export const Main: FC = () => {
 		!showNsfwWarning &&
 		requireTwitterAuth &&
 		anySocialAuthEnabled &&
-		!chatAuthenticated &&
-		accessToken,
+		!chatAuthenticated,
 	);
 
 	const handleXAuth = async () => {
-		if (!accessToken) return;
+		// Mint the anonymous token now if the viewer never chatted (lazy
+		// registration): the auth flow re-points this token to the social user.
+		const token = accessToken || (await ensureRegistered());
+		if (!token) return;
 
 		// Prefer X OAuth 2.0 if configured, otherwise fall back to Twitter OAuth 1.0a
 		const authEndpoint = xAuthEnabled ? '/api/auth/x' : '/api/auth/twitter';
 
 		try {
-			const url = `${authEndpoint}?accessToken=${accessToken}`;
+			const url = `${authEndpoint}?accessToken=${token}`;
 			const rawResponse = await fetch(url, {
 				method: 'POST',
 				headers: {
@@ -288,10 +296,11 @@ export const Main: FC = () => {
 	};
 
 	const handleDiscordAuth = async () => {
-		if (!accessToken) return;
+		const token = accessToken || (await ensureRegistered());
+		if (!token) return;
 
 		try {
-			const url = `/api/auth/discord?accessToken=${accessToken}`;
+			const url = `/api/auth/discord?accessToken=${token}`;
 			const rawResponse = await fetch(url, {
 				method: 'POST',
 				headers: {
@@ -311,10 +320,11 @@ export const Main: FC = () => {
 	};
 
 	const handleGoogleAuth = async () => {
-		if (!accessToken) return;
+		const token = accessToken || (await ensureRegistered());
+		if (!token) return;
 
 		try {
-			const url = `/api/auth/google?accessToken=${accessToken}`;
+			const url = `/api/auth/google?accessToken=${token}`;
 			const rawResponse = await fetch(url, {
 				method: 'POST',
 				headers: {
@@ -334,10 +344,11 @@ export const Main: FC = () => {
 	};
 
 	const handleGitHubAuth = async () => {
-		if (!accessToken) return;
+		const token = accessToken || (await ensureRegistered());
+		if (!token) return;
 
 		try {
-			const url = `/api/auth/github?accessToken=${accessToken}`;
+			const url = `/api/auth/github?accessToken=${token}`;
 			const rawResponse = await fetch(url, {
 				method: 'POST',
 				headers: {

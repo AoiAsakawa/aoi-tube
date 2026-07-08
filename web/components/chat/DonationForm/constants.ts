@@ -117,7 +117,8 @@ export const AVAILABLE_NETWORKS: NetworkOption[] = [
 		id: 329,
 		name: 'VirBiCoin',
 		currency: 'VBC',
-		coinGeckoId: '',
+		// Pseudo coin ID served by the backend's Coinpaprika tier (vbc-virbicoin).
+		coinGeckoId: 'virbicoin',
 		hexChainId: '0x149',
 		rpcUrl: 'https://rpc.digitalregion.jp',
 		blockExplorerUrl: 'https://explorer.digitalregion.jp',
@@ -233,7 +234,8 @@ export const AVAILABLE_TOKENS: Record<number, TokenOption[]> = {
 	],
 	329: [
 		// VirBiCoin
-		{ symbol: 'VBC', name: 'VirBiCoin', decimals: 18, coinGeckoId: '', address: '' },
+		// coinGeckoId is a pseudo ID served by the backend's Coinpaprika tier.
+		{ symbol: 'VBC', name: 'VirBiCoin', decimals: 18, coinGeckoId: 'virbicoin', address: '' },
 		{
 			symbol: 'USDT',
 			name: 'Tether',

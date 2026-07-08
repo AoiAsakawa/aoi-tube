@@ -89,9 +89,12 @@ export interface Donation {
 	userId?: string;
 	amount: number;
 	currency: string;
-	// JPY value of a crypto purchase recorded by the server at confirmation
-	// time. 0 or missing means no conversion was available.
+	// Base-currency value of a crypto purchase recorded by the server at
+	// confirmation time. 0 or missing means no conversion was available. The
+	// wire name predates configurable base currencies; fiatCurrency names the
+	// actual currency (empty means JPY).
 	amountJpy?: number;
+	fiatCurrency?: string;
 	message?: string;
 	displayName: string;
 	isAnonymous: boolean;
@@ -118,8 +121,10 @@ export interface DonationEvent {
 	timestamp: Date;
 	amount: number;
 	currency: string;
-	// JPY conversion recorded at confirmation time (crypto purchases only).
+	// Base-currency conversion recorded at confirmation time (crypto purchases
+	// only). fiatCurrency names the currency (empty means JPY).
 	amountJpy?: number;
+	fiatCurrency?: string;
 	message?: string;
 	displayName: string;
 	isAnonymous: boolean;
@@ -178,10 +183,13 @@ export interface DonationStats {
 	daily: DonationDailyStat[];
 	uniquePurchasers: number;
 	testCount: number;
-	// JPY value of crypto purchases recorded at their confirmation time.
-	// Crypto purchases without a stored conversion are not included.
-	// Optional so responses from older servers still parse.
-	cryptoJpyTotal?: number;
+	// The server's base currency; cryptoFiatTotal is expressed in it.
+	baseCurrency?: string;
+	// Base-currency value of crypto purchases recorded at their confirmation
+	// time. Purchases recorded under a different base currency or without a
+	// stored conversion are not included. Optional so responses from older
+	// servers still parse.
+	cryptoFiatTotal?: number;
 }
 
 /**

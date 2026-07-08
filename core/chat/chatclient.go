@@ -12,6 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 
+	"github.com/aoiasakawa/aoitube/auth"
 	"github.com/aoiasakawa/aoitube/config"
 	"github.com/aoiasakawa/aoitube/core/chat/events"
 	"github.com/aoiasakawa/aoitube/core/data"
@@ -116,11 +117,22 @@ var (
 )
 
 func (c *Client) sendConnectedClientInfo() {
+	// The connected-client-info event is sent only to this client, so it may
+	// carry the user's own linked-account handles. Broadcast events reuse
+	// c.User and must not leak them, so attach the details to a copy rather
+	// than mutating the shared user.
+	u := c.User
+	if u != nil && u.Authenticated {
+		userWithAuth := *u
+		userWithAuth.AuthDetails = auth.GetUserAuthDetails(u.ID)
+		u = &userWithAuth
+	}
+
 	payload := events.ConnectedClientInfo{
 		Event: events.Event{
 			Type: events.ConnectedUserInfo,
 		},
-		User: c.User,
+		User: u,
 	}
 
 	payload.SetDefaults()

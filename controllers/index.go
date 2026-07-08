@@ -56,6 +56,7 @@ func renderIndexHtml(w http.ResponseWriter, nonce string) {
 		StatusJSON       string
 		ServerConfigJSON string
 		Nonce            string
+		LogoUniqueness   string
 	}
 
 	status := getStatusResponse()
@@ -95,6 +96,7 @@ func renderIndexHtml(w http.ResponseWriter, nonce string) {
 		StatusJSON:       string(sb),
 		ServerConfigJSON: string(cb),
 		Nonce:            nonce,
+		LogoUniqueness:   data.GetLogoUniquenessString(),
 	}
 
 	index, err := static.GetWebIndexTemplate()

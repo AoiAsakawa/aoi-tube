@@ -308,7 +308,14 @@
 			"privacyNote": "이는 인증 목적으로만 사용되며, 개인 정보에 접근하거나 저장하는 일은 없어요."
 		},
 		"auth": {
-			"tab": "{{provider}} 인증"
+			"tab": "{{provider}} 인증",
+			"linkedAccountsTitle": "연결된 계정",
+			"unlink": "연결 해제",
+			"unlinkCancel": "취소",
+			"unlinkConfirm": "{{provider}} 연결을 해제하시겠습니까? 언제든 다시 연결할 수 있습니다.",
+			"unlinkSuccess": "연결을 해제했습니다.",
+			"unlinkFailed": "연결 해제에 실패했습니다.",
+			"unlinkBlockedPurchases": "구매한 아카이브가 있어 마지막 로그인 수단은 해제할 수 없습니다(다른 기기에서 접근할 수 없게 됩니다). 먼저 다른 계정을 연결하거나 운영자에게 문의하세요."
 		},
 		"browserNotify": {
 			"notSupported": "사용 중인 브라우저에서는 브라우저 알림이 지원되지 않아요.",
@@ -696,6 +703,9 @@
 				"contentRequired": "표기 내용을 입력해 주세요",
 				"enableLabel": "특정상거래법에 따른 표기 페이지 활성화",
 				"intro": "슈퍼챗(유료 서비스)을 제공하는 경우 특정상거래법에 따른 표기가 필요해요. Markdown 형식으로 자유롭게 편집할 수 있어요.",
+				"pageTitleLabel": "페이지 제목",
+				"pageTitleHelp": "선택 사항. 공개 페이지와 푸터 링크의 기본 제목을 덮어씁니다(예: \"법적 고지\", \"Impressum\"). 비워 두면 기본 라벨을 사용합니다.",
+				"pageTitlePlaceholder": "특정상거래법 표기(Tokushoho)",
 				"legalAlertTitle": "법적 요건 안내",
 				"legalBody1": "일본 국내에서 결제 서비스를 제공하는 경우 특정상거래법에 따른 표기가 의무예요. 자세한 내용은",
 				"legalBody2": "를 확인해 주세요.",
@@ -847,6 +857,12 @@
 			"donations": {
 				"title": "구매 관리",
 				"intro": "시청자 구매(슈퍼챗·화면 연출)의 매출 대시보드와 구매 내역이에요. 외부 결제 서비스에서 웹훅을 통해 자동 등록하거나 수동으로 등록할 수 있어요. 테스트 결제(샌드박스)는 매출 집계에서 제외돼요.",
+				"baseCurrency": {
+					"label": "기준 통화",
+					"help": "암호화폐 구매 금액을 환산하고 매출을 집계·표시하는 통화입니다. 각 결제 제공업체의 통화 설정은 개별적으로 유지됩니다.",
+					"saved": "기준 통화를 업데이트했습니다.",
+					"saveFailed": "기준 통화 업데이트에 실패했습니다."
+				},
 				"addManually": "수동 추가",
 				"anonymous": "익명",
 				"show": "표시하기",
@@ -1172,6 +1188,7 @@
 				},
 				"columns": {
 					"displayName": "표시 이름",
+					"auth": "인증",
 					"status": "상태",
 					"createdAt": "생성 일시",
 					"authenticatedAt": "인증 일시",
@@ -1181,7 +1198,8 @@
 					"authenticated": "인증됨",
 					"blocked": "차단",
 					"moderator": "운영자",
-					"unauthenticated": "미인증"
+					"unauthenticated": "미인증",
+					"unlinked": "해제됨"
 				},
 				"deleteUserConfirm": {
 					"title": "이 사용자를 삭제할까요?",
@@ -1203,6 +1221,44 @@
 					"selectUsers": "삭제할 사용자를 선택해 주세요",
 					"allDeleted": "모든 사용자를 삭제했어요",
 					"deleteAllFailed": "모든 사용자 삭제에 실패했어요"
+				},
+				"governance": {
+					"history": "기록",
+					"merge": "통합",
+					"reactivate": "복구",
+					"reactivateSuccess": "계정을 복구했습니다.",
+					"reactivateFailed": "계정 복구에 실패했습니다.",
+					"auditTitle": "인증 기록 — {{name}}",
+					"auditLoadFailed": "감사 로그를 불러오지 못했습니다.",
+					"auditEmpty": "인증 이벤트가 없습니다.",
+					"auditWhen": "시각",
+					"auditAction": "작업",
+					"auditActor": "실행자",
+					"mergeTitle": "계정 통합",
+					"mergeConfirm": "통합",
+					"mergeIntro": "\"{{name}}\"의 연결·기록·구매·기기를 모두 선택한 계정으로 이동합니다. 원본 계정은 이후 비활성화됩니다.",
+					"mergeTargetPlaceholder": "유지할 계정 선택",
+					"mergeWarning": "자동으로 되돌릴 수 없습니다. 원본 계정은 비활성화되지만 기록으로 남습니다.",
+					"mergeSuccess": "계정을 통합했습니다.",
+					"mergeFailed": "계정 통합에 실패했습니다.",
+					"actions": {
+						"linked": "연결",
+						"unlinked": "해제",
+						"reactivated": "복구",
+						"overwritten": "교체",
+						"merged": "통합"
+					},
+					"actors": {
+						"self": "사용자",
+						"admin": "운영자"
+					},
+					"moderatorGrantAction": "모더레이터 지정",
+					"moderatorRevokeAction": "모더레이터 해제",
+					"moderatorGrantConfirm": "\"{{name}}\"에게 모더레이터 권한을 부여하시겠습니까?",
+					"moderatorRevokeConfirm": "\"{{name}}\"의 모더레이터 권한을 해제하시겠습니까?",
+					"moderatorGranted": "모더레이터 권한을 부여했습니다.",
+					"moderatorRevoked": "모더레이터 권한을 해제했습니다.",
+					"moderatorFailed": "모더레이터 상태 변경에 실패했습니다."
 				}
 			},
 			"viewerInfo": {

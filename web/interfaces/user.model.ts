@@ -1,3 +1,8 @@
+export interface AuthDetail {
+	type: string;
+	handle?: string;
+}
+
 export class User {
 	constructor(u) {
 		this.id = u.id;
@@ -9,6 +14,7 @@ export class User {
 		this.scopes = u.scopes;
 		this.authenticated = u.authenticated;
 		this.authType = u.authType;
+		this.authDetails = u.authDetails;
 	}
 
 	id: string;
@@ -28,6 +34,10 @@ export class User {
 	authenticated: boolean;
 
 	authType?: string;
+
+	// The user's own linked social accounts (only populated for the connected
+	// user's self-info event, never for other users in chat).
+	authDetails?: AuthDetail[];
 
 	public isModerator = (): boolean => {
 		if (!this.scopes || this.scopes.length === 0) {

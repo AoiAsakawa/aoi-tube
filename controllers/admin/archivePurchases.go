@@ -93,7 +93,7 @@ func GrantArchivePurchase(w http.ResponseWriter, r *http.Request) {
 
 	currency := manifest.Currency
 	if currency == "" {
-		currency = "JPY"
+		currency = data.GetBaseCurrency()
 	}
 	donationID := shortid.MustGenerate()
 	donation := &models.Donation{

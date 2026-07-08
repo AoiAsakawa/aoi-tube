@@ -11,14 +11,19 @@ import (
 // Super Chat (highlighted message) or a screen effect.
 type DonationEvent struct {
 	Event
-	User        *user.User `json:"user,omitempty"`
-	Amount      int64      `json:"amount"`
-	Currency    string     `json:"currency"`
-	AmountJPY   int64      `json:"amountJpy,omitempty"`
-	Message     string     `json:"message,omitempty"`
-	DisplayName string     `json:"displayName"`
-	IsAnonymous bool       `json:"isAnonymous"`
-	DonationID  string     `json:"donationId"`
+	User     *user.User `json:"user,omitempty"`
+	Amount   int64      `json:"amount"`
+	Currency string     `json:"currency"`
+	// AmountJPY is the base-currency conversion recorded at confirmation
+	// time (crypto purchases only). The wire name predates configurable base
+	// currencies and is kept so archived chat replays stay readable;
+	// FiatCurrency names the actual currency (empty means JPY).
+	AmountJPY    int64  `json:"amountJpy,omitempty"`
+	FiatCurrency string `json:"fiatCurrency,omitempty"`
+	Message      string `json:"message,omitempty"`
+	DisplayName  string `json:"displayName"`
+	IsAnonymous  bool   `json:"isAnonymous"`
+	DonationID   string `json:"donationId"`
 	// ItemType is "superchat" (default) or "effect".
 	ItemType string `json:"itemType,omitempty"`
 	// EffectType is the screen effect to play when ItemType is "effect".
@@ -41,6 +46,9 @@ func (e *DonationEvent) GetBroadcastPayload() EventPayload {
 
 	if e.AmountJPY > 0 {
 		payload["amountJpy"] = e.AmountJPY
+		if e.FiatCurrency != "" {
+			payload["fiatCurrency"] = e.FiatCurrency
+		}
 	}
 	if e.ItemType != "" {
 		payload["itemType"] = e.ItemType
@@ -91,8 +99,10 @@ func (e *DonationEvent) WithItem(itemType, effectType string) *DonationEvent {
 	return e
 }
 
-// WithAmountJPY attaches the JPY conversion recorded at confirmation time.
-func (e *DonationEvent) WithAmountJPY(amountJPY int64) *DonationEvent {
-	e.AmountJPY = amountJPY
+// WithFiatConversion attaches the base-currency conversion recorded at
+// confirmation time.
+func (e *DonationEvent) WithFiatConversion(amountFiat int64, fiatCurrency string) *DonationEvent {
+	e.AmountJPY = amountFiat
+	e.FiatCurrency = fiatCurrency
 	return e
 }

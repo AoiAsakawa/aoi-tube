@@ -174,6 +174,11 @@ func Start() error {
 	// Delete a user
 	http.HandleFunc("/api/admin/chat/users/delete", middleware.RequireAdminAuth(admin.DeleteUser))
 
+	// Authentication governance: audit log, manual recovery, account merge
+	http.HandleFunc("/api/admin/chat/users/auth-events", middleware.RequireAdminAuth(admin.GetUserAuthEvents))
+	http.HandleFunc("/api/admin/chat/users/auth/reactivate", middleware.RequireAdminAuth(admin.ReactivateUserAuth))
+	http.HandleFunc("/api/admin/chat/users/merge", middleware.RequireAdminAuth(admin.MergeUsers))
+
 	// Delete all users
 	http.HandleFunc("/api/admin/chat/users/deleteall", middleware.RequireAdminAuth(admin.DeleteAllUsers))
 
@@ -377,6 +382,10 @@ func Start() error {
 	http.HandleFunc("/api/donations/recent", admin.GetRecentDonations)
 	// A viewer's own purchase history, resolved from their access token.
 	http.HandleFunc("/api/donations/mine", controllers.GetMyPurchases)
+
+	// Base currency (crypto conversion / reporting reference currency)
+	http.HandleFunc("/api/admin/config/basecurrency", middleware.RequireAdminAuth(admin.GetBaseCurrency))
+	http.HandleFunc("/api/admin/config/basecurrency/set", middleware.RequireAdminAuth(admin.SetBaseCurrency))
 
 	// PayPay integration
 	http.HandleFunc("/api/admin/config/paypay", middleware.RequireAdminAuth(admin.GetPayPayConfig))
@@ -620,6 +629,9 @@ func Start() error {
 	// GitHub auth
 	http.HandleFunc("/api/auth/github", middleware.RequireUserAccessToken(githubauth.StartAuthFlow))
 	http.HandleFunc("/api/auth/github/callback", githubauth.HandleRedirect)
+
+	// Unlink a linked social account from the requesting user
+	http.HandleFunc("/api/auth/unlink", middleware.RequireUserAccessToken(controllers.UnlinkAuth))
 
 	// ActivityPub has its own router
 	activitypub.Start(data.GetDatastore())

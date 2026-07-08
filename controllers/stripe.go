@@ -78,29 +78,57 @@ type stripeCreatePaymentRequest struct {
 	// will be granted to.
 	ArchiveID string `json:"archiveId"`
 	UserID    string `json:"userId"`
+	// PreScaledAmount and CurrencyOverride are set for archive purchases, whose
+	// manifest price is already stored in the smallest unit of its own currency
+	// (e.g. 500 = $5.00). When PreScaledAmount > 0 it is charged verbatim in
+	// CurrencyOverride, bypassing the major-unit *100 scaling that would
+	// otherwise 100x-overcharge a non-JPY archive. Not part of the JSON body —
+	// only set server-side by CreatePayment.
+	PreScaledAmount  int64
+	CurrencyOverride string
 }
 
 func createStripePayment(w http.ResponseWriter, r *http.Request, request stripeCreatePaymentRequest) {
 	config := data.GetStripeConfig()
-	if fixedAmount, err := applyFixedEffectPrice(request.ItemType, request.EffectType, config.CurrencyCode, request.Amount); err != nil {
-		WriteSimpleResponse(w, false, err.Error())
-		return
-	} else {
-		request.Amount = fixedAmount
-	}
 	if !config.Enabled {
 		WriteSimpleResponse(w, false, "Stripe is not enabled")
 		return
 	}
 
-	if request.Amount <= 0 {
-		WriteSimpleResponse(w, false, "amount must be greater than 0")
-		return
-	}
-	// Sanity upper bound (also guards the *100 conversion below from overflow).
-	if request.Amount > maxDonationAmount {
-		WriteSimpleResponse(w, false, "amount exceeds maximum limit")
-		return
+	// Archives carry a server-priced amount already in the smallest unit of the
+	// archive's own currency; charge it verbatim. Everything else is priced in
+	// major units of the provider's configured currency.
+	currency := config.CurrencyCode
+	var amountInSmallestUnit int64
+	if request.PreScaledAmount > 0 {
+		currency = request.CurrencyOverride
+		amountInSmallestUnit = request.PreScaledAmount
+		if amountInSmallestUnit <= 0 || amountInSmallestUnit > maxDonationAmount*100 {
+			WriteSimpleResponse(w, false, "amount exceeds maximum limit")
+			return
+		}
+	} else {
+		if fixedAmount, err := applyFixedEffectPrice(request.ItemType, request.EffectType, currency, request.Amount); err != nil {
+			WriteSimpleResponse(w, false, err.Error())
+			return
+		} else {
+			request.Amount = fixedAmount
+		}
+		if request.Amount <= 0 {
+			WriteSimpleResponse(w, false, "amount must be greater than 0")
+			return
+		}
+		// Sanity upper bound (also guards the *100 conversion below from overflow).
+		if request.Amount > maxDonationAmount {
+			WriteSimpleResponse(w, false, "amount exceeds maximum limit")
+			return
+		}
+		// Zero-decimal currencies (JPY, KRW) are already in their smallest unit.
+		if models.IsZeroDecimalCurrency(currency) {
+			amountInSmallestUnit = int64(request.Amount)
+		} else {
+			amountInSmallestUnit = int64(request.Amount * 100)
+		}
 	}
 
 	// Sanitize inputs
@@ -121,21 +149,11 @@ func createStripePayment(w http.ResponseWriter, r *http.Request, request stripeC
 		serverURL = "http://localhost:8080"
 	}
 
-	// Convert amount to smallest currency unit
-	// For JPY, amount is already in yen (no decimal places)
-	// For other currencies, multiply by 100
-	var amountInSmallestUnit int64
-	if config.CurrencyCode == "JPY" {
-		amountInSmallestUnit = int64(request.Amount)
-	} else {
-		amountInSmallestUnit = int64(request.Amount * 100)
-	}
-
-	// Store pending donation info
+	// Store pending donation info (amountInSmallestUnit and currency computed above)
 	pendingDonation := &models.Donation{
 		ID:              orderID,
 		Amount:          amountInSmallestUnit,
-		Currency:        config.CurrencyCode,
+		Currency:        currency,
 		Message:         request.Message,
 		DisplayName:     request.DisplayName,
 		IsAnonymous:     request.IsAnonymous,
@@ -157,7 +175,7 @@ func createStripePayment(w http.ResponseWriter, r *http.Request, request stripeC
 	}
 
 	// Create Stripe Checkout Session
-	sessionID, checkoutURL, err := createStripeCheckoutSession(config, amountInSmallestUnit, orderID, request.DisplayName, request.Message, serverURL, request.ItemType)
+	sessionID, checkoutURL, err := createStripeCheckoutSession(config, currency, amountInSmallestUnit, orderID, request.DisplayName, request.Message, serverURL, request.ItemType)
 	if err != nil {
 		log.Errorf("Failed to create Stripe checkout session: %v", err)
 		data.DeletePendingDonation(orderID)
@@ -178,7 +196,7 @@ func createStripePayment(w http.ResponseWriter, r *http.Request, request stripeC
 }
 
 // createStripeCheckoutSession creates a Stripe Checkout Session.
-func createStripeCheckoutSession(config models.StripeConfig, amountInSmallestUnit int64, donationID, displayName, message, serverURL, itemType string) (string, string, error) {
+func createStripeCheckoutSession(config models.StripeConfig, currency string, amountInSmallestUnit int64, donationID, displayName, message, serverURL, itemType string) (string, string, error) {
 	secretKey := config.GetActiveSecretKey()
 	if secretKey == "" {
 		return "", "", fmt.Errorf("Stripe secret key not configured for %s environment", map[bool]string{true: "test", false: "live"}[config.IsTestMode])
@@ -192,7 +210,7 @@ func createStripeCheckoutSession(config models.StripeConfig, amountInSmallestUni
 	form.Set("success_url", serverURL+"/donation/stripe/complete?donation_id="+donationID)
 	form.Set("cancel_url", serverURL+"/donation/stripe/cancel?donation_id="+donationID)
 	form.Set("line_items[0][quantity]", "1")
-	form.Set("line_items[0][price_data][currency]", strings.ToLower(config.CurrencyCode))
+	form.Set("line_items[0][price_data][currency]", strings.ToLower(currency))
 	form.Set("line_items[0][price_data][unit_amount]", strconv.FormatInt(amountInSmallestUnit, 10))
 	productName := "スーパーチャット / Super Chat"
 	if itemType == models.DonationItemEffect {

@@ -80,9 +80,12 @@ export interface FediverseEvent extends SocketEvent {
 export interface DonationSocketEvent extends SocketEvent {
 	amount: number;
 	currency: string;
-	// JPY value recorded by the server at confirmation time (crypto purchases
-	// only); 0 or missing means no conversion was available.
+	// Base-currency value recorded by the server at confirmation time (crypto
+	// purchases only); 0 or missing means no conversion was available. The wire
+	// name predates configurable base currencies; fiatCurrency names the actual
+	// currency (empty means JPY).
 	amountJpy?: number;
+	fiatCurrency?: string;
 	message?: string;
 	displayName: string;
 	isAnonymous: boolean;

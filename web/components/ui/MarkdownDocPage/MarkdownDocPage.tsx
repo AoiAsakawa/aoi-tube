@@ -14,16 +14,20 @@ marked.setOptions({
 });
 
 // Server-configured markdown document shape shared by the FAQ and tokushoho
-// endpoints: the page only exists while the admin has it enabled.
+// endpoints: the page only exists while the admin has it enabled. An optional
+// title overrides the localized default (used by the legal disclosure page so
+// operators can label it for their own jurisdiction).
 type MarkdownDocInfo = {
 	enabled: boolean;
+	title?: string;
 	markdownContent: string;
 };
 
 export type MarkdownDocPageProps = {
-	// i18n key for the page (and document) title.
+	// i18n key for the default page (and document) title, used when the server
+	// provides no custom title.
 	titleKey: string;
-	// Public API endpoint returning { enabled, markdownContent }.
+	// Public API endpoint returning { enabled, title?, markdownContent }.
 	endpoint: string;
 };
 
@@ -74,14 +78,17 @@ export const MarkdownDocPage: FC<MarkdownDocPageProps> = ({ titleKey, endpoint }
 		);
 	}
 
+	// Operator-set custom title wins; otherwise the localized default label.
+	const pageTitle = info?.title?.trim() || t(titleKey);
+
 	return (
 		<PageShell
 			variant="prose"
-			title={t(titleKey)}
+			title={pageTitle}
 			backTo={{ href: '/', label: t('page.backToHome') }}
 		>
 			<Head>
-				<title>{t(titleKey)}</title>
+				<title>{pageTitle}</title>
 			</Head>
 			{body}
 		</PageShell>

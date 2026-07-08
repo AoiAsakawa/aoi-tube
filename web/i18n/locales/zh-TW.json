@@ -308,7 +308,14 @@
 			"privacyNote": "這僅用於驗證目的，不會存取或儲存任何個人資訊。"
 		},
 		"auth": {
-			"tab": "{{provider}}驗證"
+			"tab": "{{provider}}驗證",
+			"linkedAccountsTitle": "已連結的帳戶",
+			"unlink": "解除連結",
+			"unlinkCancel": "取消",
+			"unlinkConfirm": "要解除 {{provider}} 的連結嗎?隨時可以重新連結。",
+			"unlinkSuccess": "已解除連結。",
+			"unlinkFailed": "解除連結失敗。",
+			"unlinkBlockedPurchases": "您有已購買的存檔,因此無法解除最後的登入方式(否則在其他裝置上將無法存取)。請先連結其他帳戶,或聯絡營運方。"
 		},
 		"browserNotify": {
 			"notSupported": "您的瀏覽器不支援瀏覽器通知。",
@@ -696,6 +703,9 @@
 				"contentRequired": "請輸入標示內容",
 				"enableLabel": "啟用依《特定商業交易法》標示頁面",
 				"intro": "提供超級留言（付費服務）時，需要依《特定商業交易法》標示。可使用Markdown格式自由編輯。",
+				"pageTitleLabel": "頁面標題",
+				"pageTitleHelp": "選填。覆蓋公開頁面與頁尾連結的預設標題(例如「法律聲明」「Impressum」)。留空則使用標準標籤。",
+				"pageTitlePlaceholder": "商業交易法揭露(Tokushoho)",
 				"legalAlertTitle": "關於法律要求",
 				"legalBody1": "在日本國內提供付款服務時，依法必須依《特定商業交易法》標示。詳情請至",
 				"legalBody2": "確認。",
@@ -847,6 +857,12 @@
 			"donations": {
 				"title": "購買管理",
 				"intro": "這是觀眾購買（超級留言、畫面特效）的營收儀表板與購買記錄。可透過外部付款服務的 Webhook 自動登錄，也可手動登錄。測試付款（沙盒）不會計入營收統計。",
+				"baseCurrency": {
+					"label": "基準貨幣",
+					"help": "加密貨幣購買金額換算及收入統計所使用的貨幣。各支付服務商各自保留其貨幣設定。",
+					"saved": "已更新基準貨幣。",
+					"saveFailed": "更新基準貨幣失敗。"
+				},
 				"addManually": "手動新增",
 				"anonymous": "匿名",
 				"show": "顯示",
@@ -1172,6 +1188,7 @@
 				},
 				"columns": {
 					"displayName": "顯示名稱",
+					"auth": "認證",
 					"status": "狀態",
 					"createdAt": "建立時間",
 					"authenticatedAt": "驗證時間",
@@ -1181,7 +1198,8 @@
 					"authenticated": "已驗證",
 					"blocked": "封鎖",
 					"moderator": "版主",
-					"unauthenticated": "未驗證"
+					"unauthenticated": "未驗證",
+					"unlinked": "已解除"
 				},
 				"deleteUserConfirm": {
 					"title": "確定要刪除此使用者嗎？",
@@ -1203,6 +1221,44 @@
 					"selectUsers": "請選擇要刪除的使用者",
 					"allDeleted": "已刪除所有使用者",
 					"deleteAllFailed": "刪除所有使用者失敗"
+				},
+				"governance": {
+					"history": "歷史",
+					"merge": "合併",
+					"reactivate": "恢復",
+					"reactivateSuccess": "已恢復帳戶。",
+					"reactivateFailed": "恢復帳戶失敗。",
+					"auditTitle": "認證歷史 — {{name}}",
+					"auditLoadFailed": "載入稽核日誌失敗。",
+					"auditEmpty": "沒有認證事件。",
+					"auditWhen": "時間",
+					"auditAction": "操作",
+					"auditActor": "執行者",
+					"mergeTitle": "合併帳戶",
+					"mergeConfirm": "合併",
+					"mergeIntro": "將「{{name}}」的連結、歷史、購買與裝置全部移至所選帳戶。來源帳戶隨後被停用。",
+					"mergeTargetPlaceholder": "選擇要保留的帳戶",
+					"mergeWarning": "無法自動復原。來源帳戶被停用但保留為歷史。",
+					"mergeSuccess": "已合併帳戶。",
+					"mergeFailed": "合併帳戶失敗。",
+					"actions": {
+						"linked": "連結",
+						"unlinked": "解除",
+						"reactivated": "恢復",
+						"overwritten": "取代",
+						"merged": "合併"
+					},
+					"actors": {
+						"self": "使用者",
+						"admin": "營運者"
+					},
+					"moderatorGrantAction": "設為版主",
+					"moderatorRevokeAction": "解除版主",
+					"moderatorGrantConfirm": "要授予「{{name}}」版主權限嗎?",
+					"moderatorRevokeConfirm": "要解除「{{name}}」的版主權限嗎?",
+					"moderatorGranted": "已授予版主權限。",
+					"moderatorRevoked": "已解除版主權限。",
+					"moderatorFailed": "變更版主狀態失敗。"
 				}
 			},
 			"viewerInfo": {

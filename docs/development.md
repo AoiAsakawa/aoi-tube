@@ -9,7 +9,8 @@ Related docs: [release.md](release.md) (build & deploy),
 [backup-and-migration.md](backup-and-migration.md) (backups & node migration),
 [SECURITY.md](SECURITY.md) (security posture),
 [streaming-and-archives.md](streaming-and-archives.md) (streaming, recording,
-PPV), [payments.md](payments.md) (payment providers), and
+PPV), [payments.md](payments.md) (payment providers),
+[authentication.md](authentication.md) (auth & account governance), and
 [`db/README.md`](../db/README.md) (sqlc queries).
 
 ## Tech stack
@@ -246,6 +247,37 @@ gotchas). Admin-wide styles are bundled through `web/styles/admin.scss`.
   language, with Chinese variants mapped to `zh` / `zh-TW`.
 - Keep `{{placeholders}}` and `<Trans>` component tags intact when
   translating.
+
+### Improving an existing translation
+
+Edit the relevant `web/i18n/locales/<lang>.json` value(s), keeping the key set,
+`{{placeholders}}` and tab indentation unchanged, then run `npm run check:i18n`.
+Because the parity gate only checks key sets (not values), retranslating is
+safe: it can never break the build. Test with `?lang=<code>` (e.g. `?lang=de`);
+untranslated strings look unchanged, but you can confirm existing translations
+have not regressed.
+
+### Adding a new language
+
+The five catalogs are not a hard limit — a new language is a self-contained
+addition:
+
+1. **Copy the reference catalog**: `cp web/i18n/locales/en.json
+   web/i18n/locales/<code>.json` (e.g. `de.json`) and translate the values.
+   Keep every key, `{{placeholder}}` and `<Trans>` tag; keep tab indentation
+   and a trailing newline (the parity gate is strict about the key set).
+2. **Register it** in `web/i18n/index.ts`: import the JSON, add it to
+   `SUPPORTED_LANGUAGES` (`{ code: '<code>', label: '<native name>' }`) and to
+   the `resources` map. That is the only wiring needed — the language switcher
+   reads `SUPPORTED_LANGUAGES`.
+3. **Verify**: `npm run check:i18n` (all catalogs must share the same key set),
+   then `npx tsc --noEmit` and load the app with `?lang=<code>`.
+
+Because `check:i18n` enforces key parity across every catalog, a partial
+translation fails the gate — fill untranslated keys with the English value (or
+the reference text) so the set stays complete; those strings simply appear in
+English until translated. Community translations are welcome via pull request;
+the parity gate keeps them safe to accept.
 
 ## Engineering gotchas
 

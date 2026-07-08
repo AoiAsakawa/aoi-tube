@@ -72,6 +72,12 @@ type payPalCreatePaymentRequest struct {
 	// authenticated buyer the entitlement is granted to.
 	ArchiveID string `json:"archiveId"`
 	UserID    string `json:"userId"`
+	// PreScaledAmount/CurrencyOverride carry an archive's manifest price, which
+	// is already in the smallest unit of the archive's own currency. When
+	// PreScaledAmount > 0 it is charged verbatim in CurrencyOverride, avoiding
+	// the major-unit *100 re-scaling. Set server-side only.
+	PreScaledAmount  int64
+	CurrencyOverride string
 }
 
 func createPayPalPayment(w http.ResponseWriter, r *http.Request, request payPalCreatePaymentRequest) {
@@ -81,21 +87,46 @@ func createPayPalPayment(w http.ResponseWriter, r *http.Request, request payPalC
 		return
 	}
 
-	if fixedAmount, err := applyFixedEffectPrice(request.ItemType, request.EffectType, config.CurrencyCode, request.Amount); err != nil {
-		WriteSimpleResponse(w, false, err.Error())
-		return
+	// Archives carry a server-priced amount already in the smallest unit of the
+	// archive's own currency; charge it verbatim. Everything else is priced in
+	// major units of the provider's configured currency.
+	currency := config.CurrencyCode
+	var amountToStore int64 // smallest unit, as stored on the donation row
+	var orderAmount float64 // major unit, as sent to PayPal
+	if request.PreScaledAmount > 0 {
+		currency = request.CurrencyOverride
+		amountToStore = request.PreScaledAmount
+		if amountToStore <= 0 || amountToStore > maxDonationAmount*100 {
+			WriteSimpleResponse(w, false, "amount exceeds maximum limit")
+			return
+		}
+		if models.IsZeroDecimalCurrency(currency) {
+			orderAmount = float64(amountToStore)
+		} else {
+			orderAmount = float64(amountToStore) / 100
+		}
 	} else {
-		request.Amount = fixedAmount
-	}
-
-	if request.Amount <= 0 {
-		WriteSimpleResponse(w, false, "amount must be greater than 0")
-		return
-	}
-	// Sanity upper bound (also guards the *100 conversion below from overflow).
-	if request.Amount > maxDonationAmount {
-		WriteSimpleResponse(w, false, "amount exceeds maximum limit")
-		return
+		if fixedAmount, err := applyFixedEffectPrice(request.ItemType, request.EffectType, currency, request.Amount); err != nil {
+			WriteSimpleResponse(w, false, err.Error())
+			return
+		} else {
+			request.Amount = fixedAmount
+		}
+		if request.Amount <= 0 {
+			WriteSimpleResponse(w, false, "amount must be greater than 0")
+			return
+		}
+		// Sanity upper bound (also guards the *100 conversion below from overflow).
+		if request.Amount > maxDonationAmount {
+			WriteSimpleResponse(w, false, "amount exceeds maximum limit")
+			return
+		}
+		orderAmount = request.Amount
+		if models.IsZeroDecimalCurrency(currency) {
+			amountToStore = int64(request.Amount)
+		} else {
+			amountToStore = int64(request.Amount * 100)
+		}
 	}
 
 	// Sanitize inputs
@@ -116,18 +147,10 @@ func createPayPalPayment(w http.ResponseWriter, r *http.Request, request payPalC
 		serverURL = "http://localhost:8080"
 	}
 
-	// Store pending donation info
-	// For JPY, store as-is (no decimal places). For other currencies, store in cents.
-	var amountToStore int64
-	if config.CurrencyCode == "JPY" {
-		amountToStore = int64(request.Amount)
-	} else {
-		amountToStore = int64(request.Amount * 100)
-	}
 	pendingDonation := &models.Donation{
 		ID:              orderID,
 		Amount:          amountToStore,
-		Currency:        config.CurrencyCode,
+		Currency:        currency,
 		Message:         request.Message,
 		DisplayName:     request.DisplayName,
 		IsAnonymous:     request.IsAnonymous,
@@ -149,7 +172,7 @@ func createPayPalPayment(w http.ResponseWriter, r *http.Request, request payPalC
 	}
 
 	// Create PayPal order
-	paypalOrderID, approvalURL, err := createPayPalOrder(config, request.Amount, orderID, serverURL, request.ItemType)
+	paypalOrderID, approvalURL, err := createPayPalOrder(config, currency, orderAmount, orderID, serverURL, request.ItemType)
 	if err != nil {
 		log.Errorf("Failed to create PayPal order: %v", err)
 		data.DeletePendingDonation(orderID)
@@ -225,7 +248,7 @@ func getPayPalAccessToken(config models.PayPalConfig) (string, error) {
 }
 
 // createPayPalOrder creates a PayPal order and returns the order ID and approval URL.
-func createPayPalOrder(config models.PayPalConfig, amount float64, donationID, serverURL, itemType string) (string, string, error) {
+func createPayPalOrder(config models.PayPalConfig, currency string, amount float64, donationID, serverURL, itemType string) (string, string, error) {
 	accessToken, err := getPayPalAccessToken(config)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to get access token: %v", err)
@@ -236,9 +259,9 @@ func createPayPalOrder(config models.PayPalConfig, amount float64, donationID, s
 		baseURL = paypalSandboxAPI
 	}
 
-	// Format amount based on currency (JPY doesn't use decimals)
+	// Format amount based on currency (zero-decimal currencies use no decimals)
 	var amountStr string
-	if config.CurrencyCode == "JPY" {
+	if models.IsZeroDecimalCurrency(currency) {
 		amountStr = fmt.Sprintf("%.0f", amount)
 	} else {
 		amountStr = fmt.Sprintf("%.2f", amount)
@@ -259,7 +282,7 @@ func createPayPalOrder(config models.PayPalConfig, amount float64, donationID, s
 				"description":  purchaseDescription,
 				"custom_id":    donationID,
 				"amount": map[string]interface{}{
-					"currency_code": config.CurrencyCode,
+					"currency_code": currency,
 					"value":         amountStr,
 				},
 			},
@@ -485,11 +508,11 @@ func processCompletedPayPalPayment(webhook models.PayPalWebhookPayload) {
 
 	donation.PaymentID = captureID
 
-	// Use the PayPal-verified amount, never the webhook body.
-	// For JPY, store as-is (no decimal places). For other currencies, store in cents.
+	// Use the PayPal-verified amount, never the webhook body. Zero-decimal
+	// currencies (JPY, KRW) are stored as-is; others in cents.
 	if capture.Amount != nil {
 		if amount, err := strconv.ParseFloat(capture.Amount.Value, 64); err == nil {
-			if donation.Currency == "JPY" {
+			if models.IsZeroDecimalCurrency(donation.Currency) {
 				donation.Amount = int64(amount)
 			} else {
 				donation.Amount = int64(amount * 100)

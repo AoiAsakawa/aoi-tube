@@ -63,13 +63,15 @@ func GetDonations(w http.ResponseWriter, r *http.Request) {
 		rows = append(rows, row)
 	}
 
+	baseCurrency := data.GetBaseCurrency()
 	count, _ := data.GetDonationCount()
-	total, _ := data.GetDonationTotal("JPY")
+	total, _ := data.GetDonationTotal(baseCurrency)
 
 	response := map[string]interface{}{
-		"donations":   rows,
-		"total":       count,
-		"totalAmount": total,
+		"donations":     rows,
+		"total":         count,
+		"totalAmount":   total,
+		"totalCurrency": baseCurrency,
 	}
 
 	controllers.WriteResponse(w, response)
@@ -82,16 +84,22 @@ func GetDonationSummary(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	baseCurrency := data.GetBaseCurrency()
 	count, _ := data.GetDonationCount()
-	totalJPY, _ := data.GetDonationTotal("JPY")
-	monthlyJPY, _ := data.GetMonthlyDonationTotalJPY()
+	total, _ := data.GetDonationTotal(baseCurrency)
+	monthly, _ := data.GetMonthlyDonationTotal(baseCurrency)
 
 	response := map[string]interface{}{
 		"count": count,
 		"totals": map[string]int64{
-			"JPY": totalJPY,
+			baseCurrency: total,
 		},
-		"monthlyJPY": monthlyJPY,
+		"baseCurrency": baseCurrency,
+		"monthlyTotal": monthly,
+	}
+	// Deprecated alias kept for external consumers of the admin API.
+	if baseCurrency == "JPY" {
+		response["monthlyJPY"] = monthly
 	}
 
 	controllers.WriteResponse(w, response)
@@ -149,7 +157,8 @@ func CreateDonation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Maximum donation amount: 1,000,000 JPY (or equivalent)
+	// Maximum donation amount in stored units: 1,000,000 major units for
+	// zero-decimal currencies, 10,000 major units (1,000,000 minor) otherwise.
 	if request.Amount > 1000000 {
 		controllers.WriteSimpleResponse(w, false, "amount exceeds maximum limit")
 		return
@@ -157,9 +166,9 @@ func CreateDonation(w http.ResponseWriter, r *http.Request) {
 
 	// Validate currency
 	if request.Currency == "" {
-		request.Currency = "JPY"
+		request.Currency = data.GetBaseCurrency()
 	}
-	if request.Currency != "JPY" && request.Currency != "USD" {
+	if !models.IsSupportedFiatCurrency(request.Currency) {
 		controllers.WriteSimpleResponse(w, false, "unsupported currency")
 		return
 	}
@@ -317,16 +326,20 @@ func GetRecentDonations(w http.ResponseWriter, r *http.Request) {
 type publicDonation struct {
 	// ID is the internal donation row ID — safe to expose (it is not a payment
 	// reference) and required by polling consumers (mcv overlay) for dedup.
-	ID          string `json:"id"`
-	Amount      int64  `json:"amount"`
-	Currency    string `json:"currency"`
-	AmountJPY   int64  `json:"amountJpy,omitempty"`
-	Message     string `json:"message,omitempty"`
-	DisplayName string `json:"displayName"`
-	IsAnonymous bool   `json:"isAnonymous"`
-	ItemType    string `json:"itemType,omitempty"`
-	EffectType  string `json:"effectType,omitempty"`
-	CreatedAt   string `json:"createdAt,omitempty"`
+	ID     string `json:"id"`
+	Amount int64  `json:"amount"`
+	// Currency is the payment currency; AmountJPY/FiatCurrency carry the
+	// base-currency conversion for crypto rows (wire name kept for replay
+	// compatibility; empty FiatCurrency means JPY).
+	Currency     string `json:"currency"`
+	AmountJPY    int64  `json:"amountJpy,omitempty"`
+	FiatCurrency string `json:"fiatCurrency,omitempty"`
+	Message      string `json:"message,omitempty"`
+	DisplayName  string `json:"displayName"`
+	IsAnonymous  bool   `json:"isAnonymous"`
+	ItemType     string `json:"itemType,omitempty"`
+	EffectType   string `json:"effectType,omitempty"`
+	CreatedAt    string `json:"createdAt,omitempty"`
 }
 
 func toPublicDonations(donations []*models.Donation) []publicDonation {
@@ -350,16 +363,17 @@ func toPublicDonations(donations []*models.Donation) []publicDonation {
 			createdAt = d.CreatedAt.Format(time.RFC3339)
 		}
 		out = append(out, publicDonation{
-			ID:          d.ID,
-			Amount:      d.Amount,
-			Currency:    d.Currency,
-			AmountJPY:   d.AmountJPY,
-			Message:     d.Message,
-			DisplayName: name,
-			IsAnonymous: d.IsAnonymous,
-			ItemType:    d.ItemType,
-			EffectType:  d.EffectType,
-			CreatedAt:   createdAt,
+			ID:           d.ID,
+			Amount:       d.Amount,
+			Currency:     d.Currency,
+			AmountJPY:    d.AmountJPY,
+			FiatCurrency: d.FiatCurrency,
+			Message:      d.Message,
+			DisplayName:  name,
+			IsAnonymous:  d.IsAnonymous,
+			ItemType:     d.ItemType,
+			EffectType:   d.EffectType,
+			CreatedAt:    createdAt,
 		})
 	}
 	return out

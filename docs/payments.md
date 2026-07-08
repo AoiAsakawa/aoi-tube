@@ -17,18 +17,19 @@ both editable in the admin panel (Admin > Super Chat > Tokushoho / FAQ settings)
 ### Screen effect price table
 
 Prices are fixed in `models/donation.go` and **enforced server-side** — the client's
-submitted amount is ignored for effects. USD prices apply to non-JPY currencies.
+submitted amount is ignored for effects. Currencies without an explicit column fall back
+to the USD price.
 
-| Effect | Command | JPY | USD |
-|--------|---------|-----|-----|
-| Confetti | `!confetti` | ¥300 | $3 |
-| Hearts | `!hearts` | ¥400 | $4 |
-| Stars | `!stars` | ¥500 | $5 |
-| Fireworks | `!fireworks` | ¥1,000 | $10 |
-| Celebration | `!celebration` | ¥2,000 | $20 |
-| Rainbow | `!rainbow` | ¥3,000 | $30 |
-| Meteor | `!meteor` | ¥5,000 | $50 |
-| Gold rush | `!goldrush` | ¥10,000 | $100 |
+| Effect | Command | JPY | USD | EUR |
+|--------|---------|-----|-----|-----|
+| Confetti | `!confetti` | ¥300 | $3 | €3 |
+| Hearts | `!hearts` | ¥400 | $4 | €4 |
+| Stars | `!stars` | ¥500 | $5 | €5 |
+| Fireworks | `!fireworks` | ¥1,000 | $10 | €10 |
+| Celebration | `!celebration` | ¥2,000 | $20 | €20 |
+| Rainbow | `!rainbow` | ¥3,000 | $30 | €30 |
+| Meteor | `!meteor` | ¥5,000 | $50 | €50 |
+| Gold rush | `!goldrush` | ¥10,000 | $100 | €100 |
 
 The `!command` form is how Ko-fi supporters trigger effects (see below); the site's own
 purchase form offers them as a picker.
@@ -36,6 +37,56 @@ purchase form offers them as a picker.
 Webhook-confirmed purchases are announced to chat after a 10-second delay so the buyer has
 time to return from the provider's checkout page; redirect-confirmed ones announce
 immediately. **Archive purchases are never announced** — they are private entitlements.
+
+## Base currency
+
+**Admin > Super Chat > Purchases** has a **Base currency** selector (default **JPY**). The
+base currency is:
+
+- the currency crypto purchases are converted into (for the Super Chat tier colors, the
+  chat amount line like `€12.00（0.004 ETH）`, and the revenue dashboard), and
+- the default currency wherever none is otherwise configured (archive pricing, manual
+  purchases, the crypto price feed).
+
+Each payment provider keeps its **own** currency setting independent of the base currency:
+PayPay is always JPY; PayPal and Stripe have their own currency codes; Ko-fi takes the
+currency from its webhook. Changing the base currency does not touch those. Crypto amounts
+already recorded under a previous base currency are excluded from the crypto revenue tile
+rather than summed across currencies, so switching mid-stream never mixes units.
+
+Amounts are stored in **minor units** (cents) for most currencies and in **major units**
+for zero-decimal currencies (JPY, KRW), matching the payment providers.
+
+## Running AoiTube outside Japan
+
+The defaults are Japan-first, but the software runs internationally with a few changes:
+
+1. **Base currency** — set it to your currency (Admin > Super Chat > Purchases). This
+   drives crypto conversion, tiering and reporting.
+2. **Providers** — enable **Stripe**, **PayPal** and/or **crypto (Metamask)**, which are
+   international, and leave **PayPay** (Japan-only) and **Doneru** (Japan-only) disabled.
+   Set each enabled provider's currency to match your base currency.
+3. **Legal disclosure page** — the `/tokushoho` page defaults to Japan's Specified
+   Commercial Transactions Act, but its title is configurable (Admin > Super Chat >
+   Tokushoho settings > *Page title*, e.g. "Legal Notice" or "Impressum") and the body is
+   free-form Markdown, so you can repurpose it for your jurisdiction. The GDPR cookie
+   consent banner is always on.
+4. **UI language** — the viewer and admin UIs ship in Japanese, English, Simplified and
+   Traditional Chinese, and Korean; append `?lang=en` (etc.) or let the browser locale
+   decide.
+
+A minimal non-Japan setup is therefore: base currency = your currency, Stripe (+ optional
+PayPal/crypto) configured in that currency, PayPay/Doneru off, and the legal page retitled
+and rewritten for your country.
+
+## Tax responsibilities
+
+Selling Super Chats, effects and pay-per-view archives may create tax obligations
+(consumption tax / VAT / sales tax, invoicing, and income reporting) that depend on the
+operator's country and the buyer's location. AoiTube does **not** calculate, collect or
+remit tax, and the fixed effect prices above are treated as tax-inclusive by the code.
+Operators are responsible for their own tax compliance — for cross-border sales consider a
+provider-side tax feature such as **Stripe Tax**, and consult a local tax professional.
 
 ## Provider setup
 
@@ -83,19 +134,28 @@ Admin > Super Chat > Stripe settings.
 Admin > Super Chat > Metamask settings: receiving wallet address, EVM network, chain
 currency, plus an optional Bitcoin Native SegWit address (`bc1...`).
 
-Selectable networks (admin UI): Ethereum Mainnet, Sepolia (testnet), Polygon Mainnet,
-Amoy (Polygon testnet), BNB Smart Chain, Arbitrum One, Optimism, Base.
+Selectable networks (donation form): Ethereum, Polygon, BNB Smart Chain, Arbitrum,
+Optimism, Base, Avalanche, Linea, Sei, VirBiCoin (+ Bitcoin and Solana), and the Sepolia /
+Amoy testnets. Since your receiving wallet address is the same across every EVM chain, a
+buyer may pay on **any supported chain** — the server verifies on the chain the payment
+was actually made on (from the request's `networkId`), not just the one set in admin.
 
-- Security: **on-chain verification, fail-closed.** For EVM chains the server queries
-  public RPC endpoints (publicnode.com) for the transaction and its receipt, and checks
-  the destination (your wallet, or the token contract with an ERC-20 `Transfer` log to
-  your wallet) and success status. Bitcoin payments are verified against
-  `mempool.space` outputs. **The recorded amount is the on-chain value**, never the
-  client's claim; unverifiable transactions are rejected. The tx hash yields a
+- Security: **on-chain verification, fail-closed.** For EVM chains the server queries a
+  public RPC endpoint for that chain for the transaction and its receipt, and checks the
+  destination (your wallet, or the token contract with an ERC-20 `Transfer` log to your
+  wallet) and success status. Bitcoin payments are verified against `mempool.space`
+  outputs. **The recorded amount AND the currency symbol are derived on-chain / from
+  server config**, never from the client, so a cheap transfer can't be re-labelled as an
+  expensive coin. Unverifiable transactions are rejected. The tx hash yields a
   deterministic payment ID for permanent replay/duplicate protection.
-- The confirmed amount is also converted to JPY (CoinGecko with CoinMarketCap fallback,
-  cached) and stored in `amount_jpy` so crypto revenue appears in stats and tier colors;
-  if conversion fails the purchase is still recorded with the raw crypto amount.
+- Public RPC nodes lag the wallet that broadcast a tx, so verification polls for the tx to
+  appear and be mined (up to ~40s) before accepting — the confirm can take a few seconds
+  to that long on slower chains.
+- The confirmed amount is also converted to the **base currency** (CoinGecko → CoinMarketCap
+  → Coinpaprika fallback, cached) and stored in `amount_jpy` + `fiat_currency` so crypto
+  revenue appears in stats and tier colors; if conversion fails the purchase is still
+  recorded with the raw crypto amount, and the last-known price is served during a provider
+  cooldown so a rate-limited free API doesn't break the price display.
 - Testnets (Sepolia, Amoy) are automatically flagged as test payments.
 
 ### Ko-fi

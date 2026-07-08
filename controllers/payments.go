@@ -37,6 +37,7 @@ func GetPaymentsStatus(w http.ResponseWriter, r *http.Request) {
 	stripeConfig := data.GetStripeConfig()
 
 	WriteResponse(w, map[string]interface{}{
+		"baseCurrency": data.GetBaseCurrency(),
 		"paypay": map[string]interface{}{
 			"enabled": paypayConfig.Enabled,
 		},
@@ -201,7 +202,7 @@ func resolveArchivePurchase(r *http.Request, archiveID string) (userID string, p
 
 	currency = m.Currency
 	if currency == "" {
-		currency = "JPY"
+		currency = data.GetBaseCurrency()
 	}
 	return user.ID, m.Price, currency, nil
 }
@@ -237,42 +238,51 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Paid archive purchase: resolve the buyer and the server-enforced price
-	// up front. userID ties the resulting entitlement to the buyer; amount is
-	// overridden with the manifest price so the client can't set it.
-	var archiveID, buyerUserID string
+	// up front. The manifest price is already stored in the smallest unit of
+	// the archive's own currency, so it is passed through as a pre-scaled
+	// amount + currency override (never the client-supplied amount) to avoid
+	// re-scaling it against the provider's currency.
+	var archiveID, buyerUserID, archiveCurrency string
+	var archivePrice int64
 	if itemType == models.DonationItemArchive {
-		uid, price, _, aerr := resolveArchivePurchase(r, req.ArchiveID)
+		uid, price, currency, aerr := resolveArchivePurchase(r, req.ArchiveID)
 		if aerr != nil {
 			WriteSimpleResponse(w, false, aerr.Error())
 			return
 		}
 		archiveID = req.ArchiveID
 		buyerUserID = uid
-		req.Amount = float64(price)
+		archivePrice = price
+		archiveCurrency = currency
+		req.Amount = 0
 	}
 
 	switch req.Provider {
 	case "paypal":
 		createPayPalPayment(w, r, payPalCreatePaymentRequest{
-			Amount:      req.Amount,
-			Message:     req.Message,
-			DisplayName: req.DisplayName,
-			IsAnonymous: req.IsAnonymous,
-			ItemType:    itemType,
-			EffectType:  effectType,
-			ArchiveID:   archiveID,
-			UserID:      buyerUserID,
+			Amount:           req.Amount,
+			Message:          req.Message,
+			DisplayName:      req.DisplayName,
+			IsAnonymous:      req.IsAnonymous,
+			ItemType:         itemType,
+			EffectType:       effectType,
+			ArchiveID:        archiveID,
+			UserID:           buyerUserID,
+			PreScaledAmount:  archivePrice,
+			CurrencyOverride: archiveCurrency,
 		})
 	case "stripe":
 		createStripePayment(w, r, stripeCreatePaymentRequest{
-			Amount:      req.Amount,
-			Message:     req.Message,
-			DisplayName: req.DisplayName,
-			IsAnonymous: req.IsAnonymous,
-			ItemType:    itemType,
-			EffectType:  effectType,
-			ArchiveID:   archiveID,
-			UserID:      buyerUserID,
+			Amount:           req.Amount,
+			Message:          req.Message,
+			DisplayName:      req.DisplayName,
+			IsAnonymous:      req.IsAnonymous,
+			ItemType:         itemType,
+			EffectType:       effectType,
+			ArchiveID:        archiveID,
+			UserID:           buyerUserID,
+			PreScaledAmount:  archivePrice,
+			CurrencyOverride: archiveCurrency,
 		})
 	default:
 		WriteSimpleResponse(w, false, "unsupported payment provider")

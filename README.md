@@ -11,6 +11,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-0.3.0-blue?style=flat-square)](https://github.com/AoiAsakawa/aoitube/releases)
 
+**English** | [日本語](README.ja.md)
 
 **Self-hosted live streaming server | Low-latency streaming | Super Chat & pay-per-view archives | Japanese language support**
 
@@ -38,6 +39,7 @@ A customized fork of [Owncast](https://github.com/owncast/owncast).
 
 - **Animated GIF emoji** — custom animated emoji packs usable in chat
 - **Require-auth chat mode** — optionally restrict chat and playback to socially authenticated viewers
+- **Account governance** — reversible unlink (soft delete), append-only audit log, and operator tools for manual recovery, account merge and moderator management (see [docs/authentication.md](docs/authentication.md))
 
 ### 💰 Super Chat & Payments
 | Payment method | Status |
@@ -45,10 +47,11 @@ A customized fork of [Owncast](https://github.com/owncast/owncast).
 | PayPay | ✅ QR payment, separate sandbox/production credentials |
 | PayPal | ✅ Sandbox/production credentials, international |
 | Stripe | ✅ Checkout Session, test/live keys |
-| Metamask / crypto | ✅ On-chain verification (ETH, Polygon, BNB, Arbitrum, Optimism, Base…) |
+| Metamask / crypto | ✅ Multi-chain on-chain verification (ETH, Polygon, BNB, Arbitrum, Optimism, Base, Avalanche, Linea, Sei, VirBiCoin, BTC…) |
 | Ko-fi | ✅ Webhook integration, `!effect` commands |
 | Doneru | ✅ External redirect integration |
 
+- **Configurable base currency** — JPY by default; set your own currency for crypto conversion, tier colors and revenue reporting (international operation supported)
 - **Super Chat** — YouTube-style amount tier colors in chat
 - **Screen effects** — 8 fixed-price purchasable effects (¥300–¥10,000), server-enforced prices
 - **Tokushoho / FAQ pages** — Japanese commerce-law disclosure (`/tokushoho`) and FAQ (`/faq`), editable from the admin panel
@@ -344,7 +347,8 @@ aoitube/
 | Document | Description |
 |------------|------|
 | [docs/streaming-and-archives.md](docs/streaming-and-archives.md) | Stream protocols, recording, archives, PPV access tiers, S3 offload, storage cleanup |
-| [docs/payments.md](docs/payments.md) | Payment provider setup, screen effect prices, purchase management, security design |
+| [docs/payments.md](docs/payments.md) | Payment provider setup, base currency, screen effect prices, purchase management, security design |
+| [docs/authentication.md](docs/authentication.md) | Social login, account governance, audit log, merge/recovery, moderators |
 | [docs/development.md](docs/development.md) | Development environment, build, tests |
 | [docs/database-operations.md](docs/database-operations.md) | Database operation procedures |
 | [docs/backup-and-migration.md](docs/backup-and-migration.md) | Automatic backups & node migration |

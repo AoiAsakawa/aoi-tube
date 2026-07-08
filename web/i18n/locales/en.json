@@ -308,7 +308,14 @@
 			"privacyNote": "This is used for authentication purposes only; no personal information is accessed or stored."
 		},
 		"auth": {
-			"tab": "{{provider}} Auth"
+			"tab": "{{provider}} Auth",
+			"linkedAccountsTitle": "Your linked accounts",
+			"unlink": "Unlink",
+			"unlinkCancel": "Cancel",
+			"unlinkConfirm": "Unlink your {{provider}} account? You can link it again anytime.",
+			"unlinkSuccess": "Account unlinked.",
+			"unlinkFailed": "Failed to unlink the account.",
+			"unlinkBlockedPurchases": "You have purchased archives, so you cannot unlink your last login method — you would lose access to them on other devices. Link another account first, or contact the operator."
 		},
 		"browserNotify": {
 			"notSupported": "Browser notifications are not supported in your browser.",
@@ -696,6 +703,9 @@
 				"contentRequired": "Please enter the notice content",
 				"enableLabel": "Enable the Legal Notice (Specified Commercial Transactions Act) page",
 				"intro": "If you offer Super Chats (a paid service), a Legal Notice based on the Specified Commercial Transactions Act is required. You can freely edit it in Markdown.",
+				"pageTitleLabel": "Page title",
+				"pageTitleHelp": "Optional. Overrides the default title on the public page and footer link (e.g. \"Legal Notice\", \"Impressum\"). Leave empty to use the standard label.",
+				"pageTitlePlaceholder": "Legal disclosure (Tokushoho)",
 				"legalAlertTitle": "About legal requirements",
 				"legalBody1": "If you offer payment services in Japan, a Legal Notice based on the Specified Commercial Transactions Act is legally required. See the",
 				"legalBody2": "for more information.",
@@ -847,6 +857,12 @@
 			"donations": {
 				"title": "Purchase Management",
 				"intro": "A sales dashboard and purchase history of viewer purchases (Super Chats and screen effects). Purchases can be registered automatically via Webhook from external payment services, or added manually. Test payments (sandbox) are excluded from sales totals.",
+				"baseCurrency": {
+					"label": "Base currency",
+					"help": "The currency crypto purchases are converted to and that revenue is reported in. Each payment provider keeps its own currency setting.",
+					"saved": "Base currency updated.",
+					"saveFailed": "Failed to update base currency."
+				},
 				"addManually": "Add Manually",
 				"anonymous": "Anonymous",
 				"show": "Show",
@@ -1172,6 +1188,7 @@
 				},
 				"columns": {
 					"displayName": "Display Name",
+					"auth": "Auth",
 					"status": "Status",
 					"createdAt": "Created",
 					"authenticatedAt": "Authenticated",
@@ -1181,7 +1198,8 @@
 					"authenticated": "Authenticated",
 					"blocked": "Blocked",
 					"moderator": "Moderator",
-					"unauthenticated": "Unauthenticated"
+					"unauthenticated": "Unauthenticated",
+					"unlinked": "unlinked"
 				},
 				"deleteUserConfirm": {
 					"title": "Delete this user?",
@@ -1203,6 +1221,44 @@
 					"selectUsers": "Please select users to delete",
 					"allDeleted": "All users deleted",
 					"deleteAllFailed": "Failed to delete all users"
+				},
+				"governance": {
+					"history": "History",
+					"merge": "Merge",
+					"reactivate": "Reactivate",
+					"reactivateSuccess": "Account reactivated.",
+					"reactivateFailed": "Failed to reactivate the account.",
+					"auditTitle": "Auth history — {{name}}",
+					"auditLoadFailed": "Failed to load the audit log.",
+					"auditEmpty": "No authentication events.",
+					"auditWhen": "When",
+					"auditAction": "Action",
+					"auditActor": "By",
+					"mergeTitle": "Merge account",
+					"mergeConfirm": "Merge",
+					"mergeIntro": "Move all links, history, purchases and devices from \"{{name}}\" into the account you choose. The source account is then disabled.",
+					"mergeTargetPlaceholder": "Choose the account to keep",
+					"mergeWarning": "This cannot be undone automatically. The source account is disabled but kept for history.",
+					"mergeSuccess": "Accounts merged.",
+					"mergeFailed": "Failed to merge the accounts.",
+					"actions": {
+						"linked": "Linked",
+						"unlinked": "Unlinked",
+						"reactivated": "Reactivated",
+						"overwritten": "Replaced",
+						"merged": "Merged"
+					},
+					"actors": {
+						"self": "User",
+						"admin": "Operator"
+					},
+					"moderatorGrantAction": "Make moderator",
+					"moderatorRevokeAction": "Remove moderator",
+					"moderatorGrantConfirm": "Grant moderator privileges to \"{{name}}\"?",
+					"moderatorRevokeConfirm": "Remove moderator privileges from \"{{name}}\"?",
+					"moderatorGranted": "Moderator privileges granted.",
+					"moderatorRevoked": "Moderator privileges removed.",
+					"moderatorFailed": "Failed to change moderator status."
 				}
 			},
 			"viewerInfo": {

@@ -143,7 +143,8 @@ func HandleCallback(code, state string) (*Request, *GoogleUser, error) {
 	body, _ := io.ReadAll(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
-		log.Errorln("Google token response:", string(body))
+		// Never log the raw token-endpoint body — it can contain issued tokens.
+		log.Errorln("Google token request failed with status", resp.StatusCode)
 		return nil, nil, errors.New("Googleトークンの取得に失敗しました")
 	}
 
@@ -171,7 +172,7 @@ func HandleCallback(code, state string) (*Request, *GoogleUser, error) {
 	userBody, _ := io.ReadAll(userResp.Body)
 
 	if userResp.StatusCode != http.StatusOK {
-		log.Errorln("Google user response:", string(userBody))
+		log.Errorln("Google user request failed with status", userResp.StatusCode)
 		return nil, nil, errors.New("Googleユーザー情報の取得に失敗しました")
 	}
 

@@ -14,3 +14,13 @@ const (
 	Google    Type = "google"
 	GitHub    Type = "github"
 )
+
+// IsKnownType reports whether the given string is a supported auth type.
+func IsKnownType(t Type) bool {
+	switch t {
+	case IndieAuth, Fediverse, Twitter, Discord, X, Google, GitHub:
+		return true
+	default:
+		return false
+	}
+}

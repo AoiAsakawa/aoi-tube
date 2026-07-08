@@ -105,14 +105,18 @@ func MetamaskConfirmDonation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verify the transaction on-chain before recording anything. The amount is
-	// taken from the chain, never from the client, and any transaction we cannot
-	// confirm (wrong recipient, not mined, RPC unavailable) is rejected.
-	verifiedAmount, err := verifyMetamaskDonation(config, request)
+	// Verify the transaction on-chain before recording anything. The amount AND
+	// the currency symbol are taken from the chain / operator config, never the
+	// client, and any transaction we cannot confirm (wrong recipient, wrong
+	// sender, insufficient confirmations, RPC unavailable) is rejected.
+	verifiedAmount, currency, err := verifyMetamaskDonation(config, request)
 	if err != nil {
 		log.Warnf("Metamask donation verification failed for tx %s: %v", request.TransactionHash, err)
 		WriteSimpleResponse(w, false, "transaction could not be verified on-chain")
 		return
+	}
+	if currency == "" {
+		currency = config.ChainCurrency
 	}
 
 	itemType, effectType, err := normalizePurchaseItem(request.ItemType, request.EffectType)
@@ -126,32 +130,28 @@ func MetamaskConfirmDonation(w http.ResponseWriter, r *http.Request) {
 		displayName = "" // localized by clients via the isAnonymous flag
 	}
 
-	// Use TokenSymbol if provided, otherwise use chain currency
-	currency := request.TokenSymbol
-	if currency == "" {
-		currency = config.ChainCurrency
-	}
-
-	// Record the JPY value at confirmation time; 0 means no conversion was
-	// available and displays fall back to the raw crypto amount.
-	amountJPY := ConvertCryptoToJPY(currency, verifiedAmount)
+	// Record the base-currency value at confirmation time; 0 means no
+	// conversion was available and displays fall back to the raw crypto amount.
+	amountFiat, fiatCurrency := ConvertCryptoToFiat(currency, verifiedAmount)
 
 	// Screen effects are fixed-price products. For crypto payments the
-	// verified on-chain amount is checked against the JPY price, with a 5%
-	// tolerance for market movement between quoting and confirmation.
-	// Without a price conversion the fixed price cannot be verified, so the
-	// purchase is rejected (Super Chats are unaffected).
+	// verified on-chain amount is checked against the base-currency price,
+	// with a 5% tolerance for market movement between quoting and
+	// confirmation. Without a price conversion the fixed price cannot be
+	// verified, so the purchase is rejected (Super Chats are unaffected).
 	if itemType == models.DonationItemEffect {
-		if amountJPY == 0 {
+		if amountFiat == 0 {
 			WriteSimpleResponse(w, false, "screen effects require a price conversion; try a fiat payment method")
 			return
 		}
-		priceJPY, ok := models.GetEffectPrice(effectType, "JPY")
+		price, ok := models.GetEffectPrice(effectType, fiatCurrency)
 		if !ok {
 			WriteSimpleResponse(w, false, "invalid effect type")
 			return
 		}
-		if float64(amountJPY) < float64(priceJPY)*0.95 {
+		// GetEffectPrice returns major units; amountFiat is in stored units.
+		priceStored := models.FiatToStoredUnits(float64(price), fiatCurrency)
+		if float64(amountFiat) < float64(priceStored)*0.95 {
 			WriteSimpleResponse(w, false, "on-chain amount is below the effect price")
 			return
 		}
@@ -161,7 +161,8 @@ func MetamaskConfirmDonation(w http.ResponseWriter, r *http.Request) {
 		ID:              donationID,
 		Amount:          verifiedAmount,
 		Currency:        currency,
-		AmountJPY:       amountJPY,
+		AmountJPY:       amountFiat,
+		FiatCurrency:    fiatCurrency,
 		Message:         request.Message,
 		DisplayName:     displayName,
 		IsAnonymous:     request.IsAnonymous,
@@ -188,7 +189,7 @@ func MetamaskConfirmDonation(w http.ResponseWriter, r *http.Request) {
 		displayName,
 		request.IsAnonymous,
 		nil,
-	).WithItem(donation.ItemType, donation.EffectType).WithAmountJPY(donation.AmountJPY)
+	).WithItem(donation.ItemType, donation.EffectType).WithFiatConversion(donation.AmountJPY, donation.FiatCurrency)
 
 	if err := chat.Broadcast(event); err != nil {
 		log.Errorf("Failed to broadcast Metamask donation: %v", err)

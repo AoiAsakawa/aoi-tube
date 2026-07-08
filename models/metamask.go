@@ -28,6 +28,11 @@ type MetamaskDonationRequest struct {
 	TransactionHash string  `json:"transactionHash"`
 	FromAddress     string  `json:"fromAddress"`
 	TokenSymbol     string  `json:"tokenSymbol"` // Symbol of token used (ETH, MATIC, USDT, etc.)
+	// NetworkID is the chain the buyer actually transacted on (the donation
+	// form lets them pick any supported chain). The server verifies on this
+	// chain, not just the operator's configured one, since the operator's
+	// wallet address is the same across EVM chains.
+	NetworkID int64 `json:"networkId"`
 	// ItemType selects the purchase: "superchat" (default) or "effect".
 	ItemType string `json:"itemType"`
 	// EffectType is the screen effect to play when ItemType is "effect".

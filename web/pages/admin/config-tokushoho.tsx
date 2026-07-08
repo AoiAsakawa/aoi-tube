@@ -13,6 +13,9 @@ const { TextArea } = Input;
 
 interface TokushohoInfo {
 	enabled: boolean;
+	// Optional custom page title (e.g. "Impressum", "Legal Notice"). Empty uses
+	// the localized default label.
+	title?: string;
 	markdownContent: string;
 }
 
@@ -158,12 +161,20 @@ const TokushohoConfigPage = () => {
 				if (data && Object.keys(data).length > 0) {
 					// If markdownContent exists, use it. Otherwise, try to migrate from old format
 					if (data.markdownContent) {
-						return { enabled: data.enabled || false, markdownContent: data.markdownContent };
+						return {
+							enabled: data.enabled || false,
+							title: data.title || '',
+							markdownContent: data.markdownContent,
+						};
 					}
 					if (data.businessName) {
-						return { enabled: data.enabled || false, markdownContent: migrateOldFormat(data) };
+						return {
+							enabled: data.enabled || false,
+							title: data.title || '',
+							markdownContent: migrateOldFormat(data),
+						};
 					}
-					return { ...defaultInfo, enabled: data.enabled || false };
+					return { ...defaultInfo, enabled: data.enabled || false, title: data.title || '' };
 				}
 				return defaultInfo;
 			},
@@ -255,6 +266,17 @@ const TokushohoConfigPage = () => {
 							style={{ marginTop: 8 }}
 						/>
 					)}
+					<Form.Item
+						name="title"
+						label={t('admin.config.tokushoho.pageTitleLabel')}
+						help={t('admin.config.tokushoho.pageTitleHelp')}
+						style={{ marginTop: 16 }}
+					>
+						<Input
+							placeholder={t('admin.config.tokushoho.pageTitlePlaceholder')}
+							maxLength={100}
+						/>
+					</Form.Item>
 				</SettingsCard>
 
 				<SettingsCard title={t('admin.config.tokushoho.contentCardTitle')}>

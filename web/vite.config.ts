@@ -62,6 +62,14 @@ function serverMetadataPlugin(): Plugin {
 				if (ctx.path.replace(/\\/g, '/').includes('/admin/')) return html;
 				return html
 					.replace('<title>AoiTube</title>', '<title>{{.Name}}</title>')
+					// Cache-bust the favicon with the logo uniqueness string so a
+					// changed logo replaces the browser's cached (often the old
+					// Owncast default) favicon instead of sticking. Also add an
+					// apple-touch-icon for iOS home-screen bookmarks.
+					.replace(
+						'<link rel="icon" href="/logo" />',
+						'<link rel="icon" href="/logo?u={{.LogoUniqueness}}" />\n\t\t<link rel="apple-touch-icon" href="/logo?u={{.LogoUniqueness}}" />',
+					)
 					.replace('</head>', `${SERVER_METADATA}\n  </head>`);
 			},
 		},

@@ -11,6 +11,9 @@ export const Footer: FC = () => {
 	const clientStatus = useServerStatus();
 	const { versionNumber } = clientStatus;
 	const [tokushohoEnabled, setTokushohoEnabled] = useState<boolean>(false);
+	// Operator-set custom title for the legal disclosure link; empty falls back
+	// to the localized default label.
+	const [tokushohoTitle, setTokushohoTitle] = useState<string>('');
 	const [faqEnabled, setFaqEnabled] = useState<boolean>(false);
 	// Only surface the archives link when at least one recording is public.
 	const { archives } = useArchives();
@@ -21,6 +24,7 @@ export const Footer: FC = () => {
 			try {
 				const response = await fetchData(TOKUSHOHO_PUBLIC);
 				setTokushohoEnabled(response && response.enabled);
+				setTokushohoTitle((response && response.title) || '');
 			} catch (_error) {
 				setTokushohoEnabled(false);
 			}
@@ -44,7 +48,9 @@ export const Footer: FC = () => {
 			</span>
 			<span className={styles.links}>
 				{hasArchives && <Link href="/archives">{t('ui.footer.archives')}</Link>}
-				{tokushohoEnabled && <Link href="/tokushoho">{t('ui.footer.tokushoho')}</Link>}
+				{tokushohoEnabled && (
+					<Link href="/tokushoho">{tokushohoTitle || t('ui.footer.tokushoho')}</Link>
+				)}
 				{faqEnabled && <Link href="/faq">{t('ui.footer.faq')}</Link>}
 				<a href="https://github.com/AoiAsakawa/aoitube/tree/main/docs" target="_blank" rel="noreferrer">
 					{t('ui.footer.documentation')}

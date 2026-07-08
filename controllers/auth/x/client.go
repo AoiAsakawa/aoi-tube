@@ -58,7 +58,7 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	authToken := "x:" + xUser.ID
 
 	// Check if a user with this auth already exists, if so, log them in.
-	if u := auth.GetUserByAuth(authToken, auth.X); u != nil {
+	if u := auth.FindLinkedUser(authToken, auth.X, auth.ActorSelf); u != nil {
 		// Handle existing auth.
 		log.Debugln("user with provided X auth already exists, logging them in")
 
@@ -75,6 +75,12 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 			log.Errorln(err)
 		}
 
+		// Refresh the stored handle (fills it in for accounts linked before the
+		// handle column existed, and keeps it current if the @name changed) and
+		// collapse any duplicate X links down to this one account.
+		auth.UpdateAuthHandle(authToken, auth.X, "@"+xUser.Username)
+		auth.PruneDuplicateProviderAuths(userID, authToken, auth.X, auth.ActorSelf)
+
 		if request.DisplayName != u.DisplayName {
 			loginMessage := fmt.Sprintf("**%s** is now authenticated as **%s**", request.DisplayName, u.DisplayName)
 			if err := chat.SendTranslatableSystemAction("userAuthenticatedAs", map[string]string{"newName": request.DisplayName, "oldName": u.DisplayName}, loginMessage, true); err != nil {
@@ -88,7 +94,7 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 
 	// Otherwise, save this as new auth.
 	log.Debug("X auth does not already exist, saving it as a new one for the current user")
-	if err := auth.AddAuth(request.UserID, authToken, auth.X); err != nil {
+	if err := auth.SetSoleProviderAuth(request.UserID, authToken, auth.X, "@"+xUser.Username, auth.ActorSelf); err != nil {
 		controllers.WriteSimpleResponse(w, false, err.Error())
 		return
 	}

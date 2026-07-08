@@ -127,6 +127,7 @@ export const ChatContainer: FC<ChatContainerProps> = ({
 			amount={message.amount}
 			currency={message.currency}
 			amountJpy={message.amountJpy}
+			fiatCurrency={message.fiatCurrency}
 			displayName={message.displayName}
 			message={message.message}
 			isAnonymous={message.isAnonymous}

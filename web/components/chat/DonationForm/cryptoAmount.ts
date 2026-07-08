@@ -23,26 +23,26 @@ export const decimalToBigInt = (value: string | number, decimals: number): bigin
 const MAX_COMPUTED_DECIMALS = 8;
 
 /**
- * Returns the decimal-string amount of a token worth `targetJpy` at the rate
- * `priceJpy` (JPY per whole token), inflated by `marginPercent`.
+ * Returns the decimal-string amount of a token worth `targetFiat` at the rate
+ * `priceFiat` (base-currency units per whole token), inflated by `marginPercent`.
  *
- * Used for fixed-JPY-price purchases (screen effects) paid in crypto: the
- * server accepts an on-chain amount worth at least 95% of the JPY price, so
+ * Used for fixed-fiat-price purchases (screen effects) paid in crypto: the
+ * server accepts an on-chain amount worth at least 95% of the fiat price, so
  * the form quotes the price plus a small safety margin for market movement.
  * The result is rounded UP at min(decimals, 8) fractional digits so the sent
  * amount can never undershoot the quoted value, and trailing zeros are
  * stripped for display. Returns '' when the inputs cannot produce a quote.
  */
-export const cryptoAmountForJpy = (
-	targetJpy: number,
-	priceJpy: number,
+export const cryptoAmountForFiat = (
+	targetFiat: number,
+	priceFiat: number,
 	decimals: number,
 	marginPercent = 0,
 ): string => {
-	if (!Number.isFinite(targetJpy) || targetJpy <= 0) return '';
-	if (!Number.isFinite(priceJpy) || priceJpy <= 0) return '';
+	if (!Number.isFinite(targetFiat) || targetFiat <= 0) return '';
+	if (!Number.isFinite(priceFiat) || priceFiat <= 0) return '';
 	const precision = Math.min(Math.max(Math.floor(decimals), 0), MAX_COMPUTED_DECIMALS);
-	const raw = (targetJpy * (1 + marginPercent / 100)) / priceJpy;
+	const raw = (targetFiat * (1 + marginPercent / 100)) / priceFiat;
 	const factor = 10 ** precision;
 	const roundedUp = Math.ceil(raw * factor) / factor;
 	if (!Number.isFinite(roundedUp) || roundedUp <= 0) return '';

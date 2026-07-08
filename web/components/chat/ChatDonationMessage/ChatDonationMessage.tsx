@@ -15,9 +15,12 @@ import styles from './ChatDonationMessage.module.scss';
 export interface ChatDonationMessageProps {
 	amount: number;
 	currency: string;
-	// JPY value recorded by the server at confirmation time (crypto purchases
-	// only); 0 or missing means no conversion was available.
+	// Base-currency value recorded by the server at confirmation time (crypto
+	// purchases only); 0 or missing means no conversion was available. The prop
+	// name predates configurable base currencies; fiatCurrency names the actual
+	// currency (defaults to JPY).
 	amountJpy?: number;
+	fiatCurrency?: string;
 	displayName: string;
 	message?: string;
 	isAnonymous?: boolean;
@@ -32,6 +35,7 @@ export const ChatDonationMessage: FC<ChatDonationMessageProps> = ({
 	amount,
 	currency,
 	amountJpy,
+	fiatCurrency = 'JPY',
 	displayName,
 	message,
 	isAnonymous = false,
@@ -61,14 +65,15 @@ export const ChatDonationMessage: FC<ChatDonationMessageProps> = ({
 
 	// Fiat superchats use YouTube-style amount tier colors keyed on their own
 	// currency. Crypto superchats (nativeTier === null) with a server-recorded
-	// JPY conversion get the JPY tier colors and a "¥1,234（0.01 ETH）" amount;
-	// crypto without a conversion keeps the classic gold styling below.
+	// base-currency conversion get that currency's tier colors and a
+	// "¥1,234（0.01 ETH）" amount; crypto without a conversion keeps the classic
+	// gold styling below.
 	const nativeTier = getSuperchatTier(amount, currency);
-	const hasJpyConversion = !nativeTier && typeof amountJpy === 'number' && amountJpy > 0;
-	const tier = nativeTier ?? (hasJpyConversion ? getSuperchatTier(amountJpy, 'JPY') : null);
+	const hasFiatConversion = !nativeTier && typeof amountJpy === 'number' && amountJpy > 0;
+	const tier = nativeTier ?? (hasFiatConversion ? getSuperchatTier(amountJpy, fiatCurrency) : null);
 
-	const formattedAmount = hasJpyConversion
-		? `${formatDonationAmount(amountJpy, 'JPY')}（${formatDonationAmount(amount, currency)}）`
+	const formattedAmount = hasFiatConversion
+		? `${formatDonationAmount(amountJpy, fiatCurrency)}（${formatDonationAmount(amount, currency)}）`
 		: formatDonationAmount(amount, currency);
 
 	if (tier) {

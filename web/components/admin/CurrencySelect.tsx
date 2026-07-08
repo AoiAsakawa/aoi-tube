@@ -13,6 +13,7 @@ export type CurrencySelectProps = {
 	 * fixes the display order, so each page keeps its existing option order.
 	 */
 	currencies?: string[];
+	disabled?: boolean;
 };
 
 /**
@@ -20,7 +21,12 @@ export type CurrencySelectProps = {
  * ISO currency codes submitted to the API; labels come from the shared
  * admin.config.shared.currencies.<code> i18n keys.
  */
-export const CurrencySelect: FC<CurrencySelectProps> = ({ value, onChange, currencies }) => {
+export const CurrencySelect: FC<CurrencySelectProps> = ({
+	value,
+	onChange,
+	currencies,
+	disabled,
+}) => {
 	const { t } = useTranslation();
 
 	const options = currencies
@@ -33,6 +39,7 @@ export const CurrencySelect: FC<CurrencySelectProps> = ({ value, onChange, curre
 		<Select
 			value={value}
 			onChange={onChange}
+			disabled={disabled}
 			style={{ width: 300, marginTop: 8 }}
 			showSearch
 			optionFilterProp="children"

@@ -68,7 +68,7 @@ func VerifyFediverseOTPRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if a user with this auth already exists, if so, log them in.
-	if u := auth.GetUserByAuth(authRegistration.Account, auth.Fediverse); u != nil {
+	if u := auth.FindLinkedUser(authRegistration.Account, auth.Fediverse, auth.ActorSelf); u != nil {
 		// Handle existing auth.
 		log.Debugln("user with provided fedvierse identity already exists, logging them in")
 
@@ -93,7 +93,7 @@ func VerifyFediverseOTPRequest(w http.ResponseWriter, r *http.Request) {
 
 	// Otherwise, save this as new auth.
 	log.Debug("fediverse account does not already exist, saving it as a new one for the current user")
-	if err := auth.AddAuth(authRegistration.UserID, authRegistration.Account, auth.Fediverse); err != nil {
+	if err := auth.SetSoleProviderAuth(authRegistration.UserID, authRegistration.Account, auth.Fediverse, authRegistration.Account, auth.ActorSelf); err != nil {
 		controllers.WriteSimpleResponse(w, false, err.Error())
 		return
 	}

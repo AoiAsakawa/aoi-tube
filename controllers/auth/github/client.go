@@ -64,7 +64,7 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	authToken := githubUser.AuthToken()
 
 	// Check if a user with this auth already exists, if so, log them in.
-	if existingUser := auth.GetUserByAuth(authToken, auth.GitHub); existingUser != nil {
+	if existingUser := auth.FindLinkedUser(authToken, auth.GitHub, auth.ActorSelf); existingUser != nil {
 		log.Debugln("user with provided GitHub auth already exists, logging them in")
 
 		// Update the current user's access token to point to the existing user id.
@@ -79,6 +79,12 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 		if err := user.SetUserAsAuthenticated(userID); err != nil {
 			log.Errorln(err)
 		}
+
+		// Refresh the stored handle (fills it in for accounts linked before the
+		// handle column existed, and keeps it current if the login changed) and
+		// collapse any duplicate GitHub links down to this one account.
+		auth.UpdateAuthHandle(authToken, auth.GitHub, githubUser.Login)
+		auth.PruneDuplicateProviderAuths(userID, authToken, auth.GitHub, auth.ActorSelf)
 
 		if request.DisplayName != existingUser.DisplayName {
 			loginMessage := fmt.Sprintf("**%s** is now authenticated as **%s**", request.DisplayName, existingUser.DisplayName)
@@ -104,7 +110,7 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 
 	// Save the GitHub auth as new
 	log.Debug("GitHub auth does not already exist, saving it as a new one for the current user")
-	if err := auth.AddAuth(u.ID, authToken, auth.GitHub); err != nil {
+	if err := auth.SetSoleProviderAuth(u.ID, authToken, auth.GitHub, githubUser.Login, auth.ActorSelf); err != nil {
 		log.Errorln("Error saving GitHub auth:", err)
 		msg := `認証の保存に失敗しました。 <a href="/">戻る</a><hr/>`
 		_ = controllers.WriteString(w, msg, http.StatusInternalServerError)

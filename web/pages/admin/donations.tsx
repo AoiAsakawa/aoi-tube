@@ -42,6 +42,8 @@ import {
 	ADMIN_ARCHIVES,
 	ADMIN_ARCHIVES_PURCHASES_GRANT,
 	ADMIN_ARCHIVES_PURCHASES_REVOKE,
+	ADMIN_BASE_CURRENCY,
+	ADMIN_BASE_CURRENCY_SET,
 	ALL_USERS,
 	DONATIONS,
 	DONATIONS_STATS,
@@ -51,6 +53,7 @@ import {
 	fetchData,
 } from '../../utils/apis';
 import { AdminLayout } from '../../components/layouts/AdminLayout';
+import { CurrencySelect } from '../../components/admin/CurrencySelect';
 import { useSiteTheme } from '../../utils/useSiteTheme';
 import {
 	Donation,
@@ -446,6 +449,10 @@ export default function DonationsPage() {
 	const [showTest, setShowTest] = useState(true);
 	// Item-type filter for the list: 'all', 'superchat', 'effect' or 'archive'.
 	const [itemFilter, setItemFilter] = useState('all');
+	// Server base currency: crypto purchases are converted to it and revenue is
+	// reported in it. Defaults to JPY.
+	const [baseCurrency, setBaseCurrency] = useState('JPY');
+	const [baseCurrencySaving, setBaseCurrencySaving] = useState(false);
 	const pageSize = 20;
 
 	const { theme: siteTheme } = useSiteTheme();
@@ -491,12 +498,43 @@ export default function DonationsPage() {
 		setStatsLoading(false);
 	};
 
+	const fetchBaseCurrency = async () => {
+		try {
+			const result = await fetchData(ADMIN_BASE_CURRENCY, { auth: true });
+			if (result && result.baseCurrency) {
+				setBaseCurrency(result.baseCurrency);
+			}
+		} catch (error) {
+			console.error('Failed to fetch base currency:', error);
+		}
+	};
+
+	const saveBaseCurrency = async (value: string) => {
+		setBaseCurrencySaving(true);
+		try {
+			await fetchData(ADMIN_BASE_CURRENCY_SET, {
+				method: 'POST',
+				data: { baseCurrency: value },
+				auth: true,
+			});
+			setBaseCurrency(value);
+			message.success(t('admin.pages.donations.baseCurrency.saved'));
+			// Reload aggregates so they re-report in the new base currency.
+			fetchStats();
+		} catch (error) {
+			console.error('Failed to save base currency:', error);
+			message.error(t('admin.pages.donations.baseCurrency.saveFailed'));
+		}
+		setBaseCurrencySaving(false);
+	};
+
 	useEffect(() => {
 		fetchDonations();
 	}, [currentPage]);
 
 	useEffect(() => {
 		fetchStats();
+		fetchBaseCurrency();
 	}, []);
 
 	const handleCreateDonation = async (values: DonationFormValues) => {
@@ -891,6 +929,20 @@ export default function DonationsPage() {
 			<Title>{t('admin.pages.donations.title')}</Title>
 			<Paragraph>{t('admin.pages.donations.intro')}</Paragraph>
 
+			{/* Base currency: crypto purchases are converted to it and revenue is
+			    reported in it. JPY by default. */}
+			<Card style={{ marginBottom: 16 }}>
+				<Text strong>{t('admin.pages.donations.baseCurrency.label')}</Text>
+				<Paragraph type="secondary" style={{ marginTop: 4, marginBottom: 8 }}>
+					{t('admin.pages.donations.baseCurrency.help')}
+				</Paragraph>
+				<CurrencySelect
+					value={baseCurrency}
+					onChange={saveBaseCurrency}
+					disabled={baseCurrencySaving}
+				/>
+			</Card>
+
 			{/* Summary cards: monthly revenue with MoM change, lifetime totals,
 			    counts, average and unique purchasers. */}
 			<Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
@@ -945,14 +997,18 @@ export default function DonationsPage() {
 						<CurrencySubLines stats={stats} field="total" />
 					</Card>
 				</Col>
-				{/* JPY value of crypto purchases, recorded at their confirmation
-				    time; hidden until at least one converted purchase exists. */}
-				{(stats?.cryptoJpyTotal ?? 0) > 0 && (
+				{/* Base-currency value of crypto purchases, recorded at their
+				    confirmation time; hidden until at least one converted purchase
+				    exists. */}
+				{(stats?.cryptoFiatTotal ?? 0) > 0 && (
 					<Col xs={24} sm={12} lg={8} xl={6}>
 						<Card loading={statsLoading}>
 							<Statistic
 								title={t('admin.pages.donations.stats.cryptoJpy')}
-								value={formatDonationAmount(stats?.cryptoJpyTotal ?? 0, 'JPY')}
+								value={formatDonationAmount(
+									stats?.cryptoFiatTotal ?? 0,
+									stats?.baseCurrency ?? 'JPY',
+								)}
 								prefix={<GoldOutlined style={{ color: '#fa8c16' }} />}
 							/>
 							<div style={{ marginTop: 8, fontSize: 12, color: 'var(--color-panel-text-muted)' }}>

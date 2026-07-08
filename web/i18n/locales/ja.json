@@ -308,7 +308,14 @@
 			"privacyNote": "これは認証目的のみに使用され、個人情報がアクセスされたり保存されることはありません。"
 		},
 		"auth": {
-			"tab": "{{provider}}認証"
+			"tab": "{{provider}}認証",
+			"linkedAccountsTitle": "連携済みのアカウント",
+			"unlink": "連携解除",
+			"unlinkCancel": "キャンセル",
+			"unlinkConfirm": "{{provider}} の連携を解除しますか?いつでも再連携できます。",
+			"unlinkSuccess": "連携を解除しました。",
+			"unlinkFailed": "連携の解除に失敗しました。",
+			"unlinkBlockedPurchases": "購入済みのアーカイブがあるため、最後のログイン手段は解除できません(他のデバイスでアクセスできなくなります)。先に別のアカウントを連携するか、運営者にお問い合わせください。"
 		},
 		"browserNotify": {
 			"notSupported": "お使いのブラウザではブラウザ通知はサポートされていません。",
@@ -696,6 +703,9 @@
 				"contentRequired": "表記内容を入力してください",
 				"enableLabel": "特定商取引法に基づく表記ページを有効にする",
 				"intro": "スーパーチャット（有料サービス）を提供する場合、特定商取引法に基づく表記が必要です。 マークダウン形式で自由に編集できます。",
+				"pageTitleLabel": "ページタイトル",
+				"pageTitleHelp": "任意。公開ページとフッターリンクの既定タイトルを上書きします(例:「特定商取引法に基づく表記」「Legal Notice」)。空欄の場合は標準ラベルを使用します。",
+				"pageTitlePlaceholder": "特定商取引法に基づく表記",
 				"legalAlertTitle": "法的要件について",
 				"legalBody1": "日本国内で決済サービスを提供する場合、特定商取引法に基づく表記が義務付けられています。 詳細は",
 				"legalBody2": "をご確認ください。",
@@ -847,6 +857,12 @@
 			"donations": {
 				"title": "購入管理",
 				"intro": "視聴者の購入（スーパーチャット・画面演出）の売上ダッシュボードと購入履歴です。外部の決済サービスからWebhook経由で自動登録することも、手動で登録することもできます。テスト決済（サンドボックス）は売上集計から除外されます。",
+				"baseCurrency": {
+					"label": "基準通貨",
+					"help": "暗号資産の購入額を換算し、売上を集計・表示する通貨です。各決済プロバイダーの通貨設定は個別に保持されます。",
+					"saved": "基準通貨を更新しました。",
+					"saveFailed": "基準通貨の更新に失敗しました。"
+				},
 				"addManually": "手動で追加",
 				"anonymous": "匿名",
 				"show": "表示する",
@@ -1172,6 +1188,7 @@
 				},
 				"columns": {
 					"displayName": "表示名",
+					"auth": "認証",
 					"status": "状態",
 					"createdAt": "作成日時",
 					"authenticatedAt": "認証日時",
@@ -1181,7 +1198,8 @@
 					"authenticated": "認証済み",
 					"blocked": "ブロック",
 					"moderator": "モデレーター",
-					"unauthenticated": "未認証"
+					"unauthenticated": "未認証",
+					"unlinked": "解除済み"
 				},
 				"deleteUserConfirm": {
 					"title": "このユーザーを削除しますか？",
@@ -1203,6 +1221,44 @@
 					"selectUsers": "削除するユーザーを選択してください",
 					"allDeleted": "全ユーザーを削除しました",
 					"deleteAllFailed": "全ユーザーの削除に失敗しました"
+				},
+				"governance": {
+					"history": "履歴",
+					"merge": "統合",
+					"reactivate": "復活",
+					"reactivateSuccess": "アカウントを復活しました。",
+					"reactivateFailed": "アカウントの復活に失敗しました。",
+					"auditTitle": "認証履歴 — {{name}}",
+					"auditLoadFailed": "監査ログの読み込みに失敗しました。",
+					"auditEmpty": "認証イベントはありません。",
+					"auditWhen": "日時",
+					"auditAction": "操作",
+					"auditActor": "実行者",
+					"mergeTitle": "アカウント統合",
+					"mergeConfirm": "統合",
+					"mergeIntro": "「{{name}}」の連携・履歴・購入・デバイスをすべて、選択したアカウントへ移します。統合元は無効化されます。",
+					"mergeTargetPlaceholder": "残すアカウントを選択",
+					"mergeWarning": "自動では元に戻せません。統合元は無効化されますが履歴として残ります。",
+					"mergeSuccess": "アカウントを統合しました。",
+					"mergeFailed": "アカウントの統合に失敗しました。",
+					"actions": {
+						"linked": "連携",
+						"unlinked": "解除",
+						"reactivated": "復活",
+						"overwritten": "置換",
+						"merged": "統合"
+					},
+					"actors": {
+						"self": "本人",
+						"admin": "運営者"
+					},
+					"moderatorGrantAction": "モデレーターにする",
+					"moderatorRevokeAction": "モデレーター解除",
+					"moderatorGrantConfirm": "「{{name}}」にモデレーター権限を付与しますか?",
+					"moderatorRevokeConfirm": "「{{name}}」のモデレーター権限を解除しますか?",
+					"moderatorGranted": "モデレーター権限を付与しました。",
+					"moderatorRevoked": "モデレーター権限を解除しました。",
+					"moderatorFailed": "モデレーター状態の変更に失敗しました。"
 				}
 			},
 			"viewerInfo": {

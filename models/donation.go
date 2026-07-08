@@ -37,14 +37,14 @@ func IsValidEffectType(effectType string) bool {
 var effectPrices = map[string]map[string]int64{
 	// 300 JPY is the storefront-wide minimum price (operator decision); each
 	// effect keeps a distinct price so the tiers never collide.
-	"confetti":    {"JPY": 300, "USD": 3},
-	"hearts":      {"JPY": 400, "USD": 4},
-	"stars":       {"JPY": 500, "USD": 5},
-	"fireworks":   {"JPY": 1000, "USD": 10},
-	"celebration": {"JPY": 2000, "USD": 20},
-	"rainbow":     {"JPY": 3000, "USD": 30},
-	"meteor":      {"JPY": 5000, "USD": 50},
-	"goldrush":    {"JPY": 10000, "USD": 100},
+	"confetti":    {"JPY": 300, "USD": 3, "EUR": 3},
+	"hearts":      {"JPY": 400, "USD": 4, "EUR": 4},
+	"stars":       {"JPY": 500, "USD": 5, "EUR": 5},
+	"fireworks":   {"JPY": 1000, "USD": 10, "EUR": 10},
+	"celebration": {"JPY": 2000, "USD": 20, "EUR": 20},
+	"rainbow":     {"JPY": 3000, "USD": 30, "EUR": 30},
+	"meteor":      {"JPY": 5000, "USD": 50, "EUR": 50},
+	"goldrush":    {"JPY": 10000, "USD": 100, "EUR": 100},
 }
 
 // GetEffectPrice returns the fixed price of a screen effect in major units
@@ -70,10 +70,15 @@ type Donation struct {
 	Amount int64 `json:"amount"`
 	// Currency is the currency code (e.g., "JPY", "USD").
 	Currency string `json:"currency"`
-	// AmountJPY is the JPY value of the purchase at confirmation time, used
-	// for crypto payments. 0 means no conversion was available; display then
-	// falls back to the raw crypto amount (e.g. "0.01 ETH").
+	// AmountJPY is the base-currency value of the purchase at confirmation
+	// time, in stored units, used for crypto payments. The wire name predates
+	// configurable base currencies and is kept so archived chat replays stay
+	// readable; FiatCurrency names the actual currency. 0 means no conversion
+	// was available; display then falls back to the raw crypto amount.
 	AmountJPY int64 `json:"amountJpy,omitempty"`
+	// FiatCurrency is the base currency AmountJPY was recorded in. Empty on
+	// legacy rows, which are always JPY.
+	FiatCurrency string `json:"fiatCurrency,omitempty"`
 	// Message is an optional message from the donor.
 	Message string `json:"message,omitempty"`
 	// DisplayName is the name to display for the donation.
@@ -164,9 +169,13 @@ type DonationStats struct {
 	Daily            []DonationDailyStat    `json:"daily"`
 	UniquePurchasers int64                  `json:"uniquePurchasers"`
 	TestCount        int64                  `json:"testCount"`
-	// CryptoJPYTotal is the JPY value of crypto purchases recorded at their
-	// confirmation time (purchases without a conversion are not included).
-	CryptoJPYTotal int64 `json:"cryptoJpyTotal"`
+	// BaseCurrency is the server's configured base currency; CryptoFiatTotal
+	// is expressed in it.
+	BaseCurrency string `json:"baseCurrency"`
+	// CryptoFiatTotal is the base-currency value of crypto purchases recorded
+	// at their confirmation time (purchases recorded under a different base
+	// currency or without a conversion are not included).
+	CryptoFiatTotal int64 `json:"cryptoFiatTotal"`
 }
 
 // FormatAmount returns the formatted amount string based on currency.

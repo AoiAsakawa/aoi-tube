@@ -1,6 +1,6 @@
-import { Tabs } from 'antd';
+import { Tabs, Button, Popconfirm, message } from 'antd';
 import { XOutlined } from '@ant-design/icons';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorBoundary } from 'react-error-boundary';
 import { FediAuthModal } from '../FediAuthModal/FediAuthModal';
@@ -67,11 +67,96 @@ export const AuthModal: FC<AuthModalProps> = ({ forceTabs }) => {
 	const currentUser = useCurrentUser();
 	const clientConfig = useClientConfig();
 	const { t } = useTranslation();
+	const [unlinking, setUnlinking] = useState<string | null>(null);
+
+	// Unlinks a provider from the current user. On success the server pushes a
+	// refreshed connected-client-info event, which updates the store's
+	// currentUser (linked accounts + authenticated state), so no local state
+	// update is needed here.
+	const handleUnlink = async (type: string) => {
+		if (!accessToken) {
+			return;
+		}
+		setUnlinking(type);
+		try {
+			const res = await fetch(`/api/auth/unlink?accessToken=${accessToken}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ type }),
+			});
+			const data = await res.json();
+			if (data.success) {
+				message.success(t('modals.auth.unlinkSuccess'));
+			} else if (data.reason === 'has_purchases') {
+				// Blocked: this is the last login method and the user owns paid
+				// archives. Keep at least one so they don't lose access.
+				message.warning(t('modals.auth.unlinkBlockedPurchases'));
+			} else {
+				message.error(data.message || t('modals.auth.unlinkFailed'));
+			}
+		} catch (_e) {
+			message.error(t('modals.auth.unlinkFailed'));
+		} finally {
+			setUnlinking(null);
+		}
+	};
 
 	if (!currentUser) {
 		return null;
 	}
-	const { displayName } = currentUser;
+	const { displayName, authDetails } = currentUser;
+
+	// Human-readable provider label for the "your linked accounts" summary.
+	const providerLabel = (type: string): string => {
+		switch (type) {
+			case 'x':
+			case 'twitter':
+				return 'X';
+			case 'github':
+				return 'GitHub';
+			case 'discord':
+				return 'Discord';
+			case 'google':
+				return 'Google';
+			case 'fediverse':
+				return 'Fediverse';
+			case 'indieauth':
+				return 'IndieAuth';
+			default:
+				return type;
+		}
+	};
+
+	// Shows the user their own linked accounts and handles. Self-view only —
+	// this data is not exposed for other chat users, and the public chat name
+	// stays the anonymous display name.
+	const linkedAccounts =
+		authDetails && authDetails.length > 0 ? (
+			<div className={styles.linkedAccounts}>
+				<div className={styles.linkedAccountsTitle}>
+					{t('modals.auth.linkedAccountsTitle')}
+				</div>
+				{authDetails.map(({ type, handle }, i) => (
+					<div key={`${type}-${i}`} className={styles.linkedAccountRow}>
+						<span className={styles.linkedAccountName}>
+							<strong>{providerLabel(type)}</strong>
+							{handle ? <span className={styles.linkedAccountHandle}>{handle}</span> : null}
+						</span>
+						<Popconfirm
+							title={t('modals.auth.unlinkConfirm', { provider: providerLabel(type) })}
+							okText={t('modals.auth.unlink')}
+							cancelText={t('modals.auth.unlinkCancel')}
+							okButtonProps={{ danger: true }}
+							onConfirm={() => handleUnlink(type)}
+						>
+							<Button size="small" danger loading={unlinking === type}>
+								{t('modals.auth.unlink')}
+							</Button>
+						</Popconfirm>
+					</div>
+				))}
+			</div>
+		) : null;
 	const { federation, authentication } = clientConfig;
 	const { enabled: fediverseEnabled } = federation;
 	const discordEnabled = authentication?.discordAuthEnabled || false;
@@ -211,6 +296,7 @@ export const AuthModal: FC<AuthModalProps> = ({ forceTabs }) => {
 			)}
 		>
 			<div>
+				{linkedAccounts}
 				<Tabs
 					defaultActiveKey={defaultKey}
 					items={items}

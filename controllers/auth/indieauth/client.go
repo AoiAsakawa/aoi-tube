@@ -64,7 +64,7 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if a user with this auth already exists, if so, log them in.
-	if u := auth.GetUserByAuth(response.Me, auth.IndieAuth); u != nil {
+	if u := auth.FindLinkedUser(response.Me, auth.IndieAuth, auth.ActorSelf); u != nil {
 		// Handle existing auth.
 		log.Debugln("user with provided indieauth already exists, logging them in")
 
@@ -90,7 +90,7 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 
 	// Otherwise, save this as new auth.
 	log.Debug("indieauth token does not already exist, saving it as a new one for the current user")
-	if err := auth.AddAuth(request.UserID, response.Me, auth.IndieAuth); err != nil {
+	if err := auth.SetSoleProviderAuth(request.UserID, response.Me, auth.IndieAuth, response.Me, auth.ActorSelf); err != nil {
 		controllers.WriteSimpleResponse(w, false, err.Error())
 		return
 	}

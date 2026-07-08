@@ -207,17 +207,19 @@ export default function CommentGenerator() {
 						}
 
 						// Same tier resolution as the main chat panel: fiat superchats
-						// use their own currency, crypto with a recorded JPY conversion
-						// uses the JPY tiers, crypto without one keeps the gold styling.
+						// use their own currency, crypto with a recorded base-currency
+						// conversion uses that currency's tiers, crypto without one keeps
+						// the gold styling.
+						const fiatCurrency = donation.fiatCurrency || 'JPY';
 						const nativeTier = getSuperchatTier(donation.amount, donation.currency);
-						const hasJpyConversion =
+						const hasFiatConversion =
 							!nativeTier && typeof donation.amountJpy === 'number' && donation.amountJpy > 0;
 						const tier =
 							nativeTier ??
-							(hasJpyConversion ? getSuperchatTier(donation.amountJpy, 'JPY') : null) ??
+							(hasFiatConversion ? getSuperchatTier(donation.amountJpy, fiatCurrency) : null) ??
 							undefined;
-						const amount = hasJpyConversion
-							? `${formatDonationAmount(donation.amountJpy, 'JPY')}（${formatDonationAmount(donation.amount, donation.currency)}）`
+						const amount = hasFiatConversion
+							? `${formatDonationAmount(donation.amountJpy, fiatCurrency)}（${formatDonationAmount(donation.amount, donation.currency)}）`
 							: formatDonationAmount(donation.amount, donation.currency);
 						const superHigh =
 							!tier && isSuperHighValueDonation(donation.amount, donation.currency);

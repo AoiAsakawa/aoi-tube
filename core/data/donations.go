@@ -28,6 +28,7 @@ func CreateDonationsTable(database *sql.DB) {
 		"effect_type" TEXT,
 		"is_test" BOOLEAN DEFAULT FALSE,
 		"amount_jpy" INTEGER DEFAULT 0,
+		"fiat_currency" TEXT DEFAULT '',
 		"archive_id" TEXT,
 		"hidden_at" TIMESTAMP,
 		"created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -42,6 +43,7 @@ func CreateDonationsTable(database *sql.DB) {
 		`ALTER TABLE donations ADD COLUMN effect_type TEXT;`,
 		`ALTER TABLE donations ADD COLUMN is_test BOOLEAN DEFAULT FALSE;`,
 		`ALTER TABLE donations ADD COLUMN amount_jpy INTEGER DEFAULT 0;`,
+		`ALTER TABLE donations ADD COLUMN fiat_currency TEXT DEFAULT '';`,
 		`ALTER TABLE donations ADD COLUMN archive_id TEXT;`,
 	} {
 		if _, err := database.Exec(migration); err != nil && !strings.Contains(err.Error(), "duplicate column") {
@@ -58,15 +60,15 @@ func CreateDonationsTable(database *sql.DB) {
 }
 
 // AddDonation will add a new donation to the database. Uses raw SQL (rather
-// than the sqlc-generated query) so the archive_id column — added for paid
-// archive entitlements — is persisted without regenerating the sqlc bindings.
+// than the sqlc-generated query) so the columns that postdate the generated
+// bindings (fiat_currency, archive_id) are persisted without regenerating them.
 func AddDonation(donation *models.Donation) error {
 	_, err := _datastore.DB.Exec(
 		`INSERT INTO donations
 			(id, user_id, amount, currency, message, display_name, is_anonymous,
 			 payment_provider, payment_id, item_type, effect_type, is_test,
-			 amount_jpy, archive_id)
-		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			 amount_jpy, fiat_currency, archive_id)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		donation.ID,
 		sql.NullString{String: donation.UserID, Valid: donation.UserID != ""},
 		donation.Amount,
@@ -80,9 +82,22 @@ func AddDonation(donation *models.Donation) error {
 		sql.NullString{String: donation.EffectType, Valid: donation.EffectType != ""},
 		sql.NullBool{Bool: donation.IsTest, Valid: true},
 		sql.NullInt64{Int64: donation.AmountJPY, Valid: donation.AmountJPY > 0},
+		sql.NullString{String: donation.FiatCurrency, Valid: donation.FiatCurrency != "" && donation.AmountJPY > 0},
 		sql.NullString{String: donation.ArchiveID, Valid: donation.ArchiveID != ""},
 	)
 	return err
+}
+
+// normalizeFiatCurrency maps a stored fiat_currency value to the effective
+// conversion currency: rows written before the column existed are JPY.
+func normalizeFiatCurrency(stored string, amountFiat int64) string {
+	if amountFiat <= 0 {
+		return ""
+	}
+	if stored == "" {
+		return "JPY"
+	}
+	return stored
 }
 
 // HasPurchasedArchive reports whether the given authenticated user holds a
@@ -100,6 +115,45 @@ func HasPurchasedArchive(userID, archiveID string) (bool, error) {
 			  AND (is_test IS NULL OR is_test = FALSE)
 		)`,
 		userID, archiveID, models.DonationItemArchive,
+	).Scan(&exists)
+	return exists, err
+}
+
+// UserHasArchivePurchase reports whether the user holds any confirmed
+// (non-test) paid-archive entitlement. Used to protect buyers from unlinking
+// their last login method, which would strand access to purchased archives on
+// a new device (the purchase row survives, but the user could no longer prove
+// they are its owner).
+func UserHasArchivePurchase(userID string) (bool, error) {
+	if userID == "" {
+		return false, nil
+	}
+	var exists bool
+	err := _datastore.DB.QueryRow(
+		`SELECT EXISTS(
+			SELECT 1 FROM donations
+			WHERE user_id = ? AND item_type = ?
+			  AND (is_test IS NULL OR is_test = FALSE)
+		)`,
+		userID, models.DonationItemArchive,
+	).Scan(&exists)
+	return exists, err
+}
+
+// UserHasPurchase reports whether the user has any confirmed (non-test)
+// purchase of any kind. Used to protect a buyer from unlinking their last
+// login method and stranding the history/entitlements keyed to their account.
+func UserHasPurchase(userID string) (bool, error) {
+	if userID == "" {
+		return false, nil
+	}
+	var exists bool
+	err := _datastore.DB.QueryRow(
+		`SELECT EXISTS(
+			SELECT 1 FROM donations
+			WHERE user_id = ? AND (is_test IS NULL OR is_test = FALSE)
+		)`,
+		userID,
 	).Scan(&exists)
 	return exists, err
 }
@@ -127,20 +181,20 @@ func ArchiveHasAnyPurchase(archiveID string) (bool, error) {
 // the scan order in scanPurchaseRows. Raw SQL (not sqlc) because the
 // archive_id column postdates the generated bindings.
 const purchaseColumns = `id, user_id, amount, currency, message, display_name, is_anonymous,
-	payment_provider, payment_id, item_type, effect_type, is_test, amount_jpy, archive_id, created_at`
+	payment_provider, payment_id, item_type, effect_type, is_test, amount_jpy, fiat_currency, archive_id, created_at`
 
 // scanPurchaseRows scans rows selected with purchaseColumns.
 func scanPurchaseRows(rows *sql.Rows) ([]*models.Donation, error) {
 	donations := make([]*models.Donation, 0)
 	for rows.Next() {
 		var d models.Donation
-		var userID, message, displayName, provider, paymentID, itemType, effectType, archiveID sql.NullString
+		var userID, message, displayName, provider, paymentID, itemType, effectType, fiatCurrency, archiveID sql.NullString
 		var isAnonymous, isTest sql.NullBool
 		var amountJPY sql.NullInt64
 		var createdAt sql.NullTime
 		if err := rows.Scan(
 			&d.ID, &userID, &d.Amount, &d.Currency, &message, &displayName, &isAnonymous,
-			&provider, &paymentID, &itemType, &effectType, &isTest, &amountJPY, &archiveID, &createdAt,
+			&provider, &paymentID, &itemType, &effectType, &isTest, &amountJPY, &fiatCurrency, &archiveID, &createdAt,
 		); err != nil {
 			return nil, err
 		}
@@ -154,6 +208,7 @@ func scanPurchaseRows(rows *sql.Rows) ([]*models.Donation, error) {
 		d.EffectType = effectType.String
 		d.IsTest = isTest.Bool
 		d.AmountJPY = amountJPY.Int64
+		d.FiatCurrency = normalizeFiatCurrency(fiatCurrency.String, amountJPY.Int64)
 		d.ArchiveID = archiveID.String
 		d.CreatedAt = createdAt.Time
 		donations = append(donations, &d)
@@ -179,13 +234,13 @@ func GetAllPurchases(limit, offset int) ([]*models.Donation, error) {
 	donations := make([]*models.Donation, 0)
 	for rows.Next() {
 		var d models.Donation
-		var userID, message, displayName, provider, paymentID, itemType, effectType, archiveID sql.NullString
+		var userID, message, displayName, provider, paymentID, itemType, effectType, fiatCurrency, archiveID sql.NullString
 		var isAnonymous, isTest sql.NullBool
 		var amountJPY sql.NullInt64
 		var createdAt, hiddenAt sql.NullTime
 		if err := rows.Scan(
 			&d.ID, &userID, &d.Amount, &d.Currency, &message, &displayName, &isAnonymous,
-			&provider, &paymentID, &itemType, &effectType, &isTest, &amountJPY, &archiveID,
+			&provider, &paymentID, &itemType, &effectType, &isTest, &amountJPY, &fiatCurrency, &archiveID,
 			&createdAt, &hiddenAt,
 		); err != nil {
 			return nil, err
@@ -200,6 +255,7 @@ func GetAllPurchases(limit, offset int) ([]*models.Donation, error) {
 		d.EffectType = effectType.String
 		d.IsTest = isTest.Bool
 		d.AmountJPY = amountJPY.Int64
+		d.FiatCurrency = normalizeFiatCurrency(fiatCurrency.String, amountJPY.Int64)
 		d.ArchiveID = archiveID.String
 		d.CreatedAt = createdAt.Time
 		if hiddenAt.Valid {
@@ -275,13 +331,24 @@ func DonationExistsForPayment(provider, paymentID string) (bool, error) {
 	return exists, err
 }
 
-// GetDonationByID will return a donation by its ID.
+// GetDonationByID will return a donation by its ID. Raw SQL so the columns
+// that postdate the sqlc bindings (fiat_currency, archive_id) are populated.
 func GetDonationByID(id string) (*models.Donation, error) {
-	row, err := _datastore.GetQueries().GetDonationByID(context.Background(), id)
+	rows, err := _datastore.DB.Query(
+		`SELECT `+purchaseColumns+` FROM donations WHERE id = ?`, id,
+	)
 	if err != nil {
 		return nil, err
 	}
-	return donationFromRow(row), nil
+	defer rows.Close()
+	donations, err := scanPurchaseRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	if len(donations) == 0 {
+		return nil, sql.ErrNoRows
+	}
+	return donations[0], nil
 }
 
 // GetDonations will return a paginated list of visible donations.
@@ -366,37 +433,38 @@ func DeleteDonation(id string) error {
 	return _datastore.GetQueries().DeleteDonation(context.Background(), id)
 }
 
-// GetMonthlyDonationTotalJPY returns the total JPY donations for the current month.
-func GetMonthlyDonationTotalJPY() (int64, error) {
+// GetMonthlyDonationTotal returns the current month's non-test donation
+// total in the given currency.
+func GetMonthlyDonationTotal(currency string) (int64, error) {
 	now := time.Now()
 	startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 	endOfMonth := startOfMonth.AddDate(0, 1, 0)
 
-	result, err := _datastore.GetQueries().GetMonthlyDonationTotalJPY(context.Background(), db.GetMonthlyDonationTotalJPYParams{
-		CreatedAt:   sql.NullTime{Time: startOfMonth, Valid: true},
-		CreatedAt_2: sql.NullTime{Time: endOfMonth, Valid: true},
-	})
-	if err != nil {
-		return 0, err
-	}
-	if result == nil {
-		return 0, nil
-	}
-	return result.(int64), nil
+	var total int64
+	err := _datastore.DB.QueryRow(
+		`SELECT COALESCE(SUM(amount), 0) FROM donations
+		 WHERE currency = ? AND (is_test IS NULL OR is_test = FALSE)
+		   AND created_at >= ? AND created_at < ?`,
+		currency, startOfMonth, endOfMonth,
+	).Scan(&total)
+	return total, err
 }
 
-// GetRecentDonations returns the most recent visible donations.
+// GetRecentDonations returns the most recent visible donations. Raw SQL so
+// the columns that postdate the sqlc bindings are populated.
 func GetRecentDonations(limit int) ([]*models.Donation, error) {
-	rows, err := _datastore.GetQueries().GetRecentDonations(context.Background(), int32(limit))
+	rows, err := _datastore.DB.Query(
+		`SELECT `+purchaseColumns+` FROM donations
+		 WHERE hidden_at IS NULL
+		 ORDER BY created_at DESC
+		 LIMIT ?`,
+		limit,
+	)
 	if err != nil {
 		return nil, err
 	}
-
-	donations := make([]*models.Donation, 0)
-	for _, row := range rows {
-		donations = append(donations, donationFromRow(row))
-	}
-	return donations, nil
+	defer rows.Close()
+	return scanPurchaseRows(rows)
 }
 
 // GetDonationStats aggregates purchase statistics for the admin dashboard.
@@ -515,10 +583,17 @@ func GetDonationStats() (*models.DonationStats, error) {
 		return nil, err
 	}
 
-	// JPY value of crypto purchases, recorded at confirmation time.
+	// Base-currency value of crypto purchases, recorded at confirmation time.
+	// Rows converted under a different base currency are excluded rather than
+	// summed across currencies; legacy rows with an empty fiat_currency were
+	// always recorded in JPY.
+	stats.BaseCurrency = GetBaseCurrency()
 	if err := database.QueryRow(
 		`SELECT COALESCE(SUM(amount_jpy), 0) FROM donations
-		 WHERE amount_jpy > 0 AND ` + notTest).Scan(&stats.CryptoJPYTotal); err != nil {
+		 WHERE amount_jpy > 0 AND `+notTest+`
+		   AND (fiat_currency = ? OR ((fiat_currency IS NULL OR fiat_currency = '') AND ? = 'JPY'))`,
+		stats.BaseCurrency, stats.BaseCurrency,
+	).Scan(&stats.CryptoFiatTotal); err != nil {
 		return nil, err
 	}
 

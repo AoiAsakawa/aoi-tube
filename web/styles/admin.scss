@@ -208,6 +208,9 @@
 	display: inline-block;
 	margin-right: 0.5rem;
 	color: var(--offline-color);
+	// Keep the status word (e.g. Japanese "オフライン") on a single line instead
+	// of wrapping to "オフ / ライン" in the narrow header.
+	white-space: nowrap;
 }
 
 .app-container .online-status-indicator .status-icon {

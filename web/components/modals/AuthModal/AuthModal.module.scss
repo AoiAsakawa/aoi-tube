@@ -1,3 +1,38 @@
+.linkedAccounts {
+	margin-bottom: 16px;
+	padding: 12px;
+	border: 1px solid var(--color-panel-border);
+	border-radius: 8px;
+	background: var(--color-field-bg);
+	color: var(--color-panel-text);
+}
+
+.linkedAccountsTitle {
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.linkedAccountRow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 4px 0;
+	font-size: 13px;
+}
+
+.linkedAccountName {
+	display: flex;
+	gap: 8px;
+	align-items: baseline;
+	min-width: 0;
+}
+
+.linkedAccountHandle {
+	color: var(--color-panel-text-muted);
+	word-break: break-all;
+}
+
 .tabContent {
 	flex-direction: row;
 	display: flex;

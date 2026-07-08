@@ -142,7 +142,8 @@ func HandleCallback(code, state string) (*Request, *GitHubUser, error) {
 	body, _ := io.ReadAll(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
-		log.Errorln("GitHub token response:", string(body))
+		// Never log the raw token-endpoint body — it can contain issued tokens.
+		log.Errorln("GitHub token request failed with status", resp.StatusCode)
 		return nil, nil, errors.New("GitHubトークンの取得に失敗しました")
 	}
 

@@ -179,6 +179,17 @@ export const ClientConfigStore: FC = () => {
 		}
 	};
 
+	// Restores a previously-issued token from localStorage without creating a
+	// new user. Used on page load so passive viewers (who never chat or log in)
+	// never create a persistent anonymous account; a token is minted lazily via
+	// the store's ensureRegistered() on first chat/login intent instead.
+	const restoreSavedSession = () => {
+		const savedAccessToken = getLocalStorage(ACCESS_TOKEN_KEY);
+		if (savedAccessToken) {
+			setAccessToken(savedAccessToken);
+		}
+	};
+
 	const handleUserRegistration = async (optionalDisplayName?: string) => {
 		const savedAccessToken = getLocalStorage(ACCESS_TOKEN_KEY);
 		if (savedAccessToken) {
@@ -384,9 +395,26 @@ export const ClientConfigStore: FC = () => {
 		startChat();
 	}, [hasLoadedConfig, accessToken]);
 
+	// Open-chat mode (social auth NOT required) needs a token just to read the
+	// live chat over the websocket, so keep the historical eager registration
+	// there. When social auth IS required, chat is gated behind login and the
+	// token is minted lazily at login time (store.ensureRegistered), so passive
+	// viewers never create an account.
+	useEffect(() => {
+		if (!hasLoadedConfig || accessToken || clientConfig.chatDisabled) {
+			return;
+		}
+		if (!clientConfig.authentication?.requireTwitterAuth) {
+			handleUserRegistration();
+		}
+	}, [hasLoadedConfig, accessToken, clientConfig]);
+
 	useEffect(() => {
 		updateClientConfig();
-		handleUserRegistration();
+		// Restore an existing session only; anonymous users are created lazily on
+		// first chat/login intent (see store.ensureRegistered) so merely visiting
+		// the site never creates a persistent account.
+		restoreSavedSession();
 		updateServerStatus();
 
 		clearInterval(serverStatusRefreshPoll);

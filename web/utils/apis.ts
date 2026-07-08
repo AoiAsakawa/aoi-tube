@@ -36,6 +36,11 @@ export const DELETE_USER = `${API_LOCATION}chat/users/delete`;
 // Delete all users
 export const DELETE_ALL_USERS = `${API_LOCATION}chat/users/deleteall`;
 
+// Authentication governance: audit log, manual recovery, account merge
+export const USER_AUTH_EVENTS = `${API_LOCATION}chat/users/auth-events`;
+export const USER_AUTH_REACTIVATE = `${API_LOCATION}chat/users/auth/reactivate`;
+export const USER_MERGE = `${API_LOCATION}chat/users/merge`;
+
 // Disable/enable a single user
 export const USER_ENABLED_TOGGLE = `${API_LOCATION}chat/users/setenabled`;
 
@@ -125,6 +130,10 @@ export const STRIPE_CREATE_PAYMENT = `${NEXT_PUBLIC_API_HOST}api/stripe/create`;
 // Aggregated payments endpoints (avoid provider names in URL path)
 export const PAYMENTS_STATUS = `${NEXT_PUBLIC_API_HOST}api/payments/status`;
 export const PAYMENTS_CREATE = `${NEXT_PUBLIC_API_HOST}api/payments/create`;
+
+// Base currency (crypto conversion / reporting reference currency)
+export const ADMIN_BASE_CURRENCY = `${API_LOCATION}config/basecurrency`;
+export const ADMIN_BASE_CURRENCY_SET = `${API_LOCATION}config/basecurrency/set`;
 
 // Crypto price API
 export const CRYPTO_PRICE = `${NEXT_PUBLIC_API_HOST}api/crypto/price`;

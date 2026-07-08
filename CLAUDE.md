@@ -1,6 +1,6 @@
 # CLAUDE.md - AoiTube プロジェクトコンテキスト
 
-このファイルはClaude AI（Claude Code等）がAoiTubeのコードベースを理解するためのコンテキストを提供します。コード・コミットメッセージ・ドキュメントは英語で統一します（このファイルのみ日本語）。
+このファイルはClaude AI（Claude Code等）がAoiTubeのコードベースを理解するためのコンテキストを提供します。コード・コミットメッセージ・ドキュメントは英語で統一します（例外はこのファイル、README.ja.md、i18n/ローカライズ資産のみ）。
 
 > **バージョン**: 0.3.0（ベースは Owncast v0.1.1 + v0.2.5からの選択的移植）
 
@@ -12,9 +12,9 @@ AoiTubeはセルフホスト型のライブストリーミングサーバーで�
 
 - 日本語ファーストUI + 5言語i18n（ja/en/zh/zh-TW/ko、視聴者+管理画面）
 - **LL-HLS**（1秒セグメントfMP4、実測2-5秒）・**WebRTC**（実験的、1秒以下、Pion SFU）+ 実測レイテンシ/解像度バッジ
-- ソーシャル認証6種: X OAuth2+PKCE（GIF絵文字）/ Discord / Google / GitHub / IndieAuth / Fediverse
-- **購入システム**（投げ銭ではなくサービス購入の体裁）: スーパーチャット（YouTube準拠の金額ティア色）+ 画面演出8種（¥300〜¥10,000固定価格・サーバー強制）+ アーカイブPPV
-- 決済6種: PayPay（サンドボックス/本番キー分離）/ PayPal / Stripe / Metamask暗号資産（オンチェーン検証）/ Ko-fi / Doneru
+- ソーシャル認証6種: X OAuth2+PKCE（GIF絵文字）/ Discord / Google / GitHub / IndieAuth / Fediverse。**認証ガバナンス**: ソフト削除（失効=可逆）、監査ログ、運営者による手動復活・アカウント統合・モデレーター管理
+- **購入システム**（投げ銭ではなくサービス購入の体裁）: スーパーチャット（YouTube準拠の金額ティア色）+ 画面演出8種（¥300〜¥10,000固定価格・サーバー強制）+ アーカイブPPV。**基準通貨は設定可能**（既定JPY、国際運用対応）
+- 決済6種: PayPay（サンドボックス/本番キー分離）/ PayPal / Stripe / Metamask暗号資産（マルチチェーン・オンチェーン検証）/ Ko-fi / Doneru
 - **録画・アーカイブ**: 3層アクセス（公開/会員限定/有料）、replay.mp4無劣化リマックス、チャット・演出同期リプレイ、容量表示、タイトル編集、保持数制限（売り物保護付き）
 - **購入管理**（管理画面: 種類フィルタ・手動付与・取消）+ 購入者向け購入履歴
 - S3/R2メディアオフロード + 自動DBバックアップ + `-restoreFromS3` ワンコマンド移行
@@ -90,14 +90,20 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 ### 購入・決済
 - 統合フロー: `controllers/payments.go`（`normalizePurchaseItem`・演出固定価格 `models/donation.go effectPrices`・確定ブロードキャスト10秒遅延）。pendingDonations は mutex+TTL+`ClaimPendingDonation` で二重確定防止
 - **サーバー側検証**: Stripe=Webhook署名必須+リダイレクトはsession再取得で`paid`確認 / PayPal=API capture再取得+`COMPLETED`+custom_id / PayPay=署名必須+API再確認 / Metamask=オンチェーン検証（`controllers/metamaskVerify.go`、宛先・金額・成功status・ERC20ログ、fail-closed）/ Ko-fi=トークン定数時間比較+tx-ID冪等。金額は常にプロバイダ側の値。上限100万円/回
+- **基準通貨(base currency)**: 設定キー `base_currency`（既定JPY、`core/data/baseCurrency.go`）。暗号資産のfiat換算・スパチャのティア判定・売上集計の基準。各プロバイダは自前の通貨設定を保持（PayPayはJPY固定）。**金額は最小単位で保存**（ゼロ小数通貨=JPY/KRWは主単位、他はマイナー単位。`models/currency.go IsZeroDecimalCurrency`）。管理は「購入・収益」ページの通貨セレクタ
+- **アーカイブPPVの通貨**: manifest価格は**自通貨の最小単位で保存済み**。決済時は事前スケール済み金額+通貨オーバーライドで通す（`payments.go` PreScaledAmount/CurrencyOverride）。**主単位前提で `*100` すると100倍過大請求になるので注意**（過去バグ）
 - **PayPay環境分離**: `models/paypay.go` `Sandbox*/Production*`+レガシーfallback付き `GetActive*`。他プロバイダも同パターン（PayPal/Stripe）
 - **アーカイブ購入**: `donations.archive_id`+`HasPurchasedArchive`（is_test除外）。チャット非配信・Webhook非発火・公開recentフィードから除外（購入者名保護）。管理の手動付与=provider"manual"金額0
-- 暗号資産はJPY換算を `amount_jpy` に記録（CoinGecko/CMC、fail-open表示・演出はfail-closed）
+- **暗号資産**: マルチチェーン対応。検証は**リクエストの `networkId`（実際に送金したチェーン）**で行う（`metamaskRPCEndpoints`/`evmNativeSymbols`、運営者ウォレットは全EVMチェーン共通）。通貨はチェーンから**サーバー側で導出**（クライアント値は使わない）。伝播/採掘待ちのポーリング（最大~40s）。fiat換算(`amount_jpy`/`fiat_currency`)を記録。VBC(329)はCoinpaprika価格（無料枠60/hのため負のキャッシュ+直近価格フォールバック、`cryptoprice.go`）
 
-### 認証・チャット
-- X OAuth2(PKCE)/Discord/Google/GitHub: `auth/<provider>/`+`controllers/auth/<provider>/`。GitHubのトークンは数値ID使用（loginはリネーム可能）
+### 認証・チャット・ガバナンス
+- X OAuth2(PKCE)/Discord/Google/GitHub/IndieAuth/Fediverse: `auth/<provider>/`+`controllers/auth/<provider>/`。GitHubのトークンは数値ID使用（loginはリネーム可能）
 - `require_twitter_auth` はレガシー名だが「ソーシャル認証必須」の汎用ゲート（公開configは `GetSocialAuthRequired()` と一致させる）
-- WebSocket: onclose登録+送信バッファ（切断中のチャットは再接続後に自動送信）。チャット入力はslateエディタ
+- **遅延登録**: 匿名ユーザーはページ表示では作らず、初回の参加意図（ログイン開始/チャット送信）時に `ensureRegistered`(zustand)で生成。認証必須モードではログインが唯一の入口。オープンチャットモードのみ従来通り即時登録
+- **認証ガバナンス（ソフト削除モデル）**: `auth` は**ハード削除せず失効(`revoked_at`/`revoked_reason`)**。ログイン系ルックアップは全て `revoked_at IS NULL`。1プロバイダー1アクティブ不変条件。**ユーザー自身の解除(`unlinked`)はログイン時に自動復活しない**（乗っ取り防止、`revoked_reason`で判別）、システム失効(`overwritten`/merge)のみ自動復活、運営者は手動復活可（`ReactivateAuth`）。ソーシャルのハンドル名を保存（管理画面・本人の連携表示のみ、**チャット名はランダム名のまま**）。購入保持ユーザーは最後のログイン手段の解除をガード
+- **監査ログ**: append-only `auth_events`（`auth/audit.go`、link/unlink/reactivate/overwrite/merge/deleted、actor=self/admin）。統合(`MergeUsers`)は**単一トランザクション**（auth/donations/tokens/messages移動+ソース無効化+マーカー、auth_eventsは移動せず相互参照）。`GetUserAuthDetailsForAdmin` はtoken含む（管理のみ）
+- 管理: ユーザーデータ画面(`web/pages/admin/chat/user-data.tsx`)で認証履歴・失効履歴表示、モデレーター付与/解除、手動復活、アカウント統合。API: `/api/admin/chat/users/{auth-events,auth/reactivate,merge,setmoderator}`
+- WebSocket: onclose登録+送信バッファ（切断中のチャットは再接続後に自動送信）。チャット入力はslateエディタ。接続情報イベントは本人にのみ連携ハンドルを含む
 
 ### ストレージ・バックアップ
 - `core/storageproviders/archiveS3.go`: ライブS3設定流用（`Enabled`非依存）、`archives/`・`backups/` プレフィックス。`PrefixUsage`/`DeleteRawPrefix`/multipart管理
@@ -115,8 +121,9 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 ## データベース
 
-- 主要テーブル: `users`（authenticated_at）/ `auth`（type: x, discord, google, github, twitter, fediverse）/ `datastore`（key-value設定）/ `messages`（2時間でプルーン）/ `donations`
-- **donations拡張列**: `item_type`("superchat"/"effect"/"archive") / `effect_type` / `is_test` / `amount_jpy` / `archive_id`（後方互換ALTER、生SQLで読み書き=sqlc再生成回避）。**購入行はアーカイブ削除後も永続**（誰が/いつ/いくら/payment_id）
+- 主要テーブル: `users`（authenticated_at）/ `auth`（type: x, discord, google, github, twitter, fediverse, indieauth）/ `auth_events`（append-only監査ログ）/ `datastore`（key-value設定）/ `messages`（2時間でプルーン）/ `donations`
+- **donations拡張列**: `item_type`("superchat"/"effect"/"archive") / `effect_type` / `is_test` / `amount_jpy`（基準通貨換算値、最小単位）/ `fiat_currency`（換算先通貨、空=JPY）/ `archive_id`（後方互換ALTER、生SQLで読み書き=sqlc再生成回避）。**購入行はアーカイブ削除後も永続**（誰が/いつ/いくら/payment_id）
+- **auth拡張列**: `handle`（ソーシャルのハンドル名）/ `revoked_at`（ソフト削除）/ `revoked_reason`（`unlinked`=ユーザー解除は自動復活しない / `overwritten`=システム失効は復活可）。ログイン系ルックアップは全て `revoked_at IS NULL`（後方互換ALTER）
 - **【重要】upstream Owncastのdatastore migration 4（パスワードbcrypt化）は適用禁止**（本フォークは独自適用済み、二重ハッシュでログイン不能になる）
 - スキーマは upstream と同一（schemaVersion=7）。DB操作の実例は `docs/database-operations.md`
 

@@ -14,6 +14,8 @@ import {
 	Statistic,
 	Row,
 	Col,
+	Select,
+	Tooltip,
 	theme,
 } from 'antd';
 import {
@@ -24,12 +26,46 @@ import {
 	UserOutlined,
 	CheckCircleOutlined,
 	StopOutlined,
+	HistoryOutlined,
+	MergeCellsOutlined,
+	SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import { AdminLayout } from '../../../components/layouts/AdminLayout';
-import { ALL_USERS, DELETE_USER, DELETE_ALL_USERS, fetchData } from '../../../utils/apis';
+import {
+	ALL_USERS,
+	DELETE_USER,
+	DELETE_ALL_USERS,
+	USER_AUTH_EVENTS,
+	USER_AUTH_REACTIVATE,
+	USER_MERGE,
+	USER_SET_MODERATOR,
+	fetchData,
+} from '../../../utils/apis';
 
 const { Text, Title } = Typography;
 const { confirm } = Modal;
+
+// Display metadata for each auth provider type. 'x' is the current X OAuth 2.0
+// login; 'twitter' is the legacy OAuth 1.0a flow — both surface as "X".
+const getProviderMeta = (type: string): { color: string; label: string } => {
+	switch (type) {
+		case 'x':
+		case 'twitter':
+			return { color: 'blue', label: 'X' };
+		case 'github':
+			return { color: 'geekblue', label: 'GitHub' };
+		case 'discord':
+			return { color: 'purple', label: 'Discord' };
+		case 'google':
+			return { color: 'red', label: 'Google' };
+		case 'fediverse':
+			return { color: 'orange', label: 'Fediverse' };
+		case 'indieauth':
+			return { color: 'cyan', label: 'IndieAuth' };
+		default:
+			return { color: 'default', label: type };
+	}
+};
 
 interface User {
 	id: string;
@@ -41,8 +77,23 @@ interface User {
 	authenticatedAt?: string;
 	authType?: string;
 	authTypes?: string[];
+	// Linked social accounts with their handles (e.g. an X @handle or a GitHub
+	// login). Shown to the operator only; not the public chat name. revoked
+	// marks an unlinked account, kept as history for provenance; token is the
+	// provider identity used to reactivate a specific revoked link.
+	authDetails?: { type: string; handle?: string; revoked?: boolean; token?: string }[];
 	scopes?: string[];
 	previousNames?: string[];
+}
+
+interface AuthEvent {
+	id: number;
+	userId: string;
+	type: string;
+	handle?: string;
+	action: string;
+	actor: string;
+	createdAt: string;
 }
 
 export default function UserDataManagement() {
@@ -52,6 +103,13 @@ export default function UserDataManagement() {
 	const [loading, setLoading] = useState(false);
 	const [searchText, setSearchText] = useState('');
 	const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+	// Governance: audit-log viewer, account-merge dialog, and per-link recovery.
+	const [auditUser, setAuditUser] = useState<User | null>(null);
+	const [auditEvents, setAuditEvents] = useState<AuthEvent[]>([]);
+	const [auditLoading, setAuditLoading] = useState(false);
+	const [mergeSource, setMergeSource] = useState<User | null>(null);
+	const [mergeTargetId, setMergeTargetId] = useState<string>('');
+	const [reactivating, setReactivating] = useState<string | null>(null);
 
 	const fetchUsers = async () => {
 		setLoading(true);
@@ -148,6 +206,83 @@ export default function UserDataManagement() {
 		});
 	};
 
+	// POST helper for the admin governance endpoints (Basic-auth via the
+	// browser session, matching the delete handlers above).
+	const adminPost = async (url: string, body: unknown): Promise<boolean> => {
+		try {
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify(body),
+			});
+			const data = await response.json().catch(() => ({}));
+			return response.ok && data.success !== false;
+		} catch (_e) {
+			return false;
+		}
+	};
+
+	const handleSetModerator = async (userId: string, isModerator: boolean) => {
+		const ok = await adminPost(USER_SET_MODERATOR, { userId, isModerator });
+		if (ok) {
+			message.success(
+				isModerator
+					? t('admin.pages.userData.governance.moderatorGranted')
+					: t('admin.pages.userData.governance.moderatorRevoked'),
+			);
+			fetchUsers();
+		} else {
+			message.error(t('admin.pages.userData.governance.moderatorFailed'));
+		}
+	};
+
+	const openAuditLog = async (user: User) => {
+		setAuditUser(user);
+		setAuditEvents([]);
+		setAuditLoading(true);
+		try {
+			const result = await fetchData(`${USER_AUTH_EVENTS}?userId=${encodeURIComponent(user.id)}`);
+			setAuditEvents(result?.events || []);
+		} catch (_e) {
+			message.error(t('admin.pages.userData.governance.auditLoadFailed'));
+		}
+		setAuditLoading(false);
+	};
+
+	const handleReactivate = async (userId: string, type: string, tok?: string) => {
+		if (!tok) {
+			return;
+		}
+		setReactivating(`${userId}:${tok}`);
+		const ok = await adminPost(USER_AUTH_REACTIVATE, { userId, type, token: tok });
+		setReactivating(null);
+		if (ok) {
+			message.success(t('admin.pages.userData.governance.reactivateSuccess'));
+			fetchUsers();
+		} else {
+			message.error(t('admin.pages.userData.governance.reactivateFailed'));
+		}
+	};
+
+	const handleMerge = async () => {
+		if (!mergeSource || !mergeTargetId) {
+			return;
+		}
+		const ok = await adminPost(USER_MERGE, {
+			sourceUserId: mergeSource.id,
+			targetUserId: mergeTargetId,
+		});
+		if (ok) {
+			message.success(t('admin.pages.userData.governance.mergeSuccess'));
+			setMergeSource(null);
+			setMergeTargetId('');
+			fetchUsers();
+		} else {
+			message.error(t('admin.pages.userData.governance.mergeFailed'));
+		}
+	};
+
 	const filteredUsers = users.filter(
 		user =>
 			user.displayName.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -163,7 +298,7 @@ export default function UserDataManagement() {
 			title: 'ID',
 			dataIndex: 'id',
 			key: 'id',
-			width: 120,
+			width: 90,
 			ellipsis: true,
 			render: (id: string) => (
 				<Text copyable={{ text: id }} style={{ fontSize: '12px' }}>
@@ -175,6 +310,7 @@ export default function UserDataManagement() {
 			title: t('admin.pages.userData.columns.displayName'),
 			dataIndex: 'displayName',
 			key: 'displayName',
+			width: 150,
 			render: (name: string, record: User) => (
 				<Space>
 					<span
@@ -191,55 +327,93 @@ export default function UserDataManagement() {
 			),
 		},
 		{
-			title: t('admin.pages.userData.columns.status'),
-			key: 'status',
-			width: 250,
-			render: (_: any, record: User) => (
-				<Space wrap>
-					{record.authenticated && (
-						<Tag color="green">{t('admin.pages.userData.tags.authenticated')}</Tag>
-					)}
-					{record.authTypes && record.authTypes.length > 0 && (
-						<>
-							{record.authTypes.map(type => {
-								let color = 'default';
-								let label = type;
-								switch (type) {
-									case 'twitter':
-										color = 'blue';
-										label = 'X';
-										break;
-									case 'discord':
-										color = 'purple';
-										label = 'Discord';
-										break;
-									case 'google':
-										color = 'red';
-										label = 'Google';
-										break;
-									case 'fediverse':
-										color = 'orange';
-										label = 'Fediverse';
-										break;
-									case 'indieauth':
-										color = 'cyan';
-										label = 'IndieAuth';
-										break;
-								}
-								return (
-									<Tag key={type} color={color}>
+			// Linked social accounts, one per line with the handle, so long
+			// handles stay readable instead of wrapping together with the status
+			// tags.
+			title: t('admin.pages.userData.columns.auth'),
+			key: 'auth',
+			width: 190,
+			render: (_: any, record: User) => {
+				const entries: { type: string; handle?: string; revoked?: boolean; token?: string }[] =
+					record.authDetails && record.authDetails.length > 0
+						? record.authDetails
+						: (record.authTypes ?? []).map(type => ({ type }));
+				if (entries.length === 0) {
+					return <Text type="secondary">—</Text>;
+				}
+				return (
+					<Space direction="vertical" size={2} style={{ display: 'flex' }}>
+						{entries.map(({ type, handle, revoked }, i) => {
+							const { color, label } = getProviderMeta(type);
+							return (
+								<span
+									key={`${type}-${i}`}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										gap: 6,
+										opacity: revoked ? 0.5 : 1,
+									}}
+								>
+									<Tag
+										color={revoked ? 'default' : color}
+										style={{ margin: 0, textDecoration: revoked ? 'line-through' : undefined }}
+									>
 										{label}
 									</Tag>
-								);
-							})}
-						</>
-					)}
-					{record.disabledAt && <Tag color="red">{t('admin.pages.userData.tags.blocked')}</Tag>}
+									{handle && (
+										<Text
+											delete={revoked}
+											type="secondary"
+											style={{ fontSize: 12, wordBreak: 'break-all' }}
+											title={handle}
+										>
+											{handle}
+										</Text>
+									)}
+									{revoked && (
+										<>
+											<Text type="secondary" style={{ fontSize: 11 }}>
+												({t('admin.pages.userData.tags.unlinked')})
+											</Text>
+											<Button
+												size="small"
+												type="link"
+												style={{ padding: 0, height: 'auto', fontSize: 11 }}
+												loading={reactivating === `${record.id}:${entries[i].token}`}
+												onClick={() => handleReactivate(record.id, type, entries[i].token)}
+											>
+												{t('admin.pages.userData.governance.reactivate')}
+											</Button>
+										</>
+									)}
+								</span>
+							);
+						})}
+					</Space>
+				);
+			},
+		},
+		{
+			title: t('admin.pages.userData.columns.status'),
+			key: 'status',
+			width: 100,
+			render: (_: any, record: User) => (
+				<Space direction="vertical" size={2} style={{ display: 'flex' }}>
+					<Tag color={record.authenticated ? 'green' : 'default'} style={{ margin: 0 }}>
+						{record.authenticated
+							? t('admin.pages.userData.tags.authenticated')
+							: t('admin.pages.userData.tags.unauthenticated')}
+					</Tag>
 					{record.scopes?.includes('MODERATOR') && (
-						<Tag color="blue">{t('admin.pages.userData.tags.moderator')}</Tag>
+						<Tag color="blue" style={{ margin: 0 }}>
+							{t('admin.pages.userData.tags.moderator')}
+						</Tag>
 					)}
-					{!record.authenticated && !record.disabledAt && !record.scopes?.includes('MODERATOR') && (
-						<Tag color="default">{t('admin.pages.userData.tags.unauthenticated')}</Tag>
+					{record.disabledAt && (
+						<Tag color="red" style={{ margin: 0 }}>
+							{t('admin.pages.userData.tags.blocked')}
+						</Tag>
 					)}
 				</Space>
 			),
@@ -263,19 +437,76 @@ export default function UserDataManagement() {
 		{
 			title: t('admin.pages.userData.columns.action'),
 			key: 'action',
-			width: 100,
-			render: (_: any, record: User) => (
-				<Popconfirm
-					title={t('admin.pages.userData.deleteUserConfirm.title')}
-					description={t('admin.pages.userData.deleteUserConfirm.description')}
-					onConfirm={() => handleDeleteUser(record.id)}
-					okText={t('admin.pages.common.delete')}
-					cancelText={t('admin.pages.common.cancel')}
-					okButtonProps={{ danger: true }}
-				>
-					<Button type="text" danger icon={<DeleteOutlined />} size="small" />
-				</Popconfirm>
-			),
+			width: 150,
+			render: (_: any, record: User) => {
+				const isModerator = record.scopes?.includes('MODERATOR') ?? false;
+				return (
+					<Space size={4}>
+						<Popconfirm
+							title={
+								isModerator
+									? t('admin.pages.userData.governance.moderatorRevokeConfirm', {
+											name: record.displayName,
+										})
+									: t('admin.pages.userData.governance.moderatorGrantConfirm', {
+											name: record.displayName,
+										})
+							}
+							okText={
+								isModerator
+									? t('admin.pages.userData.governance.moderatorRevokeAction')
+									: t('admin.pages.userData.governance.moderatorGrantAction')
+							}
+							cancelText={t('admin.pages.common.cancel')}
+							okButtonProps={{ danger: isModerator }}
+							onConfirm={() => handleSetModerator(record.id, !isModerator)}
+						>
+							<Tooltip
+								title={
+									isModerator
+										? t('admin.pages.userData.governance.moderatorRevokeAction')
+										: t('admin.pages.userData.governance.moderatorGrantAction')
+								}
+							>
+								<Button
+									size="small"
+									icon={<SafetyCertificateOutlined />}
+									type={isModerator ? 'primary' : 'default'}
+								/>
+							</Tooltip>
+						</Popconfirm>
+						<Tooltip title={t('admin.pages.userData.governance.history')}>
+							<Button
+								size="small"
+								icon={<HistoryOutlined />}
+								onClick={() => openAuditLog(record)}
+							/>
+						</Tooltip>
+						<Tooltip title={t('admin.pages.userData.governance.merge')}>
+							<Button
+								size="small"
+								icon={<MergeCellsOutlined />}
+								onClick={() => {
+									setMergeSource(record);
+									setMergeTargetId('');
+								}}
+							/>
+						</Tooltip>
+						<Popconfirm
+							title={t('admin.pages.userData.deleteUserConfirm.title')}
+							description={t('admin.pages.userData.deleteUserConfirm.description')}
+							onConfirm={() => handleDeleteUser(record.id)}
+							okText={t('admin.pages.common.delete')}
+							cancelText={t('admin.pages.common.cancel')}
+							okButtonProps={{ danger: true }}
+						>
+							<Tooltip title={t('admin.pages.common.delete')}>
+								<Button type="text" danger icon={<DeleteOutlined />} size="small" />
+							</Tooltip>
+						</Popconfirm>
+					</Space>
+				);
+			},
 		},
 	];
 
@@ -380,8 +611,97 @@ export default function UserDataManagement() {
 					showTotal: total => t('admin.pages.userData.totalItems', { num: total }),
 				}}
 				size="small"
-				scroll={{ x: 900 }}
+				scroll={{ x: 'max-content' }}
 			/>
+
+			{/* Authentication audit log: append-only link/unlink/merge history. */}
+			<Modal
+				title={t('admin.pages.userData.governance.auditTitle', {
+					name: auditUser?.displayName ?? '',
+				})}
+				open={auditUser !== null}
+				onCancel={() => setAuditUser(null)}
+				footer={null}
+				width={640}
+			>
+				<Table
+					dataSource={auditEvents}
+					rowKey="id"
+					loading={auditLoading}
+					size="small"
+					pagination={false}
+					scroll={{ y: 360 }}
+					locale={{ emptyText: t('admin.pages.userData.governance.auditEmpty') }}
+					columns={[
+						{
+							title: t('admin.pages.userData.governance.auditWhen'),
+							dataIndex: 'createdAt',
+							key: 'createdAt',
+							render: (d: string) => new Date(d).toLocaleString('ja-JP'),
+						},
+						{
+							title: t('admin.pages.userData.governance.auditAction'),
+							dataIndex: 'action',
+							key: 'action',
+							render: (action: string, e: AuthEvent) => (
+								<span>
+									<Tag>{t(`admin.pages.userData.governance.actions.${action}`, action)}</Tag>
+									{e.type ? (
+										<Text type="secondary" style={{ fontSize: 12 }}>
+											{getProviderMeta(e.type).label}
+											{e.handle ? ` · ${e.handle}` : ''}
+										</Text>
+									) : null}
+								</span>
+							),
+						},
+						{
+							title: t('admin.pages.userData.governance.auditActor'),
+							dataIndex: 'actor',
+							key: 'actor',
+							width: 90,
+							render: (actor: string) => (
+								<Tag color={actor === 'admin' ? 'blue' : 'default'}>
+									{t(`admin.pages.userData.governance.actors.${actor}`, actor)}
+								</Tag>
+							),
+						},
+					]}
+				/>
+			</Modal>
+
+			{/* Account merge: consolidate a duplicate identity into another user. */}
+			<Modal
+				title={t('admin.pages.userData.governance.mergeTitle')}
+				open={mergeSource !== null}
+				onCancel={() => setMergeSource(null)}
+				onOk={handleMerge}
+				okText={t('admin.pages.userData.governance.mergeConfirm')}
+				okButtonProps={{ disabled: !mergeTargetId, danger: true }}
+			>
+				<Text style={{ display: 'block', marginBottom: 12 }}>
+					{t('admin.pages.userData.governance.mergeIntro', {
+						name: mergeSource?.displayName ?? '',
+					})}
+				</Text>
+				<Select
+					showSearch
+					style={{ width: '100%' }}
+					placeholder={t('admin.pages.userData.governance.mergeTargetPlaceholder')}
+					value={mergeTargetId || undefined}
+					onChange={setMergeTargetId}
+					optionFilterProp="label"
+					options={users
+						.filter(u => u.id !== mergeSource?.id)
+						.map(u => ({
+							value: u.id,
+							label: `${u.displayName} (${u.id.slice(0, 8)})`,
+						}))}
+				/>
+				<Text type="warning" style={{ display: 'block', marginTop: 12, fontSize: 12 }}>
+					{t('admin.pages.userData.governance.mergeWarning')}
+				</Text>
+			</Modal>
 		</div>
 	);
 }
