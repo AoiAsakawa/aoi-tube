@@ -1,0 +1,101 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.root {
+	width: var(--chat-col-width);
+	background: linear-gradient(180deg, rgba(26, 26, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+	border-left: 1px solid rgba(255, 255, 255, 0.08);
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	top: var(--header-height);
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - var(--header-height));
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(102, 126, 234, 0.3) 50%,
+			transparent 100%
+		);
+	}
+
+	box-shadow:
+		-4px 0 20px rgba(0, 0, 0, 0.4),
+		inset 1px 0 0 rgba(255, 255, 255, 0.05);
+
+
+	@include mixins.screen(tablet) {
+		display: none;
+	}
+}
+
+// Light theme: white translucent chat column matching the header/footer
+:global(:root[data-theme='light']) {
+	.root {
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(243, 246, 252, 0.97) 100%);
+		border-left: 1px solid rgba(0, 0, 0, 0.08);
+		box-shadow:
+			-4px 0 20px rgba(30, 40, 80, 0.12),
+			inset 1px 0 0 rgba(255, 255, 255, 0.6);
+	}
+}
+
+// Pre-login state: keep the full column width so the chat doesn't jump
+// from a narrow strip to full width once the user record arrives.
+.loading {
+	align-items: center;
+	justify-content: center;
+}
+
+/*
+Inner container for chat
+*/
+.root > div {
+	display: flex;
+	flex-flow: column nowrap;
+	flex-grow: 1;
+	height: 100%;
+	width: 100%;
+}
+
+// Column label above the chat: matches the header chrome so the panel reads
+// as a deliberate surface even when there are no messages yet.
+// `.root > .panelHeader` specificity deliberately beats the legacy
+// `.root > div` rule above, which forces flex-grow:1/height:100% onto every
+// direct child (it once stretched this 1-line header to the full column and
+// pushed the chat input below the viewport).
+.root > .panelHeader {
+	flex: 0 0 auto;
+	height: auto;
+	padding: 10px 16px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--color-panel-text-muted);
+	border-bottom: 1px solid var(--color-panel-border-soft);
+}
+
+// Fills the column below the panel header; min-height: 0 lets the chat's
+// message list shrink instead of overflowing the fixed-height column.
+.root > .panelBody {
+	flex: 1 1 0;
+	height: auto;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+
+	> :global(#chat-container) {
+		flex: 1;
+		min-height: 0;
+	}
+}

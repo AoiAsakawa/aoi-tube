@@ -1,0 +1,28 @@
+.field {
+	margin-bottom: 16px;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.label {
+	display: block;
+	font-weight: 600;
+	color: var(--color-panel-text);
+}
+
+.required {
+	margin-left: 4px;
+	color: var(--theme-color-error);
+}
+
+.description {
+	color: var(--color-panel-text-muted);
+}
+
+.error {
+	margin-top: 4px;
+	font-size: 0.85rem;
+	color: var(--theme-color-error);
+}

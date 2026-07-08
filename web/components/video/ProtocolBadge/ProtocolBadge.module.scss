@@ -1,0 +1,39 @@
+.container {
+	position: absolute;
+	bottom: 60px;
+	left: 10px;
+	z-index: 100;
+	pointer-events: none;
+}
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 11px;
+	padding: 4px 8px;
+	border-radius: 3px;
+	color: white;
+	font-weight: 500;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(4px);
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.icon {
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+}
+
+.label {
+	font-weight: 600;
+}
+
+.latency {
+	margin-left: 4px;
+	font-size: 11px;
+	opacity: 0.9;
+	padding-left: 6px;
+	border-left: 1px solid rgba(255, 255, 255, 0.3);
+}

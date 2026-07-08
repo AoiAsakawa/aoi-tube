@@ -1,0 +1,88 @@
+// TODO: This component should be cleaned up and usage should be re-examined. The types should be reconsidered as well.
+
+import { Typography, Statistic, Card, Progress } from 'antd';
+import { FC } from 'react';
+
+const { Text } = Typography;
+
+export type StatisticItemProps = {
+	title?: string;
+	value?: any;
+	prefix?: any;
+	suffix?: string;
+	color?: string;
+	progress?: boolean;
+	centered?: boolean;
+	formatter?: any;
+};
+
+export type ContentProps = {
+	prefix: string;
+	value: any;
+	suffix: string;
+	title: string;
+};
+
+const Content: FC<ContentProps> = ({ prefix, value, suffix, title }) => (
+	<div>
+		{prefix}
+		<div>
+			<Text type="secondary">{title}</Text>
+		</div>
+		<div>
+			<Text type="secondary">
+				{value}
+				{suffix || '%'}
+			</Text>
+		</div>
+	</div>
+);
+
+const ProgressView: FC<StatisticItemProps> = ({
+	title = '',
+	value = 0,
+	prefix = null,
+	suffix = null,
+	color = '',
+}) => {
+	const endColor = value > 90 ? 'red' : color;
+	const content = <Content prefix={prefix} value={value} suffix={suffix} title={title} />;
+
+	return (
+		<Progress
+			type="dashboard"
+			percent={value}
+			width={120}
+			strokeColor={{
+				'0%': color,
+				'90%': endColor,
+			}}
+			format={() => content}
+		/>
+	);
+};
+
+const StatisticView: FC<StatisticItemProps> = ({
+	title = '',
+	value = 0,
+	prefix = null,
+	formatter = null,
+}) => <Statistic title={title} value={value} prefix={prefix} formatter={formatter} />;
+
+export const StatisticItem: FC<StatisticItemProps> = ({
+	progress = false,
+	centered = false,
+	...restProps
+}) => {
+	const View = progress ? ProgressView : StatisticView;
+
+	const style = centered ? { display: 'flex', alignItems: 'center', justifyContent: 'center' } : {};
+
+	return (
+		<Card type="inner">
+			<div style={style}>
+				<View progress={progress} centered={centered} {...restProps} />
+			</div>
+		</Card>
+	);
+};

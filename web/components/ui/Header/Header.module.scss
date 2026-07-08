@@ -1,0 +1,308 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.header {
+	height: var(--header-height);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	// Include the horizontal padding in the 100% width; without border-box the
+	// padding is added on top of 100% and the fixed header overflows the
+	// viewport, producing a page-wide horizontal scrollbar.
+	box-sizing: border-box;
+	padding: 0 1.5rem;
+	background: linear-gradient(135deg, rgba(26, 26, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(25px);
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 200;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	box-shadow: var(--shadow-panel);
+
+	// Subtle gradient line at bottom
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(102, 126, 234, 0.3) 50%,
+			transparent 100%
+		);
+	}
+
+	h1 {
+		margin-top: unset;
+		margin-bottom: unset;
+	}
+	// fixes header on tablet and below
+	@include mixins.screen(tablet) {
+		position: fixed;
+		top: 0px;
+		width: 100%;
+		padding: 0 1rem;
+	}
+}
+
+.logoImage {
+	padding: 0.2rem;
+	margin-right: 0.75rem;
+	display: none;
+
+	@include mixins.screen(desktop) {
+		display: block;
+	}
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+// The logo + site name link back to the home page. Styled to look like the
+// static branding it replaced (no underline, inherits header text color).
+.logoLink {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	color: inherit;
+	text-decoration: none;
+	min-width: 0; // let the title's ellipsis work inside the flex row
+
+	&:hover {
+		color: inherit;
+		text-decoration: none;
+	}
+}
+
+.title {
+	color: #ffffff;
+	font-family: var(--theme-text-display-font-family);
+	margin-bottom: 0px;
+	font-size: clamp(1rem, 4vw, 1.4rem);
+	font-weight: 700;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	// 6rem is an overapproximation of the width of
+	// the user menu
+	max-width: min(70vw, calc(100vw - 6rem));
+	overflow: hidden;
+	line-height: 1.4;
+	letter-spacing: -0.02em;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.skipLink {
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.skipLink:focus {
+	position: static;
+	width: auto;
+	height: auto;
+}
+
+.offlineTag {
+	cursor: default;
+	color: var(--theme-color-components-text-on-light);
+}
+
+.avatar {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	box-sizing: content-box;
+	border: 2px solid var(--color-overlay-medium);
+	box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+	transition: var(--transition-smooth);
+
+	&:hover {
+		transform: scale(1.05);
+		box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+	}
+}
+
+.chatOfflineText {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 0.75rem;
+	padding: 0.4rem 0.8rem;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: var(--radius-pill);
+}
+
+.rightSection {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+// Language switcher pill, matching the header's translucent dark styling
+.languageButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.1);
+	border: none;
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 1rem;
+	cursor: pointer;
+	padding: 0.45rem 0.7rem;
+	border-radius: var(--radius-pill);
+	transition: background 0.2s ease;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.2);
+		color: #ffffff;
+	}
+}
+
+// Light theme: white translucent header with dark text
+:global(:root[data-theme='light']) {
+	.header {
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(243, 246, 252, 0.95) 100%);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	}
+
+	.title {
+		color: #1a202c;
+		text-shadow: none;
+	}
+
+	.languageButton {
+		background: rgba(0, 0, 0, 0.06);
+		color: rgba(0, 0, 0, 0.7);
+
+		&:hover {
+			background: rgba(0, 0, 0, 0.12);
+			color: #1a202c;
+		}
+	}
+
+	.chatOfflineText {
+		background: rgba(0, 0, 0, 0.06);
+		color: rgba(0, 0, 0, 0.55);
+	}
+}
+
+.toolTip {
+	font-size: 0.8rem;
+}
+
+// Live badge styling
+.liveBadge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+	color: white;
+	padding: 0.35rem 1rem;
+	border-radius: var(--radius-sm);
+	font-size: 0.75rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	animation: pulseGlow 2s ease-in-out infinite;
+	box-shadow:
+		0 2px 10px rgba(255, 65, 108, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	position: relative;
+	overflow: hidden;
+
+	// Silent (test) broadcast: calm amber instead of the pulsing red LIVE.
+	&.testBadge {
+		background: linear-gradient(90deg, #b45309 0%, #d97706 100%);
+		animation: none;
+		box-shadow:
+			0 2px 10px rgba(217, 119, 6, 0.4),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	}
+
+	&::before {
+		content: '';
+		width: 8px;
+		height: 8px;
+		background: white;
+		border-radius: 50%;
+		animation: blink 1s ease-in-out infinite;
+		box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		animation: shine 3s ease-in-out infinite;
+	}
+}
+
+@keyframes pulseGlow {
+	0%,
+	100% {
+		box-shadow:
+			0 2px 10px rgba(255, 65, 108, 0.5),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2);
+		transform: scale(1);
+	}
+	50% {
+		box-shadow:
+			0 4px 25px rgba(255, 65, 108, 0.8),
+			0 0 40px rgba(255, 65, 108, 0.3),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2);
+		transform: scale(1.02);
+	}
+}
+
+@keyframes shine {
+	0% {
+		left: -100%;
+	}
+	50%,
+	100% {
+		left: 100%;
+	}
+}
+
+@keyframes blink {
+	0%,
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.4;
+		transform: scale(0.9);
+	}
+}
+
+// Offline login entry button — accented pill so it stands out from utility buttons
+.loginButton {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border: none;
+	color: #ffffff;
+	font-size: 0.85rem;
+	font-weight: 600;
+	cursor: pointer;
+	padding: 0.45rem 1rem;
+	border-radius: var(--radius-pill);
+	transition: opacity 0.2s ease;
+
+	&:hover {
+		opacity: 0.85;
+	}
+}

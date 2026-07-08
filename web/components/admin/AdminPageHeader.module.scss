@@ -1,0 +1,21 @@
+.header {
+	margin-bottom: 24px;
+}
+
+.title {
+	/* Composed with the antd class so this outranks the library's
+	   `h1.ant-typography` sizing regardless of injection order. */
+	&:global(.ant-typography) {
+		margin-bottom: 4px;
+		font-size: 1.5rem;
+		font-weight: 600;
+	}
+}
+
+.description {
+	color: var(--color-panel-text-muted);
+
+	&:global(.ant-typography) {
+		margin-bottom: 0;
+	}
+}

@@ -1,0 +1,55 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.container {
+	// Match the 1rem side margin the player and status bar keep on desktop.
+	margin: 1rem 1rem 0.5rem;
+
+	@include mixins.screen(tablet) {
+		margin: 1rem 0.75rem 0.5rem;
+	}
+}
+
+.header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 10px;
+}
+
+.heading {
+	margin: 0;
+	font-family: var(--theme-text-display-font-family);
+	font-size: 1.15rem;
+	font-weight: 600;
+	color: var(--color-panel-text);
+}
+
+.viewAllLink {
+	flex-shrink: 0;
+	font-size: 0.9rem;
+	color: var(--theme-color-action);
+
+	&:hover {
+		color: var(--theme-color-action-hover);
+		text-decoration: underline;
+	}
+}
+
+.row {
+	display: flex;
+	gap: 12px;
+	overflow-x: auto;
+	scroll-snap-type: x proximity;
+	// Keep the lifted hover state and the scrollbar from clipping the cards.
+	padding: 4px 2px 10px;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-scrollbar-thumb) transparent;
+}
+
+.cardWrapper {
+	flex: 0 0 280px;
+	width: 280px;
+	scroll-snap-align: start;
+}

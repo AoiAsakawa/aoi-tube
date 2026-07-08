@@ -1,0 +1,79 @@
+package moderation
+
+import (
+	"encoding/json"
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/aoiasakawa/aoitube/controllers"
+	"github.com/aoiasakawa/aoitube/core/chat"
+	"github.com/aoiasakawa/aoitube/core/chat/events"
+	"github.com/aoiasakawa/aoitube/core/user"
+	log "github.com/sirupsen/logrus"
+)
+
+// ExternalGetUserDetails returns the details of a chat user for an external
+// integration (e.g. a moderation bot) authorized with an admin access token.
+func ExternalGetUserDetails(integration user.ExternalAPIUser, w http.ResponseWriter, r *http.Request) {
+	GetUserDetails(w, r)
+}
+
+// GetUserDetails returns the details of a chat user for moderators.
+func GetUserDetails(w http.ResponseWriter, r *http.Request) {
+	type connectedClient struct {
+		Id           uint      `json:"id"`
+		MessageCount int       `json:"messageCount"`
+		UserAgent    string    `json:"userAgent"`
+		ConnectedAt  time.Time `json:"connectedAt"`
+		Geo          string    `json:"geo,omitempty"`
+	}
+
+	type response struct {
+		User             *user.User                `json:"user"`
+		ConnectedClients []connectedClient         `json:"connectedClients"`
+		Messages         []events.UserMessageEvent `json:"messages"`
+	}
+
+	pathComponents := strings.Split(r.URL.Path, "/")
+	uid := pathComponents[len(pathComponents)-1]
+
+	u := user.GetUserByID(uid)
+
+	if u == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	c, _ := chat.GetClientsForUser(uid)
+	clients := make([]connectedClient, len(c))
+	for i, c := range c {
+		client := connectedClient{
+			Id:           c.Id,
+			MessageCount: c.MessageCount,
+			UserAgent:    c.UserAgent,
+			ConnectedAt:  c.ConnectedAt,
+		}
+		if c.Geo != nil {
+			client.Geo = c.Geo.CountryCode
+		}
+
+		clients[i] = client
+	}
+
+	messages, err := chat.GetMessagesFromUser(uid)
+	if err != nil {
+		log.Errorln(err)
+	}
+
+	res := response{
+		User:             u,
+		ConnectedClients: clients,
+		Messages:         messages,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		controllers.InternalErrorHandler(w, err)
+	}
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja" data-theme="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="/logo" />
+		<title>AoiTube Admin</title>
+		<style>
+			/* Critical CSS to prevent FOUC (formerly pages/_document.tsx) */
+			body {
+				background: #0d0d14;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="module" src="/src/mainAdmin.tsx"></script>
+		<!-- The former light-only .ant-tabs !important overrides (a relic of
+		     pages/_document.tsx) were removed: they forced near-black tab text
+		     onto the dark theme. Tabs are themed by the antd ConfigProvider and
+		     ant-overrides.scss in both themes. -->
+	</body>
+</html>

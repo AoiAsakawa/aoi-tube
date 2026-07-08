@@ -1,0 +1,146 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+$vert-spacing: 0.75rem;
+
+.root {
+	@include mixins.surface-translucent;
+
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 1.5rem;
+	padding-top: 1rem;
+	color: #ffffff;
+	width: 100%;
+}
+
+// Right-aligned action buttons (follow / notify / external actions) so the
+// identity row and its actions read as one section on desktop; wraps to a
+// full-width row underneath on narrow screens.
+.actions {
+	flex: none;
+	margin-left: auto;
+
+	@include mixins.screen(tablet) {
+		width: 100%;
+		margin-left: 0;
+	}
+}
+
+.row {
+	margin-bottom: $vert-spacing;
+}
+
+.logoTitleSection {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	.logo {
+		margin: 0 auto 0.6rem auto;
+
+		img {
+			border-radius: 50%;
+			border: 3px solid var(--color-overlay-medium);
+			box-shadow: var(--shadow-card);
+			transition: all 0.3s ease;
+
+			&:hover {
+				transform: scale(1.05);
+				border-color: rgba(167, 139, 250, 0.5);
+			}
+		}
+	}
+
+	@include mixins.screen(desktop) {
+		flex-direction: row;
+		align-items: center;
+		.logo {
+			margin: 0 0.6rem 0 0;
+		}
+	}
+
+	@include mixins.screen(tablet) {
+		flex-direction: column;
+		align-items: center;
+		.logo {
+			margin: 0 auto 0.6rem auto;
+		}
+	}
+}
+
+.titleSection {
+	display: flex;
+	flex-direction: column;
+	margin-left: 0.6rem;
+	@include mixins.screen(tablet) {
+		margin-left: 0;
+	}
+
+	.title {
+		font-family: var(--theme-text-display-font-family);
+		font-size: 2rem;
+		font-weight: 800;
+		line-height: 1.2;
+		margin: unset;
+		letter-spacing: -0.02em;
+
+		// Solid color that works everywhere
+		color: #e2d9f3;
+	}
+
+	.subtitle {
+		font-size: 1.1rem;
+		font-weight: 400;
+		max-width: 900px;
+		margin: $vert-spacing 0;
+		color: rgba(255, 255, 255, 0.75);
+		line-height: 1.5;
+	}
+}
+
+.tagList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+
+	// Tag chips are static labels, not links: no hover affordance.
+	span {
+		display: inline-block;
+		font-weight: 500;
+		padding: 0.4rem 0.9rem;
+		background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+		border: 1px solid rgba(167, 139, 250, 0.3);
+		border-radius: var(--radius-pill);
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.9);
+		cursor: default;
+	}
+}
+
+// Light theme: the surface tokens flip automatically; only re-theme the
+// hardcoded text colors. The brand-tinted tag chips keep their purple
+// background but switch to dark text.
+:global(:root[data-theme='light']) {
+	.root {
+		color: var(--color-panel-text);
+	}
+
+	.titleSection {
+		.title {
+			color: var(--color-panel-text);
+		}
+
+		.subtitle {
+			color: var(--color-panel-text-muted);
+		}
+	}
+
+	.tagList span {
+		color: var(--color-panel-text);
+	}
+}

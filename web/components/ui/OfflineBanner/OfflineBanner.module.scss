@@ -1,0 +1,143 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.outerContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 50vh;
+	padding: 3rem;
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 600px;
+		height: 600px;
+		background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%);
+		transform: translate(-50%, -50%);
+		animation: pulse 4s ease-in-out infinite;
+	}
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 0.5;
+		transform: translate(-50%, -50%) scale(1);
+	}
+	50% {
+		opacity: 0.8;
+		transform: translate(-50%, -50%) scale(1.1);
+	}
+}
+
+// Static hero card: no hover lift (it is not interactive).
+.innerContainer {
+	@include mixins.surface-translucent;
+
+	width: clamp(280px, 100%, 650px);
+	display: flex;
+	flex-direction: column;
+	margin: 1rem auto;
+	padding: 3.5rem;
+	text-align: center;
+	position: relative;
+	z-index: 1;
+
+	@include mixins.screen(tablet) {
+		font-size: 1.2rem;
+		padding: 1.5em;
+		margin: 1rem 0.5rem;
+	}
+}
+
+.mediaContainer {
+	width: 100%;
+	margin-bottom: 1.25rem;
+}
+
+.offlineImage {
+	width: 100%;
+	height: auto;
+	max-height: 50vh;
+	object-fit: contain;
+	border-radius: var(--radius-lg);
+}
+
+.offlineVideo {
+	width: 100%;
+	height: auto;
+	max-height: 50vh;
+	object-fit: contain;
+	border-radius: var(--radius-lg);
+}
+
+.bodyText {
+	line-height: 1.8rem;
+	font-size: 1.1rem;
+	color: var(--color-panel-text);
+}
+
+.separator {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border-color: var(--color-panel-border-soft);
+}
+
+.lastLiveDate {
+	margin-top: 2rem;
+	font-size: 0.85rem;
+	color: var(--color-panel-text-muted);
+	font-family: var(--theme-text-body-font-family);
+	font-weight: 400;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.8rem 1.2rem;
+	background: var(--color-overlay-faint);
+	border-radius: var(--radius-pill);
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+
+	.clockIcon {
+		margin-right: 6px;
+		color: var(--color-panel-link);
+	}
+}
+
+.header {
+	font-family: var(--theme-text-display-font-family);
+	font-weight: 700;
+	font-size: 1.8rem;
+	margin-bottom: 0.5rem;
+
+	color: var(--color-panel-text);
+}
+
+.footer {
+	margin-top: 15px;
+}
+
+.actionLink {
+	color: var(--color-panel-link);
+	text-decoration: none;
+	cursor: pointer;
+	font-weight: 500;
+	padding: 0.5rem 1rem;
+	background: rgba(124, 58, 237, 0.12);
+	border-radius: var(--radius-md);
+	transition: all 0.3s ease;
+	display: inline-block;
+	margin: 0.25rem;
+
+	&:hover {
+		background: rgba(124, 58, 237, 0.22);
+		color: var(--color-panel-link-hover);
+		transform: translateY(-2px);
+	}
+}

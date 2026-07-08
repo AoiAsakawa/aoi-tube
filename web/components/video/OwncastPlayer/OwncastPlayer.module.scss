@@ -1,0 +1,81 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.container {
+	display: grid;
+	width: 100%;
+	justify-items: center;
+	height: var(--player-container-height);
+	aspect-ratio: 16 / 9;
+	position: relative;
+
+	@media (max-width: 1200px) {
+		height: 100%;
+		max-height: var(--player-container-height);
+	}
+
+	@include mixins.screen(desktop) {
+		// prevent sidebar from overlapping stream
+		// padding-right: 320px;
+	}
+
+	//set height of player for tablet
+	@include mixins.screen(tablet) {
+		height: var(--player-container-height);
+		max-height: var(--player-container-height);
+	}
+
+	.player {
+		width: 100%;
+		grid-column: 1;
+		grid-row: 1;
+		position: relative;
+	}
+
+	.poster {
+		// Absolutely cover the whole player area: sizing via the grid cell
+		// proved fragile (auto heights collapsed the image to zero, intrinsic
+		// widths overflowed to the right). The container is position:relative.
+		position: absolute;
+		inset: 0;
+		// The poster is a <button>: clicking it starts playback (with native
+		// browser controls there is no video.js big-play button on top of it).
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		border: none;
+		background: #000;
+		cursor: pointer;
+		overflow: hidden;
+		z-index: 2;
+	}
+
+	.posterPlayGlyph {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 84px;
+		height: 84px;
+		border-radius: 9999px;
+		background: rgba(0, 0, 0, 0.55);
+		color: #fff;
+		font-size: 34px;
+		padding-left: 6px; // optical centering of the triangle
+		pointer-events: none;
+		transition: background 0.15s ease;
+	}
+
+	.poster:hover .posterPlayGlyph,
+	.poster:focus-visible .posterPlayGlyph {
+		background: rgba(0, 0, 0, 0.75);
+	}
+}
+
+.embedded {
+	height: 100vh;
+	max-height: unset;
+}

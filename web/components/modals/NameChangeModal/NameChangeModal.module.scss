@@ -1,0 +1,110 @@
+// Theme-aware styling via panel tokens: the modal body renders in an antd
+// portal where the ConfigProvider algorithm tokens don't reliably apply, so
+// (like the other modals) every surface is pinned to our theme variables.
+.root {
+	color: var(--color-panel-text);
+}
+
+.description {
+	color: var(--color-panel-text);
+	margin-bottom: 16px;
+}
+
+.colorLabel {
+	color: var(--color-panel-text);
+}
+
+.inputGroup {
+	:global(.ant-input-affix-wrapper),
+	:global(.ant-input) {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-panel-border) !important;
+		color: var(--color-panel-text) !important;
+		border-width: 2px;
+	}
+
+	:global(.ant-input)::placeholder {
+		color: var(--color-panel-text-muted);
+	}
+
+	:global(.ant-input-show-count-suffix) {
+		font-size: 11px;
+		color: var(--color-panel-text-muted);
+	}
+
+	:global(.ant-btn-primary) {
+		font-weight: 600;
+	}
+
+	// The save button: readable in both themes and both states. antd's own
+	// disabled styling inherits unthemed (light) tokens inside the portal.
+	:global(.ant-btn-primary):not(:disabled) {
+		background: var(--theme-color-action) !important;
+		border-color: var(--theme-color-action) !important;
+		color: #fff !important;
+	}
+
+	:global(.ant-btn-primary):disabled {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-panel-border) !important;
+		color: var(--color-panel-text-muted) !important;
+	}
+}
+
+.colorChange {
+	padding-top: 8px;
+
+	:global(.ant-form-item-label) {
+		z-index: 1000;
+		margin-bottom: 0;
+		label {
+			font-weight: 600;
+		}
+	}
+}
+
+.colorDropdown {
+	// Let the swatch (UserColor) provide the color; the field chrome itself
+	// stays themed like every other input.
+	:global(.ant-select-selector),
+	:global(.ant-select-input) {
+		padding-left: 4px;
+		border-width: 2px;
+	}
+}
+
+// Theme-aware styles for Select dropdown (dark by default via panel tokens).
+// .ant-select-selector is antd v5; v6 uses .ant-select-input/.ant-select-content.
+:global(.ant-select-selector),
+:global(.ant-select-input) {
+	background: var(--color-field-bg) !important;
+	border-color: var(--color-panel-border) !important;
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-select-content),
+:global(.ant-select-placeholder) {
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-select-arrow),
+:global(.ant-select-suffix) {
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-select-dropdown) {
+	background: var(--color-field-bg) !important;
+	border: 1px solid var(--color-panel-border);
+}
+
+:global(.ant-select-item) {
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-select-item-option-active) {
+	background: var(--color-panel-border) !important;
+}
+
+:global(.ant-select-item-option-selected) {
+	background: var(--color-panel-bg) !important;
+}

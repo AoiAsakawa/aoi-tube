@@ -1,0 +1,17 @@
+.card {
+	margin-bottom: 24px;
+}
+
+.description {
+	margin-top: 0;
+	margin-bottom: 16px;
+	color: var(--color-panel-text-muted);
+}
+
+.footer {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 16px;
+	padding-top: 12px;
+	border-top: 1px solid var(--color-panel-border-soft);
+}

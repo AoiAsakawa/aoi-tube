@@ -1,0 +1,45 @@
+.content {
+	max-width: 1200px;
+	margin-inline: auto;
+	// The header is position:fixed, so offset the top padding by its height;
+	// otherwise the page header (back link + title) sits behind the header.
+	padding: calc(var(--header-height) + 24px) var(--content-gutter) 48px;
+	min-height: calc(100vh - var(--header-height) - 120px);
+}
+
+.prose {
+	max-width: 800px;
+}
+
+.wide {
+	max-width: none;
+}
+
+.pageHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 24px;
+}
+
+.titleRow {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.actions {
+	flex: none;
+}
+
+.backLink {
+	color: var(--theme-color-action);
+	font-size: 0.9rem;
+	width: fit-content;
+
+	&:hover {
+		color: var(--theme-color-action-hover);
+		text-decoration: underline;
+	}
+}

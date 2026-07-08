@@ -1,0 +1,79 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.footer {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	flex-direction: row;
+	background: linear-gradient(135deg, rgba(26, 26, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(25px);
+	color: rgba(255, 255, 255, 0.6);
+	font-family: var(--theme-text-body-font-family);
+
+	padding: 1.2rem var(--footer-padding-x);
+	font-size: 0.8rem;
+	font-weight: 400;
+	border-top: 1px solid rgba(255, 255, 255, 0.06);
+	width: 100%;
+	// Keep the horizontal padding inside the 100% width so the footer does not
+	// overflow the viewport (see the same note on the header).
+	box-sizing: border-box;
+	position: relative;
+
+	// Subtle gradient line at top
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(102, 126, 234, 0.2) 50%,
+			transparent 100%
+		);
+	}
+
+	@include mixins.screen(tablet) {
+		font-size: 10px;
+	}
+
+	a {
+		color: rgba(255, 255, 255, 0.6);
+		text-decoration: none;
+
+		&:hover {
+			color: var(--theme-color-action-hover);
+			text-decoration: underline;
+		}
+	}
+
+	.links {
+		column-gap: 2.5rem;
+		width: auto;
+		display: flex;
+		flex-direction: row;
+
+		a {
+			padding: 0.4rem 0;
+			font-weight: 500;
+		}
+	}
+}
+
+// Light theme: white translucent footer with dark text
+:global(:root[data-theme='light']) {
+	.footer {
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(243, 246, 252, 0.95) 100%);
+		color: rgba(0, 0, 0, 0.55);
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
+
+		a {
+			color: rgba(0, 0, 0, 0.55);
+		}
+	}
+}

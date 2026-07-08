@@ -1,0 +1,19 @@
+[Unit]
+Description=AoiTube Service
+
+[Service]
+Type=simple
+WorkingDirectory=[path to aoitube directory]
+ReadWritePaths=[path to aoitube directory]
+ExecStart=[path to aoitube directory]/aoitube
+Restart=always
+RestartSec=5
+User=[user to run aoitube as]
+Group=[group to run aoitube as]
+NoNewPrivileges=true
+SecureBits=noroot
+ProtectSystem=strict
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,73 @@
+// Breakpoint scale. screen() below is the shared consumer; JS uses
+// web/utils/use-media-query.ts with the same values.
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+
+@mixin flexCenter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin screen($breakpoint) {
+	@if $breakpoint == desktop {
+		@media only screen and (min-width: $tablet) {
+			@content;
+		}
+	}
+
+	// tablet also applies to mobile (no min-width cut-off). The upper bound is
+	// 767.98px so exactly-768px viewports match only screen(desktop) instead
+	// of both branches at once.
+	@if $breakpoint == tablet {
+		@media only screen and (max-width: 767.98px) {
+			@content;
+		}
+	}
+	@if $breakpoint == mobile {
+		@media only screen and (max-width: 481px) {
+			@content;
+		}
+	}
+}
+
+// Canonical panel/card surface (matches ArchiveCard, the design reference).
+@mixin surface {
+	background: var(--color-panel-bg);
+	border: 1px solid var(--color-panel-border-soft);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-card);
+}
+
+// Glassy hero surface for large panels (content header, offline banner,
+// bottom page panel). Panels usually want --radius-lg; override after
+// including when needed.
+@mixin surface-translucent {
+	background: var(--color-panel-bg-translucent);
+	backdrop-filter: blur(12px);
+	border: 1px solid var(--color-panel-border-soft);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-card);
+}
+
+// Hover/focus affordance for REAL links, buttons and clickable cards only —
+// never apply to static surfaces.
+@mixin surface-interactive {
+	transition:
+		transform 0.2s ease,
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-3px);
+		border-color: var(--theme-color-action);
+		box-shadow: var(--shadow-hover);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--theme-color-action);
+		outline-offset: 2px;
+	}
+}

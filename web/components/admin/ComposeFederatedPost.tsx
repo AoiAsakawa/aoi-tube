@@ -1,0 +1,91 @@
+import React, { FC, useState } from 'react';
+
+import { Button, Input, Modal } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { STATUS_ERROR, STATUS_SUCCESS } from '../../utils/input-statuses';
+import { fetchData, FEDERATION_MESSAGE_SEND } from '../../utils/apis';
+
+const { TextArea } = Input;
+
+export type ComposeFederatedPostProps = {
+	open: boolean;
+	handleClose: () => void;
+};
+
+export const ComposeFederatedPost: FC<ComposeFederatedPostProps> = ({ open, handleClose }) => {
+	const { t } = useTranslation();
+	const [content, setContent] = useState('');
+	const [postPending, setPostPending] = useState(false);
+	const [postSuccessState, setPostSuccessState] = useState(null);
+
+	const postButtonLabel = postSuccessState
+		? postSuccessState === STATUS_SUCCESS
+			? t('admin.layout.composeFederatedPost.postSuccess')
+			: t('admin.layout.composeFederatedPost.postError')
+		: t('admin.layout.composeFederatedPost.postButton');
+
+	function handleEditorChange(e) {
+		setContent(e.target.value);
+	}
+
+	function close() {
+		setPostPending(false);
+		setPostSuccessState(null);
+		handleClose();
+	}
+
+	async function sendButtonClicked() {
+		setPostPending(true);
+
+		const data = {
+			value: content,
+		};
+		try {
+			await fetchData(FEDERATION_MESSAGE_SEND, {
+				data,
+				method: 'POST',
+				auth: true,
+			});
+			setPostSuccessState(STATUS_SUCCESS);
+			setTimeout(close, 1000);
+		} catch (e) {
+			console.error(e);
+			setPostSuccessState(STATUS_ERROR);
+		}
+		setPostPending(false);
+	}
+
+	return (
+		<Modal
+			destroyOnHidden
+			width={600}
+			title={t('admin.layout.composeFederatedPost.title')}
+			open={open}
+			onCancel={handleClose}
+			footer={[
+				<Button key="cancel" onClick={() => handleClose()}>
+					{t('admin.layout.common.cancel')}
+				</Button>,
+				<Button
+					key="submit"
+					type="primary"
+					onClick={sendButtonClicked}
+					disabled={postPending || postSuccessState}
+					loading={postPending}
+				>
+					{postButtonLabel}
+				</Button>,
+			]}
+		>
+			<h3>{t('admin.layout.composeFederatedPost.heading')}</h3>
+			<TextArea
+				placeholder={t('admin.layout.composeFederatedPost.placeholder')}
+				size="large"
+				showCount
+				maxLength={500}
+				style={{ height: '150px', width: '100%' }}
+				onChange={handleEditorChange}
+			/>
+		</Modal>
+	);
+};

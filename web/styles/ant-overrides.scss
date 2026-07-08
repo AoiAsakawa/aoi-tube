@@ -1,0 +1,845 @@
+/* ------------------------- //
+HEADER
+// ------------------------- */
+
+.ant-layout-header {
+	line-height: unset;
+	height: auto;
+}
+/* ------------------------- //
+BUTTONS
+// ------------------------- */
+
+.ant-btn[disabled] {
+	background-color: var(--theme-color-components-secondary-button-background-disabled);
+	color: var(--theme-color-components-secondary-button-text-disabled);
+	border-color: var(--theme-color-components-secondary-button-border-disabled);
+	&:hover,
+	&:focus {
+		background-color: var(--theme-color-components-secondary-button-background-disabled);
+		color: var(--theme-color-components-secondary-button-text-disabled);
+		border-color: var(--theme-color-components-secondary-button-border-disabled);
+	}
+}
+
+.ant-btn-default {
+	// Text color comes from the antd theme algorithm; only shape and the
+	// brand border are customised here. Surfaces use flipping overlay tokens.
+	border-width: 2px;
+	border-color: var(--theme-color-components-primary-button-border);
+	border-radius: var(--theme-rounded-corners);
+	background-color: var(--color-overlay-faint);
+	&:hover,
+	&:focus {
+		border-color: var(--theme-color-action-hover);
+		background-color: var(--color-hover-bg);
+	}
+}
+
+.ant-btn-primary {
+	height: 2rem;
+	font-size: 0.85rem;
+	border-width: 2px;
+	border-radius: var(--theme-rounded-corners);
+	color: var(--theme-color-components-primary-button-text);
+	border-color: var(--theme-color-components-primary-button-border);
+
+	&:hover,
+	&:focus {
+		border-color: var(--theme-color-action-hover);
+		color: var(--theme-color-action-hover);
+		background-color: var(--theme-color-components-secondary-button-background);
+	}
+
+	&:focus {
+		border-color: var(--theme-color-components-secondary-button-text);
+	}
+	&[ant-click-animating-without-extra-node]:after {
+		animation: 0s !important;
+	}
+	background-color: var(--theme-color-components-primary-button-background);
+	color: var(--theme-color-components-primary-button-text);
+	&:hover {
+		background-color: var(--theme-color-action-hover);
+		color: var(--theme-color-components-primary-button-text);
+		border-color: var(--theme-color-action-hover);
+	}
+	&:focus {
+		background-color: var(--theme-color-action-hover);
+		color: var(--theme-color-components-primary-button-text);
+		border-color: var(--theme-color-components-primary-button-text);
+	}
+}
+
+.ant-btn-primary[disabled] {
+	background-color: var(--theme-color-components-primary-button-background-disabled);
+	border-color: var(--theme-color-components-primary-button-border-disabled);
+	color: var(--theme-color-components-primary-button-text-disabled);
+	&:hover,
+	&:focus {
+		background-color: var(--theme-color-components-primary-button-background-disabled);
+		border-color: var(--theme-color-components-primary-button-border-disabled);
+		color: var(--theme-color-components-primary-button-text-disabled);
+	}
+}
+
+.ant-btn-background-ghost {
+	border: 0px;
+	box-shadow: none !important;
+	&:hover,
+	&:focus {
+		background-color: var(--color-hover-bg);
+	}
+}
+
+/* ------------------------- //
+DROPDOWN
+// ------------------------- */
+
+.ant-dropdown-menu {
+	border-radius: var(--theme-rounded-corners);
+	background-color: var(--color-field-bg);
+}
+.ant-dropdown-menu-item {
+	color: var(--color-panel-text);
+	&:hover {
+		background-color: var(--color-hover-bg);
+	}
+	&:focus {
+		background-color: var(--color-overlay-medium);
+	}
+}
+.ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu-title {
+	font-size: 0.8rem;
+	padding: 4px 15px;
+}
+
+.ant-input-affix-wrapper {
+	background-color: var(--color-field-bg);
+}
+
+.ant-input,
+.ant-input-number-input {
+	background-color: var(--color-field-bg);
+	color: var(--color-panel-text);
+	&::placeholder {
+		color: var(--color-field-placeholder);
+	}
+}
+
+.ant-alert-error {
+	.ant-alert-icon {
+		color: var(--theme-color-palette-error);
+	}
+	.ant-alert-message {
+		color: var(--theme-color-palette-error);
+	}
+}
+
+.ant-tabs-tab {
+	padding: 0.8rem 1.2rem;
+	background-color: transparent;
+	border-radius: 12px 12px 0 0;
+	font-weight: 700;
+	color: rgba(255, 255, 255, 0.6) !important;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	font-size: 0.95rem;
+
+	& + .ant-tabs-tab {
+		margin-left: 0.5rem;
+	}
+
+	&:hover {
+		color: rgba(255, 255, 255, 0.9) !important;
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	&.ant-tabs-tab-active {
+		background: linear-gradient(
+			145deg,
+			rgba(255, 255, 255, 0.1) 0%,
+			rgba(255, 255, 255, 0.05) 100%
+		);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-bottom: none;
+
+		.ant-tabs-tab-btn {
+			color: #ffffff !important;
+			text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+
+			&:hover {
+				color: #c4b5fd !important;
+			}
+		}
+	}
+
+	.ant-tabs-tab-btn {
+		color: inherit !important;
+		font-weight: inherit;
+	}
+}
+
+.ant-tabs {
+	height: 100%;
+	color: rgba(255, 255, 255, 0.9);
+
+	.ant-tabs-nav {
+		margin-bottom: 1rem;
+		padding: 0 1rem;
+
+		&::before {
+			border-bottom: 1px solid var(--color-panel-border-soft) !important;
+		}
+	}
+
+	.ant-tabs-content-holder {
+		height: 100%;
+		padding: 0 1rem;
+	}
+	.ant-tabs-content {
+		overflow: auto;
+		.ant-tabs-tabpane-active {
+			height: 100%;
+		}
+	}
+}
+
+.ant-tabs-ink-bar {
+	background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+	height: 3px !important;
+	border-radius: 3px;
+}
+
+.ant-tabs-nav:before {
+	border-bottom-color: var(--color-panel-border-soft) !important;
+}
+
+.ant-modal-close:hover {
+	color: var(--theme-color-components-modal-header-text);
+}
+
+.ant-modal-title {
+	color: var(--theme-color-components-modal-header-text);
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+	background-color: unset;
+}
+
+td.ant-table-column-sort,
+.ant-table-thead th.ant-table-column-sort {
+	background-color: unset;
+}
+
+th {
+	// No color here: antd Tables color their own headers per theme, and a
+	// forced near-white broke plain tables on light surfaces.
+	font-family: var(--theme-text-display-font-family);
+	font-weight: 700 !important;
+}
+
+.ant-popover {
+	z-index: 800; // Lower the z-index so it renders under modals.
+}
+
+/* ------------------------- //
+ * SIDER MENUITEM
+// ------------------------- */
+.ant-menu-light .ant-menu-submenu-title:active {
+	background: var(--theme-color-palette-12);
+}
+
+.ant-menu-light .ant-menu-submenu-title:hover {
+	color: var(--theme-color-palette-12);
+}
+
+.ant-menu-submenu:hover > .ant-menu-submenu-title > .ant-menu-submenu-arrow {
+	color: var(--theme-color-palette-12);
+}
+
+.ant-menu-light .ant-menu-item:hover {
+	color: var(--theme-color-palette-12);
+}
+
+.line-chart-container {
+	position: relative;
+	.download-btn {
+		position: absolute;
+		top: 0.3rem;
+		right: 0.35rem;
+	}
+}
+
+/* ------------------------- //
+ * MODAL DARK THEME
+// ------------------------- */
+.ant-modal,
+.ant-modal-root .ant-modal,
+[class*='ant-modal'] {
+	background: transparent !important;
+}
+
+.ant-modal-content,
+.ant-modal-root .ant-modal-content,
+[class*='ant-modal-content'] {
+	background: var(--color-panel-bg) !important;
+	background-color: var(--color-panel-bg) !important;
+	border: 1px solid rgba(102, 126, 234, 0.3) !important;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
+	padding: 0 !important;
+}
+
+.ant-modal-header,
+.ant-modal-root .ant-modal-header,
+[class*='ant-modal-header'] {
+	background: var(--color-panel-bg) !important;
+	background-color: var(--color-panel-bg) !important;
+	border-bottom: 1px solid var(--color-panel-border-soft) !important;
+	margin: 0 !important;
+}
+
+.ant-modal-body,
+.ant-modal-root .ant-modal-body,
+[class*='ant-modal-body'] {
+	background: var(--color-panel-bg) !important;
+	background-color: var(--color-panel-bg) !important;
+	color: var(--color-panel-text) !important;
+}
+
+.ant-modal-title,
+.ant-modal-root .ant-modal-title,
+[class*='ant-modal-title'] {
+	color: var(--color-panel-text) !important;
+}
+
+.ant-modal-footer,
+.ant-modal-root .ant-modal-footer,
+[class*='ant-modal-footer'] {
+	background: var(--color-panel-bg) !important;
+	background-color: var(--color-panel-bg) !important;
+	border-top: 1px solid var(--color-panel-border-soft) !important;
+}
+
+.ant-modal-close,
+.ant-modal-root .ant-modal-close,
+[class*='ant-modal-close'] {
+	color: var(--color-panel-text-muted) !important;
+
+	&:hover {
+		color: var(--color-panel-text) !important;
+		background: var(--color-hover-bg) !important;
+	}
+}
+
+.ant-modal-wrap,
+.ant-modal-root .ant-modal-wrap {
+	background: transparent !important;
+}
+
+/* Modal form inputs - dark theme */
+.ant-modal-body {
+	.ant-input,
+	.ant-input-number,
+	.ant-input-number-input,
+	.ant-select-selector,
+	.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+	.ant-input-affix-wrapper {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-field-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-input-number-group-addon,
+	.ant-input-number-group-wrapper .ant-input-number-group-addon,
+	.ant-input-group-addon {
+		background: var(--color-field-bg) !important;
+		background-color: var(--color-field-bg) !important;
+		border-color: var(--color-field-border) !important;
+		color: var(--color-panel-text) !important;
+		text-shadow: none !important;
+	}
+
+	.ant-input-number-group-addon *,
+	.ant-input-group-addon * {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-input-number-prefix,
+	.ant-input-prefix,
+	.ant-input-suffix,
+	.ant-input-number-suffix {
+		color: var(--color-panel-text) !important;
+		background: var(--color-field-bg) !important;
+	}
+
+	.ant-input::placeholder,
+	.ant-input-number-input::placeholder {
+		color: var(--color-field-placeholder) !important;
+	}
+
+	.ant-select-selection-item,
+	.ant-select-selection-placeholder {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-select {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+		background: var(--color-field-bg) !important;
+		background-color: var(--color-field-bg) !important;
+		border-color: var(--color-field-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-select-selection-search-input {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-select-arrow {
+		color: var(--color-panel-text-muted) !important;
+	}
+
+	/* Textarea count (0 / 200) */
+	.ant-input-textarea-show-count::after,
+	.ant-input-data-count {
+		color: var(--color-panel-text-muted) !important;
+	}
+
+	.ant-checkbox-wrapper {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-radio-button-wrapper {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-field-border) !important;
+		color: var(--color-panel-text) !important;
+
+		&:hover {
+			color: #667eea !important;
+		}
+
+		&.ant-radio-button-wrapper-checked {
+			background: #667eea !important;
+			border-color: #667eea !important;
+			color: white !important;
+		}
+	}
+
+	label {
+		color: var(--color-panel-text) !important;
+	}
+
+	/* Modal buttons */
+	.ant-btn-default {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-field-border) !important;
+		color: var(--color-panel-text) !important;
+
+		&:hover {
+			background: var(--color-panel-border) !important;
+			border-color: #667eea !important;
+			color: #667eea !important;
+		}
+	}
+}
+
+/* ---- Global form controls (fix white Select/addon) ---- */
+.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border-color: var(--color-field-border) !important;
+	color: var(--color-panel-text) !important;
+}
+
+.ant-select .ant-select-selection-item,
+.ant-select .ant-select-selection-placeholder {
+	color: var(--color-panel-text) !important;
+}
+
+.ant-select .ant-select-selection-search-input {
+	color: var(--color-panel-text) !important;
+}
+
+.ant-select-arrow {
+	color: var(--color-panel-text-muted) !important;
+}
+
+/* antd v6 renamed the Select internals: .ant-select-selector became
+ * .ant-select-input, selection item/placeholder became
+ * .ant-select-content / .ant-select-placeholder. Keep both generations
+ * covered so the closed Select box stays dark. */
+.ant-select:not(.ant-select-customize-input) .ant-select-input,
+.ant-select-single:not(.ant-select-customize-input) .ant-select-input,
+.ant-modal-body .ant-select .ant-select-input {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border-color: var(--color-field-border) !important;
+	color: var(--color-panel-text) !important;
+}
+
+.ant-select .ant-select-content,
+.ant-select .ant-select-content-value,
+.ant-select .ant-select-placeholder,
+.ant-modal-body .ant-select .ant-select-content,
+.ant-modal-body .ant-select .ant-select-content-value,
+.ant-modal-body .ant-select .ant-select-placeholder {
+	color: var(--color-panel-text) !important;
+}
+
+.ant-select .ant-select-suffix {
+	color: var(--color-panel-text-muted) !important;
+}
+
+.ant-input-number-group-addon,
+.ant-input-group-addon {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border-color: var(--color-field-border) !important;
+	color: var(--color-panel-text) !important;
+	opacity: 1 !important;
+}
+
+.ant-input-number-group-addon *,
+.ant-input-group-addon * {
+	color: var(--color-panel-text) !important;
+	opacity: 1 !important;
+}
+
+/* Select dropdown dark theme */
+.ant-select-dropdown {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border: 1px solid var(--color-field-border) !important;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+
+	.ant-select-item {
+		color: var(--color-panel-text) !important;
+
+		&:hover,
+		&.ant-select-item-option-active {
+			background: rgba(102, 126, 234, 0.2) !important;
+		}
+
+		&.ant-select-item-option-selected {
+			background: rgba(102, 126, 234, 0.4) !important;
+			font-weight: 600;
+		}
+	}
+}
+
+/* Some antd builds render dropdown via additional wrappers */
+body .ant-select-dropdown {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+}
+
+/* Force dark theme for all Select dropdowns rendered as portals */
+.ant-select-dropdown,
+div.ant-select-dropdown,
+body .ant-select-dropdown,
+body div.ant-select-dropdown,
+#__next ~ .ant-select-dropdown,
+[class*='ant-select-dropdown'] {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border: 1px solid var(--color-field-border) !important;
+
+	.ant-select-item,
+	.ant-select-item-option {
+		color: var(--color-panel-text) !important;
+		background: transparent !important;
+		background-color: transparent !important;
+	}
+
+	.ant-select-item-option-content {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-select-item:hover,
+	.ant-select-item-option:hover,
+	.ant-select-item-option-active {
+		background: rgba(102, 126, 234, 0.2) !important;
+		background-color: rgba(102, 126, 234, 0.2) !important;
+	}
+
+	.ant-select-item-option-selected {
+		background: rgba(102, 126, 234, 0.4) !important;
+		background-color: rgba(102, 126, 234, 0.4) !important;
+		font-weight: 600;
+
+		.ant-select-item-option-content {
+			color: var(--color-panel-text) !important;
+		}
+	}
+}
+
+/* Explicitly target the donation dropdown class with higher specificity.
+ * Deliberately pinned to dark literals: the DonationForm keeps its dark
+ * styling regardless of the site theme (separate workstream). */
+div.donation-select-dropdown-dark,
+.donation-select-dropdown-dark {
+	background: #2a2d38 !important;
+	background-color: #2a2d38 !important;
+	border: 1px solid rgba(255, 255, 255, 0.2) !important;
+
+	/* Force all text color to be light */
+	* {
+		color: #e2e8f0 !important;
+	}
+
+	.ant-select-item,
+	.ant-select-item-option {
+		color: #e2e8f0 !important;
+		background: transparent !important;
+	}
+
+	.ant-select-item-option-content {
+		color: #e2e8f0 !important;
+	}
+
+	.ant-select-item:hover,
+	.ant-select-item-option:hover,
+	.ant-select-item-option-active {
+		background: rgba(102, 126, 234, 0.2) !important;
+	}
+
+	.ant-select-item-option-selected {
+		background: rgba(102, 126, 234, 0.4) !important;
+		font-weight: 600;
+
+		.ant-select-item-option-content {
+			color: #ffffff !important;
+		}
+	}
+}
+
+/* Ensure Select text is visible inside modals */
+.ant-modal .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border-color: var(--color-field-border) !important;
+}
+
+.ant-modal .ant-select .ant-select-selection-item,
+.ant-modal .ant-select .ant-select-selection-placeholder {
+	color: var(--color-panel-text) !important;
+}
+
+/* Dropdown class attached directly onto popups (popupClassName) so it
+ * cannot lose the cascade — used e.g. by the social platform selector.
+ * Token-based: the admin shares the site theme toggle, so this must flip
+ * with data-theme (dark values are the token defaults). */
+div.admin-dark-dropdown,
+.admin-dark-dropdown {
+	background: var(--color-field-bg) !important;
+	background-color: var(--color-field-bg) !important;
+	border: 1px solid var(--color-field-border) !important;
+
+	.ant-select-item,
+	.ant-select-item-option {
+		color: var(--color-panel-text) !important;
+		background: transparent !important;
+	}
+
+	.ant-select-item-option-content {
+		color: var(--color-panel-text) !important;
+	}
+
+	.ant-select-item:hover,
+	.ant-select-item-option:hover,
+	.ant-select-item-option-active {
+		background: rgba(102, 126, 234, 0.2) !important;
+	}
+
+	.ant-select-item-option-selected {
+		background: rgba(102, 126, 234, 0.4) !important;
+		font-weight: 600;
+
+		.ant-select-item-option-content {
+			color: var(--color-panel-text) !important;
+		}
+	}
+}
+
+.ant-modal .ant-select .ant-select-selection-item *,
+.ant-modal .ant-select .ant-select-selection-placeholder * {
+	color: var(--color-panel-text) !important;
+}
+
+.ant-modal .ant-select-arrow {
+	color: var(--color-panel-text-muted) !important;
+}
+
+/* ------------------------- //
+ * MODAL TEXT VISIBILITY FIX
+// ------------------------- */
+/* Ensure all text in modals is visible */
+.ant-modal-body p,
+.ant-modal-body span,
+.ant-modal-body div,
+.ant-modal-body h1,
+.ant-modal-body h2,
+.ant-modal-body h3,
+.ant-modal-body h4,
+.ant-modal-body h5,
+.ant-modal-body h6,
+.ant-modal-content p,
+.ant-modal-content span,
+.ant-modal-content div,
+.ant-modal-content h1,
+.ant-modal-content h2,
+.ant-modal-content h3,
+.ant-modal-content h4,
+.ant-modal-content h5,
+.ant-modal-content h6 {
+	color: var(--color-panel-text) !important;
+}
+
+/* Age verification modal specific */
+[class*='age-verification'],
+[class*='AgeVerification'],
+[class*='ageVerification'],
+[class*='age-gate'],
+[class*='AgeGate'] {
+	color: var(--color-panel-text) !important;
+
+	p,
+	span,
+	div,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--color-panel-text) !important;
+	}
+}
+
+/* Social auth modal specific */
+[class*='social-auth'],
+[class*='SocialAuth'],
+[class*='socialAuth'],
+[class*='auth-modal'],
+[class*='AuthModal'] {
+	color: var(--color-panel-text) !important;
+
+	p,
+	span,
+	div,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--color-panel-text) !important;
+	}
+}
+
+/* Generic modal text fix - higher specificity */
+.ant-modal-root .ant-modal-content,
+.ant-modal-root .ant-modal-body {
+	color: var(--color-panel-text) !important;
+
+	* {
+		color: inherit;
+	}
+
+	/* Exclude buttons and specific elements */
+	.ant-btn-primary {
+		color: white !important;
+	}
+
+	.ant-btn-default {
+		color: var(--color-panel-text) !important;
+	}
+}
+
+/* Fix for any custom modal components */
+[class*='Modal'] .ant-modal-body,
+[class*='modal'] .ant-modal-body {
+	color: var(--color-panel-text) !important;
+}
+
+/* Ensure Typography components are visible */
+.ant-modal .ant-typography,
+.ant-modal-body .ant-typography {
+	color: var(--color-panel-text) !important;
+}
+
+.ant-modal .ant-typography.ant-typography-secondary,
+.ant-modal-body .ant-typography.ant-typography-secondary {
+	color: var(--color-panel-text-muted) !important;
+}
+
+/* ------------------------- //
+ * LIGHT THEME (data-theme="light" on <html>)
+ * The tab styling above is white-text based and uses !important,
+ * so it cannot be flipped through variables alone.
+// ------------------------- */
+:root[data-theme='light'] {
+	.ant-tabs-tab {
+		color: rgba(0, 0, 0, 0.55) !important;
+
+		&:hover {
+			color: rgba(0, 0, 0, 0.85) !important;
+			background: rgba(0, 0, 0, 0.04);
+		}
+
+		&.ant-tabs-tab-active {
+			background: rgba(0, 0, 0, 0.05);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			border-bottom: none;
+
+			.ant-tabs-tab-btn {
+				color: #1a202c !important;
+				text-shadow: none;
+
+				&:hover {
+					color: #6544e9 !important;
+				}
+			}
+		}
+	}
+
+	.ant-tabs {
+		color: rgba(0, 0, 0, 0.85);
+	}
+}
+
+/* Theme-aware dropdown for the header language switcher */
+.language-dropdown-dark .ant-dropdown-menu {
+	background: var(--color-field-bg) !important;
+	border: 1px solid var(--color-field-border);
+
+	.ant-dropdown-menu-item {
+		color: var(--color-panel-text) !important;
+
+		&:hover {
+			background: rgba(102, 126, 234, 0.2) !important;
+		}
+	}
+
+	.ant-dropdown-menu-item-selected {
+		background: rgba(102, 126, 234, 0.4) !important;
+		color: var(--color-panel-text) !important;
+		font-weight: 600;
+	}
+}
+
+/* antd 6.5: .ant-select-input is now the inner combobox <input> nested inside
+   .ant-select-content (in 6.1 it was the field wrapper element). Our themed
+   field-background overrides painted it as an opaque box directly over the
+   selected value text, blanking every closed Select. The inner input must
+   always stay transparent; field chrome belongs to the wrapper. */
+.ant-select .ant-select-content .ant-select-input,
+.ant-select-content > .ant-select-input {
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+}

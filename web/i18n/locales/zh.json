@@ -1,0 +1,2393 @@
+{
+	"ui": {
+		"cookieConsent": {
+			"message": "本网站使用Cookie进行身份验证和会话管理。继续使用本网站，即表示您同意使用Cookie。",
+			"accept": "同意"
+		},
+		"donationAlert": {
+			"anonymous": "匿名",
+			"fromSuffix": "的超级留言"
+		},
+		"footer": {
+			"tokushoho": "基于《特定商业交易法》的标示",
+			"faq": "常见问题",
+			"documentation": "文档",
+			"contribute": "参与贡献",
+			"sourceCode": "源代码",
+			"archives": "存档"
+		},
+		"header": {
+			"skipToPlayer": "跳转到播放器",
+			"skipToOfflineMessage": "跳转到离线消息",
+			"skipToContent": "跳转到页面内容",
+			"skipToFooter": "跳转到页脚",
+			"chatAvailableWhenLive": "聊天将在直播开始后可用。",
+			"chatOffline": "聊天已离线",
+			"language": "语言",
+			"toggleTheme": "切换主题",
+			"login": "登录",
+			"home": "首页"
+		},
+		"noscript": {
+			"poweredByPrefix": "本网站由",
+			"poweredBySuffix": "提供支持。",
+			"jsRequired": "本网站使用 JavaScript 来播放 HTTP Live Streaming (HLS) 视频并提供聊天功能。但您的浏览器似乎不支持 JavaScript，或已将其禁用。",
+			"enableJs": "为了获得更好的观看体验，请使用支持 JavaScript 的浏览器。如果您在浏览器中禁用了 JavaScript，请将其启用。",
+			"watchWithoutJsTitle": "如何在没有 JavaScript 的情况下观看？",
+			"mediaPlayerPrefix": "您可以使用媒体播放器（例如",
+			"mediaPlayerSuffix": "）打开本网站的URL进行观看。",
+			"chatWithoutJsTitle": "如何在没有 JavaScript 的情况下聊天？",
+			"chatWithoutJsBody": "目前暂无在没有 JavaScript 的情况下使用聊天的方法。"
+		},
+		"notifyReminder": {
+			"title": "获取最新动态！",
+			"line1": "点击一下，",
+			"line2": "不错过任何直播！"
+		},
+		"offlineBanner": {
+			"offline": "此直播目前离线。",
+			"getNotified": "接收通知",
+			"notifySuffix": "，即可在{{streamName}}下次开播时收到提醒。",
+			"orFollowFediverse": "或者，在Fediverse上",
+			"orFollowTwitter": "或者，在X上",
+			"onTwitterPrefix": "在X上",
+			"followFediverseAccount": "关注{{fediverseAccount}}",
+			"followSuffix": "。",
+			"alsoFollowTwitterPrefix": "此外，您也可以在X上",
+			"follow": "关注",
+			"alsoFollowTwitterSuffix": "。",
+			"checkBackSuffix": "，以了解{{streamName}}的下次直播。",
+			"checkBackNoNameSuffix": "，以了解下次直播动态。",
+			"offlineCheckBackLater": "此直播目前离线，请稍后再来看看！",
+			"lastLive": "上次直播：{{time}}前"
+		},
+		"statusbar": {
+			"durationDaysHours": "{{days}}天 {{hours}}小时",
+			"durationHoursMinutes": "{{hours}}小时 {{minutes}}分钟",
+			"durationMinutesSeconds": "{{minutes}}分钟 {{seconds}}秒",
+			"streamingFor": "直播中：{{duration}}",
+			"offline": "离线",
+			"lastLive": "上次直播：{{time}}前"
+		},
+		"userMenu": {
+			"changeName": "修改名称",
+			"auth": "身份验证",
+			"hideChat": "隐藏聊天",
+			"showChat": "显示聊天",
+			"logout": "退出登录",
+			"guestName": "访客: {{name}}",
+			"purchases": "购买记录"
+		},
+		"buttons": {
+			"follow": "关注",
+			"notify": "接收通知"
+		},
+		"tabs": {
+			"about": "简介",
+			"followers": "关注者"
+		},
+		"modals": {
+			"browserNotifications": "浏览器通知",
+			"followName": "关注{{name}}"
+		}
+	},
+	"video": {
+		"protocolBadge": {
+			"defaultLatency": "10-30秒",
+			"webrtcDescription": "WebRTC超低延迟直播",
+			"llhlsDescription": "Low-Latency HLS（低延迟）",
+			"hlsDescription": "标准HLS流媒体",
+			"title": "{{description}} - 预计延迟：{{latency}}"
+		},
+		"webrtcPlayer": {
+			"notAvailable": "WebRTC直播不可用",
+			"disconnectedRetrying": "连接已断开，正在尝试重新连接...",
+			"connectionFailed": "WebRTC连接失败",
+			"retry": "重新连接",
+			"connecting": "正在连接WebRTC...",
+			"latency": "<1秒"
+		},
+		"lowLatencyToggle": {
+			"enable": "尝试低延迟模式（WebRTC）",
+			"disable": "返回标准播放"
+		}
+	},
+	"chat": {
+		"anonymous": "匿名",
+		"joinedChat": "加入了聊天。",
+		"leftChat": "离开了聊天。",
+		"hideMessage": "隐藏消息",
+		"banUser": "封禁用户",
+		"moreInfo": "更多信息...",
+		"becameModerator": "您已成为管理员。",
+		"sendMessage": "发送消息",
+		"chatUnavailable": "聊天当前不可用。",
+		"chatTextInput": "聊天输入框",
+		"emojiPicker": "表情符号选择器",
+		"sendDonation": "购买超级留言",
+		"discordAuthenticated": "已通过Discord认证",
+		"googleAuthenticated": "已通过Google认证",
+		"xAuthenticated": "已通过X认证",
+		"authenticatedViaX": "已认证（X）",
+		"system": {
+			"streamStarting": "敬请期待，直播马上开始！",
+			"streamEnding": "直播即将结束。",
+			"userAuthenticatedWith": "{{name}} 已通过 {{provider}} 验证！",
+			"userAuthenticatedAs": "{{newName}} 已验证为 {{oldName}}"
+		},
+		"openChat": "打开聊天",
+		"title": "聊天",
+		"emptyState": "还没有消息",
+		"emptyStateHint": "来发送第一条评论吧！"
+	},
+	"donation": {
+		"sendDonation": "购买超级留言",
+		"itemTypeLabel": "购买项目",
+		"itemTypeSuperchat": "超级留言",
+		"itemTypeEffect": "画面特效",
+		"effectTypeLabel": "选择特效",
+		"effectCryptoRateNote": "实际的日元换算金额可能因行情波动而略有变动",
+		"effectPriceLoading": "正在获取当前代币价格…",
+		"effectPriceUnavailable": "该代币没有价格信息，无法用于购买画面特效。请选择其他代币",
+		"purchaseThanks": "感谢您的购买！",
+		"purchaseError": "处理购买时发生错误",
+		"paymentMethod": "支付方式",
+		"crypto": "加密货币",
+		"amount": "金额",
+		"amountWithCurrency": "金额（{{currency}}）",
+		"enterAmount": "请输入金额",
+		"amountTooSmall": "金额过小",
+		"inputInCurrency": "以{{currency}}输入",
+		"inputInJpy": "以日元输入",
+		"max": "最大",
+		"displayName": "显示名称",
+		"yourName": "您的名字",
+		"sendAnonymously": "匿名发送",
+		"enterNameOrAnonymous": "请输入显示名称，或勾选匿名",
+		"messageOptional": "留言（可选）",
+		"messageToStreamer": "给主播的留言...",
+		"totalAmountLabel": "发送金额：",
+		"tokushohoLink": "基于《特定商业交易法》的标示",
+		"cancel": "取消",
+		"close": "关闭",
+		"payWith": "使用{{provider}}支付",
+		"sendWithCurrency": "发送{{currency}}",
+		"donateVia": "通过{{name}}购买超级留言",
+		"donateWith": "使用{{name}}购买超级留言",
+		"kofiDescription": "点击下方按钮，将在新标签页中打开Ko-fi的超级留言购买页面。在Ko-fi完成购买后，购买的超级留言会自动显示在聊天中。",
+		"kofiEffectCommandHint": "在Ko-fi留言开头输入下列指令之一，并支付不低于该演出价格的金额即可触发画面演出。不加指令则为普通超级留言。",
+		"doneruDescription": "点击下方按钮，将在新标签页中打开Doneru的超级留言购买页面。请在Doneru完成购买。",
+		"pageOpenedInNewTab": "{{name}}页面已在新标签页中打开",
+		"paymentUnavailable": "{{provider}}支付不可用",
+		"paymentRedirecting": "正在跳转到{{provider}}支付页面...",
+		"paymentCompleteInNewTab": "请在新打开的{{provider}}标签页中完成支付。完成后会自动显示在聊天中。",
+		"paymentCreateFailed": "创建{{provider}}支付失败",
+		"paymentCreateError": "创建{{provider}}支付时发生错误",
+		"paypalMinimumNote": "※ 由于PayPal手续费（约3.6% + ¥40），最低金额为¥300",
+		"stripeTestModeNote": "🧪 测试模式：请使用测试卡（4242 4242 4242 4242）",
+		"wallet": "钱包",
+		"solanaWallet": "Solana钱包",
+		"connectWallet": "连接钱包",
+		"connectSolanaWallet": "连接Solana钱包",
+		"connectedToWallet": "已连接到{{wallet}}",
+		"walletConnected": "已连接{{wallet}}",
+		"walletConnectedAndSwitched": "已连接{{wallet}}并切换到{{network}}",
+		"walletConnectFailed": "连接钱包失败",
+		"walletNotInstalled": "未安装钱包（MetaMask或Trust Wallet）",
+		"phantomDetected": "✓ 已检测到Phantom",
+		"solanaWalletDetected": "✓ 已检测到Solana钱包",
+		"phantomRecommended": "推荐使用Phantom（MetaMask Snap有限制）",
+		"connectedWith": "已连接（{{wallet}}）",
+		"balanceLabel": "余额：",
+		"loading": "加载中...",
+		"checkBalance": "查询余额",
+		"disconnect": "断开连接",
+		"connectMetamaskFirst": "请先连接MetaMask",
+		"connectWalletFirst": "请先连接钱包",
+		"metamaskConfigInvalid": "MetaMask配置不正确",
+		"networkAndToken": "网络与代币",
+		"withBalanceOnly": "有余额",
+		"selectNetwork": "选择网络",
+		"selectToken": "选择代币",
+		"selectNetworkAndToken": "请选择网络和代币",
+		"metamaskSwitchedNetwork": "MetaMask已切换到{{network}}",
+		"pleaseSwitchNetwork": "请将网络切换到{{network}}",
+		"switchToNetwork": "切换到{{network}}",
+		"networkAddCancelled": "已取消添加网络",
+		"networkAddFailed": "添加网络失败：{{error}}",
+		"networkSwitchCancelled": "已取消切换网络",
+		"networkSwitchFailed": "切换网络失败：{{error}}",
+		"checkWalletRequest": "请在{{wallet}}中确认请求",
+		"unknownError": "未知错误",
+		"unknownErrorOccurred": "发生未知错误",
+		"errorOccurred": "发生错误",
+		"operationCancelled": "操作已取消",
+		"cancelledByUser": "已被用户取消",
+		"connectionCancelled": "连接已取消",
+		"transactionCancelled": "交易已取消",
+		"bitcoinAddressNotConfigured": "未设置Bitcoin收款地址",
+		"recipientAddressNotConfigured": "未设置收款地址",
+		"bitcoinAddressNotConfiguredAdmin": "未设置Bitcoin收款地址，请在管理后台进行设置。",
+		"solanaAddressNotConfiguredAdmin": "未设置Solana收款地址，请在管理后台进行设置。",
+		"sendingTransaction": "正在发送交易...",
+		"donationSentThanks": "感谢您购买超级留言！",
+		"txSentButConfirmFailed": "交易已发送，但确认失败",
+		"sendErrorOccurred": "转账时发生错误",
+		"priceFetchFailed": "无法获取价格，请稍后再试。",
+		"metamaskNotDetected": "未检测到MetaMask",
+		"snapsNotSupported": "不支持MetaMask Snaps，请使用MetaMask v11.0或更高版本。",
+		"bitcoinSnapInstallCancelled": "已取消安装Bitcoin Snap",
+		"bitcoinAccountFailed": "获取Bitcoin账户失败",
+		"solanaAccountFailed": "获取Solana账户失败",
+		"trustWalletBitcoinUnsupported": "Trust Wallet不支持Bitcoin Snap。\n请直接通过Trust Wallet应用发送BTC。\n点击“发送”按钮后将显示收款地址。",
+		"solanaSnapOriginRestricted": "MetaMask的Solana Snap无法在本网站使用。\n如需发送Solana，请尝试以下方法：\n• 安装Phantom钱包扩展\n• 使用Trust Wallet应用内浏览器",
+		"solanaSnapInstallFailed": "安装Solana Snap失败。\n建议使用Phantom钱包。",
+		"trustWalletSolanaNotDetected": "无法在Trust Wallet中检测到Solana。请通过Trust Wallet应用内浏览器访问。",
+		"solanaWalletNotFound": "未找到支持Solana的钱包。请安装Phantom等钱包。",
+		"solanaConnectError": "Solana连接错误：{{error}}",
+		"phantomConnectError": "Phantom连接错误：{{error}}",
+		"solanaSendError": "Solana转账错误：{{error}}",
+		"utxoFetchFailed": "获取UTXO失败",
+		"noConfirmedBalance": "没有已确认的余额。未确认余额：{{amount}} BTC（请等待确认）",
+		"noBalanceAtAddress": "没有余额。地址：{{address}}",
+		"insufficientBalance": "余额不足。余额：{{balance}} BTC，所需金额：{{required}} BTC（含手续费）",
+		"txSignFailed": "交易签名失败",
+		"txSignFailedCheckAccount": "交易签名失败。请检查MetaMask中的Bitcoin账户，地址可能不匹配。",
+		"txSendFailed": "交易发送失败",
+		"broadcastFailed": "广播失败：{{error}}",
+		"bitcoinSendComplete": "Bitcoin转账完成！TXID：{{txid}}...",
+		"solanaSendComplete": "Solana转账完成！Signature：{{signature}}...",
+		"bitcoinSendTitle": "Bitcoin转账",
+		"stepConnectSnap": "连接Bitcoin Snap",
+		"addressShort": "地址：{{address}}...",
+		"connectingToSnap": "正在连接Snap...",
+		"installingSnap": "正在安装MetaMask Snap...",
+		"stepCheckBalance": "查询余额",
+		"fetchingUtxo": "正在获取UTXO...",
+		"stepBuildTransaction": "构建交易",
+		"buildingPsbt": "正在构建PSBT...",
+		"stepSignTransaction": "签署交易",
+		"approveSignatureInWallet": "请在{{wallet}}中批准签名",
+		"stepBroadcast": "广播",
+		"broadcasting": "正在发送到Bitcoin网络...",
+		"stepComplete": "完成",
+		"sendComplete": "转账完成！",
+		"waitingForCompletion": "正在等待转账完成...",
+		"sendErrorTitle": "转账错误",
+		"sendAmountLabel": "转账金额：",
+		"feeLabel": "手续费：",
+		"fromLabel": "发送地址："
+	},
+	"screenEffects": {
+		"confetti": "彩纸",
+		"hearts": "爱心",
+		"stars": "流星",
+		"fireworks": "烟花",
+		"celebration": "庆典",
+		"rainbow": "彩虹",
+		"meteor": "流星雨",
+		"goldrush": "黄金雨",
+		"sentEffect": "{{name}}送出了{{effect}}"
+	},
+	"modals": {
+		"common": {
+			"error": "错误",
+			"alreadyAuthenticated": "您已完成认证",
+			"reauthHint": "。不过，您也可以使用其他{{provider}}账号进行认证。",
+			"reauthHintDomain": "。不过，您也可以添加其他域名，或以其他用户身份登录。",
+			"redirectUrlMissing": "无法获取重定向URL。",
+			"authAccountPrefix": "您可以使用{{provider}}账号来认证",
+			"authAccountSuffix": "并在之后以相同的账号再次登录聊天。",
+			"authRedirectExplanation": "点击“使用{{provider}}认证”按钮后，将跳转到{{provider}}的授权页面。在那里批准应用后，您将返回本网站并完成认证。",
+			"authWithProvider": "使用{{provider}}认证",
+			"authRequiredTitle": "需要{{provider}}认证",
+			"authRequiredDescription": "观看和参与本直播需要使用{{provider}}账号进行认证。",
+			"authPrivacyNote": "认证信息仅用于识别观众，不会执行发帖等操作。",
+			"indieAuthUrlInvalid": "指定的URL无效，或不支持IndieAuth。",
+			"noteLabel": "注意",
+			"privacyNote": "这仅用于认证目的，不会访问或存储任何个人信息。"
+		},
+		"auth": {
+			"tab": "{{provider}}认证"
+		},
+		"browserNotify": {
+			"notSupported": "您的浏览器不支持浏览器通知。",
+			"notSupportedLocal": "本地服务器不支持浏览器通知。",
+			"showNotifications": "显示通知",
+			"allow": "允许",
+			"block": "阻止",
+			"enabledTitle": "通知已启用",
+			"enabledDescription": "如需停用来自{{host}}的推送通知，请前往浏览器中此网站的权限设置并关闭通知。",
+			"learnMore": "了解更多",
+			"registrationError": "注册直播通知时出错：{{message}}。请确认您未处于隐私浏览模式，且之前未禁用过此直播的通知。",
+			"description": "每当本直播开播时，您都会在浏览器中收到通知。",
+			"docsLink": "请参阅AoiTube浏览器通知详情",
+			"descriptionSuffix": "。"
+		},
+		"fediAuth": {
+			"messagePrefix": "通过接收Fediverse私信，您可以将账号链接到",
+			"messageSuffix": "，或以之前已链接的聊天用户身份登录。",
+			"codeInstructions": "请输入发送到您Fediverse账号的验证码。如果未收到验证码，请确认您能否接收私信。",
+			"verifyCode": "验证代码",
+			"accountLabel": "您的Fediverse账号",
+			"learnMoreHeader": "了解更多关于使用Fediverse认证的信息",
+			"learnMoreBody": "您可以将聊天ID与Fediverse ID链接。下次使用此聊天ID时，只需再次通过Fediverse认证即可登录。"
+		},
+		"follow": {
+			"headerPrefix": "关注本直播后，开播时您将在Fediverse上收到通知。如果您是新手，现在正是",
+			"learnFediverseLink": "了解Fediverse",
+			"headerSuffix": "的好机会。",
+			"errorTitle": "关注出错",
+			"instructions": "如需关注，请按 @用户名@服务器 的格式输入",
+			"accountPlaceholder": "Fediverse账号 @account@server",
+			"footer": "您将被重定向到您的Fediverse服务器，并被要求确认此操作。",
+			"followButton": "关注",
+			"joinButton": "加入Fediverse"
+		},
+		"indieAuth": {
+			"messagePrefix": "您可以使用自己的域名来认证",
+			"messageSuffix": "或以之前通过IndieAuth认证过的聊天用户身份登录。",
+			"domainLabel": "您的域名",
+			"learnMoreHeader": "了解更多关于使用IndieAuth认证的信息",
+			"learnMoreBody1": "IndieAuth是一种利用自己的域名，以完全独立、去中心化的方式证明自己身份的机制。",
+			"learnMoreBody2Prefix": "如果您运营着自己的AoiTube实例，可以在此使用其域名。否则，请查看",
+			"learnMoreLink": "如何支持IndieAuth",
+			"learnMoreBody2Suffix": "。"
+		},
+		"nameChange": {
+			"description": "聊天显示名称是您发送聊天消息时其他人看到的名字。",
+			"changeButton": "更改名称",
+			"placeholder": "聊天显示名称",
+			"colorLabel": "颜色"
+		},
+		"nsfwWarning": {
+			"title": "年龄确认",
+			"message1": "本网站可能包含成人内容（18岁以上）。",
+			"message2": "您已年满18岁吗？",
+			"confirm": "是，我已年满18岁",
+			"decline": "否，我未满18岁",
+			"note": "选择“是”后，将不再显示此确认。"
+		},
+		"socialAuthRequired": {
+			"titleMulti": "需要社交账号认证",
+			"descriptionMulti": "观看和参与本直播需要使用{{providers}}中任一账号进行认证。",
+			"clickButtonPrompt": "请点击下方按钮进行认证。"
+		},
+		"twitterAuthRequired": {
+			"clickButtonPrompt": "请点击“认证”按钮进行X认证。",
+			"authButton": "认证"
+		}
+	},
+	"admin": {
+		"config": {
+			"chat": {
+				"title": "聊天设置",
+				"groups": {
+					"usage": "使用",
+					"moderation": "审核",
+					"usernames": "用户名与欢迎消息"
+				}
+			},
+			"doneru": {
+				"aboutBody1": "Doneru是日本的超级留言服务。请在",
+				"aboutBody2": "上创建创作者账号即可接收超级留言。支持PayPal、Stripe等支付方式。",
+				"aboutLinkText": "Doneru官方网站",
+				"aboutTitle": "关于Doneru",
+				"creatorSettingsTitle": "创作者设置",
+				"creatorUrlDescription": "请输入您的Doneru创作者页面URL。例如：https://doneru.jp/your-username",
+				"creatorUrlLabel": "Doneru创作者页面URL",
+				"enableDescription": "启用后，超级留言表单中会显示Doneru选项。",
+				"enableLabel": "启用Doneru",
+				"howToTitle": "使用方法",
+				"intro": "启用Doneru后，观众即可通过Doneru发送超级留言。请在Doneru创建创作者账号，并设置您的创作者页面URL。",
+				"noteBody": "Doneru的超级留言在Doneru网站上处理。超级留言记录可在Doneru的仪表盘中查看。",
+				"noteTitle": "注意",
+				"saveSuccess": "已保存Doneru设置",
+				"step1Suffix": "上创建创作者账号",
+				"step2": "在个人资料设置中配置支付方式（PayPal、Stripe等）",
+				"step3": "复制您的创作者页面URL（https://doneru.jp/your-username）",
+				"step4": "粘贴到上方的“Doneru创作者页面URL”中",
+				"step5": "打开“启用Doneru”并保存",
+				"title": "Doneru设置",
+				"urlValidation": "Doneru的URL必须以 https://doneru.jp/ 开头"
+			},
+			"faq": {
+				"basicSyntaxTitle": "基本语法",
+				"contentCardTitle": "FAQ内容（Markdown格式）",
+				"enableLabel": "启用FAQ页面",
+				"insertSample": "插入示例",
+				"intro": "设置面向观众的FAQ页面。可使用Markdown格式编写。",
+				"markdownGuideTitle": "Markdown写法",
+				"mdBoldLabel": "粗体",
+				"mdBoldSample": "**粗体**",
+				"mdH1Label": "一级标题",
+				"mdH1Sample": "# 标题1",
+				"mdH2Label": "二级标题",
+				"mdH2Sample": "## 标题2",
+				"mdH3Label": "三级标题",
+				"mdH3Sample": "### 标题3",
+				"mdHrLabel": "水平线",
+				"mdLinkLabel": "链接",
+				"mdLinkSample": "[链接](URL)",
+				"mdListLabel": "项目符号",
+				"mdListSample": "- 项目",
+				"saveError": "保存FAQ设置失败",
+				"saveSuccess": "已保存FAQ设置",
+				"statusDisabled": "已禁用",
+				"statusEnabled": "已启用",
+				"title": "常见问题（FAQ）设置",
+				"urlAlertTitle": "FAQ页面URL"
+			},
+			"kofi": {
+				"aboutBody1": "Ko-fi是面向创作者的超级留言与支持平台。请在",
+				"aboutBody2": "上创建账号，连接PayPal或Stripe即可接收支持。通过设置Webhook，Ko-fi上的超级留言会实时显示在AoiTube的聊天中。",
+				"aboutLinkText": "Ko-fi官方网站",
+				"aboutTitle": "关于Ko-fi",
+				"columnCommand": "指令",
+				"columnEffect": "特效",
+				"columnPriceJpy": "价格（JPY）",
+				"columnPriceUsd": "价格（USD）",
+				"copySuccess": "已复制{{label}}",
+				"copyUrlTooltip": "复制URL",
+				"effectsCardTitle": "画面特效指令",
+				"effectsExample": "例如：将留言设为“!fireworks 一直支持你！”并支付¥1,000以上，即可触发烟花特效。",
+				"effectsIntro": "在Ko-fi留言开头输入以下指令，并支付不低于特效价格的金额，即可在直播画面触发特效。若金额低于价格，则作为普通超级留言处理。",
+				"enableDescription": "启用后，将接收来自Ko-fi的Webhook通知，并将超级留言显示在聊天中。",
+				"enableLabel": "启用Ko-fi",
+				"intro": "启用Ko-fi后，观众即可通过Ko-fi发送超级留言。请在Ko-fi创建账号并进行Webhook设置。",
+				"pageSettingsTitle": "页面设置（可选）",
+				"pageUrlDescription": "请输入您的Ko-fi页面URL。它将作为链接按钮显示在超级留言表单中。例如：https://ko-fi.com/your-username",
+				"pageUrlLabel": "Ko-fi页面URL",
+				"realtimeBody": "Ko-fi的超级留言会通过Webhook自动发送到AoiTube，并实时显示在聊天中。超级留言者的名称、金额和留言会显示在聊天里（若超级留言者选择不公开，则显示为匿名）。",
+				"realtimeTitle": "实时联动",
+				"saveSuccess": "已保存Ko-fi设置",
+				"step1Suffix": "上创建账号",
+				"step2LinkText": "设置",
+				"step2Suffix": "中连接PayPal或Stripe以启用支付",
+				"step3Suffix": "，将其打开",
+				"step4": "将上方的“Webhook URL”粘贴到Ko-fi的Webhook URL栏中",
+				"step5": "复制Ko-fi上显示的“Verification Token”，粘贴到上方的Verification Token栏中",
+				"step6": "打开“启用Ko-fi”并保存",
+				"step7": "在Ko-fi点击“Send Test”按钮，确认设置正确",
+				"title": "Ko-fi设置",
+				"urlValidation": "Ko-fi的URL必须以 https://ko-fi.com/ 开头",
+				"verificationTokenDescription": "请输入Ko-fi的Webhook设置页面上显示的“Verification Token”。出于安全考虑，强烈建议进行此设置。",
+				"verificationTokenPlaceholder": "Ko-fi的Verification Token",
+				"verificationTokenTooltip": "请复制并粘贴Ko-fi的Webhook设置页面上显示的令牌。这样将只接收来自正当Ko-fi的请求。",
+				"webhookAlertPrefix": "在Ko-fi的",
+				"webhookAlertSuffix": "中，请设置以下URL：",
+				"webhookAlertTitle": "请在Ko-fi中设置Webhook URL",
+				"webhookCardTitle": "Webhook设置",
+				"webhookSettingsPage": "Webhook设置页面"
+			},
+			"metamask": {
+				"aboutBody": "Metamask支付不收取中介手续费，但网络手续费（gas费）由转账方承担。使用Polygon等L2网络或稳定币（USDT/USDC）可以降低手续费。",
+				"aboutTitle": "关于加密货币支付",
+				"btcAddressDescription": "若要通过Bitcoin Native SegWit接收超级留言，请输入以bc1开头的Bech32地址。MetaMask的最新版本已支持Bitcoin转账。",
+				"btcAddressInvalid": "不是有效的Bech32地址格式（请输入以bc1开头的地址）",
+				"btcAddressLabel": "Bitcoin收款钱包地址（可选）",
+				"currencyCardTitle": "货币设置（参考用）",
+				"currentCurrencyLabel": "货币",
+				"currentNetworkLabel": "网络",
+				"currentPriceIdLabel": "价格参考ID",
+				"currentSettingsLabel": "当前设置",
+				"defaultNetworkDescription": "此设置为参考值。实际超级留言时，观众可自由选择网络。",
+				"defaultNetworkLabel": "参考用默认网络",
+				"enableLabel": "启用Metamask支付",
+				"evmAddressDescription": "请输入在Ethereum、Polygon等EVM系链上接收超级留言的钱包地址。",
+				"evmAddressInvalid": "不是有效的EVM地址格式（请输入以0x开头的42位地址）",
+				"evmAddressLabel": "EVM收款钱包地址",
+				"intro": "启用Metamask/Web3支付后，观众即可用加密货币发送超级留言。支持多种链和代币。",
+				"nativeCurrencyOption": "{{currency}}（原生代币）",
+				"networkAlertBody": "在超级留言界面，观众可从多种网络（Bitcoin、VirBiCoin、Ethereum、Polygon等）中自由选择。此处的设置为管理用参考值。",
+				"networkAlertTitle": "关于网络选择",
+				"networkCardTitle": "默认网络设置（参考用）",
+				"receiveCurrencyDescription": "可选择原生代币（ETH、MATIC等）或ERC-20代币（USDT、USDC等）。稳定币没有价格波动，因此收款金额更稳定。",
+				"receiveCurrencyLabel": "收款代币",
+				"saveSuccess": "已保存Metamask设置",
+				"showJpyDescription": "使用CoinGecko API显示实时的日元换算。",
+				"showJpyLabel": "显示日元换算",
+				"testAlertBody": "在生产环境使用前，建议先在Sepolia（Ethereum）或Amoy（Polygon）等测试网上进行测试。测试网代币可免费获取。",
+				"testAlertTitle": "关于测试",
+				"title": "Metamask设置",
+				"tokenAddressAutoSet": "选择预设代币后将自动设置",
+				"tokenAddressLabel": "代币合约地址",
+				"tokenDecimalsLabel": "代币小数位数",
+				"tokenUnavailable": "{{symbol}}在此网络上不可用",
+				"validateTokenRequired": "请输入代币合约地址",
+				"validateWalletFormat": "请输入有效的Ethereum地址（以0x开头的42位）",
+				"validateWalletRequired": "请输入钱包地址",
+				"walletCardTitle": "钱包设置"
+			},
+			"notify": {
+				"createButton": "创建",
+				"customDescription": "可使用Webhook构建自定义通知。",
+				"customTitle": "自定义",
+				"description": "可利用以下通知渠道，向观众告知直播开始。",
+				"instanceUrlRequired": "要启用此功能，需先设置服务器URL。",
+				"learnMore": "了解更多通知相关信息",
+				"silentModeDescription": "启用后，将抑止直播开始和结束时的所有外部通知（Webhook、浏览器推送、Discord、X、Fediverse、目录）。请在测试直播时使用。",
+				"silentModeTitle": "静默测试模式",
+				"thumbnailTitle": "通知缩略图",
+				"title": "通知"
+			},
+			"paypal": {
+				"aboutBody1": "PayPal是可在全球200多个国家和地区使用的支付服务。请在",
+				"aboutBody2": "上创建应用并获取API凭据。手续费约为3.6% + 40日元（日本）。",
+				"aboutTitle": "关于PayPal",
+				"clientIdPlaceholder": "例如：AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz",
+				"credentialsMissingBody": "请设置{{env}}环境的Client ID和Client Secret。",
+				"enableLabel": "启用PayPal支付",
+				"envProduction": "生产",
+				"envSandbox": "沙盒",
+				"intro": "PayPal是全球广泛使用的支付服务。请在PayPal Developer Portal创建应用，并获取Client ID和Client Secret。",
+				"liveClientIdDescription": "在PayPal Developer Portal的“Live”标签页获取的Client ID",
+				"liveClientSecretDescription": "在PayPal Developer Portal的“Live”标签页获取的Client Secret",
+				"liveClientSecretPlaceholder": "输入Live Client Secret",
+				"merchantIdDescription": "PayPal商业账号的Merchant ID（非必填）",
+				"merchantIdLabel": "Merchant ID（可选）",
+				"merchantIdPlaceholder": "例如：ABCDEFGHIJKLM",
+				"modeProductionNote": "🔴 生产环境（将进行真实支付）",
+				"modeSandboxNote": "🧪 测试环境（不会进行真实支付）",
+				"productionEnvAlertBody": "用于真实支付的凭据。在生产环境中会产生真实的资金流动。",
+				"productionEnvAlertTitle": "生产环境",
+				"productionTabLabel": "🔴 生产环境",
+				"sandboxClientIdDescription": "在PayPal Developer Portal的“Sandbox”标签页获取的Client ID",
+				"sandboxClientSecretDescription": "在PayPal Developer Portal的“Sandbox”标签页获取的Client Secret",
+				"sandboxClientSecretPlaceholder": "输入Sandbox Client Secret",
+				"sandboxEnvAlertBody": "用于测试的凭据。可使用沙盒账号进行测试支付。",
+				"sandboxEnvAlertTitle": "沙盒环境",
+				"sandboxTabLabel": "🧪 沙盒环境",
+				"sandboxTestAlertTitle": "沙盒测试",
+				"sandboxTestBody1": "在沙盒模式下，可以使用",
+				"sandboxTestBody2": "进行测试支付。不会产生真实的资金流动。",
+				"sandboxTestLinkText": "沙盒账号",
+				"saveSuccess": "已保存PayPal设置",
+				"separateCredsBody": "在PayPal Developer Portal中，沙盒用和生产用会分别签发不同的Client ID和Client Secret。请输入与各环境对应的凭据。",
+				"separateCredsTitle": "沙盒和生产环境使用各自独立的凭据",
+				"step1Suffix": "，登录",
+				"step2": "在“Apps & Credentials”部分创建新应用",
+				"step3Body": "：在“Sandbox”标签页获取Client ID和Client Secret，并输入到上方的“沙盒环境”标签页",
+				"step3Strong": "沙盒用",
+				"step4Body": "：在“Live”标签页获取Client ID和Client Secret，并输入到上方的“生产环境”标签页",
+				"step4Strong": "生产用",
+				"step5": "（可选）在PayPal Developer Portal中设置Webhook URL",
+				"step6": "将环境模式设为“沙盒”并进行测试",
+				"step7": "测试完成后，将环境模式切换为“生产”",
+				"title": "PayPal设置",
+				"webhookEventNote": "请选择“PAYMENT.CAPTURE.COMPLETED”作为Webhook事件。"
+			},
+			"paypay": {
+				"aboutBody1": "PayPay的API凭据可从",
+				"aboutBody2": "获取。建议先在沙盒环境中进行测试。",
+				"apiKeyLabel": "API Key",
+				"apiKeyPlaceholder": "输入API Key",
+				"apiSecretLabel": "API Secret",
+				"apiSecretPlaceholder": "输入API Secret",
+				"credentialsMissingBody": "请设置{{env}}环境的API Key和API Secret。",
+				"enableLabel": "启用PayPay支付",
+				"intro": "启用PayPay支付后，观众即可用PayPay发送超级留言。请在PayPay for Developers创建账号，并获取API凭据。",
+				"merchantIdLabel": "Merchant ID（商户ID）",
+				"merchantIdPlaceholder": "输入商户ID",
+				"productionWarningBody": "将进行真实支付。请确认API凭据正确。",
+				"saveSuccess": "已保存PayPay设置",
+				"separateCredsBody": "在PayPay for Developers中，沙盒用和生产用会分别签发不同的API Key和API Secret。请输入与各环境对应的凭据。",
+				"title": "PayPay设置"
+			},
+			"shared": {
+				"apiCredentials": "API凭据",
+				"basicSettings": "基本设置",
+				"credentialsMissing": "凭据未设置",
+				"currencies": {
+					"AUD": "AUD - 澳元",
+					"BRL": "BRL - 巴西雷亚尔",
+					"CAD": "CAD - 加拿大元",
+					"CHF": "CHF - 瑞士法郎",
+					"CNY": "CNY - 人民币",
+					"CZK": "CZK - 捷克克朗",
+					"DKK": "DKK - 丹麦克朗",
+					"EUR": "EUR - 欧元",
+					"GBP": "GBP - 英镑",
+					"HKD": "HKD - 港币",
+					"INR": "INR - 印度卢比",
+					"JPY": "JPY - 日元",
+					"KRW": "KRW - 韩元",
+					"MXN": "MXN - 墨西哥比索",
+					"MYR": "MYR - 马来西亚林吉特",
+					"NOK": "NOK - 挪威克朗",
+					"NZD": "NZD - 新西兰元",
+					"PHP": "PHP - 菲律宾比索",
+					"PLN": "PLN - 波兰兹罗提",
+					"SEK": "SEK - 瑞典克朗",
+					"SGD": "SGD - 新加坡元",
+					"THB": "THB - 泰铢",
+					"TWD": "TWD - 新台币",
+					"USD": "USD - 美元"
+				},
+				"currency": "货币",
+				"displayNameDescription": "可自定义超级留言按钮上显示的名称。留空时将显示为“{{name}}”。",
+				"displayNameOptional": "显示名称（可选）",
+				"environmentMode": "环境模式",
+				"loading": "加载中...",
+				"productionModeActiveBody": "将进行真实支付。请确认设置正确。",
+				"productionModeActiveTitle": "生产模式已启用",
+				"sandboxTestFirst": "在生产环境使用前，请先在沙盒中测试。",
+				"saveSettings": "保存设置",
+				"setupSteps": "设置步骤",
+				"webhookEndpoint": "Webhook端点",
+				"webhookUrlDescription": "请将此URL注册到支付服务商的Webhook设置中。",
+				"saveSuccess": "设置已保存",
+				"saveError": "设置保存失败"
+			},
+			"socialItems": {
+				"authDescription": "允许观众使用社交账号在聊天中进行认证。在聊天设置中启用“要求社交认证”后，将强制要求使用这些账号进行认证。",
+				"authTitle": "社交认证设置",
+				"title": "社交设置"
+			},
+			"stripe": {
+				"aboutBody1": "Stripe是支持135种以上货币和多种支付方式的支付平台。请在",
+				"aboutBody2": "上创建账号并获取API密钥。手续费约为3.6%（日本）。",
+				"aboutTitle": "关于Stripe",
+				"apiKeysTitle": "API密钥",
+				"credentialsMissingBody": "请设置{{env}}环境的API密钥。",
+				"enableLabel": "启用Stripe支付",
+				"envProduction": "生产",
+				"envTest": "测试",
+				"intro": "Stripe是全球广泛使用的支付平台。请在Stripe Dashboard创建账号，并获取API密钥。",
+				"liveModeAlertBody": "生产用API密钥。将使用真实的信用卡进行支付。",
+				"liveModeAlertTitle": "生产模式",
+				"livePublishableKeyDescription": "在Stripe Dashboard的“开发者”→“API密钥”中获取（以pk_live_开头）",
+				"liveSecretKeyDescription": "在Stripe Dashboard的“开发者”→“API密钥”中获取（以sk_live_开头）",
+				"liveTabLabel": "🔴 生产模式",
+				"liveWebhookSecretLabel": "Live Webhook Secret（可选）",
+				"modeProductionNote": "🔴 生产模式（将进行真实支付）",
+				"modeTestNote": "测试模式（可使用测试卡支付）",
+				"saveSuccess": "已保存Stripe设置",
+				"separateKeysBody": "在Stripe Dashboard中，测试用和生产用会签发不同的API密钥。请输入与各环境对应的密钥。",
+				"separateKeysTitle": "测试模式和生产模式使用各自独立的API密钥",
+				"step1Suffix": "，登录（若没有账号请先创建）",
+				"step2": "在“开发者”→“API密钥”部分查看API密钥",
+				"step3Body": "：打开“测试模式”开关，获取以pk_test_和sk_test_开头的密钥，并输入到上方的“测试模式”标签页",
+				"step3Strong": "测试用",
+				"step4Body": "：关闭“测试模式”开关，获取以pk_live_和sk_live_开头的密钥，并输入到上方的“生产模式”标签页",
+				"step4Strong": "生产用",
+				"step5": "（可选）在“开发者”→“Webhook”中创建Webhook端点",
+				"step6": "将环境模式设为“测试”并进行测试",
+				"step7": "测试完成后，将环境模式切换为“生产”",
+				"testCardAlertTitle": "测试卡",
+				"testCardFailure": "失败的支付",
+				"testCardIntro": "在测试模式下，可使用以下测试卡号：",
+				"testCardNote": "有效期请使用未来的任意日期，CVC请使用任意3位数字。",
+				"testCardSuccess": "成功的支付",
+				"testModeAlertBody": "测试用API密钥。可使用测试卡（4242 4242 4242 4242）进行测试支付。",
+				"testModeAlertTitle": "测试模式",
+				"testModeFirst": "在生产环境使用前，请先在测试模式下测试。",
+				"testPublishableKeyDescription": "在Stripe Dashboard的“开发者”→“API密钥”中获取（以pk_test_开头）",
+				"testSecretKeyDescription": "在Stripe Dashboard的“开发者”→“API密钥”中获取（以sk_test_开头）",
+				"testTabLabel": "🧪 测试模式",
+				"testWebhookSecretLabel": "Test Webhook Secret（可选）",
+				"title": "Stripe设置",
+				"webhookEventNote": "请选择“checkout.session.completed”作为Webhook事件。",
+				"webhookSecretDescription": "创建Webhook端点时获取（以whsec_开头）"
+			},
+			"tokushoho": {
+				"contentCardTitle": "标示内容（Markdown格式）",
+				"contentPlaceholder": "以Markdown格式输入...",
+				"contentRequired": "请输入标示内容",
+				"enableLabel": "启用基于《特定商业交易法》的标示页面",
+				"intro": "提供超级留言（付费服务）时，需要基于《特定商业交易法》进行标示。可使用Markdown格式自由编辑。",
+				"legalAlertTitle": "关于法律要求",
+				"legalBody1": "在日本国内提供支付服务时，法律要求依据《特定商业交易法》进行标示。详情请查看",
+				"legalBody2": "。",
+				"legalLinkText": "消费者厅网站",
+				"markdownGuideSuffix": "等语法。保存后可在标示页面查看预览。",
+				"markdownGuideTitle": "关于Markdown语法",
+				"mdBoldSample": "**粗体**",
+				"mdH1Sample": "# 标题1",
+				"mdH2Sample": "## 标题2",
+				"mdListSample": "* 列表",
+				"saveError": "保存失败：{{message}}",
+				"saveSuccess": "已保存基于《特定商业交易法》的标示",
+				"title": "基于《特定商业交易法》的标示",
+				"urlAlertTitle": "标示页面URL",
+				"validationError": "请检查输入内容"
+			},
+			"video": {
+				"advancedSettings": "高级设置",
+				"docLinkText": "视频文档",
+				"introPrefix": "在更改视频设置之前，请先查看",
+				"introSuffix": "，了解其对直播性能的影响。建议先准备一个中等质量的输出，再根据需要添加画质变体。",
+				"tabQuality": "画质设置",
+				"tabStreaming": "直播协议",
+				"title": "视频设置"
+			},
+			"recording": {
+				"title": "录制设置",
+				"tabLabel": "录制",
+				"description": "自动录制直播并保存为存档（VOD）。录制以未公开状态保存，请在「实用工具 > 存档」中确认内容（并可设置价格）后再公开。公开的录制会显示在面向观众的列表页（/archives）。"
+			},
+			"backup": {
+				"title": "备份",
+				"description": "自动备份数据库（配置、用户、购买记录和存档观看权限）。由于涉及支付，建议开启备份以保护购买记录。"
+			}
+		},
+		"pages": {
+			"common": {
+				"cancel": "取消",
+				"delete": "删除",
+				"docsIntro": "有关用法和示例，请查看以下文档。",
+				"documentation": "文档",
+				"name": "名称",
+				"pleaseWait": "请稍候",
+				"selectAll": "全选"
+			},
+			"accessTokens": {
+				"title": "访问令牌",
+				"intro": "访问令牌用于外部第三方工具在AoiTube服务器上执行特定操作。请务必妥善保管，不要包含在客户端代码中，而应存放在可控的服务器端。",
+				"createButton": "创建访问令牌",
+				"modalTitle": "创建新访问令牌",
+				"nameHint": "使用此访问令牌发送消息时，将作为聊天中的用户名显示。",
+				"namePlaceholder": "机器人/服务/集成的名称",
+				"scopeHint": "请选择授予此访问令牌的权限。创建后无法编辑。",
+				"neverUsed": "未使用",
+				"columns": {
+					"token": "令牌",
+					"scopes": "权限",
+					"lastUsed": "最后使用"
+				},
+				"scopes": {
+					"systemMessages": {
+						"name": "系统消息",
+						"description": "可作为系统发送官方消息。"
+					},
+					"chatMessages": {
+						"name": "聊天消息",
+						"description": "可作为此令牌的所有者发送聊天消息。"
+					},
+					"admin": {
+						"name": "管理员权限",
+						"description": "可执行审核、获取服务器状态等管理操作。"
+					}
+				}
+			},
+			"actions": {
+				"title": "外部操作",
+				"intro": "外部操作URL是第三方UI，当用户点击按钮时可嵌入显示在AoiTube页面内。",
+				"createAction": "创建新操作",
+				"editAction": "编辑操作",
+				"saved": "已更新。",
+				"htmlEmbed": "HTML嵌入",
+				"sameTab": "同一标签页",
+				"newTab": "新标签页",
+				"columns": {
+					"description": "说明",
+					"urlEmbed": "URL / 嵌入",
+					"icon": "图标",
+					"color": "颜色",
+					"openMode": "打开方式"
+				},
+				"modal": {
+					"urlIntro": "添加要显示的外部操作URL。",
+					"httpsOnly": "仅支持HTTPS的URL和嵌入。",
+					"learnMore": "了解更多外部操作相关信息",
+					"typePlaceholder": "选择操作类型",
+					"typeUrl": "嵌入链接或URL",
+					"typeHtml": "自定义HTML",
+					"htmlPlaceholder": "HTML嵌入代码（必填）",
+					"urlPlaceholder": "https://myserver.com/action（必填）",
+					"titlePlaceholder": "操作名称（必填）",
+					"descriptionPlaceholder": "说明（可选）",
+					"iconPlaceholder": "https://myserver.com/action/icon.png（可选）",
+					"colorLabel": "按钮背景色（可选）",
+					"openExternally": "在新标签页中打开，而非页面内"
+				}
+			},
+			"chat": {
+				"title": "聊天管理",
+				"columns": {
+					"time": "时间",
+					"user": "用户",
+					"message": "消息"
+				},
+				"filters": {
+					"visible": "显示中",
+					"hidden": "已隐藏"
+				},
+				"tabs": {
+					"connected": "连接中",
+					"offline": "（离线）",
+					"banned": "已屏蔽的用户",
+					"ipBans": "IP屏蔽",
+					"moderators": "版主"
+				},
+				"viewerDocsPre": "有关观众附加信息的设置，请参阅",
+				"viewerDocsPost": "。",
+				"offlineDescription": "当直播开始且聊天启用时，连接中的聊天客户端将显示在这里。",
+				"messageHistory": "消息历史（{{num}}条）",
+				"messageHistoryIntro": "管理显示在直播画面上的观众消息。",
+				"bulkLabel": "选择多条消息以更改显示状态：",
+				"bulkShow": "显示",
+				"bulkHide": "隐藏"
+			},
+			"configGeneral": {
+				"tabs": {
+					"general": "常规",
+					"customCss": "自定义CSS",
+					"customScripts": "自定义脚本"
+				}
+			},
+			"configServer": {
+				"tabs": {
+					"server": "服务器设置",
+					"storage": "S3对象存储",
+					"streamKeys": "推流密钥",
+					"backup": "备份"
+				}
+			},
+			"donations": {
+				"title": "购买管理",
+				"intro": "观众购买（超级留言、画面特效）的销售仪表盘和购买记录。可通过外部支付服务的Webhook自动登记，也可手动登记。测试支付（沙盒）不计入销售统计。",
+				"addManually": "手动添加",
+				"anonymous": "匿名",
+				"show": "显示",
+				"hide": "隐藏",
+				"visible": "显示中",
+				"hiddenLabel": "已隐藏",
+				"showTest": "显示测试支付",
+				"testTag": "测试",
+				"testTooltip": "属于沙盒/测试模式的支付，不计入销售统计。",
+				"testCountTag": "测试 {{num}}条（不计入统计）",
+				"columns": {
+					"date": "日期时间",
+					"item": "商品",
+					"provider": "支付方式",
+					"amount": "金额",
+					"purchaser": "购买者",
+					"message": "消息",
+					"status": "状态",
+					"action": "操作"
+				},
+				"items": {
+					"superchat": "超级留言",
+					"screenEffect": "画面特效（{{name}}）",
+					"unknown": "未知",
+					"archive": "存档购买：{{title}}",
+					"archiveDeleted": "（已删除的存档）",
+					"archiveStat": "存档购买"
+				},
+				"providers": {
+					"manual": "手动",
+					"unknown": "未知"
+				},
+				"stats": {
+					"thisMonth": "本月销售额",
+					"momLabel": "环比上月",
+					"noLastMonth": "上月无数据",
+					"total": "累计销售额",
+					"cryptoJpy": "加密资产（日元换算）",
+					"cryptoJpyNote": "按确认时的汇率换算的合计",
+					"purchaseCount": "购买总数",
+					"countSuffix": "条",
+					"average": "平均购买额",
+					"uniquePurchasers": "独立购买者",
+					"peopleSuffix": "人",
+					"excludingAnonymous": "不含匿名购买"
+				},
+				"charts": {
+					"daily": "每日销售额（过去30天）",
+					"dailyTooltip": "{{currency}}：{{amount}}（{{num}}条）",
+					"byProvider": "按支付方式",
+					"providerTooltip": "{{label}}：{{num}}条（{{amounts}}）",
+					"byItem": "按商品的购买数",
+					"itemTooltip": "{{num}}条",
+					"emptyDaily": "暂无销售数据",
+					"emptyProviders": "暂无支付数据",
+					"emptyItems": "暂无购买数据"
+				},
+				"deleteConfirm": {
+					"title": "删除超级留言",
+					"content": "确定要彻底删除此超级留言吗？此操作无法撤销。"
+				},
+				"messages": {
+					"created": "已登记超级留言",
+					"createFailed": "登记失败",
+					"shown": "已显示",
+					"hidden": "已隐藏",
+					"updateFailed": "更新失败",
+					"deleted": "已删除",
+					"deleteFailed": "删除失败"
+				},
+				"modal": {
+					"title": "手动登记超级留言",
+					"register": "登记",
+					"amountLabel": "金额",
+					"amountRequired": "请输入金额",
+					"amountPlaceholder": "输入金额",
+					"currencyLabel": "货币",
+					"currencyJpy": "日元 (JPY)",
+					"currencyUsd": "美元 (USD)",
+					"currencyEur": "欧元 (EUR)",
+					"displayNameLabel": "显示名称",
+					"displayNamePlaceholder": "购买者的名字",
+					"messageLabel": "消息",
+					"messagePlaceholder": "消息（可选）",
+					"anonymousLabel": "设为匿名"
+				},
+				"filter": {
+					"all": "全部",
+					"superchat": "超级留言",
+					"effect": "画面特效",
+					"archive": "存档"
+				},
+				"revoke": {
+					"button": "撤销",
+					"confirmTitle": "撤销观看权限？",
+					"confirmContent": "该用户将无法再观看此存档。",
+					"success": "已撤销观看权限",
+					"failed": "撤销失败"
+				},
+				"grant": {
+					"button": "授予观看权限",
+					"title": "授予存档观看权限",
+					"archiveLabel": "存档",
+					"userLabel": "用户",
+					"submit": "授予",
+					"success": "已授予观看权限",
+					"failed": "授予失败",
+					"alreadyOwned": "该用户已拥有此存档的观看权限"
+				}
+			},
+			"emojis": {
+				"title": "表情符号",
+				"intro": "可上传聊天中使用的自定义表情符号。上传新表情符号时，文件名将用作表情符号名称。",
+				"uploadButton": "上传新表情符号",
+				"deleteEmoji": "删除表情符号",
+				"deleting": "正在删除表情符号…",
+				"deleted": "已删除表情符号",
+				"converting": "正在转换表情符号…",
+				"uploading": "正在上传表情符号…",
+				"uploaded": "已上传表情符号！",
+				"unsupportedFileType": "不支持的文件格式：{{type}}"
+			},
+			"hardwareInfo": {
+				"title": "硬件信息",
+				"noDataDescription": "尚未收集到硬件信息。",
+				"memory": "内存",
+				"disk": "磁盘",
+				"chartTitle": "使用率"
+			},
+			"help": {
+				"title": "有什么可以帮您？",
+				"troubleshooting": "故障排查",
+				"troubleshootingButton": "解决问题",
+				"readDocs": "阅读文档",
+				"commonTasks": "常见任务",
+				"otherTitle": "其他",
+				"learnMore": "查看详情",
+				"questions": {
+					"configure": "我想配置AoiTube",
+					"broadcasting": "我想了解直播软件的设置方法",
+					"embed": "我想将直播嵌入到其他网站",
+					"customize": "我想自定义网站",
+					"video": "我想调整视频输出",
+					"storage": "我想使用外部存储"
+				},
+				"other": {
+					"foundBug": "我发现了Bug",
+					"foundBugPre": "如果发现Bug，请",
+					"foundBugLink": "告知我们",
+					"question": "我有一般性问题",
+					"questionPre": "大多数问题都能在",
+					"questionAnd": "和",
+					"questionPost": "中找到答案。",
+					"addon": "我想制作AoiTube插件",
+					"addonBody": "可使用开发者API创建机器人/叠加层/工具/插件。",
+					"addonLink": "开发者API请见此处。"
+				}
+			},
+			"home": {
+				"viewers": "观众",
+				"peakViewers": "峰值观众数",
+				"input": "输入",
+				"inboundDetails": "入站流详情",
+				"inboundVideoStream": "入站视频流",
+				"inboundAudioStream": "入站音频流",
+				"outboundDetails": "出站流详情",
+				"outboundVideoStream": "出站视频流",
+				"outboundAudioStream": "出站音频流",
+				"streamStarted": "开始直播于{{relative}}"
+			},
+			"loginSettings": {
+				"title": "登录设置",
+				"intro": "管理用于登录管理后台的密码、通行密钥、安全密钥和一次性密码。",
+				"currentUser": "当前用户：",
+				"rename": "重命名",
+				"deleteKeyConfirm": "确定要删除“{{name}}”吗？",
+				"proxyError": {
+					"message": "无法连接到认证代理",
+					"description": "此页面需要认证代理（Authelia）在 /authelia/ 上运行。如果会话已过期，请重新加载页面。"
+				},
+				"columns": {
+					"registeredAt": "注册日期",
+					"lastUsed": "最后使用",
+					"actions": "操作"
+				},
+				"keysCard": {
+					"title": "通行密钥与安全密钥",
+					"addKey": "添加密钥",
+					"empty": "没有已注册的密钥"
+				},
+				"totpCard": {
+					"title": "一次性密码（验证器应用）",
+					"setup": "设置",
+					"registered": "已注册通过验证器应用的一次性密码。",
+					"notRegistered": "尚未设置。可使用验证器应用（如1Password）生成6位代码。",
+					"deleteConfirm": "确定要删除一次性密码吗？"
+				},
+				"passwordCard": {
+					"title": "修改密码",
+					"current": "当前密码",
+					"new": "新密码",
+					"confirm": "新密码（确认）",
+					"submit": "修改密码"
+				},
+				"messages": {
+					"codeAutoFetched": "已自动获取验证码",
+					"codeRequired": "请输入验证码",
+					"codeInvalid": "验证码不正确或已过期",
+					"codeNotReady": "尚未能获取代码。请几秒后重试",
+					"securityKeyFailed": "使用安全密钥验证失败",
+					"securityKeyCancelled": "已取消使用安全密钥的验证",
+					"totpRequired": "请输入一次性密码",
+					"totpInvalid": "一次性密码不正确",
+					"keyNameRequired": "请输入密钥名称",
+					"keyAdded": "已添加密钥",
+					"keyAddFailed": "添加密钥失败",
+					"keyAddCancelled": "已取消添加密钥",
+					"keyDeleted": "已删除“{{name}}”",
+					"deleteFailed": "删除失败",
+					"renamed": "已重命名",
+					"renameFailed": "重命名失败",
+					"totpStartFailed": "无法开始设置一次性密码",
+					"totpCodeRequired": "请输入应用中显示的6位代码",
+					"totpRegistered": "已注册一次性密码",
+					"totpMismatch": "代码不匹配。请重试",
+					"totpDeleted": "已删除一次性密码",
+					"passwordMismatch": "新密码不匹配",
+					"passwordChanged": "已修改密码",
+					"passwordChangeFailed": "修改密码失败。请检查当前密码"
+				},
+				"elevationModal": {
+					"title": "身份验证",
+					"codeIntro": "更改安全设置需要验证码。验证码会自动获取（如需数秒，请点击重新获取）。",
+					"codePlaceholder": "验证码（8位）",
+					"verify": "验证",
+					"secondFactorIntro": "接下来，请使用已注册的认证方式进行身份验证。",
+					"securityKeyConfirm": "使用安全密钥/通行密钥验证",
+					"totpPlaceholder": "一次性密码（6位）",
+					"confirm": "确认"
+				},
+				"addKeyModal": {
+					"title": "添加安全密钥/通行密钥",
+					"okText": "添加",
+					"intro": "输入密钥名称并点击“添加”后，将开始浏览器的安全密钥注册。",
+					"placeholder": "例如：YubiKey 5C、1Password"
+				},
+				"renameModal": {
+					"title": "重命名密钥",
+					"okText": "更改"
+				},
+				"totpModal": {
+					"title": "设置一次性密码",
+					"okText": "注册",
+					"scanQr": "请使用验证器应用扫描此二维码。",
+					"manualSecret": "手动输入密钥：{{secret}}",
+					"codePlaceholder": "应用中显示的6位代码"
+				}
+			},
+			"streamHealth": {
+				"title": "直播性能",
+				"noData": "尚未收集到数据。当直播开始且有观众时，此页面即可使用。",
+				"intro1": "此页面用于发现并排查直播中可能出现的问题。由于它汇总了全体观众的体验，如果只有个别观众的情况极差，在小规模直播中可能会影响整体数值。",
+				"intro2": "这些数据仅从使用AoiTube网页观看页面的观众处收集。如果观众使用VLC/MPV/QuickTime等外部播放器观看，则不会计入。",
+				"unitSeconds": "秒",
+				"slowDownloads": "下载缓慢",
+				"slowNetwork": "有网络较慢的观众",
+				"bitrateChartTitle": "观众的最低比特率",
+				"bitrateError": "至少有一名观众正以 {{speed}}kbps 播放，低于您提供的最低画质（{{lowest}}kbps）。如果错误持续，请考虑添加更低比特率的画质。",
+				"speedError": "观众端的播放可能跟不上所需的速度。原因可能是网络较慢或延迟设置。需要缩短观众消费视频所花费的时间。请尝试添加低比特率画质，或增大延迟缓冲设置。",
+				"stats": {
+					"playerSpeed": "观众的播放速度",
+					"playerLatency": "观众的延迟",
+					"recentErrors": "近期的播放错误"
+				},
+				"charts": {
+					"errors": "错误",
+					"qualityChanges": "画质切换",
+					"latencyMedian": "直播延迟（中位数）",
+					"latencyMin": "直播延迟（最小）",
+					"latencyMax": "直播延迟（最大）",
+					"downloadMax": "下载时间（最大）",
+					"downloadMedian": "下载时间（中位数）",
+					"downloadMin": "下载时间（最小）",
+					"targetLimit": "参考上限",
+					"bitrateMin": "播放速度（最小）",
+					"bitrateMedian": "播放速度（中位数）",
+					"bitrateMax": "播放速度（最大）",
+					"availableBitrates": "可用比特率"
+				},
+				"segmentSection": {
+					"title": "分段下载",
+					"p1": "如果视频分段的下载耗时过长，观众会遇到缓冲。下载缓慢时，可考虑提供低画质（低比特率）、使用外部存储/CDN/更快的网络等方式来改善。对部分观众而言，增大延迟缓冲也可能有所改善。",
+					"p2": "作为参考，如果粉色线持续接近蓝色线，则很可能是观众端出现了问题。"
+				},
+				"networkSection": {
+					"title": "观众的网络速度",
+					"p1": "这是观众的播放比特率（网络状况的参考）。当观众的比特率低于您提供的最低画质的比特率时，就容易发生缓冲。如果有网络较慢的观众，请考虑再添加更低的画质。",
+					"p2": "作为参考，如果粉色线接近最低的蓝色线，则可能至少有一名观众出现了问题。"
+				},
+				"errorsSection": {
+					"title": "错误与画质切换",
+					"p1": "这是近期的错误数（缓冲等）以及全体观众发生的画质切换次数。错误可能由浏览器问题、扩展程序、Wi-Fi不稳定等各种因素引起，并非全部致命，也并非都能由直播端控制。",
+					"p2": "画质切换本身未必是坏事，但如果频繁发生且错误同时增多，请考虑添加另一种画质变体。"
+				},
+				"latencySection": {
+					"title": "观众的延迟",
+					"description": "这是观众相对于实时画面的延迟（秒）的参考。延迟骤增的最大原因是缓冲。延迟高本身并非问题，过度追求低延迟反而可能引发缓冲，最终导致延迟更大。"
+				}
+			},
+			"userData": {
+				"title": "用户数据管理",
+				"intro": "可查看和删除用户。删除用户后，其认证信息和访问令牌也会被删除。",
+				"searchPlaceholder": "按用户名或ID搜索",
+				"refresh": "刷新",
+				"deleteSelected": "删除所选（{{num}}）",
+				"deleteAll": "全部删除",
+				"totalItems": "{{num}} 条",
+				"stats": {
+					"totalUsers": "总用户数",
+					"authenticated": "已认证",
+					"blocked": "已屏蔽",
+					"moderators": "版主"
+				},
+				"columns": {
+					"displayName": "显示名称",
+					"status": "状态",
+					"createdAt": "创建时间",
+					"authenticatedAt": "认证时间",
+					"action": "操作"
+				},
+				"tags": {
+					"authenticated": "已认证",
+					"blocked": "屏蔽",
+					"moderator": "版主",
+					"unauthenticated": "未认证"
+				},
+				"deleteUserConfirm": {
+					"title": "确定要删除此用户吗？",
+					"description": "其认证信息和访问令牌也会被删除"
+				},
+				"deleteSelectedConfirm": {
+					"title": "确定要删除 {{num}} 名用户吗？",
+					"content": "此操作无法撤销。所选用户的认证信息和访问令牌也会被删除。"
+				},
+				"deleteAllConfirm": {
+					"title": "确定要删除全部用户吗？",
+					"content": "此操作无法撤销。所有用户数据、认证信息和访问令牌都会被删除。",
+					"okText": "全部删除"
+				},
+				"messages": {
+					"fetchFailed": "获取用户失败",
+					"deleted": "已删除用户",
+					"deleteFailed": "删除用户失败",
+					"selectUsers": "请选择要删除的用户",
+					"allDeleted": "已删除全部用户",
+					"deleteAllFailed": "删除全部用户失败"
+				}
+			},
+			"viewerInfo": {
+				"title": "观众信息",
+				"currentViewers": "当前观众数",
+				"maxViewersThisStream": "本次直播的最大观众数",
+				"maxViewersLastStream": "上次直播的最大观众数",
+				"allTimeMaxViewers": "累计最大观众数",
+				"noDataDescription": "尚未收集到观众数据。",
+				"chartTitle": "观众数",
+				"unitPeople": "人",
+				"timeWindows": {
+					"currentStream": "当前直播",
+					"last12Hours": "过去12小时",
+					"last24Hours": "过去24小时",
+					"last7Days": "过去7天",
+					"last30Days": "过去30天",
+					"last3Months": "过去3个月",
+					"last6Months": "过去6个月"
+				}
+			},
+			"webhooks": {
+				"intro": "Webhook是根据AoiTube内发生的事件向外部API发送的回调。可用于实现聊天机器人、直播开始时自动通知等。",
+				"createButton": "创建Webhook",
+				"modalTitle": "创建新Webhook",
+				"eventsHint": "请选择要发送到此Webhook的事件。",
+				"columns": {
+					"events": "事件"
+				},
+				"events": {
+					"chat": {
+						"name": "聊天消息",
+						"description": "当用户发送聊天消息时"
+					},
+					"userJoined": {
+						"name": "用户加入",
+						"description": "当用户加入聊天时"
+					},
+					"nameChange": {
+						"name": "用户名更改",
+						"description": "当用户更改名称时"
+					},
+					"visibilityUpdate": {
+						"name": "消息显示状态更改",
+						"description": "当因审核等原因导致消息的显示状态发生变化时"
+					},
+					"streamStarted": {
+						"name": "直播开始",
+						"description": "当直播开始时"
+					},
+					"streamStopped": {
+						"name": "直播结束",
+						"description": "当直播结束时"
+					},
+					"streamTitleUpdated": {
+						"name": "直播标题更改",
+						"description": "当直播标题被更改时"
+					},
+					"donation": {
+						"name": "超级留言",
+						"description": "当购买超级留言时"
+					}
+				}
+			},
+			"federation": {
+				"actions": {
+					"title": "Fediverse 操作",
+					"description": "这里会显示他人对您的帖子作出的反应（点赞/转发等），以及关注请求的列表。",
+					"columnAction": "操作",
+					"columnFrom": "来源",
+					"columnTimestamp": "时间",
+					"repost": "转发",
+					"like": "点赞",
+					"follow": "关注"
+				},
+				"followers": {
+					"columnName": "名称",
+					"approve": "批准",
+					"reject": "拒绝",
+					"remove": "解除",
+					"requestedDate": "申请日期",
+					"blockedDate": "拒绝/屏蔽日期",
+					"addedDate": "添加日期",
+					"tabFollowers": "关注者",
+					"tabPending": "申请",
+					"tabBlocked": "已屏蔽",
+					"followersIntro": "以下账号会在直播开始或发布帖子时收到通知。",
+					"pendingIntro": "以下用户希望在 <fediverse>Fediverse</fediverse> 上关注您的AoiTube服务器，以接收直播开始通知。每个申请都需要批准。",
+					"blockedIntro": "以下用户已被拒绝或屏蔽。您也可以重新将其批准为关注者。"
+				}
+			},
+			"archives": {
+				"title": "存档管理",
+				"description": "已录制的直播（VOD）。可切换公开状态或删除。",
+				"empty": "暂无录像",
+				"untitled": "无标题直播",
+				"unfinished": "录制未完成",
+				"play": "播放",
+				"visible": "公开",
+				"hidden": "隐藏",
+				"columns": {
+					"title": "标题",
+					"startedAt": "直播时间",
+					"duration": "时长",
+					"visible": "公开状态",
+					"actions": "操作",
+					"size": "大小"
+				},
+				"deleteConfirm": {
+					"title": "删除存档",
+					"content": "永久删除此录像？此操作无法撤销。"
+				},
+				"messages": {
+					"shown": "已公开",
+					"hidden": "已隐藏",
+					"deleted": "已删除",
+					"updateFailed": "更新失败",
+					"deleteFailed": "删除失败",
+					"fetchFailed": "获取存档失败",
+					"bulkDeleted": "已删除{{count}}个存档",
+					"titleSaved": "标题已更新"
+				},
+				"bulkDeleteButton": "删除所选的{{count}}项",
+				"bulkDeleteConfirm": {
+					"title": "删除所选的存档吗？",
+					"content": "将永久删除{{count}}个存档。此操作无法撤销。"
+				},
+				"pricing": {
+					"columnTitle": "访问权限 / 价格",
+					"public": "公开",
+					"authenticated": "会员专属",
+					"paid": "付费",
+					"priceLabel": "价格",
+					"priceRequired": "付费存档的价格必须至少为 1",
+					"save": "保存",
+					"saved": "已保存价格设置"
+				},
+				"editTitle": "编辑标题"
+			}
+		},
+		"layout": {
+			"banUserButton": {
+				"actionBan": "封禁",
+				"actionUnban": "解除封禁",
+				"confirmContent": "，确定要{{action}}吗？",
+				"confirmTitle": "{{action}}确认",
+				"deleteMessagesNote": "（同时删除其消息）",
+				"okBan": "封禁",
+				"okUnban": "解除封禁",
+				"banAction": "封禁",
+				"unbanAction": "解除封禁"
+			},
+			"moderatorUserButton": {
+				"actionGrant": "授予版主",
+				"actionRevoke": "撤销版主",
+				"confirmContent": "，确定要{{action}}吗？",
+				"confirmTitle": "{{action}}确认",
+				"okGrant": "授予",
+				"okRevoke": "撤销"
+			},
+			"bannedIPsTable": {
+				"colIpAddress": "IP地址",
+				"colReason": "原因",
+				"colCreatedAt": "创建时间",
+				"unbanTitle": "解除IP地址封禁"
+			},
+			"clientTable": {
+				"colDisplayName": "显示名称",
+				"searchPlaceholder": "搜索显示名称...",
+				"colMessageCount": "发送数",
+				"colConnectedTime": "连接时长",
+				"colUserAgent": "用户代理",
+				"colLocation": "地区"
+			},
+			"userTable": {
+				"colDisplayName": "最后确认的显示名称",
+				"colCreatedAt": "创建时间",
+				"colDisabledAt": "禁用时间"
+			},
+			"composeFederatedPost": {
+				"postSuccess": "完成",
+				"postError": "失败",
+				"postButton": "发布",
+				"title": "向关注者发布",
+				"heading": "可以分享今后的直播计划，或号召关注者前来观看。",
+				"placeholder": "正在直播，欢迎来看！"
+			},
+			"socialDropdown": {
+				"description": "如需使用此列表中没有的平台名称，请选择“其他”并输入任意名称。将不显示Logo。",
+				"platformLabel": "平台",
+				"selectPlaceholder": "选择平台...",
+				"other": "其他..."
+			},
+			"editLogo": {
+				"loadFailed": "加载Logo数据失败",
+				"updated": "Logo已更新"
+			},
+			"common": {
+				"advancedSettings": "高级设置",
+				"cancel": "取消",
+				"delete": "删除",
+				"edit": "编辑",
+				"error": "发生错误：{{message}}",
+				"no": "否",
+				"resetFailed": "重置失败",
+				"save": "保存",
+				"statusLabel": "状态：",
+				"uploadFailed": "上传失败",
+				"yes": "是"
+			},
+			"codecSelector": {
+				"updated": "已更新视频编解码器。",
+				"appliesNextStream": "视频编解码器设置的更改将在下次直播开始时生效。",
+				"codecDefault": "默认 (libx264)",
+				"codecNvidia": "NVIDIA GPU 加速",
+				"codecVaapi": "VA-API 硬件编码",
+				"codecV4l2": "Video4Linux 硬件编码",
+				"codecOmx": "适用于 Raspberry Pi 的 OpenMax (omx)",
+				"codecVideoToolbox": "Apple VideoToolbox（硬件）",
+				"descLibx264": "libx264 是默认编解码器，在共享VPS环境中往往是唯一可行的选择。除非您确信已启用其他选项，否则建议使用它。",
+				"descNvenc": "如果您拥有配备编码核心的较新 NVIDIA GPU，则可使用 GPU 进行编码。",
+				"descVaapi": "VA-API 有时可在 NVIDIA 的专有驱动，或适用于 AMD/Intel 的 Mesa 驱动上使用。",
+				"descQsv": "Quick Sync 是 Intel 的视频编码/解码硬件。如果您拥有配备集成GPU的较新 Intel CPU，则可作为一个选项。",
+				"descV4l2": "Video4Linux 是用于访问 Intel/AMD 等多种硬件编码平台的接口。",
+				"descOmx": "OpenMax 是主要在 Raspberry Pi 上使用的编解码器。",
+				"descVideoToolbox": "Apple VideoToolbox 是用于直接访问硬件编码器/解码器的底层框架。",
+				"title": "视频编解码器",
+				"intro": "如果具备支持的硬件以及所需的驱动/软件，则有可能改善视频编码性能。",
+				"warningLink": "更改设置可能导致直播无法播放。更改前请查看文档。",
+				"confirmChange": "将视频编解码器更改为 {{codec}}。在了解其影响后，是否继续？"
+			},
+			"currentVariantsTable": {
+				"updated": "已更新变体",
+				"appliesNextStream": "视频设置的更改将在下次直播开始时生效。",
+				"colName": "名称",
+				"unnamed": "（无名称）",
+				"colVideoBitrate": "视频比特率",
+				"sameAsSource": "与源相同",
+				"colCpuUsage": "CPU使用率",
+				"notApplicable": "不适用",
+				"resetWarning": "警告：请编辑并重置",
+				"title": "流输出",
+				"modalTitle": "编辑视频变体",
+				"addVariant": "添加变体"
+			},
+			"editCustomJavascript": {
+				"placeholder": "/* 在此输入自定义JavaScript */",
+				"title": "使用JavaScript自定义页面",
+				"desc": "可在AoiTube页面中插入自定义JavaScript，以添加自定义功能或集成第三方脚本。有关用法的详情，请参阅",
+				"docsLink": "网页文档",
+				"descSuffix": "。",
+				"plainJsNote": "请勿使用HTML或script标签，只编写纯JavaScript。"
+			},
+			"editCustomStyles": {
+				"placeholder": "/* 在此输入自定义CSS */",
+				"title": "使用CSS自定义页面外观",
+				"desc": "可覆盖页面中各组件的CSS，以自定义AoiTube的外观。详情请参阅",
+				"docsLink": "“CSS与组件”指南",
+				"descSuffix": "。",
+				"plainCssNote": "此处输入的CSS将在页面加载时原样插入。请输入纯CSS文本。"
+			},
+			"editNotificationThumbnail": {
+				"invalidFileType": "不支持的文件格式（仅限 jpg、png、gif、webp）",
+				"fileTooLarge": "文件过大（最大 10MB）",
+				"updated": "通知缩略图已更新。重启服务器后生效。",
+				"resetDone": "已重置通知缩略图",
+				"label": "通知缩略图",
+				"current": "当前缩略图",
+				"usingLogo": "（正在使用Logo）",
+				"previewAlt": "通知缩略图预览",
+				"uploadButton": "上传缩略图",
+				"resetButton": "重置",
+				"statusCustom": "已自定义",
+				"statusNone": "未设置（使用Logo）",
+				"tip": "在通过Discord或X发送直播开始通知时显示的图片。若不设置，将使用Logo。更改后需要重启服务器。"
+			},
+			"editOfflineClip": {
+				"invalidFileType": "不支持的文件格式（仅限 .ts / .tsclip）",
+				"fileTooLarge": "文件过大（最大 25MB）",
+				"updated": "待机视频（离线时的视频）已更新",
+				"resetDone": "已将待机视频恢复为默认",
+				"label": "待机画面（离线时的视频）",
+				"uploadButton": "上传待机视频",
+				"resetButton": "恢复默认",
+				"statusCustom": "已自定义",
+				"statusDefault": "默认",
+				"tip": "替换在直播离线期间以HLS形式播放的“待机视频（单个TS分段）”。根据AoiTube的预期，建议使用时长约8秒的 .ts / .tsclip（时长不同可能导致播放不稳定）。",
+				"previewLabel": "预览（{{type}}）：",
+				"previewCustom": "自定义",
+				"previewDefault": "默认"
+			},
+			"editOfflineMedia": {
+				"invalidFileType": "不支持的文件格式（.mp4 / .jpg / .png / .gif / .webp）",
+				"fileTooLarge": "文件过大（最大 50MB）",
+				"updated": "已更新离线显示用媒体",
+				"deleted": "已删除离线显示用媒体",
+				"deleteFailed": "删除失败",
+				"configured": "已设置（{{type}}：{{path}}）",
+				"notConfigured": "未设置",
+				"label": "离线显示（图片/MP4）",
+				"uploadButton": "上传图片/MP4",
+				"tip": "当直播离线时，在离线画面上显示图片或MP4。MP4将以自动播放（静音/循环）方式显示。",
+				"previewLabel": "预览：",
+				"previewAlt": "离线媒体预览"
+			},
+			"editServerDetails": {
+				"restartRequired": "要使服务器设置的更新生效，需要重启 AoiTube 服务器。",
+				"ffmpegApplied": "更改后的FFmpeg路径将在下次直播开始时使用。",
+				"socketOverrideDesc": "如果整个AoiTube实例前面有CDN，请在此指定WebSocket连接的源服务器。大多数情况下无需此设置。"
+			},
+			"logTable": {
+				"levelInfo": "信息",
+				"levelWarning": "警告",
+				"levelError": "错误",
+				"colLevel": "级别",
+				"colTime": "时间",
+				"colMessage": "消息",
+				"title": "日志"
+			},
+			"mainLayout": {
+				"statusOnline": "直播中 {{duration}}",
+				"statusOffline": "离线",
+				"menu": {
+					"accessTokens": "访问令牌",
+					"externalActions": "外部操作",
+					"donationsAdmin": "购买管理",
+					"paypaySettings": "PayPay设置",
+					"paypalSettings": "PayPal设置",
+					"stripeSettings": "Stripe设置",
+					"metamaskSettings": "Metamask设置",
+					"kofiSettings": "Ko-fi设置",
+					"doneruSettings": "Doneru设置",
+					"tokushoho": "特商法标示",
+					"faqSettings": "FAQ设置",
+					"viewers": "观众",
+					"chatManagement": "聊天管理",
+					"userData": "用户数据",
+					"emojis": "表情符号",
+					"hardware": "硬件",
+					"streamHealth": "直播状态",
+					"logs": "日志",
+					"socialActions": "社交操作",
+					"loginSettings": "登录设置",
+					"generalSettings": "常规设置",
+					"serverSettings": "服务器设置",
+					"videoSettings": "视频设置",
+					"chatSettings": "聊天设置",
+					"socialSettings": "社交设置",
+					"notificationSettings": "通知设置",
+					"home": "主页",
+					"chatAndUsers": "聊天与用户",
+					"followers": "关注者",
+					"donations": "购买与收益",
+					"configuration": "设置",
+					"utilities": "实用工具",
+					"integrations": "集成",
+					"help": "帮助",
+					"logout": "退出登录",
+					"archives": "存档"
+				},
+				"menuGroups": {
+					"management": "管理",
+					"providers": "支付服务商",
+					"legal": "标示与条款"
+				},
+				"pageTitle": "{{name}} 管理",
+				"serverUnreachable": "无法连接到服务器",
+				"adminDashboardTitle": "{{name}} 管理后台",
+				"composePostTooltip": "向社交关注者发布",
+				"composePost": "撰写帖子",
+				"streamTitlePlaceholder": "您现在正在直播什么？（直播标题）",
+				"switchToLight": "切换到浅色主题",
+				"switchToDark": "切换到深色主题",
+				"themeToggle": "切换主题",
+				"language": "语言",
+				"aboutAoiTube": "关于 AoiTube（v{{version}}）"
+			},
+			"offline": {
+				"broadcastSoftware": "使用直播软件",
+				"broadcastSoftwareLink": "了解如何将现有软件连接到新服务器并开始直播。",
+				"streamUrl": "推流地址：",
+				"streamKey": "推流密钥：",
+				"view": "显示",
+				"overriddenByCli": "已通过命令行覆盖。",
+				"forkFeatures": "此分支版本的主要功能",
+				"featureOauthTitle": "OAuth 2.0认证",
+				"featureOauthDesc": "支持使用 X / Discord / Google / GitHub 账户登录",
+				"featureDonationTitle": "超级留言功能",
+				"featureDonationDesc": "支持 PayPay / PayPal / Stripe / Metamask / Ko-fi / Doneru",
+				"featureRtmpsTitle": "RTMPS支持",
+				"featureRtmpsDesc": "支持安全的RTMP流媒体",
+				"configureSocialAuth": "在社交设置中配置认证",
+				"donationSetup": "设置超级留言功能",
+				"donationIntro": "配置支付服务商后即可接收观众的超级留言。",
+				"donationPaypay": "二维码支付",
+				"donationPaypal": "国际支付（200多个国家和地区）",
+				"donationMetamask": "加密资产支付（ETH、SOL、BTC等）",
+				"donationKofi": "国际超级留言服务（Webhook联动）",
+				"donationDoneru": "外部超级留言服务联动",
+				"openDonationAdmin": "打开超级留言管理后台",
+				"embed": "在其他网站嵌入视频",
+				"embedLink": "了解如何将AoiTube流添加到其他网站。",
+				"chatDisabledTitle": "聊天已禁用",
+				"chatDisabledDesc": "在开始直播之前，聊天将保持禁用状态。",
+				"directoryTitle": "在AoiTube目录中发现观众",
+				"directoryPromo": "登记到AoiTube目录，推广您的直播。",
+				"directorySettings": "设置",
+				"directoryEnableSuffix": "中启用。",
+				"fediverseTitle": "将AoiTube实例添加到Fediverse",
+				"fediverseEnableLink": "启用AoiTube的Fediverse功能",
+				"fediverseDesc": "，加入Fediverse，实现关注、分享与互动。",
+				"notActiveTitle": "直播未在进行",
+				"notActiveDesc": "从直播软件连接后即开始直播。",
+				"featureStreamingTitle": "低延迟直播",
+				"featureStreamingDesc": "支持 LL-HLS（2-4秒）和 WebRTC（1秒以下）低延迟传输",
+				"featureRecordingTitle": "录制与存档",
+				"featureRecordingDesc": "录制直播并发布为点播，支持付费观看存档与特效同步回放",
+				"featureI18nTitle": "多语言界面",
+				"featureI18nDesc": "观众端与管理端界面支持5种语言（日、英、简中、繁中、韩）",
+				"featureBackupTitle": "自动备份",
+				"featureBackupDesc": "定期数据库备份、S3转存与一键迁移",
+				"donationStripe": "信用卡支付（国际）"
+			},
+			"resetYP": {
+				"title": "重置目录登记",
+				"desc": "如果AoiTube Directory的收录出现问题，并被建议“重置”连接，可在此执行。下次开始直播时，将尝试从头重新登记到目录。",
+				"confirm": "确定要重置到AoiTube Directory的连接吗？",
+				"resetButton": "重置目录连接"
+			},
+			"userPopover": {
+				"createdAt": "创建时间：{{date}}",
+				"clickForDetails": "点击显示详情",
+				"viewDetailsAria": "显示此用户的详情",
+				"close": "关闭",
+				"title": "用户详情：{{name}}",
+				"connectedNow": "此用户当前已连接到聊天。",
+				"connectionDuration": "连接时长：",
+				"messageCount": "发送数：",
+				"userAgent": "用户代理：",
+				"previousNames": "此用户过去的显示名称：",
+				"nameChangedAgo": "（{{duration}}前更改）",
+				"bannedAtPrefix": "此用户已于",
+				"bannedAtSuffix": "被封禁。"
+			},
+			"videoLatency": {
+				"markLowest": "最小",
+				"markHighest": "最大",
+				"comment0": "最小延迟 / 容错性低（不推荐。视直播内容和设置，可能无法正常工作）",
+				"comment1": "低延迟 / 容错性低",
+				"comment2": "中等延迟 / 容错性中等（默认）",
+				"comment3": "高延迟 / 容错性高",
+				"comment4": "最大延迟 / 容错性最高",
+				"updated": "已更新延迟缓冲级别。",
+				"appliesNextStream": "延迟缓冲设置的更改将在下次直播开始时生效。",
+				"title": "延迟缓冲",
+				"desc1": "延迟看似越低越好，但延迟越低，容错性和稳定性可能越差。不推荐使用最小设置。",
+				"desc2": "与观众互动较多的直播适合低延迟，互动较少的直播则提高延迟更易保持稳定。",
+				"learnMore": "了解更多。"
+			},
+			"videoVariantForm": {
+				"passthroughBitrateNote": "启用视频直通时，无法选择比特率。",
+				"bitrateLow": "适用于低带宽环境。",
+				"bitrateMedium": "适用于大多数网络环境。",
+				"bitrateHigh": "适用于高带宽环境。",
+				"passthroughFramerateNote": "启用视频直通时，无法选择帧率。",
+				"passthroughCpuNote": "启用视频直通时，无法选择CPU/GPU使用率。",
+				"learnMoreSettings": "详细了解各设置对服务器性能的影响。",
+				"passthroughWarningPrefix": "注意：此输出变体已启用",
+				"passthroughWarningEm": "视频直通",
+				"passthroughWarningSuffix": "。以下编码设置将失效。",
+				"cpuUsageTitle": "CPU/GPU 使用率",
+				"cpuUsageDesc": "调低可降低服务器负载。调高有时可提升画质。",
+				"cpuUsageSubtext": "根据您的环境，这可能指的是GPU而非CPU的使用率。",
+				"learnMoreHardware": "详细了解硬件性能。",
+				"videoBitrateTitle": "视频比特率",
+				"learnMoreBitrate": "详细了解比特率。",
+				"resolutionTitle": "分辨率",
+				"resolutionDesc1": "缩放会占用服务器的额外资源。若对此输出进行缩放，为保持宽高比，请指定宽度",
+				"resolutionDescOr": "或",
+				"resolutionDesc2": "高度中的一项。",
+				"learnMoreResolution": "详细了解分辨率。",
+				"passthroughTitle": "视频直通",
+				"passthroughDesc1Prefix": "启用视频直通有时可降低硬件使用率，但直播可能会",
+				"passthroughDesc1Strong": "无法播放",
+				"passthroughDesc1Suffix": "。",
+				"passthroughDesc2": "使用直通时，此输出的所有其他设置都将失效。",
+				"passthroughDocsLink": "由于此设置影响较大，启用前请查看文档。",
+				"passthroughConfirm": "您是否已阅读视频直通的文档，并了解启用它所带来的风险？",
+				"usePassthrough": "是否使用视频直通？",
+				"framerateTitle": "帧率",
+				"learnMoreFramerate": "详细了解帧率。"
+			}
+		},
+		"sections": {
+			"streamKeys": {
+				"defaultComment": "新密钥",
+				"keyLabel": "密钥",
+				"keyTooltip": "在直播软件中输入的密钥。密钥至少8个字符，且必须分别至少包含1个大写字母、小写字母、符号和数字。",
+				"keyPlaceholder": "输入密钥",
+				"commentLabel": "备注",
+				"commentTooltip": "添加此密钥原因的备注",
+				"commentPlaceholder": "OBS用密钥",
+				"add": "添加",
+				"copied": "已复制到剪贴板",
+				"copyFailed": "无法复制到剪贴板",
+				"columns": {
+					"key": "密钥",
+					"comment": "备注"
+				},
+				"intro1": "推流密钥用于直播软件连接AoiTube时的认证。多数情况下一个即可，但如果多人共用服务器，或希望为不同的推流来源分别设置密钥，可在此添加。",
+				"intro2": "这些密钥与管理员密码无关，也不会授予更改AoiTube设置的权限。",
+				"docs": {
+					"beforeLink": "有关直播的详情，请参阅",
+					"linkText": "文档"
+				},
+				"saveError": "密钥保存错误",
+				"noKeysTitle": "没有推流密钥",
+				"noKeysDescription": "在创建至少一个推流密钥并在直播软件中设置之前，无法进行直播。"
+			},
+			"rtmps": {
+				"restartRequired": "要使RTMPS设置的更新生效，需要重启AoiTube服务器。",
+				"enableSaveError": "保存RTMPS启用设置失败。",
+				"title": "RTMPS（加密流媒体）",
+				"aboutTitle": "关于RTMPS",
+				"aboutDescription": "RTMPS（RTMP over TLS）会对从直播软件到服务器的通信进行端到端加密。使用此功能需要有效的SSL/TLS证书。",
+				"exampleUrlLabel": "推流地址示例：",
+				"enableLabel": "启用RTMPS",
+				"pathsWarning": "请设置证书和私钥的路径",
+				"portLabel": "RTMPS端口",
+				"portTip": "接受RTMPS连接的端口号。默认为1936。",
+				"certPathLabel": "SSL证书路径",
+				"certPathTip": "SSL/TLS证书文件的绝对路径（例如：/etc/letsencrypt/live/example.com/fullchain.pem）",
+				"keyPathLabel": "私钥路径",
+				"keyPathTip": "SSL/TLS私钥文件的绝对路径（例如：/etc/letsencrypt/live/example.com/privkey.pem）",
+				"configuredTitle": "RTMPS已配置",
+				"configuredDescription": "请在直播软件（如OBS）中使用以下URL：",
+				"serverLabel": "服务器："
+			},
+			"pageContent": {
+				"title": "自定义页面内容",
+				"description": {
+					"beforeLink": "可以使用简单的",
+					"linkText": "Markdown 语法",
+					"afterLink": "来编辑页面内容。"
+				},
+				"placeholder": "请在此输入自定义页面内容...",
+				"save": "保存"
+			},
+			"socialLinks": {
+				"saveError": "发生错误：{{message}}",
+				"columnTitle": "社交链接",
+				"edit": "编辑",
+				"otherPlatformPlaceholder": "其他平台名称",
+				"title": "社交链接",
+				"description": "可添加各社交平台的账号名，或指向其他个人主页的链接。",
+				"modalTitle": "编辑社交链接",
+				"urlPlaceholder": "页面的URL",
+				"addButton": "添加社交链接"
+			},
+			"general": {
+				"description": "以下内容将显示在网站上，用于介绍您的直播和内容。",
+				"learnMore": "了解更多。"
+			},
+			"serverConfig": {
+				"description": "请将管理员密码从默认值更改，并保存在安全的地方。多数情况下，无需更改其他设置。"
+			},
+			"instanceTags": {
+				"updateSuccess": "已更新标签。",
+				"emptyWarning": "请输入标签",
+				"duplicateWarning": "此标签已被使用",
+				"title": "添加标签",
+				"description": "便于在目录中对AoiTube服务器进行分类。"
+			},
+			"instanceDetails": {
+				"title": "设置实例详情",
+				"offlineMessageLabel": "离线消息：",
+				"offlineMessageTip": "在未直播期间向页面访客显示的消息。也可使用Markdown。",
+				"saveMessage": "保存消息",
+				"directory": {
+					"beforeLink": "为了吸引更多观众，可以登记到",
+					"afterLink": "。这是由AoiTube项目运营的外部服务。",
+					"learnMore": "了解更多"
+				},
+				"directoryRequiresUrl": {
+					"beforeStrong": "要启用目录，需要在上方设置",
+					"strongText": "服务器URL",
+					"afterStrong": "。"
+				}
+			},
+			"storage": {
+				"intro": {
+					"beforeLink": "AoiTube 也可以使用外部存储提供商进行直播。详情请参阅",
+					"linkText": "存储文档"
+				},
+				"warning": "配置错误可能导致视频无法播放。请务必在存储提供商的文档中确认为AoiTube创建的存储桶的配置方法。",
+				"liveOnly": "这是用于直播的设置，并非用于存档、录制或点播（VOD）。",
+				"updated": "已更新。",
+				"restartNote": "存储设置的更改将在下次直播开始时生效。",
+				"useS3": "使用S3存储提供商",
+				"optionalSettings": "可选设置",
+				"save": "保存"
+			},
+			"appearance": {
+				"colorNames": {
+					"background": "背景",
+					"action": "操作",
+					"actionHover": "操作（悬停）",
+					"primaryButtonBorder": "主按钮边框",
+					"primaryButtonText": "主按钮文字",
+					"chatBackground": "聊天背景",
+					"chatText": "文字（聊天）",
+					"textOnDark": "文字（亮色）",
+					"textOnLight": "文字（暗色）",
+					"headerFooter": "页眉/页脚",
+					"pageContent": "页面内容",
+					"videoStatusBarBackground": "视频状态栏背景",
+					"videoStatusBarForeground": "视频状态栏前景",
+					"roundedCorners": "圆角"
+				},
+				"updated": "已更新。",
+				"loading": "加载中...",
+				"title": "自定义外观",
+				"description": "以下颜色将用于整个用户界面。",
+				"sectionColors": "各区块的颜色",
+				"sectionColorsDescription": "UI的部分区块可通过选择颜色进行自定义。",
+				"chatUserColors": "聊天用户的颜色",
+				"otherSettings": "其他设置",
+				"roundedCornersAmount": "圆角大小",
+				"saveColors": "保存颜色",
+				"resetToDefaults": "恢复默认值"
+			},
+			"browserNotify": {
+				"updated": "已更新。",
+				"title": "浏览器通知",
+				"description1": "可让观众在浏览器中接收直播开始时的通知。",
+				"description2": "并非所有浏览器都支持。",
+				"enableLabel": "启用浏览器通知",
+				"save": "保存"
+			},
+			"discordNotify": {
+				"updated": "已更新。",
+				"description": "每次开始直播时，向Discord频道发送通知。",
+				"webhookLinkText": "创建Webhook",
+				"instructionsBeforeItalic": "在Discord的频道中，从",
+				"instructionsItalicText": "编辑频道 / 集成",
+				"instructionsAfterItalic": "创建Webhook，并输入到下方。",
+				"enableLabel": "启用Discord通知",
+				"save": "保存",
+				"title": "Discord通知"
+			},
+			"twitterNotify": {
+				"enableLabel": "启用X通知",
+				"consumerKeyTip": "X Developer Portal的API Key",
+				"consumerKeyPlaceholder": "输入API Key",
+				"consumerSecretTip": "X Developer Portal的API Secret",
+				"consumerSecretPlaceholder": "输入API Secret",
+				"accessTokenTip": "与应用关联的Access Token",
+				"accessTokenPlaceholder": "输入Access Token",
+				"accessTokenSecretPlaceholder": "输入Access Token Secret",
+				"goLiveMessageLabel": "直播开始消息",
+				"goLiveMessageTip": "直播开始时发布推文的正文",
+				"goLiveMessagePlaceholder": "🔴 直播开始啦！快来看看吧♪",
+				"hashtagsLabel": "话题标签",
+				"hashtagsTip": "添加到推文中的话题标签（例如：#直播 #游戏实况）",
+				"hashtagsPlaceholder": "#直播 #Live #游戏实况",
+				"includeTitleLabel": "包含直播标题",
+				"includeServerNameLabel": "包含主播名称",
+				"saved": "已保存",
+				"previewServerName": "📺 您的频道名称",
+				"previewTitle": "🎬 直播标题显示在这里",
+				"previewUrl": "🔗 https://您的直播URL",
+				"title": "X 通知",
+				"description": "直播开始时自动在X上发布推文。",
+				"apiRequiredTitle": "需要配置X API",
+				"apiRequiredLine1": "请在X Developer Portal创建应用，并获取OAuth 1.0a凭据。",
+				"importantLabel": "重要：",
+				"apiRequiredLine2": "请将App permissions设置为“Read and Write”。",
+				"apiCredentials": "API凭据",
+				"postContent": "推文内容设置",
+				"postPreview": "推文预览",
+				"previewImageAlt": "推文附带图片",
+				"previewImageNote": "※ 将附带通知缩略图或Logo",
+				"saveSettings": "保存设置"
+			},
+			"discordAuth": {
+				"clientIdTip": "Discord Developer Portal的Client ID",
+				"clientIdPlaceholder": "输入Client ID",
+				"clientSecretTip": "Discord Developer Portal的Client Secret",
+				"clientSecretPlaceholder": "输入Client Secret",
+				"saved": "已保存",
+				"title": "Discord认证",
+				"description": "配置Discord认证后，观众即可使用Discord账号加入聊天。",
+				"stepsTitle": "设置步骤：",
+				"step1AfterLink": "，访问此页面",
+				"step2": "在“New Application”中创建新应用",
+				"step3": "从 OAuth2 → General 复制 Client ID 和 Client Secret",
+				"step4": "在 OAuth2 → Redirects 中添加以下URL：",
+				"configuredTitle": "Discord认证已配置",
+				"configuredDescription": "观众可使用Discord账号进行认证。",
+				"save": "保存"
+			},
+			"googleAuth": {
+				"clientIdTip": "Google Cloud Console的Client ID",
+				"clientIdPlaceholder": "输入Client ID",
+				"clientSecretTip": "Google Cloud Console的Client Secret",
+				"clientSecretPlaceholder": "输入Client Secret",
+				"saved": "已保存",
+				"title": "Google认证",
+				"description": "配置Google认证后，观众即可使用Google账号加入聊天。",
+				"stepsTitle": "设置步骤：",
+				"step1AfterLink": "，访问此页面",
+				"step2": "创建或选择项目",
+				"step3": "选择“创建凭据”→“OAuth 客户端 ID”",
+				"step4": "在应用类型中选择“Web 应用”",
+				"step5": "在“已授权的重定向 URI”中添加以下URL：",
+				"step6": "复制 Client ID 和 Client Secret",
+				"oauthConsentNote": "注意：还需要配置OAuth同意屏幕。请在“OAuth 同意屏幕”中进行设置，并添加所需的权限范围（email、profile、openid）。",
+				"configuredTitle": "Google认证已配置",
+				"configuredDescription": "观众可使用Google账号进行认证。",
+				"save": "保存"
+			},
+			"githubAuth": {
+				"clientIdTip": "GitHub OAuth App的Client ID",
+				"clientIdPlaceholder": "输入Client ID",
+				"clientSecretTip": "GitHub OAuth App的Client Secret",
+				"clientSecretPlaceholder": "输入Client Secret",
+				"saved": "已保存",
+				"title": "GitHub认证",
+				"description": "配置GitHub认证后，观众即可使用GitHub账号加入聊天。",
+				"stepsTitle": "设置步骤：",
+				"step1AfterLink": "，访问此页面",
+				"step2": "选择“OAuth Apps”标签页",
+				"step3": "点击“New OAuth App”",
+				"step4": "输入应用名称和主页URL",
+				"step5": "在“Authorization callback URL”中设置以下URL：",
+				"step6": "点击“Register application”，生成Client Secret并复制Client ID和Client Secret",
+				"clientSecretNote": "注意：Client Secret仅在生成后显示一次，请立即复制。如已丢失，请重新生成。",
+				"configuredTitle": "GitHub认证已配置",
+				"configuredDescription": "观众可使用GitHub账号进行认证。",
+				"save": "保存"
+			},
+			"xAuth": {
+				"clientIdTip": "X Developer Portal的Client ID (OAuth 2.0)",
+				"clientIdPlaceholder": "输入Client ID",
+				"clientSecretTip": "X Developer Portal的Client Secret (OAuth 2.0)",
+				"clientSecretPlaceholder": "输入Client Secret",
+				"saved": "已保存",
+				"title": "X认证 (OAuth 2.0)",
+				"description": "配置X认证后，观众即可使用X账号加入聊天。由于使用OAuth 2.0，需要与现有的X通知设置分开配置。",
+				"stepsTitle": "设置步骤：",
+				"step1AfterLink": "，访问此页面",
+				"step2": "创建项目和应用（或使用现有的）",
+				"step3": "在“User authentication settings”中启用OAuth 2.0",
+				"step4": "App permissions：选择“Read”",
+				"step5": "Type of App：选择“Web App, Automated App or Bot”",
+				"step6": "在 Callback URI / Redirect URL 中添加以下URL：",
+				"step7": "设置 Website URL（本网站的URL）",
+				"step8": "复制 Client ID 和 Client Secret",
+				"configuredTitle": "X认证已配置",
+				"configuredDescription": "观众可使用X账号进行认证。",
+				"save": "保存"
+			},
+			"federation": {
+				"modal": {
+					"title": "启用Fediverse功能",
+					"cancelButton": "不启用",
+					"okButton": "启用Fediverse功能",
+					"howItWorksTitle": "AoiTube的Fediverse功能是如何运作的？",
+					"intro": {
+						"beforeLink": "AoiTube的Fediverse功能，是通过让您的服务器加入",
+						"linkText": "Fediverse",
+						"afterLink": "（去中心化、开放且独立的服务器群）来实现的。"
+					},
+					"docs": {
+						"beforeLink": "有关这些功能的详情和运作机制，请查看",
+						"linkText": "文档",
+						"afterLink": "。"
+					},
+					"thingsToKnowTitle": "需要了解的事项",
+					"point1": "这些功能尚属新功能，且由于涉及与外部的联动，可能会出现问题。如果您觉得运行不稳定，欢迎向我们报告。",
+					"point2": "请务必以HTTPS（SSL）方式公开AoiTube服务器。",
+					"point3": "在开始被关注之后更改服务器URL或社交用户名，会在Fediverse上被视为另一个用户，之前的用户可能看起来像是消失了。",
+					"point4Term": "私密模式",
+					"point4AfterTerm": "启用后，可手动批准关注者，并将帖子的公开范围限制为仅关注者可见。",
+					"learnMoreTitle": "进一步了解Fediverse",
+					"learnMore": {
+						"beforeLink": "如果您初次接触这些概念，建议先进一步了解Fediverse所提供的功能与文化。详情请参阅",
+						"linkText": "文档",
+						"afterLink": "。您可以从中找到入门参考信息。"
+					}
+				},
+				"httpsWarning": "要启用此功能，需先将服务器URL设置为HTTPS。",
+				"portWarning": "此功能仅支持在SSL标准端口（443）上公开的AoiTube。",
+				"title": "Fediverse联动",
+				"intro": {
+					"beforeStrong": "AoiTube的",
+					"strongText": "Fediverse功能",
+					"afterStrong": "可将您的实例连接到Fediverse（Mastodon等去中心化社交网络）。关注者可以接收直播开始的通知，或对帖子作出反应。"
+				},
+				"enableNotice": "启用后，可在直播开始时自动通知Fediverse关注者，或撰写任意内容的帖子。",
+				"learnMoreLink": "Fediverse功能的详情请见此处"
+			},
+			"streamProtocol": {
+				"fetchError": "获取设置失败",
+				"iceServersArrayError": "请以数组格式指定ICE服务器",
+				"iceServersJsonError": "无效的JSON格式",
+				"iceServersInvalid": "ICE服务器的设置无效",
+				"saveSuccess": "已保存设置",
+				"saveError": "保存失败",
+				"latencySaveError": "保存延迟级别失败",
+				"viewerDisconnected": "已断开观众连接",
+				"disconnectError": "断开连接失败",
+				"allViewersDisconnected": "已断开所有观众连接",
+				"columns": {
+					"connectedAt": "连接时间",
+					"ipAddress": "IP地址",
+					"actions": "操作"
+				},
+				"disconnect": "断开",
+				"loading": "加载中...",
+				"title": "流媒体协议设置",
+				"description": "设置面向观众的流媒体协议。WebRTC可实现超低延迟（~1秒以下），LL-HLS可实现低延迟（~2-3秒）。",
+				"experimentalTitle": "实验性功能",
+				"experimentalDescription": "WebRTC和LL-HLS为实验性功能。若在直播过程中更改设置，可能需要重启。",
+				"standardHls": "标准HLS",
+				"enabledLabel": "启用",
+				"standardHlsDescription": "标准的HLS流媒体。兼容性最高，最为稳定。延迟：~10-30秒",
+				"experimentalTag": "实验性",
+				"latencyLevel": "延迟级别",
+				"marks": {
+					"lowest": "最低",
+					"low": "低",
+					"medium": "中",
+					"standard": "标准",
+					"reliable": "高可靠"
+				},
+				"llhlsDescription": "Apple LL-HLS协议。Safari、iOS及较新的浏览器支持。延迟：~2-5秒",
+				"maxViewers": "最大观众数",
+				"maxViewersTip": "0 = 无限制。请根据服务器资源进行设置。",
+				"webrtcDescription": "实时通信协议。可实现最低的延迟。延迟：~0.5-2秒",
+				"webrtcAdvanced": "WebRTC高级设置",
+				"iceServers": "ICE服务器设置",
+				"iceServersTip": "以JSON数组指定STUN/TURN服务器。urls请以数组格式指定。如需NAT穿透，建议配置TURN服务器。",
+				"webrtcStats": "WebRTC统计",
+				"currentViewers": "当前观众",
+				"status": "状态",
+				"statusEnabled": "已启用",
+				"statusDisabled": "已禁用",
+				"connectedViewers": "连接中的观众",
+				"disconnectAll": "断开全部",
+				"saveButton": "保存设置",
+				"reload": "重新加载"
+			}
+		},
+		"fields": {
+			"serverName": {
+				"placeholder": "AoiTube网站名称",
+				"label": "网站名称",
+				"tip": "AoiTube服务器的名称"
+			},
+			"streamTitle": {
+				"placeholder": "今天在做什么...",
+				"label": "直播标题",
+				"tip": "今天的直播是关于什么的？"
+			},
+			"serverSummary": {
+				"label": "简介",
+				"tip": "关于您、服务器或直播的简短说明。"
+			},
+			"offlineMessage": {
+				"placeholder": "直播离线时显示的消息。",
+				"label": "离线消息",
+				"tip": "直播离线时向观众显示的可选消息。"
+			},
+			"welcomeMessage": {
+				"label": "欢迎消息",
+				"tip": "观众首次连接到聊天时发送的系统聊天消息。留空则禁用。"
+			},
+			"logo": {
+				"label": "Logo",
+				"tip": "在整个站点使用的图标：页眉、favicon、通知和Fediverse头像。推荐正方形（如512×512以上）的JPG/PNG。更改立即生效；浏览器标签图标将在下次访问时刷新。",
+				"statusCustom": "已设置（{{file}}）",
+				"statusDefault": "默认"
+			},
+			"adminPassword": {
+				"label": "管理员密码",
+				"tip": "请将此密码保存在安全的地方。登录管理仪表盘时需要用到！"
+			},
+			"ffmpegPath": {
+				"label": "FFmpeg路径",
+				"tip": "服务器上FFMPEG应用程序的绝对文件路径"
+			},
+			"webPort": {
+				"label": "AoiTube端口",
+				"tip": "AoiTube Web服务器监听的端口。默认为8080"
+			},
+			"rtmpPort": {
+				"label": "RTMP端口",
+				"tip": "接收直播的端口。默认为1935"
+			},
+			"instanceUrl": {
+				"label": "服务器URL",
+				"tip": "AoiTube服务器的完整URL。"
+			},
+			"socketHostOverride": {
+				"label": "Websocket主机覆盖",
+				"tip": "AoiTube服务器的直连URL。"
+			},
+			"tags": {
+				"placeholder": "添加新标签"
+			},
+			"nsfw": {
+				"label": "成人内容？",
+				"tip": "如果打算直播成人内容，请打开此项。请正确设置，以便在目录中正确显示。"
+			},
+			"directoryEnabled": {
+				"label": "启用目录",
+				"tip": "如需在目录中显示，请打开此项。"
+			},
+			"hideViewerCount": {
+				"label": "隐藏观众数",
+				"tip": "如需隐藏网页上的观众数，请打开此项。"
+			},
+			"silentStreamMode": {
+				"label": "静默模式（测试直播）",
+				"tip": "启用后，将不发送直播开始时的任何外部通知，直播仅对管理员和版主可见（也不会发布到S3/CDN）。切换将从下次直播开始时生效。"
+			},
+			"chatDisable": {
+				"label": "聊天",
+				"tip": "切换AoiTube服务器聊天功能的开/关。"
+			},
+			"chatJoinMessages": {
+				"label": "加入消息",
+				"tip": "当观众加入聊天时显示。"
+			},
+			"chatEstablishedUsers": {
+				"label": "仅限老用户",
+				"tip": "仅允许注册已达一定时间的用户聊天。"
+			},
+			"chatSpamProtection": {
+				"label": "垃圾信息防护",
+				"tip": "通过限制连续发送的速度来防止垃圾信息。禁用后将取消速率限制。"
+			},
+			"chatSlurFilter": {
+				"label": "不当言辞过滤",
+				"tip": "屏蔽包含歧视性、攻击性词语（主要为英语）的消息。"
+			},
+			"requireSocialAuth": {
+				"label": "要求社交认证",
+				"tip": "加入聊天将需要X或Discord认证。请事先在通知设置中配置各服务的API凭据。"
+			},
+			"forbiddenUsernames": {
+				"placeholder": "用户名",
+				"label": "禁用用户名",
+				"tip": "聊天用户名中禁用的词语列表。"
+			},
+			"suggestedUsernames": {
+				"placeholder": "用户名",
+				"label": "默认用户名",
+				"tip": "分配给新用户的聊天用户名候选列表。少于10个时将生成随机名称。用户之后可以更改，同一用户名可能被多次分配。",
+				"minNotReached": "此功能至少需要10个条目。",
+				"noEntries": "将使用默认的名称生成器。"
+			},
+			"federationEnabled": {
+				"label": "启用Fediverse功能",
+				"tip": "在Fediverse上收发活动。"
+			},
+			"federationPrivate": {
+				"label": "私密",
+				"tip": "关注请求将需要批准，且只有关注者才能看到活动。"
+			},
+			"federationShowEngagement": {
+				"label": "显示互动",
+				"tip": "关注、点赞、分享将显示在聊天信息流中。"
+			},
+			"federationLiveMessage": {
+				"placeholder": "直播开始啦！快来看看吧！",
+				"label": "直播开始消息",
+				"tip": "用于告知直播已开始的消息。标签会自动添加。留空则禁用。"
+			},
+			"federationDefaultUser": {
+				"label": "用户名",
+				"tip": "用于在Fediverse上收发活动的用户名。例如使用“bob”，则会以 @bob@yourserver 的身份发送消息。有了关注者后请勿更改。"
+			},
+			"federationInstanceUrl": {
+				"label": "服务器URL",
+				"tip": "启用Fediverse功能需要AoiTube服务器的完整URL。必须使用SSL（https）。有了关注者后请勿更改。"
+			},
+			"federationNsfw": {
+				"label": "可能包含成人内容",
+				"tip": "如果打算直播成人内容，请打开此项，以便将直播预览标记为敏感内容。"
+			},
+			"federationBlockedDomains": {
+				"label": "屏蔽的域名",
+				"tip": "可屏蔽来自特定域名的互动。"
+			},
+			"videoVariant": {
+				"videoPassthroughTip": "启用后其他所有设置都将失效。请保持禁用并照常设置。",
+				"audioPassthroughTip": "如果选择“否”，请设置所需的音频比特率。",
+				"scaledWidth": {
+					"label": "缩放后的宽度",
+					"tip": "根据需要缩放宽度。"
+				},
+				"scaledHeight": {
+					"label": "缩放后的高度",
+					"tip": "根据需要缩放高度。"
+				},
+				"name": {
+					"label": "名称",
+					"placeholder": "高画质或低画质",
+					"tip": "在播放器中显示的、便于阅读的名称。"
+				}
+			},
+			"framerate": {
+				"tip": "降低帧率会减少编码并发送给观众的视频量，从而节省CPU和带宽（相应地，流畅度会下降）。对大多数内容而言，较低的帧率也没有问题。",
+				"tooltips": {
+					"fps24": "24fps - 适用于电影/演示/音乐/低配置、低带宽服务器。",
+					"fps25": "25fps - 适用于电影/演示/音乐/低配置、低带宽服务器。",
+					"fps30": "30fps - 适用于慢节奏/休闲游戏、聊天及通用场景。",
+					"fps50": "50fps - 适用于快节奏/动作游戏、体育及高清视频。",
+					"fps60": "60fps - 适用于快节奏/动作游戏、体育及高清视频。",
+					"fps90": "90fps - 适用于最新的快节奏游戏及高性能硬件。",
+					"fps120": "120fps - 实验性。请自行承担风险使用。"
+				}
+			},
+			"videoBitrate": {
+				"tip": "直播的整体画质通常受比特率的影响最大。"
+			},
+			"encoderPreset": {
+				"lowest": "最低",
+				"highest": "最高",
+				"tooltips": {
+					"level0": "最低硬件使用率 - 最低画质视频",
+					"level1": "低硬件使用率 - 低画质视频",
+					"level2": "中等硬件使用率 - 中等画质视频",
+					"level3": "高硬件使用率 - 高画质视频",
+					"level4": "最高硬件使用率 - 更高画质视频"
+				}
+			},
+			"encoderRecommendation": {
+				"helpText": "目前只设置了一个视频画质变体。如果服务器有足够的计算资源，请考虑添加另一个低画质变体，以便让更多人能够观看您的内容！"
+			},
+			"s3": {
+				"region": {
+					"label": "区域"
+				},
+				"secret": {
+					"label": "私密密钥",
+					"placeholder": "私密密钥"
+				},
+				"servingEndpoint": {
+					"label": "分发端点",
+					"tip": "如需从非默认URL分发内容时指定（用于CDN或部分存储提供商）。通常无需设置。"
+				},
+				"forcePathStyle": {
+					"label": "强制路径样式",
+					"tip": "如果S3提供商不支持 virtual-hosted-style URL，请打开此项（例如：Oracle Cloud Object Storage）。"
+				}
+			},
+			"discord": {
+				"webhookUrl": {
+					"tip": "分配给频道的Webhook。"
+				},
+				"goLiveMessage": {
+					"label": "直播开始文本",
+					"tip": "直播开始时发送的文本。",
+					"placeholder": "直播开始啦！快来看看吧！"
+				}
+			},
+			"browserPush": {
+				"goLiveMessage": {
+					"label": "直播开始文本",
+					"tip": "直播开始时发送的文本。",
+					"placeholder": "直播开始啦！快来看看吧！"
+				}
+			},
+			"passwordComplexity": {
+				"minLength": "- 至少8个字符",
+				"maxLength": "- 最多192个字符",
+				"lowercase": "- 至少1个小写字母",
+				"uppercase": "- 至少1个大写字母",
+				"number": "- 至少1个数字",
+				"specialCharacter": "- 至少1个特殊字符：!@#$%^&*"
+			},
+			"toggle": {
+				"on": "开",
+				"off": "关",
+				"error": "发生错误：{{message}}"
+			},
+			"livePoster": {
+				"label": "直播封面",
+				"tip": "在直播刚开始（首个缩略图生成前）以及观众按下播放键前显示的图片。推荐16:9（如1280×720以上）的JPG/PNG。未设置时使用内置\"LIVE\"图片。开播约20秒后会切换为自动生成的缩略图。",
+				"uploadButton": "上传图片",
+				"resetButton": "恢复默认",
+				"statusCustom": "已设置",
+				"statusDefault": "默认",
+				"previewLabel": "预览（{{type}}）:",
+				"updated": "直播封面已更新",
+				"resetSuccess": "已恢复默认",
+				"loadFailed": "图片加载失败"
+			},
+			"recordingEnabled": {
+				"label": "录制直播",
+				"tip": "启用后，直播结束时会自动保存为存档（VOD），观众可以稍后观看。设置更改将从下次直播开始生效。"
+			},
+			"recordingRetention": {
+				"label": "录制保留数量",
+				"tip": "保留的未公开录制的最大数量，超出后按最旧顺序自动删除。0为不限制。已公开、会员限定、付费及有购买记录的存档不会被自动删除。"
+			},
+			"recordingStoreS3": {
+				"label": "将录制保存到S3",
+				"tip": "启用后，直播结束时会将录制媒体转存到S3对象存储（与直播分发相同的存储桶，位于archives/下），释放本地磁盘。播放通过服务器代理，因此非公开存档的保护得以保留。请先在「服务器设置 > 存储」中配置S3凭证。"
+			},
+			"backupEnabled": {
+				"label": "启用自动备份",
+				"tip": "启用后，数据库将按计划备份。"
+			},
+			"backupInterval": {
+				"label": "备份间隔（小时）",
+				"tip": "运行备份的间隔（小时）。最小1，默认24。"
+			},
+			"backupRetention": {
+				"label": "本地保留数量",
+				"tip": "保留的本地备份文件最大数量；超过的会自动删除最旧的。0表示无限制。"
+			},
+			"backupStoreS3": {
+				"label": "将备份保存到S3",
+				"tip": "同时将每个备份上传到S3对象存储（与直播分发相同的存储桶，位于backups/下）。可在磁盘损坏时避免丢失并简化节点迁移。请先配置S3凭证。"
+			}
+		}
+	},
+	"archives": {
+		"title": "直播存档",
+		"description": "观看过往直播的录像。",
+		"empty": "暂无录像",
+		"backToHome": "返回首页",
+		"untitled": "未命名直播",
+		"chatReplay": "聊天回放",
+		"backToList": "返回列表",
+		"recentTitle": "过往直播",
+		"viewAll": "查看全部",
+		"paid": {
+			"ownedBadge": "已购买",
+			"membersBadge": "会员专属",
+			"purchaseTitle": "购买存档",
+			"loginModalTitle": "登录",
+			"purchasedTitle": "购买完成",
+			"purchasedBinding": "已以「{{name}}」购买。请使用相同账号登录以观看。",
+			"watchNow": "观看",
+			"loginRequired": "该存档为付费内容。请登录后购买。",
+			"loginToPurchase": "登录以购买",
+			"loggedInAs": "当前登录账号",
+			"bindingNote": "此次购买将绑定到账号「{{name}}」。在其他设备上请使用相同的社交账号登录。",
+			"payWith": "使用 {{provider}} 购买",
+			"noProviders": "当前没有可用的支付方式。",
+			"returnHint": "完成支付后，返回此页面即可观看。",
+			"paymentOpenedTab": "支付页面已在新标签页中打开。完成后请返回此页面。",
+			"paymentFailed": "无法开始支付。",
+			"lockedBadge": "付费"
+		},
+		"members": {
+			"title": "会员限定存档",
+			"loginRequired": "观看此存档需要登录。",
+			"loginToWatch": "登录后观看",
+			"loggedInTitle": "已登录，现在可以观看。"
+		},
+		"count": "{{count}}个录制",
+		"copyLink": "复制链接",
+		"linkCopied": "已复制链接",
+		"moreArchives": "更多存档"
+	},
+	"page": {
+		"notFound": "页面未找到",
+		"backToHome": "返回首页",
+		"loading": "加载中..."
+	},
+	"purchases": {
+		"title": "购买记录",
+		"empty": "暂无购买记录",
+		"loginHint": "登录后可查看购买记录",
+		"watch": "观看",
+		"itemSuperchat": "超级留言",
+		"itemEffect": "画面特效",
+		"itemArchive": "存档",
+		"archiveDeleted": "（已删除的存档）",
+		"testTag": "测试"
+	}
+}

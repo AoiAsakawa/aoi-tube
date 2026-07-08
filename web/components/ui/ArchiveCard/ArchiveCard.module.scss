@@ -1,0 +1,185 @@
+.card {
+	// A real <button> for keyboard access; strip the native chrome.
+	display: block;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	text-align: left;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+	overflow: hidden;
+	background-color: var(--color-panel-bg);
+	border: 1px solid var(--color-panel-border-soft);
+	border-radius: var(--theme-rounded-corners);
+	transition:
+		transform 0.2s ease,
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-3px) scale(1.01);
+		border-color: var(--theme-color-action);
+		box-shadow: var(--shadow-hover);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--theme-color-action);
+		outline-offset: 2px;
+	}
+}
+
+.thumbnail {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	// Subtle themed gradient behind the placeholder glyph, and behind the
+	// image while it loads.
+	background: linear-gradient(
+		135deg,
+		var(--color-panel-bg-alt) 0%,
+		var(--color-panel-bg-deep) 100%
+	);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.thumbnailImage {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.placeholderGlyph {
+	font-size: 2.5rem;
+	line-height: 1;
+	color: var(--color-panel-text-muted);
+	opacity: 0.7;
+}
+
+.duration {
+	position: absolute;
+	right: 6px;
+	bottom: 6px;
+	padding: 1px 6px;
+	border-radius: 4px;
+	// Theme-invariant dark pill with white text, like video player overlays.
+	background: rgba(0, 0, 0, 0.75);
+	color: #fff;
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+
+// Access badges pinned to the top-left of the thumbnail. Theme-invariant
+// (fixed colors) since they sit over the image, like the duration pill.
+.badge {
+	position: absolute;
+	top: 6px;
+	left: 6px;
+	padding: 2px 8px;
+	border-radius: var(--radius-sm);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #fff;
+	white-space: nowrap;
+}
+
+.paidBadge {
+	background: rgba(0, 0, 0, 0.75);
+	font-variant-numeric: tabular-nums;
+}
+
+.ownedBadge {
+	background: #16a34a; // green: the viewer owns this archive
+}
+
+.membersBadge {
+	background: #6544e9; // brand purple: members-only
+}
+
+.details {
+	padding: 10px 12px 12px;
+}
+
+.title {
+	color: var(--color-panel-text);
+	font-weight: 600;
+	line-height: 1.35;
+	// Clamp long titles to two lines.
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+}
+
+.date {
+	margin-top: 4px;
+	color: var(--color-panel-text-muted);
+	font-size: 0.85rem;
+}
+
+// Rendition label (e.g. "1080p60") shown next to the recording date.
+.quality {
+	margin-left: 8px;
+	padding: 1px 6px;
+	border-radius: var(--radius-sm);
+	background: var(--color-chip-bg);
+	color: var(--color-panel-text-muted);
+	font-size: 0.7rem;
+	font-weight: 600;
+}
+
+// Hover richness: the card lifts, the thumbnail zooms slightly and a play
+// glyph fades in — signals "this plays" without any chrome at rest.
+.card {
+	transition:
+		transform 0.18s ease,
+		box-shadow 0.18s ease;
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-3px);
+		box-shadow: var(--shadow-panel);
+	}
+
+	&:hover .thumbnailImage,
+	&:focus-visible .thumbnailImage {
+		transform: scale(1.04);
+	}
+
+	&:hover .playGlyph,
+	&:focus-visible .playGlyph {
+		opacity: 1;
+	}
+}
+
+.thumbnailImage {
+	transition: transform 0.25s ease;
+}
+
+.playGlyph {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 2.2rem;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.35);
+	opacity: 0;
+	transition: opacity 0.18s ease;
+	pointer-events: none;
+}
+
+// The newest recording gets a two-column hero slot with a larger title.
+.hero {
+	.title {
+		font-size: 1.15rem;
+	}
+}

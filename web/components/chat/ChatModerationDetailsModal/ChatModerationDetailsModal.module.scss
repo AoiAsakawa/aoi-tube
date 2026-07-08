@@ -1,0 +1,195 @@
+.modalContainer {
+	padding: 10px;
+}
+
+.chatHistory {
+	margin: 10px;
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.colorBlock {
+	display: inline-block;
+	width: 60px;
+	height: 20px;
+	border: 1px solid #000;
+	text-align: center;
+	font-size: 0.8rem;
+}
+
+.displayName {
+	font-weight: bold;
+	padding-right: 10px;
+	font-size: 1.2rem;
+}
+
+/* Theme-aware styles for Collapse and Table (dark by default via panel tokens) */
+.darkCollapse {
+	color: var(--color-panel-text) !important;
+	background: var(--color-panel-bg) !important;
+
+	* {
+		background-color: inherit;
+	}
+
+	:global(.ant-collapse) {
+		background: var(--color-panel-bg) !important;
+		border-color: var(--color-panel-border) !important;
+		border: 1px solid var(--color-panel-border);
+	}
+
+	:global(.ant-collapse-item) {
+		border-color: var(--color-panel-border) !important;
+		border-bottom: 1px solid var(--color-panel-border) !important;
+		background: var(--color-panel-bg) !important;
+	}
+
+	:global(.ant-collapse-header) {
+		color: var(--color-panel-text) !important;
+		background: var(--color-panel-bg-alt) !important;
+		border-color: var(--color-panel-border) !important;
+	}
+
+	:global(.ant-collapse-header-text) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-collapse-expand-icon) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-collapse-arrow) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-collapse-content) {
+		background: var(--color-panel-bg) !important;
+		border-color: var(--color-panel-border) !important;
+		border-top: 1px solid var(--color-panel-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-collapse-content-box) {
+		background: var(--color-panel-bg) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-collapse-content-active) {
+		background: var(--color-panel-bg) !important;
+	}
+
+	:global(.ant-collapse > .ant-collapse-item:last-child) {
+		border-bottom: 1px solid var(--color-panel-border) !important;
+	}
+
+	/* Nested collapse styles - more specific */
+	:global(.ant-collapse .ant-collapse) {
+		background: var(--color-panel-bg) !important;
+	}
+
+	:global(.ant-collapse .ant-collapse-item) {
+		background: var(--color-panel-bg) !important;
+	}
+
+	:global(.ant-collapse .ant-collapse .ant-collapse-content) {
+		background: var(--color-panel-bg) !important;
+	}
+
+	:global(.ant-collapse .ant-collapse .ant-collapse-content-box) {
+		background: var(--color-panel-bg) !important;
+	}
+
+	/* All divs inside */
+	div {
+		background-color: var(--color-panel-bg) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	/* Row styles */
+	:global(.ant-row) {
+		color: var(--color-panel-text) !important;
+		background: var(--color-panel-bg) !important;
+	}
+
+	:global(.ant-col) {
+		color: var(--color-panel-text) !important;
+		background: var(--color-panel-bg) !important;
+	}
+
+	/* Tag styles */
+	:global(.ant-tag) {
+		background: var(--color-chip-bg) !important;
+		color: var(--color-panel-text) !important;
+		border-color: var(--color-panel-border) !important;
+	}
+
+	div {
+		color: var(--color-panel-text) !important;
+		background-color: transparent;
+	}
+
+	:global(.ant-table) {
+		background: var(--color-panel-bg-deep) !important;
+		border-color: var(--color-panel-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-table-container) {
+		border: 1px solid var(--color-panel-border) !important;
+		border-radius: 4px;
+	}
+
+	:global(.ant-table-thead > tr > th) {
+		background: var(--color-panel-bg-alt) !important;
+		color: var(--color-panel-text) !important;
+		border-color: var(--color-panel-border) !important;
+		border-bottom: 1px solid var(--color-panel-border) !important;
+	}
+
+	:global(.ant-table-tbody > tr > td) {
+		background: var(--color-panel-bg-deep) !important;
+		color: var(--color-panel-text) !important;
+		border-color: var(--color-panel-border) !important;
+		border-bottom: 1px solid var(--color-panel-border) !important;
+	}
+
+	:global(.ant-table-tbody > tr:hover > td) {
+		background: var(--color-panel-bg-alt) !important;
+	}
+
+	:global(.ant-table-cell) {
+		border-color: var(--color-panel-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-pagination) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-pagination-item) {
+		background: var(--color-panel-bg-alt);
+		border-color: var(--color-panel-border);
+
+		a {
+			color: var(--color-panel-text) !important;
+		}
+	}
+
+	:global(.ant-pagination-item-active) {
+		border-color: #7c3aed;
+	}
+
+	:global(.ant-pagination-prev),
+	:global(.ant-pagination-next) {
+		color: var(--color-panel-text) !important;
+
+		button {
+			color: var(--color-panel-text) !important;
+		}
+	}
+
+	:global(.ant-pagination-disabled) {
+		color: #666 !important;
+	}
+}

@@ -1,0 +1,90 @@
+.statusbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: var(--status-bar-height);
+	width: 100%;
+	padding: 0 1.5rem;
+	color: rgba(255, 255, 255, 0.95);
+	background: linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	font-family: var(--theme-text-display-font-family);
+
+	font-size: 0.85rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.onlineMessage {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+
+	&::before {
+		content: '';
+		width: 10px;
+		height: 10px;
+		background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+		border-radius: 50%;
+		animation: livePulse 2s infinite;
+		box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+	}
+}
+
+@keyframes livePulse {
+	0%,
+	100% {
+		box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+	}
+	50% {
+		box-shadow: 0 0 20px rgba(34, 197, 94, 0.9);
+	}
+}
+
+.viewerCount {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: var(--color-overlay-soft);
+	border-radius: var(--radius-pill);
+	font-weight: 700;
+	border: 1px solid var(--color-panel-border-soft);
+}
+
+.viewerIcon {
+	display: inline-flex;
+	color: #a78bfa;
+	font-size: 1rem;
+}
+
+// Light theme: dark text on the brand-tinted translucent bar. The bar's
+// purple 15% gradient stays; over the light page it reads as a pale
+// periwinkle strip.
+:global(:root[data-theme='light']) {
+	.statusbar {
+		color: #1a202c;
+	}
+
+	.viewerIcon {
+		color: #6544e9;
+	}
+
+	// The video embed page keeps its dark, appearance-driven backdrop in
+	// both themes, so restore the dark-theme colors there.
+	:global(.video-embed) {
+		.statusbar {
+			color: rgba(255, 255, 255, 0.95);
+		}
+
+		.viewerCount {
+			background: rgba(255, 255, 255, 0.1);
+			border-color: rgba(255, 255, 255, 0.1);
+		}
+
+		.viewerIcon {
+			color: #a78bfa;
+		}
+	}
+}

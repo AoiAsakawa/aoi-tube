@@ -1,0 +1,61 @@
+// Archive replay layout: video player beside a read-only, playhead-synced
+// chat column. Grid: the 16:9 player column defines the row height and the
+// chat stretches to match (no fixed pixel height / overhang). On narrow
+// screens the chat drops below the player.
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--chat-col-width);
+	gap: 16px;
+	width: 100%;
+
+	@media (max-width: 900px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.playerColumn {
+	position: relative;
+	min-width: 0;
+	// Match the live player card: rounded surface with the video clipped to it.
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+	background: #000;
+	box-shadow: var(--shadow-panel);
+}
+
+.chatColumn {
+	// height: 0 keeps the chat's natural content height from inflating the
+	// grid row; min-height: 100% stretches it to the player-defined row.
+	height: 0;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--color-panel-border-soft);
+	background: var(--color-panel-bg);
+	overflow: hidden;
+
+	@media (max-width: 900px) {
+		height: 50vh;
+		min-height: 0;
+	}
+}
+
+// Replay chat title bar, matching the live chat column's panel header.
+.chatHeader {
+	flex: none;
+	padding: 10px 16px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--color-panel-text-muted);
+	border-bottom: 1px solid var(--color-panel-border-soft);
+}
+
+.chatBody {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}

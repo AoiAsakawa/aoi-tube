@@ -1,0 +1,49 @@
+.tabContent {
+	flex-direction: row;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: var(--color-panel-text);
+
+	.icon {
+		height: 15px;
+		padding-right: 5px;
+		// The source logo is black; invert it to white for the dark tabs.
+		filter: invert(1);
+	}
+}
+
+// Light theme: tab surfaces are light, so keep the black source logo as-is
+:global(:root[data-theme='light']) {
+	.tabContent .icon {
+		filter: none;
+	}
+}
+
+// Theme-aware styles for AuthModal tabs (dark by default via panel tokens)
+:global(.ant-tabs-card .ant-tabs-nav .ant-tabs-tab) {
+	background: var(--color-field-bg) !important;
+	border-color: var(--color-panel-border) !important;
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-tabs-card .ant-tabs-nav .ant-tabs-tab:hover) {
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-tabs-card .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active) {
+	background: var(--color-panel-bg) !important;
+	border-bottom-color: var(--color-panel-bg) !important;
+}
+
+:global(.ant-tabs-card .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+	color: var(--color-panel-text) !important;
+}
+
+:global(.ant-tabs-card .ant-tabs-content-holder) {
+	background: var(--color-panel-bg);
+	border: 1px solid var(--color-panel-border);
+	border-top: none;
+	padding: 16px;
+	color: var(--color-panel-text);
+}

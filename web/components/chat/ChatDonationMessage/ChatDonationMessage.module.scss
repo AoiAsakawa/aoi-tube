@@ -1,0 +1,242 @@
+/* YouTube-style tiered superchat card (fiat currencies).
+   Tier colors are applied inline from getSuperchatTier(). */
+.superchatCard {
+	margin: 8px 0;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+	animation: donationAppear 0.5s ease-out;
+}
+
+.superchatHeader {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 16px;
+}
+
+.superchatName {
+	font-weight: 500;
+	font-size: 13px;
+	opacity: 0.9;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.superchatAmount {
+	font-weight: 700;
+	font-size: 15px;
+	flex-shrink: 0;
+}
+
+.superchatBody {
+	padding: 8px 16px 10px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.superchatMessage {
+	word-break: break-word;
+}
+
+.superchatTimestamp {
+	font-size: 11px;
+	opacity: 0.75;
+	margin-top: 4px;
+	text-align: right;
+}
+
+/* Screen effect purchase: a single celebratory chat line */
+.effectLine {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	color: var(--theme-color-components-chat-text);
+	font-size: var(--chat-message-text-size, 14px);
+}
+
+.effectLineEmoji {
+	flex-shrink: 0;
+	line-height: 1;
+}
+
+/* Classic gold donation card, kept for crypto currencies */
+.donationContainer {
+	display: flex;
+	flex-direction: column;
+	padding: 12px 16px;
+	margin: 8px 0;
+	border-radius: 8px;
+	background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+	box-shadow: 0 2px 8px rgba(255, 179, 71, 0.3);
+	animation: donationAppear 0.5s ease-out;
+}
+
+@keyframes donationAppear {
+	0% {
+		opacity: 0;
+		transform: translateY(-10px) scale(0.95);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+.donationHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+
+.donorInfo {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.donorName {
+	font-weight: 600;
+	color: #1a1a1a;
+	font-size: 14px;
+}
+
+.donationIcon {
+	font-size: 18px;
+}
+
+.amount {
+	font-weight: 700;
+	font-size: 18px;
+	color: #c41e3a;
+	background: rgba(255, 255, 255, 0.7);
+	padding: 4px 12px;
+	border-radius: 16px;
+}
+
+.message {
+	color: #333;
+	font-size: 14px;
+	line-height: 1.5;
+	padding: 8px 12px;
+	background: rgba(255, 255, 255, 0.6);
+	border-radius: 6px;
+	margin-top: 4px;
+}
+
+.timestamp {
+	font-size: 11px;
+	color: #666;
+	margin-top: 8px;
+	text-align: right;
+}
+
+/* High-value donation styling (1,000+ JPY / 10+ USD) */
+.highValue {
+	background: linear-gradient(135deg, #ff6b6b 0%, #ffd700 50%, #ff6b6b 100%);
+	background-size: 200% 200%;
+	animation:
+		donationAppear 0.5s ease-out,
+		gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.highValue .amount {
+	font-size: 22px;
+	background: rgba(255, 255, 255, 0.9);
+}
+
+/* Super high-value donation styling (10,000+ JPY / 100+ USD) */
+.superHighValue {
+	background: linear-gradient(
+		135deg,
+		#dc143c 0%,
+		#ff4500 25%,
+		#ff0000 50%,
+		#ff4500 75%,
+		#dc143c 100%
+	);
+	background-size: 300% 300%;
+	animation:
+		donationAppear 0.5s ease-out,
+		superGradientShift 2s ease infinite;
+	box-shadow:
+		0 4px 20px rgba(220, 20, 60, 0.5),
+		0 0 30px rgba(255, 0, 0, 0.3);
+	border: 2px solid rgba(255, 215, 0, 0.6);
+}
+
+@keyframes superGradientShift {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.superHighValue .donorName {
+	color: #ffffff;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.superHighValue .amount {
+	font-size: 24px;
+	font-weight: 800;
+	color: #ffffff;
+	background: linear-gradient(135deg, #ffd700 0%, #ffec8b 50%, #ffd700 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+	padding: 6px 16px;
+	border-radius: 20px;
+	animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+}
+
+.superHighValue .message {
+	color: #1a1a1a;
+	background: rgba(255, 255, 255, 0.85);
+	font-weight: 500;
+}
+
+.superHighValue .timestamp {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+/* Anonymous donation styling */
+.anonymous {
+	background: linear-gradient(135deg, #a8a8a8 0%, #d4d4d4 100%);
+}
+
+.anonymous .amount {
+	color: #555;
+}

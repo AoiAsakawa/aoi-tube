@@ -1,0 +1,2393 @@
+{
+	"ui": {
+		"cookieConsent": {
+			"message": "This site uses cookies for authentication and session management. By using this site, you consent to the use of cookies.",
+			"accept": "Accept"
+		},
+		"donationAlert": {
+			"anonymous": "Anonymous",
+			"fromSuffix": " purchased a Super Chat"
+		},
+		"footer": {
+			"tokushoho": "Legal Notice (Specified Commercial Transactions Act)",
+			"faq": "FAQ",
+			"documentation": "Documentation",
+			"contribute": "Contribute",
+			"sourceCode": "Source code",
+			"archives": "Archives"
+		},
+		"header": {
+			"skipToPlayer": "Skip to player",
+			"skipToOfflineMessage": "Skip to offline message",
+			"skipToContent": "Skip to page content",
+			"skipToFooter": "Skip to footer",
+			"chatAvailableWhenLive": "Chat will be available once the stream is live.",
+			"chatOffline": "Chat is offline",
+			"language": "Language",
+			"toggleTheme": "Toggle theme",
+			"login": "Log in",
+			"home": "Home"
+		},
+		"noscript": {
+			"poweredByPrefix": "This site is powered by",
+			"poweredBySuffix": ".",
+			"jsRequired": "This site uses JavaScript for HTTP Live Streaming (HLS) video playback and chat. However, your browser does not appear to support JavaScript, or it is disabled.",
+			"enableJs": "For the best viewing experience, please use a browser that supports JavaScript. If JavaScript is disabled in your browser, please enable it.",
+			"watchWithoutJsTitle": "How can I watch without JavaScript?",
+			"mediaPlayerPrefix": "You can watch by opening this site's URL in a media player (e.g.",
+			"mediaPlayerSuffix": ").",
+			"chatWithoutJsTitle": "How can I chat without JavaScript?",
+			"chatWithoutJsBody": "There is currently no way to use chat without JavaScript."
+		},
+		"notifyReminder": {
+			"title": "Stay updated!",
+			"line1": "Click to never miss",
+			"line2": "a future stream!"
+		},
+		"offlineBanner": {
+			"offline": "This stream is offline.",
+			"getNotified": "Get notified",
+			"notifySuffix": " to be alerted the next time {{streamName}} goes live.",
+			"orFollowFediverse": " Or, on the Fediverse,",
+			"orFollowTwitter": " Or, on X,",
+			"onTwitterPrefix": " On X,",
+			"followFediverseAccount": "Follow {{fediverseAccount}}",
+			"followSuffix": ".",
+			"alsoFollowTwitterPrefix": " You can also",
+			"follow": "follow",
+			"alsoFollowTwitterSuffix": " on X.",
+			"checkBackSuffix": " to catch {{streamName}}'s next stream.",
+			"checkBackNoNameSuffix": " to catch the next stream.",
+			"offlineCheckBackLater": "This stream is offline. Check back soon!",
+			"lastLive": "Last live {{time}} ago"
+		},
+		"statusbar": {
+			"durationDaysHours": "{{days}}d {{hours}}h",
+			"durationHoursMinutes": "{{hours}}h {{minutes}}m",
+			"durationMinutesSeconds": "{{minutes}}m {{seconds}}s",
+			"streamingFor": "Streaming for {{duration}}",
+			"offline": "Offline",
+			"lastLive": "Last live {{time}} ago"
+		},
+		"userMenu": {
+			"changeName": "Change name",
+			"auth": "Authenticate",
+			"hideChat": "Hide chat",
+			"showChat": "Show chat",
+			"logout": "Log out",
+			"guestName": "Guest: {{name}}",
+			"purchases": "Purchase history"
+		},
+		"buttons": {
+			"follow": "Follow",
+			"notify": "Notify"
+		},
+		"tabs": {
+			"about": "About",
+			"followers": "Followers"
+		},
+		"modals": {
+			"browserNotifications": "Browser Notifications",
+			"followName": "Follow {{name}}"
+		}
+	},
+	"video": {
+		"protocolBadge": {
+			"defaultLatency": "10-30 seconds",
+			"webrtcDescription": "WebRTC ultra-low-latency streaming",
+			"llhlsDescription": "Low-Latency HLS",
+			"hlsDescription": "Standard HLS streaming",
+			"title": "{{description}} - Expected latency: {{latency}}"
+		},
+		"webrtcPlayer": {
+			"notAvailable": "WebRTC streaming is not available",
+			"disconnectedRetrying": "Connection lost. Attempting to reconnect...",
+			"connectionFailed": "WebRTC connection failed",
+			"retry": "Reconnect",
+			"connecting": "Connecting via WebRTC...",
+			"latency": "<1s"
+		},
+		"lowLatencyToggle": {
+			"enable": "Try low latency (WebRTC)",
+			"disable": "Back to standard playback"
+		}
+	},
+	"chat": {
+		"anonymous": "Anonymous",
+		"joinedChat": "joined the chat.",
+		"leftChat": "left the chat.",
+		"hideMessage": "Hide message",
+		"banUser": "Ban user",
+		"moreInfo": "More info...",
+		"becameModerator": "You are now a moderator.",
+		"sendMessage": "Send message",
+		"chatUnavailable": "Chat is currently unavailable.",
+		"chatTextInput": "Chat text input",
+		"emojiPicker": "Emoji picker",
+		"sendDonation": "Purchase a Super Chat",
+		"discordAuthenticated": "Authenticated with Discord",
+		"googleAuthenticated": "Authenticated with Google",
+		"xAuthenticated": "Authenticated with X",
+		"authenticatedViaX": "Authenticated (X)",
+		"system": {
+			"streamStarting": "Stay tuned, the stream is starting!",
+			"streamEnding": "The stream is ending.",
+			"userAuthenticatedWith": "{{name}} is now authenticated with {{provider}}!",
+			"userAuthenticatedAs": "{{newName}} is now authenticated as {{oldName}}"
+		},
+		"openChat": "Open chat",
+		"title": "Chat",
+		"emptyState": "No messages yet",
+		"emptyStateHint": "Be the first to say something!"
+	},
+	"donation": {
+		"sendDonation": "Purchase a Super Chat",
+		"itemTypeLabel": "Purchase type",
+		"itemTypeSuperchat": "Super Chat",
+		"itemTypeEffect": "Screen effect",
+		"effectTypeLabel": "Choose an effect",
+		"effectCryptoRateNote": "The final JPY conversion may differ slightly due to market rate movement",
+		"effectPriceLoading": "Fetching the current token price…",
+		"effectPriceUnavailable": "This token has no price feed, so it cannot be used to buy screen effects. Please choose another token",
+		"purchaseThanks": "Thank you for your purchase!",
+		"purchaseError": "An error occurred while processing your purchase",
+		"paymentMethod": "Payment method",
+		"crypto": "Crypto",
+		"amount": "Amount",
+		"amountWithCurrency": "Amount ({{currency}})",
+		"enterAmount": "Please enter an amount",
+		"amountTooSmall": "Amount is too small",
+		"inputInCurrency": "Enter in {{currency}}",
+		"inputInJpy": "Enter in JPY",
+		"max": "Max",
+		"displayName": "Display name",
+		"yourName": "Your name",
+		"sendAnonymously": "Send anonymously",
+		"enterNameOrAnonymous": "Please enter a display name or check the anonymous box",
+		"messageOptional": "Message (optional)",
+		"messageToStreamer": "Message to the streamer...",
+		"totalAmountLabel": "Amount to send:",
+		"tokushohoLink": "Legal Notice (Specified Commercial Transactions Act)",
+		"cancel": "Cancel",
+		"close": "Close",
+		"payWith": "Pay with {{provider}}",
+		"sendWithCurrency": "Send {{currency}}",
+		"donateVia": "Purchase a Super Chat via {{name}}",
+		"donateWith": "Purchase a Super Chat with {{name}}",
+		"kofiDescription": "Clicking the button below will open the Ko-fi Super Chat purchase page in a new tab. Once you complete your purchase on Ko-fi, your Super Chat will automatically appear in the chat.",
+		"kofiEffectCommandHint": "Start your Ko-fi message with one of the commands below and pay at least that effect's price to trigger it. Without a command it becomes a regular Super Chat.",
+		"doneruDescription": "Clicking the button below will open the Doneru Super Chat purchase page in a new tab. Please complete your purchase on Doneru.",
+		"pageOpenedInNewTab": "The {{name}} page has opened in a new tab",
+		"paymentUnavailable": "{{provider}} payments are unavailable",
+		"paymentRedirecting": "Redirecting to the {{provider}} payment page...",
+		"paymentCompleteInNewTab": "Please complete your payment in the new {{provider}} tab. Once completed, it will automatically appear in the chat.",
+		"paymentCreateFailed": "Failed to create the {{provider}} payment",
+		"paymentCreateError": "An error occurred while creating the {{provider}} payment",
+		"paypalMinimumNote": "* Due to PayPal fees (approx. 3.6% + ¥40), the minimum amount is ¥300",
+		"stripeTestModeNote": "🧪 Test mode: Please use the test card (4242 4242 4242 4242)",
+		"wallet": "Wallet",
+		"solanaWallet": "Solana wallet",
+		"connectWallet": "Connect wallet",
+		"connectSolanaWallet": "Connect Solana wallet",
+		"connectedToWallet": "Connected to {{wallet}}",
+		"walletConnected": "{{wallet}} connected",
+		"walletConnectedAndSwitched": "Connected {{wallet}} and switched to {{network}}",
+		"walletConnectFailed": "Failed to connect the wallet",
+		"walletNotInstalled": "No wallet is installed (MetaMask or Trust Wallet)",
+		"phantomDetected": "✓ Phantom detected",
+		"solanaWalletDetected": "✓ Solana wallet detected",
+		"phantomRecommended": "Phantom recommended (MetaMask Snap has limitations)",
+		"connectedWith": "Connected ({{wallet}})",
+		"balanceLabel": "Balance:",
+		"loading": "Loading...",
+		"checkBalance": "Check balance",
+		"disconnect": "Disconnect",
+		"connectMetamaskFirst": "Please connect MetaMask first",
+		"connectWalletFirst": "Please connect a wallet first",
+		"metamaskConfigInvalid": "The MetaMask configuration is invalid",
+		"networkAndToken": "Network & Token",
+		"withBalanceOnly": "With balance",
+		"selectNetwork": "Select network",
+		"selectToken": "Select token",
+		"selectNetworkAndToken": "Please select a network and token",
+		"metamaskSwitchedNetwork": "MetaMask switched to {{network}}",
+		"pleaseSwitchNetwork": "Please switch the network to {{network}}",
+		"switchToNetwork": "Switch to {{network}}",
+		"networkAddCancelled": "Adding the network was cancelled",
+		"networkAddFailed": "Failed to add the network: {{error}}",
+		"networkSwitchCancelled": "Switching the network was cancelled",
+		"networkSwitchFailed": "Failed to switch the network: {{error}}",
+		"checkWalletRequest": "Please check the request in {{wallet}}",
+		"unknownError": "Unknown error",
+		"unknownErrorOccurred": "An unknown error occurred",
+		"errorOccurred": "An error occurred",
+		"operationCancelled": "The operation was cancelled",
+		"cancelledByUser": "Cancelled by the user",
+		"connectionCancelled": "The connection was cancelled",
+		"transactionCancelled": "The transaction was cancelled",
+		"bitcoinAddressNotConfigured": "The Bitcoin recipient address is not configured",
+		"recipientAddressNotConfigured": "The recipient address is not configured",
+		"bitcoinAddressNotConfiguredAdmin": "The Bitcoin recipient address is not configured. Please set it in the admin panel.",
+		"solanaAddressNotConfiguredAdmin": "The Solana recipient address is not configured. Please set it in the admin panel.",
+		"sendingTransaction": "Sending transaction...",
+		"donationSentThanks": "Thank you for purchasing a Super Chat!",
+		"txSentButConfirmFailed": "The transaction was sent, but confirmation failed",
+		"sendErrorOccurred": "An error occurred while sending",
+		"priceFetchFailed": "Could not fetch the price. Please wait a moment and try again.",
+		"metamaskNotDetected": "MetaMask could not be detected",
+		"snapsNotSupported": "MetaMask Snaps is not supported. Please use MetaMask v11.0 or later.",
+		"bitcoinSnapInstallCancelled": "The Bitcoin Snap installation was cancelled",
+		"bitcoinAccountFailed": "Failed to get the Bitcoin account",
+		"solanaAccountFailed": "Failed to get the Solana account",
+		"trustWalletBitcoinUnsupported": "Bitcoin Snap is not available in Trust Wallet.\nPlease send BTC directly from the Trust Wallet app.\nThe recipient address will be shown when you press the \"Send\" button.",
+		"solanaSnapOriginRestricted": "MetaMask's Solana Snap is not available on this site.\nTo send Solana, please try one of the following:\n• Install the Phantom wallet extension\n• Use the Trust Wallet in-app browser",
+		"solanaSnapInstallFailed": "Failed to install the Solana Snap.\nWe recommend using the Phantom wallet.",
+		"trustWalletSolanaNotDetected": "Solana could not be detected in Trust Wallet. Please access this site from the Trust Wallet in-app browser.",
+		"solanaWalletNotFound": "No Solana-compatible wallet was found. Please install a wallet such as Phantom.",
+		"solanaConnectError": "Solana connection error: {{error}}",
+		"phantomConnectError": "Phantom connection error: {{error}}",
+		"solanaSendError": "Solana send error: {{error}}",
+		"utxoFetchFailed": "Failed to fetch UTXOs",
+		"noConfirmedBalance": "No confirmed balance. Unconfirmed balance: {{amount}} BTC (please wait for confirmation)",
+		"noBalanceAtAddress": "No balance. Address: {{address}}",
+		"insufficientBalance": "Insufficient balance. Balance: {{balance}} BTC, required: {{required}} BTC (including fees)",
+		"txSignFailed": "Failed to sign the transaction",
+		"txSignFailedCheckAccount": "Failed to sign the transaction. Please check your Bitcoin account in MetaMask. The address may not match.",
+		"txSendFailed": "Failed to send the transaction",
+		"broadcastFailed": "Broadcast failed: {{error}}",
+		"bitcoinSendComplete": "Bitcoin sent! TXID: {{txid}}...",
+		"solanaSendComplete": "Solana sent! Signature: {{signature}}...",
+		"bitcoinSendTitle": "Send Bitcoin",
+		"stepConnectSnap": "Connect Bitcoin Snap",
+		"addressShort": "Address: {{address}}...",
+		"connectingToSnap": "Connecting to the Snap...",
+		"installingSnap": "Installing the MetaMask Snap...",
+		"stepCheckBalance": "Check balance",
+		"fetchingUtxo": "Fetching UTXOs...",
+		"stepBuildTransaction": "Build transaction",
+		"buildingPsbt": "Building the PSBT...",
+		"stepSignTransaction": "Sign transaction",
+		"approveSignatureInWallet": "Please approve the signature in {{wallet}}",
+		"stepBroadcast": "Broadcast",
+		"broadcasting": "Broadcasting to the Bitcoin network...",
+		"stepComplete": "Complete",
+		"sendComplete": "Transfer complete!",
+		"waitingForCompletion": "Waiting for the transfer to complete...",
+		"sendErrorTitle": "Transfer error",
+		"sendAmountLabel": "Send amount:",
+		"feeLabel": "Fee:",
+		"fromLabel": "From:"
+	},
+	"screenEffects": {
+		"confetti": "confetti",
+		"hearts": "hearts",
+		"stars": "shooting stars",
+		"fireworks": "fireworks",
+		"celebration": "celebration",
+		"rainbow": "rainbow",
+		"meteor": "meteor shower",
+		"goldrush": "gold rush",
+		"sentEffect": "{{name}} sent {{effect}}"
+	},
+	"modals": {
+		"common": {
+			"error": "Error",
+			"alreadyAuthenticated": "You are already authenticated",
+			"reauthHint": ". However, you can authenticate again with a different {{provider}} account.",
+			"reauthHintDomain": ". However, you can also add another domain or log in as a different user.",
+			"redirectUrlMissing": "Could not get the redirect URL.",
+			"authAccountPrefix": "You can use your {{provider}} account to authenticate",
+			"authAccountSuffix": "and log back into chat as the same user in the future.",
+			"authRedirectExplanation": "Clicking the \"Authenticate with {{provider}}\" button will take you to the {{provider}} authorization page. After you approve the app there, you will be returned to this site and authentication will be complete.",
+			"authWithProvider": "Authenticate with {{provider}}",
+			"authRequiredTitle": "{{provider}} authentication required",
+			"authRequiredDescription": "To watch and participate in this stream, you must authenticate with a {{provider}} account.",
+			"authPrivacyNote": "Your authentication is used only to identify viewers; no actions such as posting will be performed.",
+			"indieAuthUrlInvalid": "The provided URL is invalid or does not support IndieAuth.",
+			"noteLabel": "Note",
+			"privacyNote": "This is used for authentication purposes only; no personal information is accessed or stored."
+		},
+		"auth": {
+			"tab": "{{provider}} Auth"
+		},
+		"browserNotify": {
+			"notSupported": "Browser notifications are not supported in your browser.",
+			"notSupportedLocal": "Browser notifications are not supported on a local server.",
+			"showNotifications": "Show notifications",
+			"allow": "Allow",
+			"block": "Block",
+			"enabledTitle": "Notifications are enabled",
+			"enabledDescription": "To disable push notifications from {{host}}, go to your browser's permissions for this site and turn off notifications.",
+			"learnMore": "Learn more",
+			"registrationError": "Error registering for live notifications: {{message}}. Please make sure you are not in a private browsing session and that you have not previously disabled notifications for this stream.",
+			"description": "Get a browser notification whenever this stream goes live.",
+			"docsLink": " Learn more about AoiTube browser notifications",
+			"descriptionSuffix": "."
+		},
+		"fediAuth": {
+			"messagePrefix": "Receive a Fediverse direct message to link your account to",
+			"messageSuffix": ", or log in as a previously linked chat user.",
+			"codeInstructions": "Enter the code sent to your Fediverse account. If you have not received a code, make sure you can receive direct messages.",
+			"verifyCode": "Verify code",
+			"accountLabel": "Your Fediverse account",
+			"learnMoreHeader": "Learn more about authenticating with the Fediverse",
+			"learnMoreBody": "You can link your chat identity with your Fediverse identity. The next time you want to use this chat identity, you can log in by authenticating with the Fediverse again."
+		},
+		"follow": {
+			"headerPrefix": "Follow this stream to get notified on the Fediverse when it goes live. If you're new, there's no better time to",
+			"learnFediverseLink": "learn about the Fediverse",
+			"headerSuffix": "and give it a try.",
+			"errorTitle": "Follow error",
+			"instructions": "To follow, enter your account in the form @username@server",
+			"accountPlaceholder": "Fediverse account @account@server",
+			"footer": "You will be redirected to your Fediverse server and asked to confirm the action.",
+			"followButton": "Follow",
+			"joinButton": "Join the Fediverse"
+		},
+		"indieAuth": {
+			"messagePrefix": "Use your own domain to authenticate",
+			"messageSuffix": "or log in as a chat user you previously authenticated with IndieAuth.",
+			"domainLabel": "Your domain",
+			"learnMoreHeader": "Learn more about authenticating with IndieAuth",
+			"learnMoreBody1": "IndieAuth is a way to prove your identity using your own domain, in a fully independent and decentralized manner.",
+			"learnMoreBody2Prefix": "If you run your own AoiTube instance, you can use that domain here. Otherwise, check out",
+			"learnMoreLink": "how to add IndieAuth support",
+			"learnMoreBody2Suffix": "."
+		},
+		"nameChange": {
+			"description": "Your chat display name is the name others see when you send chat messages.",
+			"changeButton": "Change name",
+			"placeholder": "Chat display name",
+			"colorLabel": "Color"
+		},
+		"nsfwWarning": {
+			"title": "Age verification",
+			"message1": "This site may contain adult content (18+).",
+			"message2": "Are you 18 or older?",
+			"confirm": "Yes, I am 18 or older",
+			"decline": "No, I am under 18",
+			"note": "If you select \"Yes\", this confirmation will not be shown again."
+		},
+		"socialAuthRequired": {
+			"titleMulti": "Social authentication required",
+			"descriptionMulti": "To watch and participate in this stream, you must authenticate with one of the following accounts: {{providers}}.",
+			"clickButtonPrompt": "Please click a button below to authenticate."
+		},
+		"twitterAuthRequired": {
+			"clickButtonPrompt": "Please click the \"Authenticate\" button to authenticate with X.",
+			"authButton": "Authenticate"
+		}
+	},
+	"admin": {
+		"config": {
+			"chat": {
+				"title": "Chat Settings",
+				"groups": {
+					"usage": "Usage",
+					"moderation": "Moderation",
+					"usernames": "Usernames & Welcome"
+				}
+			},
+			"doneru": {
+				"aboutBody1": "Doneru is a Japanese Super Chat service.",
+				"aboutBody2": "lets you create a creator account and receive Super Chats. It supports payment methods such as PayPal and Stripe.",
+				"aboutLinkText": "Doneru official site",
+				"aboutTitle": "About Doneru",
+				"creatorSettingsTitle": "Creator Settings",
+				"creatorUrlDescription": "Enter the URL of your Doneru creator page. Example: https://doneru.jp/your-username",
+				"creatorUrlLabel": "Doneru creator page URL",
+				"enableDescription": "When enabled, a Doneru option appears in the Super Chat form.",
+				"enableLabel": "Enable Doneru",
+				"howToTitle": "How to use",
+				"intro": "When Doneru is enabled, viewers can send Super Chats through Doneru. Create a creator account on Doneru and set your creator page URL.",
+				"noteBody": "Super Chats sent via Doneru are processed on the Doneru site. You can review your Super Chat history in the Doneru dashboard.",
+				"noteTitle": "Note",
+				"saveSuccess": "Doneru settings saved",
+				"step1Suffix": ": create a creator account",
+				"step2": "Set up your payment methods (PayPal, Stripe, etc.) in your profile settings",
+				"step3": "Copy your creator page URL (https://doneru.jp/your-username)",
+				"step4": "Paste it into the \"Doneru creator page URL\" field above",
+				"step5": "Turn on \"Enable Doneru\" and save",
+				"title": "Doneru Settings",
+				"urlValidation": "The Doneru URL must start with https://doneru.jp/"
+			},
+			"faq": {
+				"basicSyntaxTitle": "Basic syntax",
+				"contentCardTitle": "FAQ content (Markdown)",
+				"enableLabel": "Enable the FAQ page",
+				"insertSample": "Insert sample",
+				"intro": "Configure an FAQ page for your viewers. You can write it in Markdown.",
+				"markdownGuideTitle": "How to write Markdown",
+				"mdBoldLabel": "Bold",
+				"mdBoldSample": "**Bold**",
+				"mdH1Label": "Large heading",
+				"mdH1Sample": "# Heading 1",
+				"mdH2Label": "Medium heading",
+				"mdH2Sample": "## Heading 2",
+				"mdH3Label": "Small heading",
+				"mdH3Sample": "### Heading 3",
+				"mdHrLabel": "Horizontal rule",
+				"mdLinkLabel": "Link",
+				"mdLinkSample": "[Link](URL)",
+				"mdListLabel": "Bulleted list",
+				"mdListSample": "- Item",
+				"saveError": "Failed to save the FAQ settings",
+				"saveSuccess": "FAQ settings saved",
+				"statusDisabled": "Disabled",
+				"statusEnabled": "Enabled",
+				"title": "FAQ Settings",
+				"urlAlertTitle": "FAQ page URL"
+			},
+			"kofi": {
+				"aboutBody1": "Ko-fi is a Super Chat and support platform for creators.",
+				"aboutBody2": "lets you create an account and connect PayPal or Stripe to receive support. By configuring a Webhook, Super Chats on Ko-fi appear in your AoiTube chat in real time.",
+				"aboutLinkText": "Ko-fi official site",
+				"aboutTitle": "About Ko-fi",
+				"columnCommand": "Command",
+				"columnEffect": "Effect",
+				"columnPriceJpy": "Price (JPY)",
+				"columnPriceUsd": "Price (USD)",
+				"copySuccess": "Copied {{label}}",
+				"copyUrlTooltip": "Copy URL",
+				"effectsCardTitle": "Screen effect commands",
+				"effectsExample": "Example: If you set your message to \"!fireworks Thanks for your continued support!\" and pay ¥1,000 or more, a fireworks effect is triggered.",
+				"effectsIntro": "If you start your Ko-fi message with one of the commands below and pay at least the effect's price, the effect is triggered on the stream. If the amount is below the price, it is treated as a regular Super Chat.",
+				"enableDescription": "When enabled, AoiTube accepts Webhook notifications from Ko-fi and displays Super Chats in the chat.",
+				"enableLabel": "Enable Ko-fi",
+				"intro": "When Ko-fi is enabled, viewers can send Super Chats through Ko-fi. Create an account on Ko-fi and set up the Webhook.",
+				"pageSettingsTitle": "Page settings (optional)",
+				"pageUrlDescription": "Enter the URL of your Ko-fi page. It appears as a link button in the Super Chat form. Example: https://ko-fi.com/your-username",
+				"pageUrlLabel": "Ko-fi page URL",
+				"realtimeBody": "Super Chats on Ko-fi are automatically sent to AoiTube via the Webhook and displayed in the chat in real time. The donor's name, amount, and message appear in the chat (if the donor chooses to stay private, they are shown as anonymous).",
+				"realtimeTitle": "Real-time integration",
+				"saveSuccess": "Ko-fi settings saved",
+				"step1Suffix": ": create an account",
+				"step2LinkText": "Settings",
+				"step2Suffix": ": connect PayPal or Stripe to enable payments",
+				"step3Suffix": ": open it",
+				"step4": "Paste the \"Webhook URL\" above into Ko-fi's Webhook URL field",
+				"step5": "Copy the \"Verification Token\" shown in Ko-fi and paste it into the Verification Token field above",
+				"step6": "Turn on \"Enable Ko-fi\" and save",
+				"step7": "Click the \"Send Test\" button in Ko-fi to confirm your settings are correct",
+				"title": "Ko-fi Settings",
+				"urlValidation": "The Ko-fi URL must start with https://ko-fi.com/",
+				"verificationTokenDescription": "Enter the \"Verification Token\" shown on Ko-fi's Webhook settings page. We strongly recommend configuring this for security.",
+				"verificationTokenPlaceholder": "Ko-fi Verification Token",
+				"verificationTokenTooltip": "Copy and paste the token shown on Ko-fi's Webhook settings page. This ensures that only legitimate requests from Ko-fi are accepted.",
+				"webhookAlertPrefix": "Go to Ko-fi's ",
+				"webhookAlertSuffix": " and set the following URL:",
+				"webhookAlertTitle": "Set the Webhook URL in Ko-fi",
+				"webhookCardTitle": "Webhook settings",
+				"webhookSettingsPage": "Webhook settings page"
+			},
+			"metamask": {
+				"aboutBody": "Metamask payments incur no intermediary fees, but the sender pays the network fee (gas). Using an L2 network such as Polygon or a stablecoin (USDT/USDC) can help keep fees low.",
+				"aboutTitle": "About crypto payments",
+				"btcAddressDescription": "To receive Super Chats via Bitcoin Native SegWit, enter a Bech32 address starting with bc1. The latest version of MetaMask supports sending Bitcoin.",
+				"btcAddressInvalid": "This is not a valid Bech32 address (enter an address starting with bc1)",
+				"btcAddressLabel": "Bitcoin receiving wallet address (optional)",
+				"currencyCardTitle": "Currency settings (reference)",
+				"currentCurrencyLabel": "Currency",
+				"currentNetworkLabel": "Network",
+				"currentPriceIdLabel": "Price reference ID",
+				"currentSettingsLabel": "Current settings",
+				"defaultNetworkDescription": "This setting is for reference only. For actual Super Chats, viewers can freely choose the network.",
+				"defaultNetworkLabel": "Default network for reference",
+				"enableLabel": "Enable Metamask payments",
+				"evmAddressDescription": "Enter the address of the wallet where you want to receive Super Chats on EVM chains such as Ethereum and Polygon.",
+				"evmAddressInvalid": "This is not a valid EVM address (enter a 42-character address starting with 0x)",
+				"evmAddressLabel": "EVM receiving wallet address",
+				"intro": "When Metamask/Web3 payments are enabled, viewers can send Super Chats in crypto. Multiple chains and tokens are supported.",
+				"nativeCurrencyOption": "{{currency}} (native currency)",
+				"networkAlertBody": "On the Super Chat screen, viewers can freely choose from multiple networks (Bitcoin, VirBiCoin, Ethereum, Polygon, etc.). The setting here is a reference value for administration.",
+				"networkAlertTitle": "About network selection",
+				"networkCardTitle": "Default network settings (reference)",
+				"receiveCurrencyDescription": "You can choose a native currency (ETH, MATIC, etc.) or an ERC-20 token (USDT, USDC, etc.). Stablecoins have no price volatility, so the amount you receive stays stable.",
+				"receiveCurrencyLabel": "Receiving currency",
+				"saveSuccess": "Metamask settings saved",
+				"showJpyDescription": "Uses the CoinGecko API to show a real-time JPY conversion.",
+				"showJpyLabel": "Show JPY conversion",
+				"testAlertBody": "Before using this in production, we recommend testing on a testnet such as Sepolia (Ethereum) or Amoy (Polygon). Testnet tokens are available for free.",
+				"testAlertTitle": "About testing",
+				"title": "Metamask Settings",
+				"tokenAddressAutoSet": "This is set automatically when you select a preset token",
+				"tokenAddressLabel": "Token contract address",
+				"tokenDecimalsLabel": "Token decimals",
+				"tokenUnavailable": "{{symbol}} is not available on this network",
+				"validateTokenRequired": "Enter the token contract address",
+				"validateWalletFormat": "Enter a valid Ethereum address (42 characters starting with 0x)",
+				"validateWalletRequired": "Enter a wallet address",
+				"walletCardTitle": "Wallet settings"
+			},
+			"notify": {
+				"createButton": "Create",
+				"customDescription": "You can build your own notifications using Webhooks.",
+				"customTitle": "Custom",
+				"description": "Use the notification channels below to let viewers know when your stream goes live.",
+				"instanceUrlRequired": "To enable this feature, you must first set your server URL.",
+				"learnMore": "Learn more about notifications",
+				"silentModeDescription": "When enabled, all external notifications on stream start and stop (Webhook, browser push, Discord, X, Fediverse, and the directory) are suppressed. Use this for test streams.",
+				"silentModeTitle": "Silent test mode",
+				"thumbnailTitle": "Notification thumbnail",
+				"title": "Notifications"
+			},
+			"paypal": {
+				"aboutBody1": "PayPal is a payment service available in over 200 countries and regions worldwide.",
+				"aboutBody2": "lets you create an app and get your API credentials. The fee is approximately 3.6% + ¥40 (in Japan).",
+				"aboutTitle": "About PayPal",
+				"clientIdPlaceholder": "Example: AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz",
+				"credentialsMissingBody": "Please set the Client ID and Client Secret for the {{env}} environment.",
+				"enableLabel": "Enable PayPal payments",
+				"envProduction": "Production",
+				"envSandbox": "Sandbox",
+				"intro": "PayPal is a payment service used worldwide. Create an app in the PayPal Developer Portal and get your Client ID and Client Secret.",
+				"liveClientIdDescription": "The Client ID obtained from the \"Live\" tab of the PayPal Developer Portal",
+				"liveClientSecretDescription": "The Client Secret obtained from the \"Live\" tab of the PayPal Developer Portal",
+				"liveClientSecretPlaceholder": "Enter the Live Client Secret",
+				"merchantIdDescription": "The Merchant ID of your PayPal business account (not required)",
+				"merchantIdLabel": "Merchant ID (optional)",
+				"merchantIdPlaceholder": "Example: ABCDEFGHIJKLM",
+				"modeProductionNote": "🔴 Production environment (real payments are processed)",
+				"modeSandboxNote": "🧪 Test environment (no real payments are processed)",
+				"productionEnvAlertBody": "These credentials are used for real payments. In production, real money changes hands.",
+				"productionEnvAlertTitle": "Production environment",
+				"productionTabLabel": "🔴 Production",
+				"sandboxClientIdDescription": "The Client ID obtained from the \"Sandbox\" tab of the PayPal Developer Portal",
+				"sandboxClientSecretDescription": "The Client Secret obtained from the \"Sandbox\" tab of the PayPal Developer Portal",
+				"sandboxClientSecretPlaceholder": "Enter the Sandbox Client Secret",
+				"sandboxEnvAlertBody": "These are test credentials. You can make test payments using a sandbox account.",
+				"sandboxEnvAlertTitle": "Sandbox environment",
+				"sandboxTabLabel": "🧪 Sandbox",
+				"sandboxTestAlertTitle": "Sandbox testing",
+				"sandboxTestBody1": "In sandbox mode, you can make test payments using a ",
+				"sandboxTestBody2": ". No real money changes hands.",
+				"sandboxTestLinkText": "sandbox account",
+				"saveSuccess": "PayPal settings saved",
+				"separateCredsBody": "The PayPal Developer Portal issues different Client IDs and Client Secrets for sandbox and production. Enter the credentials that correspond to each environment.",
+				"separateCredsTitle": "Use separate credentials for sandbox and production",
+				"step1Suffix": ": log in",
+				"step2": "Create a new app in the \"Apps & Credentials\" section",
+				"step3Body": ": Get the Client ID and Client Secret from the \"Sandbox\" tab and enter them in the \"Sandbox environment\" tab above",
+				"step3Strong": "For sandbox",
+				"step4Body": ": Get the Client ID and Client Secret from the \"Live\" tab and enter them in the \"Production environment\" tab above",
+				"step4Strong": "For production",
+				"step5": "(Optional) Set the Webhook URL in the PayPal Developer Portal",
+				"step6": "Set the environment mode to \"Sandbox\" and test",
+				"step7": "After testing, switch the environment mode to \"Production\"",
+				"title": "PayPal Settings",
+				"webhookEventNote": "Select \"PAYMENT.CAPTURE.COMPLETED\" as the Webhook event."
+			},
+			"paypay": {
+				"aboutBody1": "You can find your PayPay API credentials in the",
+				"aboutBody2": "portal. We recommend testing in the sandbox environment first.",
+				"apiKeyLabel": "API Key",
+				"apiKeyPlaceholder": "Enter the API key",
+				"apiSecretLabel": "API Secret",
+				"apiSecretPlaceholder": "Enter the API secret",
+				"credentialsMissingBody": "Please set the API Key and API Secret for the {{env}} environment.",
+				"enableLabel": "Enable PayPay payments",
+				"intro": "When PayPay payments are enabled, viewers can send Super Chats with PayPay. Create an account on PayPay for Developers and get your API credentials.",
+				"merchantIdLabel": "Merchant ID",
+				"merchantIdPlaceholder": "Enter the Merchant ID",
+				"productionWarningBody": "Real payments will be processed. Make sure your API credentials are correct.",
+				"saveSuccess": "PayPay settings saved",
+				"separateCredsBody": "PayPay for Developers issues different API Keys and API Secrets for sandbox and production. Enter the credentials that correspond to each environment.",
+				"title": "PayPay Settings"
+			},
+			"shared": {
+				"apiCredentials": "API credentials",
+				"basicSettings": "Basic settings",
+				"credentialsMissing": "Credentials are not set",
+				"currencies": {
+					"AUD": "AUD - Australian Dollar",
+					"BRL": "BRL - Brazilian Real",
+					"CAD": "CAD - Canadian Dollar",
+					"CHF": "CHF - Swiss Franc",
+					"CNY": "CNY - Chinese Yuan",
+					"CZK": "CZK - Czech Koruna",
+					"DKK": "DKK - Danish Krone",
+					"EUR": "EUR - Euro",
+					"GBP": "GBP - British Pound",
+					"HKD": "HKD - Hong Kong Dollar",
+					"INR": "INR - Indian Rupee",
+					"JPY": "JPY - Japanese Yen",
+					"KRW": "KRW - South Korean Won",
+					"MXN": "MXN - Mexican Peso",
+					"MYR": "MYR - Malaysian Ringgit",
+					"NOK": "NOK - Norwegian Krone",
+					"NZD": "NZD - New Zealand Dollar",
+					"PHP": "PHP - Philippine Peso",
+					"PLN": "PLN - Polish Zloty",
+					"SEK": "SEK - Swedish Krona",
+					"SGD": "SGD - Singapore Dollar",
+					"THB": "THB - Thai Baht",
+					"TWD": "TWD - Taiwan Dollar",
+					"USD": "USD - US Dollar"
+				},
+				"currency": "Currency",
+				"displayNameDescription": "You can customize the name shown on the Super Chat button. If left blank, \"{{name}}\" is displayed.",
+				"displayNameOptional": "Display name (optional)",
+				"environmentMode": "Environment mode",
+				"loading": "Loading...",
+				"productionModeActiveBody": "Real payments will be processed. Make sure your settings are correct.",
+				"productionModeActiveTitle": "Production mode is active",
+				"sandboxTestFirst": "Before using this in production, please test in the sandbox.",
+				"saveSettings": "Save settings",
+				"setupSteps": "Setup steps",
+				"webhookEndpoint": "Webhook endpoint",
+				"webhookUrlDescription": "Register this URL in the payment provider's webhook settings.",
+				"saveSuccess": "Settings saved",
+				"saveError": "Failed to save settings"
+			},
+			"socialItems": {
+				"authDescription": "Let viewers authenticate to chat with a social account. If you enable \"Require social authentication\" in the chat settings, authentication with these accounts becomes mandatory.",
+				"authTitle": "Social authentication settings",
+				"title": "Social Settings"
+			},
+			"stripe": {
+				"aboutBody1": "Stripe is a payment platform that supports over 135 currencies and many payment methods.",
+				"aboutBody2": "lets you create an account and get your API keys. The fee is approximately 3.6% (in Japan).",
+				"aboutTitle": "About Stripe",
+				"apiKeysTitle": "API keys",
+				"credentialsMissingBody": "Please set the API keys for the {{env}} environment.",
+				"enableLabel": "Enable Stripe payments",
+				"envProduction": "Production",
+				"envTest": "Test",
+				"intro": "Stripe is a payment platform used worldwide. Create an account in the Stripe Dashboard and get your API keys.",
+				"liveModeAlertBody": "These are production API keys. Payments are processed with real credit cards.",
+				"liveModeAlertTitle": "Production mode",
+				"livePublishableKeyDescription": "Obtained from \"Developers\" → \"API keys\" in the Stripe Dashboard (starts with pk_live_)",
+				"liveSecretKeyDescription": "Obtained from \"Developers\" → \"API keys\" in the Stripe Dashboard (starts with sk_live_)",
+				"liveTabLabel": "🔴 Production mode",
+				"liveWebhookSecretLabel": "Live Webhook Secret (optional)",
+				"modeProductionNote": "🔴 Production mode (real payments are processed)",
+				"modeTestNote": "Test mode (you can pay with test cards)",
+				"saveSuccess": "Stripe settings saved",
+				"separateKeysBody": "The Stripe Dashboard issues different API keys for test and production. Enter the keys that correspond to each environment.",
+				"separateKeysTitle": "Use separate API keys for test mode and production mode",
+				"step1Suffix": ": log in (or create an account if you don't have one)",
+				"step2": "Find your API keys in the \"Developers\" → \"API keys\" section",
+				"step3Body": ": Turn the \"Test mode\" toggle ON, get the keys starting with pk_test_ and sk_test_, and enter them in the \"Test mode\" tab above",
+				"step3Strong": "For testing",
+				"step4Body": ": Turn the \"Test mode\" toggle OFF, get the keys starting with pk_live_ and sk_live_, and enter them in the \"Production mode\" tab above",
+				"step4Strong": "For production",
+				"step5": "(Optional) Create a Webhook endpoint under \"Developers\" → \"Webhooks\"",
+				"step6": "Set the environment mode to \"Test\" and test",
+				"step7": "After testing, switch the environment mode to \"Production\"",
+				"testCardAlertTitle": "Test cards",
+				"testCardFailure": "Payments that fail",
+				"testCardIntro": "In test mode, you can use the following test card numbers:",
+				"testCardNote": "Use any future expiration date and any 3-digit CVC.",
+				"testCardSuccess": "Payments that succeed",
+				"testModeAlertBody": "These are test API keys. You can make test payments using the test card (4242 4242 4242 4242).",
+				"testModeAlertTitle": "Test mode",
+				"testModeFirst": "Before using this in production, please test in test mode.",
+				"testPublishableKeyDescription": "Obtained from \"Developers\" → \"API keys\" in the Stripe Dashboard (starts with pk_test_)",
+				"testSecretKeyDescription": "Obtained from \"Developers\" → \"API keys\" in the Stripe Dashboard (starts with sk_test_)",
+				"testTabLabel": "🧪 Test mode",
+				"testWebhookSecretLabel": "Test Webhook Secret (optional)",
+				"title": "Stripe Settings",
+				"webhookEventNote": "Select \"checkout.session.completed\" as the Webhook event.",
+				"webhookSecretDescription": "Obtained when you create the Webhook endpoint (starts with whsec_)"
+			},
+			"tokushoho": {
+				"contentCardTitle": "Notice content (Markdown)",
+				"contentPlaceholder": "Enter in Markdown...",
+				"contentRequired": "Please enter the notice content",
+				"enableLabel": "Enable the Legal Notice (Specified Commercial Transactions Act) page",
+				"intro": "If you offer Super Chats (a paid service), a Legal Notice based on the Specified Commercial Transactions Act is required. You can freely edit it in Markdown.",
+				"legalAlertTitle": "About legal requirements",
+				"legalBody1": "If you offer payment services in Japan, a Legal Notice based on the Specified Commercial Transactions Act is legally required. See the",
+				"legalBody2": "for more information.",
+				"legalLinkText": "Consumer Affairs Agency website",
+				"markdownGuideSuffix": "and more can be used. After saving, you can preview the result on the notice page.",
+				"markdownGuideTitle": "About Markdown syntax",
+				"mdBoldSample": "**Bold**",
+				"mdH1Sample": "# Heading 1",
+				"mdH2Sample": "## Heading 2",
+				"mdListSample": "* List",
+				"saveError": "Failed to save: {{message}}",
+				"saveSuccess": "Legal Notice (Specified Commercial Transactions Act) saved",
+				"title": "Legal Notice (Specified Commercial Transactions Act)",
+				"urlAlertTitle": "Notice page URL",
+				"validationError": "Please check your input"
+			},
+			"video": {
+				"advancedSettings": "Advanced settings",
+				"docLinkText": "video documentation",
+				"introPrefix": "Before changing your video settings, review the",
+				"introSuffix": "to understand how it affects streaming performance. We recommend starting with a single medium-quality output and adding quality variants as needed.",
+				"tabQuality": "Quality settings",
+				"tabStreaming": "Streaming protocol",
+				"title": "Video Settings"
+			},
+			"recording": {
+				"title": "Recording",
+				"tabLabel": "Recording",
+				"description": "Automatically record streams and save them as archives (VOD). Recordings are saved unpublished, so review them (and optionally set pricing) before publishing from Utilities > Archives. Published recordings appear on the viewer-facing list page (/archives)."
+			},
+			"backup": {
+				"title": "Backup",
+				"description": "Automatically back up the database (config, users, purchase history and archive viewing entitlements). Because payments are involved, backups are recommended to protect purchase records."
+			}
+		},
+		"pages": {
+			"common": {
+				"cancel": "Cancel",
+				"delete": "Delete",
+				"docsIntro": "For instructions and examples, see the documentation below.",
+				"documentation": "Documentation",
+				"name": "Name",
+				"pleaseWait": "Please wait",
+				"selectAll": "Select all"
+			},
+			"accessTokens": {
+				"title": "Access Tokens",
+				"intro": "Access tokens are used by external, third-party tools to perform specific actions on your AoiTube server. Always keep them secure, never include them in client-side code, and store them on a server you control.",
+				"createButton": "Create Access Token",
+				"modalTitle": "Create a New Access Token",
+				"nameHint": "When you send messages with this access token, this will be shown as the username in chat.",
+				"namePlaceholder": "Name of the bot, service, or integration",
+				"scopeHint": "Select the permissions to grant to this access token. They cannot be edited after creation.",
+				"neverUsed": "Never used",
+				"columns": {
+					"token": "Token",
+					"scopes": "Scopes",
+					"lastUsed": "Last Used"
+				},
+				"scopes": {
+					"systemMessages": {
+						"name": "System Messages",
+						"description": "Can send official messages as the system."
+					},
+					"chatMessages": {
+						"name": "Chat Messages",
+						"description": "Can send chat messages as the owner of this token."
+					},
+					"admin": {
+						"name": "Admin",
+						"description": "Can perform administrative actions such as moderation and retrieving server status."
+					}
+				}
+			},
+			"actions": {
+				"title": "External Actions",
+				"intro": "External action URLs are third-party UIs that can be embedded within your AoiTube page when a user clicks a button.",
+				"createAction": "Create a New Action",
+				"editAction": "Edit Action",
+				"saved": "Updated.",
+				"htmlEmbed": "HTML Embed",
+				"sameTab": "Same tab",
+				"newTab": "New tab",
+				"columns": {
+					"description": "Description",
+					"urlEmbed": "URL / Embed",
+					"icon": "Icon",
+					"color": "Color",
+					"openMode": "Open Mode"
+				},
+				"modal": {
+					"urlIntro": "Add the URL of the external action you want to display.",
+					"httpsOnly": "Only HTTPS URLs and embeds are supported.",
+					"learnMore": "Learn more about external actions",
+					"typePlaceholder": "Select the action type",
+					"typeUrl": "Link to or embed a URL",
+					"typeHtml": "Custom HTML",
+					"htmlPlaceholder": "HTML embed code (required)",
+					"urlPlaceholder": "https://myserver.com/action (required)",
+					"titlePlaceholder": "Action name (required)",
+					"descriptionPlaceholder": "Description (optional)",
+					"iconPlaceholder": "https://myserver.com/action/icon.png (optional)",
+					"colorLabel": "Button background color (optional)",
+					"openExternally": "Open in a new tab instead of within the page"
+				}
+			},
+			"chat": {
+				"title": "Chat Management",
+				"columns": {
+					"time": "Time",
+					"user": "User",
+					"message": "Message"
+				},
+				"filters": {
+					"visible": "Visible",
+					"hidden": "Hidden"
+				},
+				"tabs": {
+					"connected": "Connected",
+					"offline": "(Offline)",
+					"banned": "Blocked Users",
+					"ipBans": "IP Blocks",
+					"moderators": "Moderators"
+				},
+				"viewerDocsPre": "For configuring additional viewer information, see",
+				"viewerDocsPost": ".",
+				"offlineDescription": "Connected chat clients will appear here when the stream is live and chat is enabled.",
+				"messageHistory": "Message History ({{num}})",
+				"messageHistoryIntro": "Manage the messages from viewers that appear on the stream page.",
+				"bulkLabel": "Select multiple messages to change their visibility:",
+				"bulkShow": "Show",
+				"bulkHide": "Hide"
+			},
+			"configGeneral": {
+				"tabs": {
+					"general": "General",
+					"customCss": "Custom CSS",
+					"customScripts": "Custom Scripts"
+				}
+			},
+			"configServer": {
+				"tabs": {
+					"server": "Server Settings",
+					"storage": "S3 Object Storage",
+					"streamKeys": "Stream Keys",
+					"backup": "Backup"
+				}
+			},
+			"donations": {
+				"title": "Purchase Management",
+				"intro": "A sales dashboard and purchase history of viewer purchases (Super Chats and screen effects). Purchases can be registered automatically via Webhook from external payment services, or added manually. Test payments (sandbox) are excluded from sales totals.",
+				"addManually": "Add Manually",
+				"anonymous": "Anonymous",
+				"show": "Show",
+				"hide": "Hide",
+				"visible": "Visible",
+				"hiddenLabel": "Hidden",
+				"showTest": "Show test payments",
+				"testTag": "Test",
+				"testTooltip": "This is a sandbox/test-mode payment, so it is not included in sales totals.",
+				"testCountTag": "{{num}} test (excluded from totals)",
+				"columns": {
+					"date": "Date",
+					"item": "Item",
+					"provider": "Payment Method",
+					"amount": "Amount",
+					"purchaser": "Purchaser",
+					"message": "Message",
+					"status": "Status",
+					"action": "Actions"
+				},
+				"items": {
+					"superchat": "Super Chat",
+					"screenEffect": "Screen effect ({{name}})",
+					"unknown": "Unknown",
+					"archive": "Archive purchase: {{title}}",
+					"archiveDeleted": "(deleted archive)",
+					"archiveStat": "Archive purchase"
+				},
+				"providers": {
+					"manual": "Manual",
+					"unknown": "Unknown"
+				},
+				"stats": {
+					"thisMonth": "This Month's Sales",
+					"momLabel": "MoM",
+					"noLastMonth": "No data for last month",
+					"total": "Total Sales",
+					"cryptoJpy": "Crypto (JPY equivalent)",
+					"cryptoJpyNote": "Total converted at the rate at time of confirmation",
+					"purchaseCount": "Total Purchases",
+					"countSuffix": "",
+					"average": "Average Purchase",
+					"uniquePurchasers": "Unique Purchasers",
+					"peopleSuffix": "",
+					"excludingAnonymous": "Excluding anonymous purchases"
+				},
+				"charts": {
+					"daily": "Daily Sales (Last 30 Days)",
+					"dailyTooltip": "{{currency}}: {{amount}} ({{num}})",
+					"byProvider": "By Payment Method",
+					"providerTooltip": "{{label}}: {{num}} ({{amounts}})",
+					"byItem": "Purchases by Item",
+					"itemTooltip": "{{num}}",
+					"emptyDaily": "No sales data yet",
+					"emptyProviders": "No payment data yet",
+					"emptyItems": "No purchase data yet"
+				},
+				"deleteConfirm": {
+					"title": "Delete Super Chat",
+					"content": "Permanently delete this Super Chat? This action cannot be undone."
+				},
+				"messages": {
+					"created": "Super Chat registered",
+					"createFailed": "Failed to register",
+					"shown": "Shown",
+					"hidden": "Hidden",
+					"updateFailed": "Failed to update",
+					"deleted": "Deleted",
+					"deleteFailed": "Failed to delete"
+				},
+				"modal": {
+					"title": "Manually Register a Super Chat",
+					"register": "Register",
+					"amountLabel": "Amount",
+					"amountRequired": "Please enter an amount",
+					"amountPlaceholder": "Enter an amount",
+					"currencyLabel": "Currency",
+					"currencyJpy": "Japanese Yen (JPY)",
+					"currencyUsd": "US Dollar (USD)",
+					"currencyEur": "Euro (EUR)",
+					"displayNameLabel": "Display Name",
+					"displayNamePlaceholder": "Purchaser's name",
+					"messageLabel": "Message",
+					"messagePlaceholder": "Message (optional)",
+					"anonymousLabel": "Make anonymous"
+				},
+				"filter": {
+					"all": "All",
+					"superchat": "Super Chat",
+					"effect": "Screen effects",
+					"archive": "Archives"
+				},
+				"revoke": {
+					"button": "Revoke",
+					"confirmTitle": "Revoke viewing access?",
+					"confirmContent": "The user will no longer be able to watch this archive.",
+					"success": "Viewing access revoked",
+					"failed": "Failed to revoke viewing access"
+				},
+				"grant": {
+					"button": "Grant viewing access",
+					"title": "Grant archive viewing access",
+					"archiveLabel": "Archive",
+					"userLabel": "User",
+					"submit": "Grant",
+					"success": "Viewing access granted",
+					"failed": "Failed to grant viewing access",
+					"alreadyOwned": "This user already has access to this archive"
+				}
+			},
+			"emojis": {
+				"title": "Emojis",
+				"intro": "You can upload custom emojis for use in chat. When you upload a new emoji, its file name is used as the emoji name.",
+				"uploadButton": "Upload New Emoji",
+				"deleteEmoji": "Delete emoji",
+				"deleting": "Deleting emoji…",
+				"deleted": "Emoji deleted",
+				"converting": "Converting emoji…",
+				"uploading": "Uploading emoji…",
+				"uploaded": "Emoji uploaded!",
+				"unsupportedFileType": "Unsupported file type: {{type}}"
+			},
+			"hardwareInfo": {
+				"title": "Hardware Info",
+				"noDataDescription": "Hardware information has not been collected yet.",
+				"memory": "Memory",
+				"disk": "Disk",
+				"chartTitle": "Usage"
+			},
+			"help": {
+				"title": "How can we help?",
+				"troubleshooting": "Troubleshooting",
+				"troubleshootingButton": "Solve a problem",
+				"readDocs": "Read the documentation",
+				"commonTasks": "Common Tasks",
+				"otherTitle": "Other",
+				"learnMore": "Learn more",
+				"questions": {
+					"configure": "I want to configure AoiTube",
+					"broadcasting": "I want to know how to set up my broadcasting software",
+					"embed": "I want to embed my stream on another site",
+					"customize": "I want to customize my site",
+					"video": "I want to adjust my video output",
+					"storage": "I want to use external storage"
+				},
+				"other": {
+					"foundBug": "I found a bug",
+					"foundBugPre": "If you found a bug,",
+					"foundBugLink": "let us know",
+					"question": "I have a general question",
+					"questionPre": "Many questions are answered in the",
+					"questionAnd": "and",
+					"questionPost": ".",
+					"addon": "I want to build an add-on for AoiTube",
+					"addonBody": "You can use the developer API to build bots, overlays, tools, and add-ons.",
+					"addonLink": "See the developer API."
+				}
+			},
+			"home": {
+				"viewers": "Viewers",
+				"peakViewers": "Peak Viewers",
+				"input": "Input",
+				"inboundDetails": "Inbound Stream Details",
+				"inboundVideoStream": "Inbound Video Stream",
+				"inboundAudioStream": "Inbound Audio Stream",
+				"outboundDetails": "Outbound Stream Details",
+				"outboundVideoStream": "Outbound Video Stream",
+				"outboundAudioStream": "Outbound Audio Stream",
+				"streamStarted": "Stream started {{relative}}"
+			},
+			"loginSettings": {
+				"title": "Login Settings",
+				"intro": "Manage the passwords, passkeys, security keys, and one-time passwords used to log in to the admin panel.",
+				"currentUser": "Current user:",
+				"rename": "Rename",
+				"deleteKeyConfirm": "Delete \"{{name}}\"?",
+				"proxyError": {
+					"message": "Cannot connect to the authentication proxy",
+					"description": "This page requires an authentication proxy (Authelia) running at /authelia/. If your session has expired, please reload the page."
+				},
+				"columns": {
+					"registeredAt": "Registered",
+					"lastUsed": "Last Used",
+					"actions": "Actions"
+				},
+				"keysCard": {
+					"title": "Passkeys & Security Keys",
+					"addKey": "Add Key",
+					"empty": "No keys registered"
+				},
+				"totpCard": {
+					"title": "One-Time Password (Authenticator App)",
+					"setup": "Set up",
+					"registered": "A one-time password via an authenticator app is registered.",
+					"notRegistered": "Not set up. You can use a 6-digit code with an authenticator app (such as 1Password).",
+					"deleteConfirm": "Delete the one-time password?"
+				},
+				"passwordCard": {
+					"title": "Change Password",
+					"current": "Current password",
+					"new": "New password",
+					"confirm": "New password (confirm)",
+					"submit": "Change Password"
+				},
+				"messages": {
+					"codeAutoFetched": "Verification code fetched automatically",
+					"codeRequired": "Please enter the verification code",
+					"codeInvalid": "The verification code is incorrect or has expired",
+					"codeNotReady": "The code is not ready yet. Please try again in a few seconds",
+					"securityKeyFailed": "Verification with the security key failed",
+					"securityKeyCancelled": "Verification with the security key was cancelled",
+					"totpRequired": "Please enter the one-time password",
+					"totpInvalid": "The one-time password is incorrect",
+					"keyNameRequired": "Please enter a name for the key",
+					"keyAdded": "Key added",
+					"keyAddFailed": "Failed to add the key",
+					"keyAddCancelled": "Adding the key was cancelled",
+					"keyDeleted": "Deleted \"{{name}}\"",
+					"deleteFailed": "Failed to delete",
+					"renamed": "Renamed",
+					"renameFailed": "Failed to rename",
+					"totpStartFailed": "Could not start one-time password setup",
+					"totpCodeRequired": "Please enter the 6-digit code shown in the app",
+					"totpRegistered": "One-time password registered",
+					"totpMismatch": "The code does not match. Please try again",
+					"totpDeleted": "One-time password deleted",
+					"passwordMismatch": "The new passwords do not match",
+					"passwordChanged": "Password changed",
+					"passwordChangeFailed": "Failed to change the password. Please check your current password"
+				},
+				"elevationModal": {
+					"title": "Identity Verification",
+					"codeIntro": "Changing security settings requires a verification code. The code is fetched automatically (if it takes a few seconds, press Refresh).",
+					"codePlaceholder": "Verification code (8 digits)",
+					"verify": "Verify",
+					"secondFactorIntro": "Next, verify your identity with a registered authentication method.",
+					"securityKeyConfirm": "Verify with security key / passkey",
+					"totpPlaceholder": "One-time password (6 digits)",
+					"confirm": "Confirm"
+				},
+				"addKeyModal": {
+					"title": "Add Security Key / Passkey",
+					"okText": "Add",
+					"intro": "Enter a name for the key and press \"Add\" to begin security key registration in your browser.",
+					"placeholder": "e.g. YubiKey 5C, 1Password"
+				},
+				"renameModal": {
+					"title": "Rename Key",
+					"okText": "Rename"
+				},
+				"totpModal": {
+					"title": "Set Up One-Time Password",
+					"okText": "Register",
+					"scanQr": "Scan this QR code with your authenticator app.",
+					"manualSecret": "Secret for manual entry: {{secret}}",
+					"codePlaceholder": "The 6-digit code shown in the app"
+				}
+			},
+			"streamHealth": {
+				"title": "Stream Performance",
+				"noData": "No data has been collected yet. This page becomes available when a stream is live and has viewers.",
+				"intro1": "This page is designed to help you find and isolate potential problems with your stream. Because it aggregates the experience of all viewers, a single viewer in an extremely poor situation can affect the overall numbers on a low-viewership stream.",
+				"intro2": "This data is collected only from viewers using the AoiTube web viewing page. It does not reflect viewers watching in external players such as VLC, MPV, or QuickTime.",
+				"unitSeconds": "s",
+				"slowDownloads": "Slow downloads",
+				"slowNetwork": "Some viewers have a slow connection",
+				"bitrateChartTitle": "Lowest Viewer Bitrate",
+				"bitrateError": "At least one viewer is playing at {{speed}}kbps, which is slower than the lowest quality you offer ({{lowest}}kbps). If the errors continue, consider adding a lower-bitrate quality.",
+				"speedError": "Viewers' playback may not be keeping up with the required speed. This can be caused by a slow connection or your latency settings. You need to reduce the time it takes viewers to consume the video. Try adding a lower-bitrate quality or increasing your latency buffer setting.",
+				"stats": {
+					"playerSpeed": "Viewer Playback Speed",
+					"playerLatency": "Viewer Latency",
+					"recentErrors": "Recent Playback Errors"
+				},
+				"charts": {
+					"errors": "Errors",
+					"qualityChanges": "Quality Changes",
+					"latencyMedian": "Stream Latency (Median)",
+					"latencyMin": "Stream Latency (Min)",
+					"latencyMax": "Stream Latency (Max)",
+					"downloadMax": "Download Time (Max)",
+					"downloadMedian": "Download Time (Median)",
+					"downloadMin": "Download Time (Min)",
+					"targetLimit": "Target Limit",
+					"bitrateMin": "Playback Speed (Min)",
+					"bitrateMedian": "Playback Speed (Median)",
+					"bitrateMax": "Playback Speed (Max)",
+					"availableBitrates": "Available Bitrates"
+				},
+				"segmentSection": {
+					"title": "Segment Downloads",
+					"p1": "If video segments take too long to download, viewers will experience buffering. When downloads are slow, possible remedies include offering a lower quality (lower bitrate) or improving delivery with external storage, a CDN, or a faster connection. For some viewers, increasing the latency buffer can also help.",
+					"p2": "As a rule of thumb, if the pink line consistently approaches the blue line, viewers are likely experiencing problems."
+				},
+				"networkSection": {
+					"title": "Viewer Network Speed",
+					"p1": "This is your viewers' playback bitrate (a rough indicator of their connection). When a viewer's bitrate falls below the bitrate of the lowest quality you offer, buffering becomes more likely. If you have viewers on slow connections, consider adding an even lower quality.",
+					"p2": "As a rule of thumb, if the pink line approaches the lowest blue line, at least one viewer may be experiencing problems."
+				},
+				"errorsSection": {
+					"title": "Errors and Quality Changes",
+					"p1": "These are the number of recent errors (such as buffering) and the number of quality changes across all viewers. Errors can be caused by many factors, such as browser issues, extensions, or a poor Wi-Fi connection. Not all of them are fatal or within your control as the streamer.",
+					"p2": "Quality changes are not necessarily a bad thing, but if they happen frequently and errors are increasing at the same time, consider adding another quality variant."
+				},
+				"latencySection": {
+					"title": "Viewer Latency",
+					"description": "This is a rough measure of how far behind the live video your viewers are (in seconds). The biggest cause of latency spikes is buffering. High latency is not itself a problem; over-optimizing for low latency can cause buffering, which can ultimately increase latency even further."
+				}
+			},
+			"userData": {
+				"title": "User Data Management",
+				"intro": "You can view and delete users. Deleting a user also deletes their authentication credentials and access tokens.",
+				"searchPlaceholder": "Search by username or ID",
+				"refresh": "Refresh",
+				"deleteSelected": "Delete Selected ({{num}})",
+				"deleteAll": "Delete All",
+				"totalItems": "{{num}} items",
+				"stats": {
+					"totalUsers": "Total Users",
+					"authenticated": "Authenticated",
+					"blocked": "Blocked",
+					"moderators": "Moderators"
+				},
+				"columns": {
+					"displayName": "Display Name",
+					"status": "Status",
+					"createdAt": "Created",
+					"authenticatedAt": "Authenticated",
+					"action": "Actions"
+				},
+				"tags": {
+					"authenticated": "Authenticated",
+					"blocked": "Blocked",
+					"moderator": "Moderator",
+					"unauthenticated": "Unauthenticated"
+				},
+				"deleteUserConfirm": {
+					"title": "Delete this user?",
+					"description": "Their authentication credentials and access tokens will also be deleted"
+				},
+				"deleteSelectedConfirm": {
+					"title": "Delete {{num}} users?",
+					"content": "This action cannot be undone. The authentication credentials and access tokens of the selected users will also be deleted."
+				},
+				"deleteAllConfirm": {
+					"title": "Delete all users?",
+					"content": "This action cannot be undone. All user data, authentication credentials, and access tokens will be deleted.",
+					"okText": "Delete All"
+				},
+				"messages": {
+					"fetchFailed": "Failed to fetch users",
+					"deleted": "User deleted",
+					"deleteFailed": "Failed to delete the user",
+					"selectUsers": "Please select users to delete",
+					"allDeleted": "All users deleted",
+					"deleteAllFailed": "Failed to delete all users"
+				}
+			},
+			"viewerInfo": {
+				"title": "Viewer Info",
+				"currentViewers": "Current Viewers",
+				"maxViewersThisStream": "Peak Viewers This Stream",
+				"maxViewersLastStream": "Peak Viewers Last Stream",
+				"allTimeMaxViewers": "All-Time Peak Viewers",
+				"noDataDescription": "Viewer data has not been collected yet.",
+				"chartTitle": "Viewers",
+				"unitPeople": "",
+				"timeWindows": {
+					"currentStream": "Current stream",
+					"last12Hours": "Last 12 hours",
+					"last24Hours": "Last 24 hours",
+					"last7Days": "Last 7 days",
+					"last30Days": "Last 30 days",
+					"last3Months": "Last 3 months",
+					"last6Months": "Last 6 months"
+				}
+			},
+			"webhooks": {
+				"intro": "Webhooks are callbacks sent to an external API in response to events that occur within AoiTube. They can be used to implement chat bots, automatically announce when a stream starts, and more.",
+				"createButton": "Create Webhook",
+				"modalTitle": "Create a New Webhook",
+				"eventsHint": "Select the events to send to this Webhook.",
+				"columns": {
+					"events": "Events"
+				},
+				"events": {
+					"chat": {
+						"name": "Chat Message",
+						"description": "When a user sends a chat message"
+					},
+					"userJoined": {
+						"name": "User Joined",
+						"description": "When a user joins the chat"
+					},
+					"nameChange": {
+						"name": "Username Change",
+						"description": "When a user changes their name"
+					},
+					"visibilityUpdate": {
+						"name": "Message Visibility Change",
+						"description": "When a message's visibility changes due to moderation or similar"
+					},
+					"streamStarted": {
+						"name": "Stream Started",
+						"description": "When the stream starts"
+					},
+					"streamStopped": {
+						"name": "Stream Stopped",
+						"description": "When the stream stops"
+					},
+					"streamTitleUpdated": {
+						"name": "Stream Title Changed",
+						"description": "When the stream title is changed"
+					},
+					"donation": {
+						"name": "Super Chat",
+						"description": "When a Super Chat is purchased"
+					}
+				}
+			},
+			"federation": {
+				"actions": {
+					"title": "Fediverse Actions",
+					"description": "This shows a list of reactions others have made to your posts (such as likes and shares), along with follow requests.",
+					"columnAction": "Action",
+					"columnFrom": "From",
+					"columnTimestamp": "Timestamp",
+					"repost": "Share",
+					"like": "Like",
+					"follow": "Follow"
+				},
+				"followers": {
+					"columnName": "Name",
+					"approve": "Approve",
+					"reject": "Reject",
+					"remove": "Remove",
+					"requestedDate": "Requested Date",
+					"blockedDate": "Rejected/Blocked Date",
+					"addedDate": "Added Date",
+					"tabFollowers": "Followers",
+					"tabPending": "Pending",
+					"tabBlocked": "Blocked",
+					"followersIntro": "The following accounts receive notifications when you start streaming or post.",
+					"pendingIntro": "The following users want to follow your AoiTube server on the <fediverse>Fediverse</fediverse> and receive notifications when you go live. Each request must be approved.",
+					"blockedIntro": "The following users have been rejected or blocked. You can also re-approve them as followers."
+				}
+			},
+			"archives": {
+				"title": "Archive Management",
+				"description": "Recorded streams (VOD). Toggle visibility or delete them.",
+				"empty": "No recordings yet",
+				"untitled": "Untitled stream",
+				"unfinished": "Recording incomplete",
+				"play": "Play",
+				"visible": "Public",
+				"hidden": "Hidden",
+				"columns": {
+					"title": "Title",
+					"startedAt": "Streamed at",
+					"duration": "Duration",
+					"visible": "Visibility",
+					"actions": "Actions",
+					"size": "Size"
+				},
+				"deleteConfirm": {
+					"title": "Delete archive",
+					"content": "Permanently delete this recording? This cannot be undone."
+				},
+				"messages": {
+					"shown": "Now public",
+					"hidden": "Now hidden",
+					"deleted": "Deleted",
+					"updateFailed": "Update failed",
+					"deleteFailed": "Delete failed",
+					"fetchFailed": "Failed to fetch archives",
+					"bulkDeleted": "Deleted {{count}} archives",
+					"titleSaved": "Title updated"
+				},
+				"bulkDeleteButton": "Delete {{count}} selected",
+				"bulkDeleteConfirm": {
+					"title": "Delete the selected archives?",
+					"content": "This permanently deletes {{count}} archives. This cannot be undone."
+				},
+				"pricing": {
+					"columnTitle": "Access / Price",
+					"public": "Public",
+					"authenticated": "Members only",
+					"paid": "Paid",
+					"priceLabel": "Price",
+					"priceRequired": "Paid archives require a price of at least 1",
+					"save": "Save",
+					"saved": "Pricing saved"
+				},
+				"editTitle": "Edit title"
+			}
+		},
+		"layout": {
+			"banUserButton": {
+				"actionBan": "ban this user",
+				"actionUnban": "unban this user",
+				"confirmContent": "Are you sure you want to {{action}}?",
+				"confirmTitle": "Confirm: {{action}}",
+				"deleteMessagesNote": " (their messages will also be deleted)",
+				"okBan": "Ban",
+				"okUnban": "Unban",
+				"banAction": "Ban",
+				"unbanAction": "Unban"
+			},
+			"moderatorUserButton": {
+				"actionGrant": "grant moderator to this user",
+				"actionRevoke": "revoke moderator from this user",
+				"confirmContent": "Are you sure you want to {{action}}?",
+				"confirmTitle": "Confirm: {{action}}",
+				"okGrant": "Grant",
+				"okRevoke": "Revoke"
+			},
+			"bannedIPsTable": {
+				"colIpAddress": "IP Address",
+				"colReason": "Reason",
+				"colCreatedAt": "Created At",
+				"unbanTitle": "Unban IP address"
+			},
+			"clientTable": {
+				"colDisplayName": "Display Name",
+				"searchPlaceholder": "Search display name...",
+				"colMessageCount": "Messages Sent",
+				"colConnectedTime": "Connected Time",
+				"colUserAgent": "User Agent",
+				"colLocation": "Location"
+			},
+			"userTable": {
+				"colDisplayName": "Last Known Display Name",
+				"colCreatedAt": "Created At",
+				"colDisabledAt": "Disabled At"
+			},
+			"composeFederatedPost": {
+				"postSuccess": "Posted",
+				"postError": "Failed to post",
+				"postButton": "Post",
+				"title": "Post to followers",
+				"heading": "Share your upcoming stream schedule or invite your followers to tune in.",
+				"placeholder": "I'm live now. Come check it out!"
+			},
+			"socialDropdown": {
+				"description": "If you want to use a platform name that isn't in this list, select \"Other\" and enter any name you like. No logo will be displayed.",
+				"platformLabel": "Platform",
+				"selectPlaceholder": "Select a platform...",
+				"other": "Other..."
+			},
+			"editLogo": {
+				"loadFailed": "Failed to load logo data",
+				"updated": "Logo updated"
+			},
+			"common": {
+				"advancedSettings": "Advanced settings",
+				"cancel": "Cancel",
+				"delete": "Delete",
+				"edit": "Edit",
+				"error": "An error occurred: {{message}}",
+				"no": "No",
+				"resetFailed": "Reset failed",
+				"save": "Save",
+				"statusLabel": "Status:",
+				"uploadFailed": "Upload failed",
+				"yes": "Yes"
+			},
+			"codecSelector": {
+				"updated": "Video codec updated.",
+				"appliesNextStream": "Changes to the video codec setting take effect the next time you start streaming.",
+				"codecDefault": "Default (libx264)",
+				"codecNvidia": "NVIDIA GPU acceleration",
+				"codecVaapi": "VA-API hardware encoding",
+				"codecV4l2": "Video4Linux hardware encoding",
+				"codecOmx": "OpenMax (omx) for Raspberry Pi",
+				"codecVideoToolbox": "Apple VideoToolbox (hardware)",
+				"descLibx264": "libx264 is the default codec and is often effectively the only option in shared VPS environments. Unless you're sure you have another option enabled, we recommend using this one.",
+				"descNvenc": "If you have a relatively recent NVIDIA GPU with encoding cores, you can encode on the GPU.",
+				"descVaapi": "VA-API may be available with NVIDIA's proprietary drivers or with the Mesa drivers for AMD/Intel.",
+				"descQsv": "Quick Sync is Intel's hardware for video encoding and decoding. It's an option if you have a relatively recent Intel CPU with an integrated GPU.",
+				"descV4l2": "Video4Linux is an interface for accessing several hardware encoding backends, such as those for Intel and AMD.",
+				"descOmx": "OpenMax is a codec used primarily on the Raspberry Pi.",
+				"descVideoToolbox": "Apple VideoToolbox is a low-level framework for directly accessing hardware encoders and decoders.",
+				"title": "Video codec",
+				"intro": "If you have supported hardware along with the required drivers and software, you may be able to improve video encoding performance.",
+				"warningLink": "Changing this setting may make your stream unplayable. Please review the documentation before changing it.",
+				"confirmChange": "You are about to change the video codec to {{codec}}. Do you understand the impact and want to continue?"
+			},
+			"currentVariantsTable": {
+				"updated": "Variant updated",
+				"appliesNextStream": "Changes to the video settings take effect the next time you start streaming.",
+				"colName": "Name",
+				"unnamed": "(Unnamed)",
+				"colVideoBitrate": "Video Bitrate",
+				"sameAsSource": "Same as source",
+				"colCpuUsage": "CPU Usage",
+				"notApplicable": "N/A",
+				"resetWarning": "Warning: please edit and reset",
+				"title": "Stream output",
+				"modalTitle": "Edit video variant",
+				"addVariant": "Add variant"
+			},
+			"editCustomJavascript": {
+				"placeholder": "/* Enter your custom JavaScript here */",
+				"title": "Customize the page with JavaScript",
+				"desc": "You can inject custom JavaScript into your AoiTube page to add your own functionality or integrate third-party scripts. For details on how to use this, see the",
+				"docsLink": "web page documentation",
+				"descSuffix": ".",
+				"plainJsNote": "Do not use HTML or script tags; write plain JavaScript only."
+			},
+			"editCustomStyles": {
+				"placeholder": "/* Enter your custom CSS here */",
+				"title": "Customize the page's appearance with CSS",
+				"desc": "You can override the CSS of the individual components on the page to customize the look of AoiTube. For more details, see the",
+				"docsLink": "\"CSS and components\" guide",
+				"descSuffix": ".",
+				"plainCssNote": "The CSS you enter here is inserted as-is when the page loads. Please enter plain CSS text."
+			},
+			"editNotificationThumbnail": {
+				"invalidFileType": "Unsupported file type (jpg, png, gif, and webp only)",
+				"fileTooLarge": "The file is too large (max 10MB)",
+				"updated": "Notification thumbnail updated. It will take effect after you restart the server.",
+				"resetDone": "Notification thumbnail reset",
+				"label": "Notification thumbnail",
+				"current": "Current thumbnail",
+				"usingLogo": "(Using logo)",
+				"previewAlt": "Notification thumbnail preview",
+				"uploadButton": "Upload thumbnail",
+				"resetButton": "Reset",
+				"statusCustom": "Custom",
+				"statusNone": "Not set (using logo)",
+				"tip": "This image is shown when a stream-start notification is sent on Discord or X. If you don't set one, your logo is used. A server restart is required after changing it."
+			},
+			"editOfflineClip": {
+				"invalidFileType": "Unsupported file type (.ts / .tsclip only)",
+				"fileTooLarge": "The file is too large (max 25MB)",
+				"updated": "Offline clip (video shown while offline) updated",
+				"resetDone": "Offline clip reset to default",
+				"label": "Offline screen (video shown while offline)",
+				"uploadButton": "Upload offline clip",
+				"resetButton": "Reset to default",
+				"statusCustom": "Custom",
+				"statusDefault": "Default",
+				"tip": "Replaces the \"offline clip\" (a single TS segment) that is served over HLS while the stream is offline. Because of how AoiTube works, we recommend a .ts / .tsclip that is roughly 8 seconds long (a different length may cause unstable playback).",
+				"previewLabel": "Preview ({{type}}):",
+				"previewCustom": "Custom",
+				"previewDefault": "Default"
+			},
+			"editOfflineMedia": {
+				"invalidFileType": "Unsupported file type (.mp4 / .jpg / .png / .gif / .webp)",
+				"fileTooLarge": "The file is too large (max 50MB)",
+				"updated": "Offline display media updated",
+				"deleted": "Offline display media deleted",
+				"deleteFailed": "Failed to delete",
+				"configured": "Configured ({{type}}: {{path}})",
+				"notConfigured": "Not configured",
+				"label": "Offline display (image/MP4)",
+				"uploadButton": "Upload image/MP4",
+				"tip": "Displays an image or MP4 on the offline screen while the stream is offline. MP4s are played automatically (muted and looped).",
+				"previewLabel": "Preview:",
+				"previewAlt": "Offline media preview"
+			},
+			"editServerDetails": {
+				"restartRequired": "You must restart the AoiTube server for the updated server settings to take effect.",
+				"ffmpegApplied": "The updated FFmpeg path will be used the next time you start a live stream.",
+				"socketOverrideDesc": "If you have a CDN in front of your entire AoiTube instance, specify here the origin server that the WebSocket should connect to. In most cases this setting is not needed."
+			},
+			"logTable": {
+				"levelInfo": "Info",
+				"levelWarning": "Warning",
+				"levelError": "Error",
+				"colLevel": "Level",
+				"colTime": "Time",
+				"colMessage": "Message",
+				"title": "Logs"
+			},
+			"mainLayout": {
+				"statusOnline": "Live {{duration}}",
+				"statusOffline": "Offline",
+				"menu": {
+					"accessTokens": "Access Tokens",
+					"externalActions": "External Actions",
+					"donationsAdmin": "Purchase Management",
+					"paypaySettings": "PayPay Settings",
+					"paypalSettings": "PayPal Settings",
+					"stripeSettings": "Stripe Settings",
+					"metamaskSettings": "Metamask Settings",
+					"kofiSettings": "Ko-fi Settings",
+					"doneruSettings": "Doneru Settings",
+					"tokushoho": "Legal Notice",
+					"faqSettings": "FAQ Settings",
+					"viewers": "Viewers",
+					"chatManagement": "Chat Management",
+					"userData": "User Data",
+					"emojis": "Emojis",
+					"hardware": "Hardware",
+					"streamHealth": "Stream Health",
+					"logs": "Logs",
+					"socialActions": "Social Actions",
+					"loginSettings": "Login Settings",
+					"generalSettings": "General Settings",
+					"serverSettings": "Server Settings",
+					"videoSettings": "Video Settings",
+					"chatSettings": "Chat Settings",
+					"socialSettings": "Social Settings",
+					"notificationSettings": "Notification Settings",
+					"home": "Home",
+					"chatAndUsers": "Chat & Users",
+					"followers": "Followers",
+					"donations": "Purchases & Revenue",
+					"configuration": "Configuration",
+					"utilities": "Utilities",
+					"integrations": "Integrations",
+					"help": "Help",
+					"logout": "Log out",
+					"archives": "Archives"
+				},
+				"menuGroups": {
+					"management": "Management",
+					"providers": "Payment Providers",
+					"legal": "Legal & Policies"
+				},
+				"pageTitle": "{{name}} Admin",
+				"serverUnreachable": "Cannot reach the server",
+				"adminDashboardTitle": "{{name}} Admin Dashboard",
+				"composePostTooltip": "Post to your social followers",
+				"composePost": "Compose post",
+				"streamTitlePlaceholder": "What are you streaming right now? (stream title)",
+				"switchToLight": "Switch to light theme",
+				"switchToDark": "Switch to dark theme",
+				"themeToggle": "Toggle theme",
+				"language": "Language",
+				"aboutAoiTube": "About AoiTube (v{{version}})"
+			},
+			"offline": {
+				"broadcastSoftware": "Use broadcasting software",
+				"broadcastSoftwareLink": "Learn how to connect your existing software to your new server and start streaming.",
+				"streamUrl": "Stream URL:",
+				"streamKey": "Stream key:",
+				"view": "View",
+				"overriddenByCli": "Overridden on the command line.",
+				"forkFeatures": "Key features of this fork",
+				"featureOauthTitle": "OAuth 2.0 authentication",
+				"featureOauthDesc": "Sign in with X / Discord / Google / GitHub accounts",
+				"featureDonationTitle": "Super Chat",
+				"featureDonationDesc": "PayPay / PayPal / Stripe / Metamask / Ko-fi / Doneru",
+				"featureRtmpsTitle": "RTMPS support",
+				"featureRtmpsDesc": "Supports secure RTMP streaming",
+				"configureSocialAuth": "Configure authentication in Social settings",
+				"donationSetup": "Set up Super Chat",
+				"donationIntro": "Configure a payment provider to accept Super Chats from viewers.",
+				"donationPaypay": "QR code payments",
+				"donationPaypal": "International payments (200+ countries and regions)",
+				"donationMetamask": "Crypto payments (ETH, SOL, BTC, etc.)",
+				"donationKofi": "International Super Chat service (Webhook integration)",
+				"donationDoneru": "External Super Chat service integration",
+				"openDonationAdmin": "Open the Super Chat admin panel",
+				"embed": "Embed the video on other sites",
+				"embedLink": "Learn how to add your AoiTube stream to other sites.",
+				"chatDisabledTitle": "Chat is disabled",
+				"chatDisabledDesc": "Chat will remain disabled until you start a live stream.",
+				"directoryTitle": "Find viewers on the AoiTube directory",
+				"directoryPromo": "Register with the AoiTube directory to promote your stream.",
+				"directorySettings": "The General settings page",
+				"directoryEnableSuffix": " has an option to enable it.",
+				"fediverseTitle": "Add your AoiTube instance to the Fediverse",
+				"fediverseEnableLink": "Enable AoiTube's Fediverse features",
+				"fediverseDesc": " to join the Fediverse and allow following, sharing, and engagement.",
+				"notActiveTitle": "Your stream is not active",
+				"notActiveDesc": "Connect from your broadcasting software to begin a stream.",
+				"featureStreamingTitle": "Low-latency streaming",
+				"featureStreamingDesc": "LL-HLS (2-4s) and WebRTC (sub-second) low-latency delivery",
+				"featureRecordingTitle": "Recording & archives",
+				"featureRecordingDesc": "Record streams and publish them as VOD, with pay-per-view archives and effect-synced replay",
+				"featureI18nTitle": "Multilingual UI",
+				"featureI18nDesc": "Viewer and admin UI in 5 languages (Japanese, English, Simplified/Traditional Chinese, Korean)",
+				"featureBackupTitle": "Automatic backups",
+				"featureBackupDesc": "Scheduled database backups, S3 offload and one-command migration",
+				"donationStripe": "Credit card payments (international)"
+			},
+			"resetYP": {
+				"title": "Reset directory registration",
+				"desc": "If you're having trouble with your AoiTube Directory listing and have been advised to \"reset\" the connection, you can do that here. The next time you start a live stream, it will try to register with the directory again from scratch.",
+				"confirm": "Reset the connection to the AoiTube Directory?",
+				"resetButton": "Reset directory connection"
+			},
+			"userPopover": {
+				"createdAt": "Created: {{date}}",
+				"clickForDetails": "Click to view details",
+				"viewDetailsAria": "View details for this user",
+				"close": "Close",
+				"title": "User details: {{name}}",
+				"connectedNow": "This user is currently connected to chat.",
+				"connectionDuration": "Connected time:",
+				"messageCount": "Messages sent:",
+				"userAgent": "User agent:",
+				"previousNames": "This user's previous display names:",
+				"nameChangedAgo": "(changed {{duration}} ago)",
+				"bannedAtPrefix": "This user was banned on",
+				"bannedAtSuffix": "and can be unbanned below."
+			},
+			"videoLatency": {
+				"markLowest": "Lowest",
+				"markHighest": "Highest",
+				"comment0": "Lowest latency / low error tolerance (not recommended; may not work depending on your content and settings)",
+				"comment1": "Low latency / low error tolerance",
+				"comment2": "Medium latency / medium error tolerance (default)",
+				"comment3": "High latency / high error tolerance",
+				"comment4": "Highest latency / highest error tolerance",
+				"updated": "Latency buffer level updated.",
+				"appliesNextStream": "Changes to the latency buffer setting take effect the next time you start streaming.",
+				"title": "Latency buffer",
+				"desc1": "Lower latency may seem better, but the lower you set it, the more error tolerance and stability can suffer. We do not recommend the lowest setting.",
+				"desc2": "Use low latency for streams with a lot of viewer interaction; for other streams, raising the latency tends to be more stable.",
+				"learnMore": "Learn more."
+			},
+			"videoVariantForm": {
+				"passthroughBitrateNote": "Bitrate cannot be selected when video passthrough is enabled.",
+				"bitrateLow": "For low-bandwidth environments.",
+				"bitrateMedium": "Suitable for most connections.",
+				"bitrateHigh": "For high-bandwidth environments.",
+				"passthroughFramerateNote": "Frame rate cannot be selected when video passthrough is enabled.",
+				"passthroughCpuNote": "CPU/GPU usage cannot be selected when video passthrough is enabled.",
+				"learnMoreSettings": "Learn more about how each setting affects server performance.",
+				"passthroughWarningPrefix": "Note: this output variant has",
+				"passthroughWarningEm": "video passthrough",
+				"passthroughWarningSuffix": "enabled. The encoding settings below are disabled.",
+				"cpuUsageTitle": "CPU/GPU usage",
+				"cpuUsageDesc": "Lowering it reduces the load on your server. Raising it may improve video quality.",
+				"cpuUsageSubtext": "Depending on your setup, this may refer to GPU usage rather than CPU usage.",
+				"learnMoreHardware": "Learn more about hardware performance.",
+				"videoBitrateTitle": "Video bitrate",
+				"learnMoreBitrate": "Learn more about bitrates.",
+				"resolutionTitle": "Resolution",
+				"resolutionDesc1": "Resizing uses additional server resources. If you resize this output, specify only the width",
+				"resolutionDescOr": "or",
+				"resolutionDesc2": "height to preserve the aspect ratio.",
+				"learnMoreResolution": "Learn more about resolution.",
+				"passthroughTitle": "Video passthrough",
+				"passthroughDesc1Prefix": "Enabling video passthrough can reduce hardware usage, but it may also make your stream",
+				"passthroughDesc1Strong": "unplayable",
+				"passthroughDesc1Suffix": "in some cases.",
+				"passthroughDesc2": "When you use passthrough, all the other settings for this output are disabled.",
+				"passthroughDocsLink": "This setting has a big impact, so review the documentation before enabling it.",
+				"passthroughConfirm": "Have you read the video passthrough documentation and do you understand the risks of enabling it?",
+				"usePassthrough": "Use video passthrough?",
+				"framerateTitle": "Frame rate",
+				"learnMoreFramerate": "Learn more about frame rates."
+			}
+		},
+		"sections": {
+			"streamKeys": {
+				"defaultComment": "New key",
+				"keyLabel": "Key",
+				"keyTooltip": "The key you enter into your streaming software. The key must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one symbol, and one number.",
+				"keyPlaceholder": "Enter a key",
+				"commentLabel": "Comment",
+				"commentTooltip": "A note about why you added this key",
+				"commentPlaceholder": "Key for OBS",
+				"add": "Add",
+				"copied": "Copied to clipboard",
+				"copyFailed": "Could not copy to clipboard",
+				"columns": {
+					"key": "Key",
+					"comment": "Comment"
+				},
+				"intro1": "Stream keys are used to authenticate your streaming software when it connects to AoiTube. In most cases a single key is enough, but if you share your server with other people or want a separate key for each source, you can add more here.",
+				"intro2": "These keys are unrelated to your admin password and do not grant permission to change AoiTube settings.",
+				"docs": {
+					"beforeLink": "To learn more about streaming, see the ",
+					"linkText": "documentation"
+				},
+				"saveError": "Error saving key",
+				"noKeysTitle": "No stream keys",
+				"noKeysDescription": "You can't stream until you create at least one stream key and set it in your streaming software."
+			},
+			"rtmps": {
+				"restartRequired": "You must restart the AoiTube server for RTMPS configuration changes to take effect.",
+				"enableSaveError": "Failed to save the RTMPS enable setting.",
+				"title": "RTMPS (Encrypted Streaming)",
+				"aboutTitle": "About RTMPS",
+				"aboutDescription": "RTMPS (RTMP over TLS) provides end-to-end encryption for the connection between your streaming software and the server. A valid SSL/TLS certificate is required to use this feature.",
+				"exampleUrlLabel": "Example stream URL:",
+				"enableLabel": "Enable RTMPS",
+				"pathsWarning": "Please set the certificate and private key paths",
+				"portLabel": "RTMPS Port",
+				"portTip": "The port number that accepts RTMPS connections. The default is 1936.",
+				"certPathLabel": "SSL Certificate Path",
+				"certPathTip": "The absolute path to the SSL/TLS certificate file (e.g. /etc/letsencrypt/live/example.com/fullchain.pem)",
+				"keyPathLabel": "Private Key Path",
+				"keyPathTip": "The absolute path to the SSL/TLS private key file (e.g. /etc/letsencrypt/live/example.com/privkey.pem)",
+				"configuredTitle": "RTMPS is configured",
+				"configuredDescription": "Use the following URL in your streaming software (such as OBS):",
+				"serverLabel": "Server:"
+			},
+			"pageContent": {
+				"title": "Custom Page Content",
+				"description": {
+					"beforeLink": "You can edit your page content using simple ",
+					"linkText": "Markdown",
+					"afterLink": "."
+				},
+				"placeholder": "Enter your custom page content here...",
+				"save": "Save"
+			},
+			"socialLinks": {
+				"saveError": "An error occurred: {{message}}",
+				"columnTitle": "Social Links",
+				"edit": "Edit",
+				"otherPlatformPlaceholder": "Other platform name",
+				"title": "Social Links",
+				"description": "Add your social media handles or links to your other profiles.",
+				"modalTitle": "Edit Social Link",
+				"urlPlaceholder": "Page URL",
+				"addButton": "Add a social link"
+			},
+			"general": {
+				"description": "The following details are displayed on your site to describe your stream and content.",
+				"learnMore": "Learn more."
+			},
+			"serverConfig": {
+				"description": "Change the admin password from its default and keep it somewhere safe. In most cases, you won't need to change the other settings."
+			},
+			"instanceTags": {
+				"updateSuccess": "Tags updated.",
+				"emptyWarning": "Please enter a tag",
+				"duplicateWarning": "This tag is already in use",
+				"title": "Add Tags",
+				"description": "Useful for categorizing your AoiTube server in the directory."
+			},
+			"instanceDetails": {
+				"title": "Configure Instance Details",
+				"offlineMessageLabel": "Offline message:",
+				"offlineMessageTip": "The message shown to visitors while you are not streaming. Markdown is supported.",
+				"saveMessage": "Save Message",
+				"directory": {
+					"beforeLink": "To grow your audience, you can list your stream in the ",
+					"afterLink": ", an external service run by the AoiTube project.",
+					"learnMore": "Learn more"
+				},
+				"directoryRequiresUrl": {
+					"beforeStrong": "To enable the directory, you must set the ",
+					"strongText": "Server URL",
+					"afterStrong": " above."
+				}
+			},
+			"storage": {
+				"intro": {
+					"beforeLink": "AoiTube can also broadcast using an external storage provider. For details, see the ",
+					"linkText": "storage documentation"
+				},
+				"warning": "Incorrect settings may prevent your video from playing. Be sure to check your storage provider's documentation for how to configure the bucket you created for AoiTube.",
+				"liveOnly": "This is a setting for live streaming, not for archiving, recording, or VOD purposes.",
+				"updated": "Updated.",
+				"restartNote": "Changes to your storage settings will take effect the next time you start streaming.",
+				"useS3": "Use an S3 storage provider",
+				"optionalSettings": "Optional settings",
+				"save": "Save"
+			},
+			"appearance": {
+				"colorNames": {
+					"background": "Background",
+					"action": "Action",
+					"actionHover": "Action (hover)",
+					"primaryButtonBorder": "Primary button border",
+					"primaryButtonText": "Primary button text",
+					"chatBackground": "Chat background",
+					"chatText": "Chat text",
+					"textOnDark": "Text on dark",
+					"textOnLight": "Text on light",
+					"headerFooter": "Header/Footer",
+					"pageContent": "Page content",
+					"videoStatusBarBackground": "Video status bar background",
+					"videoStatusBarForeground": "Video status bar foreground",
+					"roundedCorners": "Rounded corners"
+				},
+				"updated": "Updated.",
+				"loading": "Loading...",
+				"title": "Customize Appearance",
+				"description": "The following colors are used throughout the user interface.",
+				"sectionColors": "Section colors",
+				"sectionColorsDescription": "Some sections of the UI can be customized by choosing colors.",
+				"chatUserColors": "Chat user colors",
+				"otherSettings": "Other settings",
+				"roundedCornersAmount": "Rounded corner amount",
+				"saveColors": "Save Colors",
+				"resetToDefaults": "Reset to defaults"
+			},
+			"browserNotify": {
+				"updated": "Updated.",
+				"title": "Browser Notifications",
+				"description1": "Viewers can opt in to receive a browser notification when your stream goes live.",
+				"description2": "Not all browsers are supported.",
+				"enableLabel": "Enable browser notifications",
+				"save": "Save"
+			},
+			"discordNotify": {
+				"updated": "Updated.",
+				"description": "Notify a Discord channel every time you start streaming.",
+				"webhookLinkText": "Create a Webhook",
+				"instructionsBeforeItalic": "In your Discord channel, create a Webhook from ",
+				"instructionsItalicText": "Edit Channel / Integrations",
+				"instructionsAfterItalic": " and enter it below.",
+				"enableLabel": "Enable Discord notifications",
+				"save": "Save",
+				"title": "Discord Notifications"
+			},
+			"twitterNotify": {
+				"enableLabel": "Enable X notifications",
+				"consumerKeyTip": "The API Key from the X Developer Portal",
+				"consumerKeyPlaceholder": "Enter your API Key",
+				"consumerSecretTip": "The API Secret from the X Developer Portal",
+				"consumerSecretPlaceholder": "Enter your API Secret",
+				"accessTokenTip": "The Access Token associated with your app",
+				"accessTokenPlaceholder": "Enter your Access Token",
+				"accessTokenSecretPlaceholder": "Enter your Access Token Secret",
+				"goLiveMessageLabel": "Go-live message",
+				"goLiveMessageTip": "The text to tweet when your stream goes live",
+				"goLiveMessagePlaceholder": "🔴 I'm live now! Come hang out ♪",
+				"hashtagsLabel": "Hashtags",
+				"hashtagsTip": "Hashtags to add to the tweet (e.g. #streaming #gaming)",
+				"hashtagsPlaceholder": "#streaming #live #gaming",
+				"includeTitleLabel": "Include stream title",
+				"includeServerNameLabel": "Include streamer name",
+				"saved": "Saved",
+				"previewServerName": "📺 Your channel name",
+				"previewTitle": "🎬 Your stream title goes here",
+				"previewUrl": "🔗 https://your-stream-url",
+				"title": "X Notifications",
+				"description": "Automatically post a tweet to X when your stream goes live.",
+				"apiRequiredTitle": "X API configuration required",
+				"apiRequiredLine1": "Create an app in the X Developer Portal and obtain your OAuth 1.0a credentials.",
+				"importantLabel": "Important:",
+				"apiRequiredLine2": "Set App permissions to \"Read and Write\".",
+				"apiCredentials": "API credentials",
+				"postContent": "Tweet content settings",
+				"postPreview": "Tweet preview",
+				"previewImageAlt": "Tweet attachment image",
+				"previewImageNote": "* The notification thumbnail or logo will be attached",
+				"saveSettings": "Save Settings"
+			},
+			"discordAuth": {
+				"clientIdTip": "The Client ID from the Discord Developer Portal",
+				"clientIdPlaceholder": "Enter your Client ID",
+				"clientSecretTip": "The Client Secret from the Discord Developer Portal",
+				"clientSecretPlaceholder": "Enter your Client Secret",
+				"saved": "Saved",
+				"title": "Discord Authentication",
+				"description": "Once Discord authentication is configured, viewers can join the chat with their Discord account.",
+				"stepsTitle": "Setup steps:",
+				"step1AfterLink": " and sign in",
+				"step2": "Create a new application with \"New Application\"",
+				"step3": "Copy the Client ID and Client Secret from OAuth2 → General",
+				"step4": "Add the following URL under OAuth2 → Redirects:",
+				"configuredTitle": "Discord authentication is configured",
+				"configuredDescription": "Viewers can authenticate with their Discord account.",
+				"save": "Save"
+			},
+			"googleAuth": {
+				"clientIdTip": "The Client ID from the Google Cloud Console",
+				"clientIdPlaceholder": "Enter your Client ID",
+				"clientSecretTip": "The Client Secret from the Google Cloud Console",
+				"clientSecretPlaceholder": "Enter your Client Secret",
+				"saved": "Saved",
+				"title": "Google Authentication",
+				"description": "Once Google authentication is configured, viewers can join the chat with their Google account.",
+				"stepsTitle": "Setup steps:",
+				"step1AfterLink": " and sign in",
+				"step2": "Create or select a project",
+				"step3": "Choose \"Create credentials\" → \"OAuth client ID\"",
+				"step4": "Select \"Web application\" as the application type",
+				"step5": "Add the following URL under \"Authorized redirect URIs\":",
+				"step6": "Copy the Client ID and Client Secret",
+				"oauthConsentNote": "Note: You also need to configure the OAuth consent screen. Set it up under \"OAuth consent screen\" and add the required scopes (email, profile, openid).",
+				"configuredTitle": "Google authentication is configured",
+				"configuredDescription": "Viewers can authenticate with their Google account.",
+				"save": "Save"
+			},
+			"githubAuth": {
+				"clientIdTip": "The Client ID from your GitHub OAuth App",
+				"clientIdPlaceholder": "Enter your Client ID",
+				"clientSecretTip": "The Client Secret from your GitHub OAuth App",
+				"clientSecretPlaceholder": "Enter your Client Secret",
+				"saved": "Saved",
+				"title": "GitHub Authentication",
+				"description": "Once GitHub authentication is configured, viewers can join the chat with their GitHub account.",
+				"stepsTitle": "Setup steps:",
+				"step1AfterLink": " and sign in",
+				"step2": "Select the \"OAuth Apps\" tab",
+				"step3": "Click \"New OAuth App\"",
+				"step4": "Enter the application name and homepage URL",
+				"step5": "Set the following URL as the \"Authorization callback URL\":",
+				"step6": "Click \"Register application\", generate a client secret, and copy the Client ID and Client Secret",
+				"clientSecretNote": "Note: The Client Secret is only shown once right after it is generated, so copy it immediately. If you lose it, generate a new one.",
+				"configuredTitle": "GitHub authentication is configured",
+				"configuredDescription": "Viewers can authenticate with their GitHub account.",
+				"save": "Save"
+			},
+			"xAuth": {
+				"clientIdTip": "The Client ID from the X Developer Portal (OAuth 2.0)",
+				"clientIdPlaceholder": "Enter your Client ID",
+				"clientSecretTip": "The Client Secret from the X Developer Portal (OAuth 2.0)",
+				"clientSecretPlaceholder": "Enter your Client Secret",
+				"saved": "Saved",
+				"title": "X Authentication (OAuth 2.0)",
+				"description": "Once X authentication is configured, viewers can join the chat with their X account. Because it uses OAuth 2.0, it requires separate configuration from your existing X notification settings.",
+				"stepsTitle": "Setup steps:",
+				"step1AfterLink": " and sign in",
+				"step2": "Create a project and app (or use an existing one)",
+				"step3": "Enable OAuth 2.0 under \"User authentication settings\"",
+				"step4": "App permissions: select \"Read\"",
+				"step5": "Type of App: select \"Web App, Automated App or Bot\"",
+				"step6": "Add the following URL under Callback URI / Redirect URL:",
+				"step7": "Set the Website URL (this site's URL)",
+				"step8": "Copy the Client ID and Client Secret",
+				"configuredTitle": "X authentication is configured",
+				"configuredDescription": "Viewers can authenticate with their X account.",
+				"save": "Save"
+			},
+			"federation": {
+				"modal": {
+					"title": "Enable Fediverse Features",
+					"cancelButton": "Don't enable",
+					"okButton": "Enable Fediverse features",
+					"howItWorksTitle": "How do AoiTube's Fediverse features work?",
+					"intro": {
+						"beforeLink": "AoiTube's Fediverse features work by having your server join the ",
+						"linkText": "Fediverse",
+						"afterLink": " — a decentralized, open collection of independent servers."
+					},
+					"docs": {
+						"beforeLink": "For more details on these features and how they work, see the ",
+						"linkText": "documentation",
+						"afterLink": "."
+					},
+					"thingsToKnowTitle": "Things to know",
+					"point1": "These features are still new, and because they involve integrating with external services, problems can occur. If something doesn't seem to work reliably, please report it.",
+					"point2": "Your AoiTube server must be served over HTTPS (SSL).",
+					"point3": "If you change your server URL or social username after people have started following you, you'll be treated as a different user on the Fediverse, and the previous user may appear to have disappeared.",
+					"point4Term": "Private mode",
+					"point4AfterTerm": ", when enabled, lets you manually approve followers and restrict the visibility of your posts to followers only.",
+					"learnMoreTitle": "Learn more about the Fediverse",
+					"learnMore": {
+						"beforeLink": "If these concepts are new to you, it's worth taking some time to better understand what the Fediverse offers and its culture. For more, see the ",
+						"linkText": "documentation",
+						"afterLink": " — you'll find helpful information to get started."
+					}
+				},
+				"httpsWarning": "To enable this feature, you must first set your server URL to use HTTPS.",
+				"portWarning": "This feature is only supported for AoiTube served on the standard SSL port (443).",
+				"title": "Fediverse Integration",
+				"intro": {
+					"beforeStrong": "AoiTube's ",
+					"strongText": "Fediverse features",
+					"afterStrong": " connect your instance to the Fediverse (decentralized social networks such as Mastodon). Followers can receive notifications when you go live and react to your posts."
+				},
+				"enableNotice": "When enabled, you can automatically notify your Fediverse followers when you go live and create posts with any content you like.",
+				"learnMoreLink": "Learn more about Fediverse features"
+			},
+			"streamProtocol": {
+				"fetchError": "Failed to fetch the configuration",
+				"iceServersArrayError": "Please specify ICE servers as an array",
+				"iceServersJsonError": "Invalid JSON format",
+				"iceServersInvalid": "The ICE server configuration is invalid",
+				"saveSuccess": "Configuration saved",
+				"saveError": "Failed to save",
+				"latencySaveError": "Failed to save the latency level",
+				"viewerDisconnected": "Viewer disconnected",
+				"disconnectError": "Failed to disconnect",
+				"allViewersDisconnected": "All viewers disconnected",
+				"columns": {
+					"connectedAt": "Connected at",
+					"ipAddress": "IP address",
+					"actions": "Actions"
+				},
+				"disconnect": "Disconnect",
+				"loading": "Loading...",
+				"title": "Streaming Protocol Settings",
+				"description": "Configure the streaming protocol for your viewers. WebRTC delivers ultra-low latency (~1 second or less), while LL-HLS delivers low latency (~2-3 seconds).",
+				"experimentalTitle": "Experimental features",
+				"experimentalDescription": "WebRTC and LL-HLS are experimental features. If you change these settings while streaming, a restart may be required.",
+				"standardHls": "Standard HLS",
+				"enabledLabel": "Enabled",
+				"standardHlsDescription": "Standard HLS streaming. The most compatible and stable option. Latency: ~10-30 seconds",
+				"experimentalTag": "Experimental",
+				"latencyLevel": "Latency level",
+				"marks": {
+					"lowest": "Lowest",
+					"low": "Low",
+					"medium": "Medium",
+					"standard": "Standard",
+					"reliable": "Reliable"
+				},
+				"llhlsDescription": "Apple LL-HLS protocol. Supported in Safari, iOS, and modern browsers. Latency: ~2-5 seconds",
+				"maxViewers": "Maximum viewers",
+				"maxViewersTip": "0 = unlimited. Set this according to your server resources.",
+				"webrtcDescription": "Real-time communication protocol. Delivers the lowest latency. Latency: ~0.5-2 seconds",
+				"webrtcAdvanced": "WebRTC advanced settings",
+				"iceServers": "ICE server configuration",
+				"iceServersTip": "Specify STUN/TURN servers as a JSON array. The urls field must be an array. If NAT traversal is required, configuring a TURN server is recommended.",
+				"webrtcStats": "WebRTC statistics",
+				"currentViewers": "Current viewers",
+				"status": "Status",
+				"statusEnabled": "Enabled",
+				"statusDisabled": "Disabled",
+				"connectedViewers": "Connected viewers",
+				"disconnectAll": "Disconnect all",
+				"saveButton": "Save Settings",
+				"reload": "Reload"
+			}
+		},
+		"fields": {
+			"serverName": {
+				"placeholder": "AoiTube site name",
+				"label": "Name",
+				"tip": "The name of your AoiTube server"
+			},
+			"streamTitle": {
+				"placeholder": "What are you up to today...",
+				"label": "Stream Title",
+				"tip": "What is your stream about today?"
+			},
+			"serverSummary": {
+				"label": "Summary",
+				"tip": "A brief description of you, your server, or your stream."
+			},
+			"offlineMessage": {
+				"placeholder": "A message to display when the stream is offline.",
+				"label": "Offline Message",
+				"tip": "An optional message to display to viewers when the stream is offline."
+			},
+			"welcomeMessage": {
+				"label": "Welcome Message",
+				"tip": "A system chat message sent to viewers when they first connect to chat. Leave blank to disable."
+			},
+			"logo": {
+				"label": "Logo",
+				"tip": "The icon used across the whole site: header, favicon, notifications and the Fediverse profile image. A square JPG/PNG (e.g. 512×512 or larger) is recommended. Changes apply immediately; browser tab icons refresh on the next visit.",
+				"statusCustom": "Custom ({{file}})",
+				"statusDefault": "Default"
+			},
+			"adminPassword": {
+				"label": "Admin Password",
+				"tip": "Keep this password in a safe place. You will need it to log in to the admin dashboard!"
+			},
+			"ffmpegPath": {
+				"label": "FFmpeg Path",
+				"tip": "The absolute file path to the FFMPEG application on your server"
+			},
+			"webPort": {
+				"label": "AoiTube Port",
+				"tip": "The port the AoiTube web server listens on. Default is 8080"
+			},
+			"rtmpPort": {
+				"label": "RTMP Port",
+				"tip": "The port used to receive your stream. Default is 1935"
+			},
+			"instanceUrl": {
+				"label": "Server URL",
+				"tip": "The full URL of your AoiTube server."
+			},
+			"socketHostOverride": {
+				"label": "Websocket Host Override",
+				"tip": "The direct URL of your AoiTube server."
+			},
+			"tags": {
+				"placeholder": "Add a new tag"
+			},
+			"nsfw": {
+				"label": "Adult Content?",
+				"tip": "Turn this on if you plan to stream adult content. This ensures your stream is displayed correctly in the directory."
+			},
+			"directoryEnabled": {
+				"label": "Enable Directory",
+				"tip": "Turn this on to be listed in the directory."
+			},
+			"hideViewerCount": {
+				"label": "Hide Viewer Count",
+				"tip": "Turn this on to hide the viewer count on the web page."
+			},
+			"silentStreamMode": {
+				"label": "Silent Mode (Test Stream)",
+				"tip": "When enabled, no external notifications are sent when the stream starts, and the stream is visible only to admins and moderators (it is also not published to S3/CDN). The change takes effect from the next stream start."
+			},
+			"chatDisable": {
+				"label": "Chat",
+				"tip": "Turn the chat feature on your AoiTube server on or off."
+			},
+			"chatJoinMessages": {
+				"label": "Join Messages",
+				"tip": "Show a message when a viewer joins the chat."
+			},
+			"chatEstablishedUsers": {
+				"label": "Established Users Only",
+				"tip": "Only users who have been registered for a certain amount of time can chat."
+			},
+			"chatSpamProtection": {
+				"label": "Spam Protection",
+				"tip": "Limits how quickly consecutive messages can be posted to prevent spam. Disabling this removes rate limiting."
+			},
+			"chatSlurFilter": {
+				"label": "Slur Filter",
+				"tip": "Blocks messages that contain discriminatory or offensive words (mainly in English)."
+			},
+			"requireSocialAuth": {
+				"label": "Require Social Authentication",
+				"tip": "Requires X or Discord authentication to join the chat. Configure each service's API credentials in the notification settings beforehand."
+			},
+			"forbiddenUsernames": {
+				"placeholder": "Username",
+				"label": "Forbidden Usernames",
+				"tip": "A list of words that are forbidden in chat usernames."
+			},
+			"suggestedUsernames": {
+				"placeholder": "Username",
+				"label": "Default Usernames",
+				"tip": "An optional list of chat usernames to assign to new users. If fewer than 10 are provided, random names are generated. Users can change their name later, and the same username may be assigned multiple times.",
+				"minNotReached": "This feature requires at least 10 entries.",
+				"noEntries": "The default name generator will be used."
+			},
+			"federationEnabled": {
+				"label": "Enable Fediverse Features",
+				"tip": "Send and receive activity on the Fediverse."
+			},
+			"federationPrivate": {
+				"label": "Private",
+				"tip": "Follow requests will require approval, and only followers will be able to see your activity."
+			},
+			"federationShowEngagement": {
+				"label": "Show Engagement",
+				"tip": "Follows, likes, and shares will appear in the chat feed."
+			},
+			"federationLiveMessage": {
+				"placeholder": "The stream has started! Come and watch!",
+				"label": "Go Live Message",
+				"tip": "A message announcing that your live stream has started. Tags are added automatically. Leave blank to disable."
+			},
+			"federationDefaultUser": {
+				"label": "Username",
+				"tip": "The username used to send and receive activity on the Fediverse. For example, using \"bob\" will send messages from @bob@yourserver. Do not change this once you have followers."
+			},
+			"federationInstanceUrl": {
+				"label": "Server URL",
+				"tip": "The full URL of your AoiTube server is required to enable Fediverse features. It must use SSL (https). Do not change this once you have followers."
+			},
+			"federationNsfw": {
+				"label": "Possibly Adult Content",
+				"tip": "Turn this on if you plan to stream adult content, so that previews of your stream can be marked as sensitive."
+			},
+			"federationBlockedDomains": {
+				"label": "Blocked Domains",
+				"tip": "You can block interactions from specific domains."
+			},
+			"videoVariant": {
+				"videoPassthroughTip": "Enabling this disables all other settings. Leave it off and configure as usual.",
+				"audioPassthroughTip": "If you select \"No\", set your desired audio bitrate.",
+				"scaledWidth": {
+					"label": "Resized Width",
+					"tip": "Resize the width if needed."
+				},
+				"scaledHeight": {
+					"label": "Resized Height",
+					"tip": "Resize the height if needed."
+				},
+				"name": {
+					"label": "Name",
+					"placeholder": "High or low quality",
+					"tip": "A human-readable name to display in the player."
+				}
+			},
+			"framerate": {
+				"tip": "Lowering the frame rate reduces the amount of video encoded and sent to viewers, saving CPU and bandwidth (at the cost of smoothness). A lower rate is fine for most content.",
+				"tooltips": {
+					"fps24": "24fps - For movies, presentations, music, and low-spec or low-bandwidth servers.",
+					"fps25": "25fps - For movies, presentations, music, and low-spec or low-bandwidth servers.",
+					"fps30": "30fps - For slow or casual games, chatting, and general use.",
+					"fps50": "50fps - For fast or action games, sports, and HD video.",
+					"fps60": "60fps - For fast or action games, sports, and HD video.",
+					"fps90": "90fps - For the latest fast-paced games and high-performance hardware.",
+					"fps120": "120fps - Experimental. Use at your own risk."
+				}
+			},
+			"videoBitrate": {
+				"tip": "The overall quality of your stream is generally affected most by the bitrate."
+			},
+			"encoderPreset": {
+				"lowest": "Lowest",
+				"highest": "Highest",
+				"tooltips": {
+					"level0": "Lowest hardware usage - lowest quality video",
+					"level1": "Low hardware usage - low quality video",
+					"level2": "Medium hardware usage - average quality video",
+					"level3": "High hardware usage - high quality video",
+					"level4": "Highest hardware usage - higher quality video"
+				}
+			},
+			"encoderRecommendation": {
+				"helpText": "Only one video quality variant is configured. If your server has enough computing resources, consider adding another lower-quality variant so more people can watch your content!"
+			},
+			"s3": {
+				"region": {
+					"label": "Region"
+				},
+				"secret": {
+					"label": "Secret Key",
+					"placeholder": "Secret Key"
+				},
+				"servingEndpoint": {
+					"label": "Serving Endpoint",
+					"tip": "Specify this if you want to serve content from a URL other than the default (used with CDNs and some storage providers). This is usually not needed."
+				},
+				"forcePathStyle": {
+					"label": "Force Path Style",
+					"tip": "Turn this on if your S3 provider does not support virtual-hosted-style URLs (e.g. Oracle Cloud Object Storage)."
+				}
+			},
+			"discord": {
+				"webhookUrl": {
+					"tip": "The Webhook assigned to your channel."
+				},
+				"goLiveMessage": {
+					"label": "Go Live Text",
+					"tip": "The text to send when your stream starts.",
+					"placeholder": "The stream has started! Come and watch!"
+				}
+			},
+			"browserPush": {
+				"goLiveMessage": {
+					"label": "Go Live Text",
+					"tip": "The text to send when your stream starts.",
+					"placeholder": "The stream has started! Come and watch!"
+				}
+			},
+			"passwordComplexity": {
+				"minLength": "- At least 8 characters",
+				"maxLength": "- At most 192 characters",
+				"lowercase": "- At least one lowercase letter",
+				"uppercase": "- At least one uppercase letter",
+				"number": "- At least one number",
+				"specialCharacter": "- At least one special character: !@#$%^&*"
+			},
+			"toggle": {
+				"on": "On",
+				"off": "Off",
+				"error": "An error occurred: {{message}}"
+			},
+			"livePoster": {
+				"label": "Live poster",
+				"tip": "Shown in the player right after the stream starts (before the first thumbnail is generated) and before a viewer presses play. A 16:9 JPG/PNG (e.g. 1280×720 or larger) is recommended. The built-in \"LIVE\" image is used when unset. About 20 seconds into the broadcast it switches to the auto-generated thumbnail.",
+				"uploadButton": "Upload image",
+				"resetButton": "Reset to default",
+				"statusCustom": "Custom",
+				"statusDefault": "Default",
+				"previewLabel": "Preview ({{type}}):",
+				"updated": "Live poster updated",
+				"resetSuccess": "Reset to default",
+				"loadFailed": "Failed to load the image"
+			},
+			"recordingEnabled": {
+				"label": "Record streams",
+				"tip": "When enabled, streams are automatically saved as archives (VOD) after they end so viewers can watch them later. Changes take effect from the next stream."
+			},
+			"recordingRetention": {
+				"label": "Recording retention",
+				"tip": "Maximum number of unpublished recordings to keep; the oldest are deleted automatically once exceeded. 0 means unlimited. Published, members-only, paid and ever-purchased archives are never auto-deleted."
+			},
+			"recordingStoreS3": {
+				"label": "Store recordings on S3",
+				"tip": "When enabled, recording media is offloaded to S3 object storage (same bucket as live distribution, under archives/) after a stream ends, freeing local disk. Playback is proxied through the server so hidden-archive protection is preserved. Configure S3 credentials first under Server Settings > Storage."
+			},
+			"backupEnabled": {
+				"label": "Enable automatic backups",
+				"tip": "When enabled, the database is backed up on a schedule."
+			},
+			"backupInterval": {
+				"label": "Backup interval (hours)",
+				"tip": "How often to run a backup, in hours. Minimum 1, default 24."
+			},
+			"backupRetention": {
+				"label": "Local retention",
+				"tip": "Maximum number of local backup files to keep; older ones are pruned automatically. 0 keeps all."
+			},
+			"backupStoreS3": {
+				"label": "Store backups on S3",
+				"tip": "Also upload each backup to S3 object storage (same bucket as live distribution, under backups/). Survives disk loss and eases node migration. Configure S3 credentials first."
+			}
+		}
+	},
+	"archives": {
+		"title": "Stream Archives",
+		"description": "Watch recordings of past streams.",
+		"empty": "No recordings yet",
+		"backToHome": "Back to home",
+		"untitled": "Untitled stream",
+		"chatReplay": "Chat Replay",
+		"backToList": "Back to list",
+		"recentTitle": "Past Streams",
+		"viewAll": "View all",
+		"paid": {
+			"ownedBadge": "Purchased",
+			"membersBadge": "Members only",
+			"purchaseTitle": "Purchase archive",
+			"loginModalTitle": "Log in",
+			"purchasedTitle": "Purchase complete",
+			"purchasedBinding": "Purchased as \"{{name}}\". Log in with the same account to watch it.",
+			"watchNow": "Watch now",
+			"loginRequired": "This archive is paid. Please log in to purchase it.",
+			"loginToPurchase": "Log in to purchase",
+			"loggedInAs": "Logged in as",
+			"bindingNote": "This purchase is tied to the account \"{{name}}\". On another device, log in with the same social account.",
+			"payWith": "Buy with {{provider}}",
+			"noProviders": "No payment methods are currently available.",
+			"returnHint": "After completing payment, return to this page to watch.",
+			"paymentOpenedTab": "The payment page opened in a new tab. Return here once it is complete.",
+			"paymentFailed": "Failed to start the payment.",
+			"lockedBadge": "Paid"
+		},
+		"members": {
+			"title": "Members-only archive",
+			"loginRequired": "Log in to watch this archive.",
+			"loginToWatch": "Log in to watch",
+			"loggedInTitle": "Logged in. You can watch now."
+		},
+		"count": "{{count}} recordings",
+		"copyLink": "Copy link",
+		"linkCopied": "Link copied",
+		"moreArchives": "More archives"
+	},
+	"page": {
+		"notFound": "Page not found",
+		"backToHome": "Back to home",
+		"loading": "Loading..."
+	},
+	"purchases": {
+		"title": "Purchase history",
+		"empty": "No purchases yet",
+		"loginHint": "Log in to see your purchase history",
+		"watch": "Watch",
+		"itemSuperchat": "Super Chat",
+		"itemEffect": "Screen effect",
+		"itemArchive": "Archive",
+		"archiveDeleted": "(Deleted archive)",
+		"testTag": "Test"
+	}
+}

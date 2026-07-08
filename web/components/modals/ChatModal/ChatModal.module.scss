@@ -1,0 +1,75 @@
+.modalWrapper {
+	// This is so modals and popovers spawned from this modal will
+	// be on top of it. Modals usually have a z-index of 1000 and popovers 800.
+	// We're getting into really hacky territory here. Don't judge, there
+	// is history behind this. Ask an elder to tell you tales.
+	z-index: 799;
+	top: unset;
+
+	// Remove any white outline/border on wrapper
+	:global(.ant-modal) {
+		background: transparent !important;
+		border: none !important;
+		box-shadow: none !important;
+	}
+
+	:global(.ant-modal-wrap) {
+		background: transparent !important;
+	}
+}
+
+.root {
+	// margin-top: 18vh;
+	background: transparent !important;
+
+	:global(.ant-modal-content) {
+		background: var(--color-panel-bg) !important;
+		border: 1px solid rgba(102, 126, 234, 0.3) !important;
+		border-radius: 16px !important;
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
+		overflow: hidden;
+		padding: 0 !important;
+	}
+
+	:global(.ant-modal-header) {
+		background: var(--color-panel-bg) !important;
+		border-bottom: 1px solid var(--color-panel-border-soft) !important;
+		padding: 0.75rem 1rem !important;
+		border-radius: 16px 16px 0 0;
+		margin: 0 !important;
+	}
+
+	:global(.ant-modal-title) {
+		background: transparent !important;
+	}
+
+	:global(.ant-modal-body) {
+		background: var(--color-panel-bg) !important;
+		padding: 0 !important;
+		border-radius: 0 0 16px 16px;
+	}
+
+	:global(.ant-modal-close) {
+		color: var(--color-panel-text-muted);
+
+		&:hover {
+			color: var(--color-panel-text);
+			background: var(--color-hover-bg) !important;
+		}
+	}
+
+	// Force all inner elements to have transparent background
+	:global(.ant-modal-content > *) {
+		background-color: transparent;
+	}
+}
+
+// Chat fills a fixed-height modal body; padding removed so the chat
+// container manages its own inner spacing.
+.modalBody {
+	padding: 0;
+	height: 55vh;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}

@@ -1,0 +1,577 @@
+.donationModal {
+	:global(.ant-modal-content) {
+		border-radius: 12px;
+		background-color: var(--color-panel-bg) !important;
+		border: 1px solid var(--color-panel-border);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+		overflow: visible !important;
+		padding: 0 !important;
+	}
+
+	:global(.ant-modal-header) {
+		border-bottom: 1px solid var(--color-panel-border);
+		background-color: var(--color-panel-bg) !important;
+		padding: 16px 24px;
+		margin: 0 !important;
+		border-radius: 12px 12px 0 0;
+	}
+
+	:global(.ant-modal-title) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-modal-body) {
+		background-color: var(--color-panel-bg) !important;
+		padding: 24px !important;
+	}
+
+	:global(.ant-modal-close) {
+		top: 12px !important;
+		right: 12px !important;
+		width: 32px !important;
+		height: 32px !important;
+		color: var(--color-panel-text-muted) !important;
+		z-index: 10;
+
+		&:hover {
+			color: var(--color-panel-text) !important;
+			background-color: var(--color-hover-bg) !important;
+			border-radius: 4px;
+		}
+	}
+
+	:global(.ant-modal-footer) {
+		background-color: var(--color-panel-bg) !important;
+		border-top: 1px solid var(--color-panel-border);
+		margin: 0 !important;
+		padding: 12px 24px !important;
+		border-radius: 0 0 12px 12px;
+	}
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.label {
+	font-weight: 600;
+	color: var(--color-panel-text);
+	font-size: 0.9rem;
+}
+
+.presetAmounts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.presetButton {
+	min-width: 80px;
+	background-color: var(--color-field-bg) !important;
+	border-color: #4a4d58 !important;
+	color: #ffffff !important;
+	font-weight: 500;
+
+	span {
+		color: #ffffff !important;
+	}
+
+	&:hover {
+		background-color: #3b3e4d !important;
+		border-color: #667eea !important;
+		color: #ffffff !important;
+
+		span {
+			color: #ffffff !important;
+		}
+	}
+}
+
+/* ant-design primary button状態適用 */
+.presetButton:global(.ant-btn-primary) {
+	background-color: #667eea !important;
+	border-color: #667eea !important;
+	color: #ffffff !important;
+}
+.presetButton:global(.ant-btn-primary):hover {
+	background-color: #5a6fd6 !important;
+	border-color: #5a6fd6 !important;
+}
+
+.customAmount {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.amountInput {
+	flex: 1;
+	min-width: 180px;
+
+	:global(.ant-input-number) {
+		background-color: var(--color-field-bg) !important;
+		border-color: #4a4d58 !important;
+		width: 100% !important;
+	}
+
+	:global(.ant-input-number-input) {
+		color: var(--color-panel-text) !important;
+		font-size: 14px;
+	}
+
+	:global(.ant-input-number-group-addon) {
+		background-color: #3b3e4d !important;
+		color: var(--color-panel-text) !important;
+		border-color: #4a4d58 !important;
+	}
+}
+
+.currencySelect {
+	width: 80px;
+}
+
+.anonymousCheckbox {
+	margin-top: 0.5rem;
+}
+
+.summary {
+	background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.25) 100%);
+	border: 1px solid rgba(255, 193, 7, 0.5);
+	border-radius: 8px;
+	padding: 1rem;
+	text-align: center;
+}
+
+.totalAmount {
+	font-size: 1.2rem;
+	color: var(--color-panel-text);
+
+	strong {
+		color: #d4a500;
+		font-size: 1.5rem;
+	}
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--color-panel-border-soft);
+}
+
+.paymentMethods {
+	display: flex;
+	width: 100%;
+
+	:global(.ant-radio-button-wrapper) {
+		flex: 1;
+		text-align: center;
+	}
+}
+
+.paypayNote {
+	margin-top: 0.5rem;
+	padding: 0.75rem;
+	background: #fff0f0;
+	border: 1px solid #ff6b6b;
+	border-radius: 6px;
+	font-size: 0.85rem;
+	color: #c92a2a;
+}
+
+.tokushohoLink {
+	margin-top: 0.75rem;
+	font-size: 0.8rem;
+
+	a {
+		color: #ffc107;
+		text-decoration: underline;
+
+		&:hover {
+			color: #ffda6a;
+		}
+	}
+}
+
+.paymentMethodGroup {
+	display: flex;
+	width: 100%;
+
+	:global(.ant-radio-button-wrapper) {
+		flex: 1;
+		text-align: center;
+	}
+}
+
+.walletInfo {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	background: #e6f7ff;
+	border: 1px solid #91d5ff;
+	border-radius: 6px;
+}
+
+.walletAddress {
+	font-family: monospace;
+	font-size: 0.85rem;
+	color: #0050b3;
+}
+
+.networkInfo {
+	margin-top: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	background: #f6ffed;
+	border: 1px solid #b7eb8f;
+	border-radius: 6px;
+	font-size: 0.8rem;
+	color: #389e0d;
+}
+
+.inputModeToggle {
+	margin-bottom: 0.75rem;
+
+	:global(.ant-segmented) {
+		background: var(--color-field-bg) !important;
+	}
+
+	:global(.ant-segmented-item) {
+		color: #a0a0a0 !important;
+	}
+
+	:global(.ant-segmented-item-selected) {
+		background: #667eea !important;
+		color: white !important;
+	}
+}
+
+/* Superchat / screen effect item type selector */
+.itemTypeToggle {
+	:global(.ant-segmented) {
+		background: var(--color-field-bg) !important;
+	}
+
+	:global(.ant-segmented-item) {
+		color: #a0a0a0 !important;
+	}
+
+	:global(.ant-segmented-item-selected) {
+		background: #667eea !important;
+		color: white !important;
+	}
+}
+
+/* Screen effect picker: fixed-price emoji cards with a highlighted selection */
+.effectPicker {
+	display: grid;
+	// Eight fixed-price cards: 4 columns x 2 rows on desktop.
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 0.5rem;
+
+	// Two columns on narrow phones so the labels stay readable.
+	@media (max-width: 420px) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.effectCard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.75rem 0.5rem;
+	background: var(--color-field-bg);
+	border: 2px solid #4a4d58;
+	border-radius: 8px;
+	color: var(--color-panel-text);
+	cursor: pointer;
+	transition:
+		border-color 0.2s ease,
+		background 0.2s ease;
+
+	&:hover {
+		border-color: #667eea;
+	}
+}
+
+.effectCardSelected {
+	border-color: #667eea;
+	background: rgba(102, 126, 234, 0.25);
+	box-shadow: 0 0 0 1px #667eea;
+}
+
+.effectEmoji {
+	font-size: 28px;
+	line-height: 1;
+}
+
+.effectName {
+	font-size: 0.85rem;
+	// English effect names are stored lowercase for use mid-sentence
+	// ("sent fireworks"); capitalize them on the picker cards.
+	text-transform: capitalize;
+}
+
+/* Fixed price shown on each effect card (server-enforced amount) */
+.effectPrice {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #a0b4ff;
+}
+
+/* Cards are unpickable while a crypto rate is still loading / unavailable */
+.effectCardDisabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+
+	&:hover {
+		border-color: #4a4d58;
+	}
+}
+
+/* Required token amount at the current rate ("≈ 0.00423 ETH") */
+.effectCryptoAmount {
+	font-size: 0.7rem;
+	color: #94a3b8;
+	word-break: break-all;
+}
+
+/* Rate-loading / market-movement notes under the effect picker */
+.effectCryptoNote {
+	display: flex;
+	align-items: center;
+	margin-top: 0.5rem;
+	font-size: 12px;
+	color: #94a3b8;
+}
+
+.priceConversion {
+	display: flex;
+	align-items: center;
+	margin-top: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	background: rgba(102, 126, 234, 0.15);
+	border: 1px solid rgba(102, 126, 234, 0.4);
+	border-radius: 6px;
+	font-size: 0.85rem;
+	color: #a0b4ff;
+}
+
+.networkTokenSelectors {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.networkSelect {
+	flex: 1;
+
+	// .ant-select-selector is antd v5; v6 renders .ant-select-input instead.
+	:global(.ant-select-selector),
+	:global(.ant-select-input) {
+		background-color: var(--color-field-bg) !important;
+		color: var(--color-panel-text) !important;
+		border-color: #4a4d58 !important;
+	}
+
+	:global(.ant-select-content),
+	:global(.ant-select-placeholder) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-select-arrow),
+	:global(.ant-select-suffix) {
+		color: #a0a0a0 !important;
+	}
+}
+
+.tokenSelect {
+	flex: 1;
+
+	:global(.ant-select-selector),
+	:global(.ant-select-input) {
+		background-color: var(--color-field-bg) !important;
+		color: var(--color-panel-text) !important;
+		border-color: #4a4d58 !important;
+	}
+
+	:global(.ant-select-content),
+	:global(.ant-select-placeholder) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-select-arrow),
+	:global(.ant-select-suffix) {
+		color: #a0a0a0 !important;
+	}
+}
+
+.labelRow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.balanceFilter {
+	font-size: 0.8rem;
+	color: #666;
+}
+
+.tokenOption {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.tokenBalance {
+	color: #52c41a;
+	font-size: 0.85rem;
+	font-weight: 500;
+}
+
+.balanceDisplay {
+	margin-top: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
+	border: 1px solid #b7eb8f;
+	border-radius: 6px;
+	font-size: 0.9rem;
+	color: #389e0d;
+	font-weight: 500;
+}
+
+.selectDropdown {
+	background-color: var(--color-field-bg) !important;
+}
+
+/* ================================================
+   Light theme (data-theme="light" on <html>).
+   Panel/field surfaces and text above already flip via the --color-*
+   tokens; this block only covers the greys that have no token with a
+   matching dark value (#4a4d58 / #3b3e4d / #ffffff / #a0a0a0) and
+   decorative text that would be unreadable on light surfaces. Brand
+   purple (#667eea), semantic info/success/error boxes and the gold
+   summary card stay unchanged.
+   ================================================ */
+:global(:root[data-theme='light']) {
+	.presetButton {
+		border-color: var(--color-field-border) !important;
+		color: var(--color-panel-text) !important;
+
+		span {
+			color: var(--color-panel-text) !important;
+		}
+
+		&:hover {
+			background-color: var(--color-panel-bg-alt) !important;
+			border-color: #667eea !important;
+			color: var(--color-panel-text) !important;
+
+			span {
+				color: var(--color-panel-text) !important;
+			}
+		}
+	}
+
+	// Re-assert brand styling on the selected (primary) preset button so the
+	// grey light-theme overrides above don't clobber it.
+	.presetButton:global(.ant-btn-primary) {
+		border-color: #667eea !important;
+		color: #ffffff !important;
+
+		span {
+			color: #ffffff !important;
+		}
+
+		&:hover {
+			background-color: #5a6fd6 !important;
+			border-color: #5a6fd6 !important;
+			color: #ffffff !important;
+
+			span {
+				color: #ffffff !important;
+			}
+		}
+	}
+
+	.amountInput {
+		:global(.ant-input-number) {
+			border-color: var(--color-field-border) !important;
+		}
+
+		:global(.ant-input-number-group-addon) {
+			background-color: var(--color-panel-bg-alt) !important;
+			border-color: var(--color-field-border) !important;
+		}
+	}
+
+	.inputModeToggle,
+	.itemTypeToggle {
+		:global(.ant-segmented-item) {
+			color: var(--color-panel-text-muted) !important;
+		}
+
+		// Keep the white label on the brand-purple selected segment.
+		:global(.ant-segmented-item-selected) {
+			color: white !important;
+		}
+	}
+
+	.effectCard {
+		border-color: var(--color-field-border);
+
+		&:hover {
+			border-color: #667eea;
+		}
+	}
+
+	.effectCardSelected {
+		border-color: #667eea;
+	}
+
+	// Periwinkle price text is unreadable on light cards; darken to indigo.
+	.effectPrice,
+	.priceConversion {
+		color: #4c51bf;
+	}
+
+	// Slate token-amount / note text is too faint on white; darken it.
+	.effectCryptoAmount,
+	.effectCryptoNote {
+		color: #64748b;
+	}
+
+	// Amber link is unreadable on white; darken the gold.
+	.tokushohoLink a {
+		color: #8f7d00;
+
+		&:hover {
+			color: #b08800;
+		}
+	}
+
+	.networkSelect,
+	.tokenSelect {
+		:global(.ant-select-selector),
+		:global(.ant-select-input) {
+			border-color: var(--color-field-border) !important;
+		}
+
+		:global(.ant-select-arrow),
+		:global(.ant-select-suffix) {
+			color: var(--color-panel-text-muted) !important;
+		}
+	}
+}

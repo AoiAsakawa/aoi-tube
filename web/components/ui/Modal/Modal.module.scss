@@ -1,0 +1,141 @@
+.spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
+.content {
+	display: block;
+	height: 100%;
+	padding: 1.25rem;
+	background-color: var(--color-panel-bg) !important;
+	color: var(--color-panel-text) !important;
+
+	h1:first-child,
+	h2:first-child,
+	h3:first-child {
+		margin-top: unset;
+		color: var(--color-panel-text);
+	}
+}
+
+.modal {
+	:global(.ant-modal-content) {
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+		background-color: var(--color-panel-bg) !important;
+		border: 1px solid var(--color-panel-border);
+		border-radius: 8px;
+		overflow: visible !important;
+		padding: 0 !important;
+	}
+
+	:global(.ant-modal-header) {
+		color: var(--theme-color-components-modal-header-text);
+		font-family: var(--theme-text-display-font-family);
+		padding: 16px 24px !important;
+		background-color: var(--color-panel-bg) !important;
+		border-bottom: 1px solid var(--color-panel-border) !important;
+		margin: 0 !important;
+		border-radius: 8px 8px 0 0;
+	}
+
+	:global(.ant-modal-title) {
+		color: var(--color-panel-text) !important;
+		font-size: 17px;
+		font-weight: 600;
+	}
+
+	:global(.ant-modal-body) {
+		overflow: auto;
+		border-radius: 0 0 8px 8px;
+		background-color: var(--color-panel-bg) !important;
+		color: var(--color-panel-text) !important;
+		padding: 24px !important;
+	}
+
+	:global(.ant-modal-close) {
+		top: 12px !important;
+		right: 12px !important;
+		width: 32px !important;
+		height: 32px !important;
+		color: var(--color-panel-text-muted) !important;
+		z-index: 10;
+
+		&:hover {
+			color: var(--color-panel-text) !important;
+			background-color: var(--color-hover-bg) !important;
+			border-radius: 4px;
+		}
+	}
+
+	:global(.ant-modal-close-x) {
+		font-size: 12px;
+	}
+
+	:global(.ant-modal) {
+		color: var(--theme-color-components-text-on-light);
+		h1 {
+			color: var(--theme-color-components-text-on-light);
+		}
+	}
+
+	// Select inside modal (.ant-select-selector is antd v5; v6 renders
+	// .ant-select-input / .ant-select-content instead — cover both)
+	:global(.ant-select-selector),
+	:global(.ant-select-input) {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-panel-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-select-content),
+	:global(.ant-select-placeholder) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-select-arrow),
+	:global(.ant-select-suffix) {
+		color: var(--color-panel-text) !important;
+	}
+
+	// Input inside modal
+	:global(.ant-input),
+	:global(.ant-input-affix-wrapper) {
+		background: var(--color-field-bg) !important;
+		border-color: var(--color-panel-border) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-input)::placeholder {
+		color: var(--color-panel-text-muted) !important;
+	}
+
+	// Spin inside modal
+	:global(.ant-spin-container) {
+		background: var(--color-panel-bg) !important;
+		color: var(--color-panel-text) !important;
+	}
+
+	// Tag inside modal
+	:global(.ant-tag) {
+		background: var(--color-chip-bg) !important;
+		color: var(--color-panel-text) !important;
+		border-color: var(--color-panel-border) !important;
+	}
+
+	// Row and Col inside modal
+	:global(.ant-row) {
+		color: var(--color-panel-text) !important;
+	}
+
+	:global(.ant-col) {
+		color: var(--color-panel-text) !important;
+	}
+
+	// All text in modal
+	div,
+	span,
+	p {
+		color: var(--color-panel-text);
+	}
+}

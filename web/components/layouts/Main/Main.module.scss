@@ -1,0 +1,33 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.layout {
+	// this margin is for fixed header
+	padding-top: var(--header-height);
+	background: linear-gradient(180deg, #0d0d14 0%, #12121a 100%);
+	min-height: 100vh;
+
+	position: relative;
+
+	// add some spacing between the last row of content and the footer
+	.footerContainer {
+		margin-top: 5em;
+	}
+}
+
+.nsfwOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #000;
+	z-index: 999;
+}
+
+// Light theme: match the light page gradient defined in globals.scss
+// (the layout background covers the body gradient).
+:global(:root[data-theme='light']) {
+	.layout {
+		background: linear-gradient(180deg, #f2f4fa 0%, #e6eaf3 100%);
+	}
+}

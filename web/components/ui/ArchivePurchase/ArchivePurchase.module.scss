@@ -1,0 +1,92 @@
+.panel {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	color: var(--color-panel-text);
+}
+
+.centered {
+	align-items: center;
+	justify-content: center;
+	padding: 16px 0;
+}
+
+.archiveTitle {
+	font-weight: 600;
+	font-size: 1.05rem;
+	overflow-wrap: anywhere;
+}
+
+.price {
+	font-size: 1.6rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	color: var(--color-panel-text);
+}
+
+.heading {
+	margin: 0;
+	font-size: 1.15rem;
+	color: var(--color-panel-text);
+}
+
+.successIcon {
+	font-size: 2.4rem;
+	color: #16a34a;
+}
+
+// The account-binding note. Highlighted so buyers notice which identity a
+// purchase attaches to and that they must reuse the same login elsewhere.
+.bindingNote {
+	margin: 0;
+	padding: 10px 12px;
+	border-radius: var(--radius-sm);
+	background: var(--color-panel-bg-alt);
+	border: 1px solid var(--color-panel-border-soft);
+	color: var(--color-panel-text-muted);
+	font-size: 0.9rem;
+	line-height: 1.5;
+}
+
+.loginNote {
+	margin: 0;
+	color: var(--color-panel-text-muted);
+	font-size: 0.9rem;
+	line-height: 1.5;
+}
+
+.accountRow {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.accountLabel {
+	color: var(--color-panel-text-muted);
+	font-size: 0.85rem;
+}
+
+.accountName {
+	font-weight: 600;
+	overflow-wrap: anywhere;
+}
+
+.providers {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.unavailable {
+	margin: 0;
+	color: var(--color-panel-text-muted);
+	font-size: 0.9rem;
+}
+
+.returnHint {
+	margin: 0;
+	color: var(--color-panel-text-muted);
+	font-size: 0.8rem;
+	line-height: 1.4;
+}

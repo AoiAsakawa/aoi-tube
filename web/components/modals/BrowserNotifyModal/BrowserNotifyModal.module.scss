@@ -1,0 +1,64 @@
+.description {
+	margin-bottom: 5px;
+	color: var(--color-panel-text);
+}
+
+.pushPreview {
+	border-style: dashed;
+	border-width: 2px;
+	border-color: var(--color-panel-border);
+	width: 100%;
+	max-width: 400px;
+	margin: 1%;
+	margin-top: 10px;
+
+	.inner {
+		margin: 10px;
+		padding: 15px;
+		background-color: var(--color-field-bg);
+		box-shadow: 2px 6px 7px 0px rgba(0, 0, 0, 0.3);
+		color: var(--color-panel-text);
+
+		.title {
+			font-weight: bold;
+			color: var(--color-panel-text);
+		}
+
+		.permissionLine {
+			margin-top: 5px;
+			display: flex;
+			align-items: center;
+			color: var(--color-panel-text-muted);
+
+			.bell {
+				margin-top: -1px;
+				margin-right: 5px;
+			}
+		}
+
+		.buttonRow {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+
+			.disabled {
+				cursor: not-allowed;
+				outline-width: 1;
+				outline-color: var(--color-panel-border);
+				outline-style: solid;
+				background-color: var(--color-panel-border);
+				color: var(--color-panel-text-muted);
+			}
+
+			button {
+				margin-left: 10px;
+				padding-left: 15px;
+				padding-right: 15px;
+				padding-top: 4px;
+				padding-bottom: 4px;
+				border-radius: 3px;
+				border-style: solid;
+			}
+		}
+	}
+}

@@ -1,0 +1,1046 @@
+/* Admin UI stylesheet bundle.
+   Formerly ten separate files under web/public/styles/admin/ loaded as
+   runtime <link> tags from AdminLayout; folded into the Vite bundle in the
+   exact same order. Section markers preserve the file boundaries. */
+
+/* ==== main-layout.css ==== */
+/* NOTE: This is used for the admin only! */
+
+/*
+ * Semantic status colors for the header online/offline indicator. These were
+ * previously referenced but never defined, which made the status icon compute
+ * to black and lose its meaning entirely.
+ */
+:root {
+	--online-color: #52c41a;
+	--offline-color: #999999;
+}
+
+/*
+ * The side nav / menu below are INTENTIONALLY dark in BOTH themes (classic
+ * dashboard shell). They match the antd Layout siderBg / dark Menu tokens set
+ * for both themes in src/App.tsx — change them together if this ever flips.
+ */
+.app-container .side-nav {
+	position: fixed;
+	height: 100vh;
+	overflow: auto;
+	z-index: 10;
+	background-color: #2d3748 !important;
+}
+
+.app-container .menu-container {
+	border-color: transparent;
+	background-color: #2d3748 !important;
+	color: #ffffff !important;
+}
+
+/* Antd 5 menu styles */
+.app-container .menu-container.ant-menu-dark,
+.app-container .menu-container.ant-menu-dark .ant-menu-sub {
+	background-color: #2d3748 !important;
+	color: #ffffff !important;
+}
+
+.app-container .menu-container .ant-menu-item,
+.app-container .menu-container .ant-menu-submenu-title,
+.app-container .menu-container .ant-menu-item a,
+.app-container .menu-container .ant-menu-item span,
+.app-container .menu-container .ant-menu-submenu-title span,
+.app-container .menu-container .ant-menu-title-content,
+.app-container .menu-container .ant-menu-title-content a {
+	color: #ffffff !important;
+}
+
+.app-container .menu-container .ant-menu-item:hover,
+.app-container .menu-container .ant-menu-submenu-title:hover,
+.app-container .menu-container .ant-menu-item:hover a,
+.app-container .menu-container .ant-menu-item:hover span {
+	color: #da9eff !important;
+	background-color: #4a5568 !important;
+}
+
+.app-container .menu-container .ant-menu-item-selected,
+.app-container .menu-container .ant-menu-item-selected a,
+.app-container .menu-container .ant-menu-item-selected span,
+.app-container .menu-container .ant-menu-item-selected .ant-menu-title-content,
+.app-container .menu-container .ant-menu-item-selected .ant-menu-title-content a {
+	color: #ffffff !important;
+	background-color: #6544e9 !important;
+}
+
+.app-container .menu-container .ant-menu-submenu-arrow,
+.app-container .menu-container .ant-menu-submenu-expand-icon {
+	color: #ffffff !important;
+}
+
+.app-container .menu-container .ant-menu-sub.ant-menu-inline {
+	background-color: #1a202c !important;
+}
+
+/* Labels of `type: 'group'` menu sections (e.g. the super chat submenu):
+   muted but readable on the intentionally-dark sider. */
+.app-container .menu-container .ant-menu-item-group-title {
+	color: rgba(255, 255, 255, 0.55) !important;
+	font-size: 12px;
+}
+
+.app-container .menu-container .ant-menu-item-icon,
+.app-container .menu-container .anticon {
+	color: #ffffff !important;
+}
+
+/* The sidebar brand block is a <span> (demoted from h1 so the page content's
+   AdminPageHeader is the only h1 per view); the explicit bottom margin keeps
+   the gap the UA h1 margin used to provide. */
+.app-container .owncast-title {
+	padding: 1rem;
+	padding-bottom: 4px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin: 0 0 21px;
+}
+
+.app-container .owncast-title .logo-container {
+	background-color: var(--theme-color-palette-4);
+	padding: 4px;
+	border-radius: 9999px;
+	width: 60px;
+	height: 60px;
+	overflow: hidden;
+}
+
+/* The operator-configured logo image fills the round badge. */
+.app-container .owncast-title .logo-container img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 9999px;
+}
+
+.app-container .owncast-title .title-label {
+	display: inline-block;
+	margin-left: 1rem;
+	color: var(--theme-color-palette-4);
+	font-size: 1.15rem;
+	font-weight: 200;
+	text-transform: uppercase;
+	line-height: normal;
+	letter-spacing: 0.05em;
+}
+
+.app-container .layout-main {
+	margin-left: 240px;
+}
+
+/* Below antd's lg breakpoint the sider collapses to zero width (see
+   MainLayout's breakpoint/collapsedWidth props); drop the fixed offset so the
+   content gets the full viewport instead of a 240px dead gutter. The expanded
+   sider overlays content via its fixed positioning + z-index. */
+@media (max-width: 991.98px) {
+	.app-container .layout-main {
+		margin-left: 0;
+	}
+
+	/* The zero-width trigger is rendered outside the collapsed (0px-wide)
+	   sider box; the rail's own overflow:auto was clipping it into an
+	   unclickable sliver. Let the trigger overflow and scroll the menu via
+	   the sider's inner children container instead. */
+	.app-container .side-nav {
+		overflow: visible;
+	}
+	.app-container .side-nav .ant-layout-sider-children {
+		overflow-y: auto;
+		height: 100vh;
+	}
+}
+
+.app-container .layout-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	padding-right: 1rem;
+	padding-left: 1rem;
+	/* Theme-flipping surface token (dark by default, flips with data-theme). */
+	background-color: var(--color-panel-bg);
+}
+
+.app-container .main-content-container {
+	/* Theme-flipping surface token (dark by default, flips with data-theme). */
+	background-color: var(--color-panel-bg-alt);
+	padding: 2em 3em 3em;
+	min-width: 50vw;
+}
+
+/* Constrain page content and give sections a consistent vertical rhythm.
+   Pages that genuinely need the full width (logs, large tables) can add
+   the --wide modifier next to main-content-container. */
+.app-container .main-content-container > * {
+	max-width: 1140px;
+}
+
+.app-container .main-content-container--wide > * {
+	max-width: none;
+}
+
+.app-container .footer-container {
+	text-align: center;
+}
+
+.app-container .online-status-indicator {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.app-container .online-status-indicator .online-thumbnail {
+	width: 12.5rem;
+}
+
+.app-container .online-status-indicator .status-label {
+	color: var(--theme-color-palette-4);
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	display: inline-block;
+	margin-right: 0.5rem;
+	color: var(--offline-color);
+}
+
+.app-container .online-status-indicator .status-icon {
+	font-size: 1.5rem;
+}
+
+.app-container .online-status-indicator .status-icon svg {
+	fill: var(--offline-color);
+}
+
+.app-container.online .online-status-indicator .status-icon svg {
+	fill: var(--online-color);
+}
+
+.status-container .status-icon {
+	padding: 5px;
+}
+
+.app-container.online .online-status-indicator .status-label {
+	white-space: nowrap;
+	color: var(--online-color);
+}
+
+.global-stream-title-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding-top: 1em;
+	box-shadow:
+		0 1px 3px 0 rgb(0 0 0 / 0.1),
+		0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.global-stream-title-container ::placeholder {
+	color: var(--color-field-placeholder);
+}
+
+.global-stream-title-container .textfield-with-submit-container {
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 0;
+}
+
+.global-stream-title-container .textfield-with-submit-container .input-side {
+	width: 400px;
+	border: 1px solid rgba(120, 113, 255, 0.5);
+	border-radius: 0.75rem;
+}
+
+@media (max-width: 800px) {
+	.global-stream-title-container .textfield-with-submit-container .input-side {
+		width: auto;
+	}
+}
+
+.global-stream-title-container .textfield-with-submit-container .label-side {
+	display: none;
+}
+
+.global-stream-title-container .textfield-with-submit-container .lower-container {
+	width: auto;
+}
+
+.global-stream-title-container .textfield-with-submit-container .lower-container .lower-content {
+	flex-direction: column-reverse;
+	position: relative;
+}
+
+.global-stream-title-container .textfield-with-submit-container .lower-container .label-spacer,
+.global-stream-title-container .textfield-with-submit-container .lower-container .field-tip {
+	display: none;
+}
+
+.global-stream-title-container .textfield-with-submit-container .lower-container .status-container {
+	line-height: 1;
+	position: absolute;
+	bottom: -2em;
+}
+
+.global-stream-title-container
+	.textfield-with-submit-container
+	.lower-container
+	.update-button-container {
+	margin: 0;
+	margin-left: 0.5em;
+	line-height: 1;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+	background-color: var(--theme-color-components-form-field-background);
+}
+
+.ant-menu-item a,
+.ant-menu-submenu-expand-icon,
+.ant-menu-submenu-arrow {
+	color: unset;
+}
+
+.ant-modal-title {
+	color: var(--theme-color-components-modal-header-text);
+}
+
+/* Admin text readability: handled by the token-based rules in
+   styles/globals.scss (.app-container / .form-module blocks) so text follows
+   the data-theme toggle. Do not re-pin colors here. */
+.app-container .main-content-container .formfield-tip {
+	color: var(--color-panel-text-muted);
+}
+
+/* ==== form-textfields.css ==== */
+.formfield-container {
+	--form-label-container-width: 15em;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	width: 100%;
+	max-width: 600px;
+}
+.formfield-container .label-side {
+	width: 100%;
+	text-align: left;
+	margin: 0 0 0.35em;
+}
+.formfield-container .formfield-label {
+	font-weight: 600;
+	font-size: 1em;
+	color: var(--color-panel-text);
+}
+.formfield-container.required .formfield-label::before {
+	content: '*';
+	display: inline-block;
+	margin-right: 0.25em;
+	color: var(--ant-error);
+}
+.formfield-container .input-side {
+	max-width: 500px;
+	width: 100%;
+}
+.formfield-container .input-group {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+.formfield-container .status-container {
+	margin: 0.25em;
+	width: 100%;
+	display: block;
+}
+.formfield-container .status-container.empty {
+	display: none;
+	visibility: visible;
+}
+.formfield-container .field-tip {
+	margin: 0.5em 0.5em;
+}
+
+.textfield-with-submit-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-bottom: 1em;
+}
+.textfield-with-submit-container .textfield-component {
+	width: 100%;
+}
+.textfield-with-submit-container .textfield-component .textfield-container .field-tip,
+.textfield-with-submit-container .textfield-component .textfield-container .status-container {
+	display: none;
+}
+.textfield-with-submit-container .lower-container {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+.textfield-with-submit-container .lower-container .label-spacer {
+	display: none;
+}
+.textfield-with-submit-container .lower-container .lower-content {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: flex-end;
+	width: 100%;
+}
+.textfield-with-submit-container .lower-container .lower-content .field-tip {
+	margin-right: 1em;
+	width: 100%;
+}
+.textfield-with-submit-container .lower-container .lower-content .status-container {
+	margin: 0.5em;
+}
+.textfield-with-submit-container .lower-container .lower-content .status-container.empty {
+	display: none;
+}
+.textfield-with-submit-container .lower-container .update-button-container {
+	visibility: hidden;
+	margin: 0.25em 0;
+}
+.textfield-with-submit-container.submittable .lower-container .update-button-container {
+	visibility: visible;
+}
+@media (max-width: 800px) {
+	.textfield-with-submit-container .label-spacer {
+		display: none;
+	}
+}
+.toggleswitch-container {
+	margin: 2em 0 1em;
+}
+.toggleswitch-container .label-side {
+	margin-top: 0;
+}
+.toggleswitch-container .input-group {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+.toggleswitch-container .input-group .status-container {
+	width: auto;
+	margin: 0 0 0 1em;
+	display: inline-block;
+}
+
+/* ==== form-misc-elements.css ==== */
+.status-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 0.75rem;
+}
+/* --ant-success / --ant-error / --ant-warning are defined in
+   styles/globals.scss (:root). */
+.status-container.status-success {
+	color: var(--ant-success);
+}
+.status-container.status-error {
+	color: var(--ant-error);
+}
+.status-container.status-warning {
+	color: var(--ant-warning);
+}
+.status-container.empty {
+	display: none;
+}
+.status-container .status-icon {
+	display: inline-block;
+	margin-right: 0.5em;
+}
+.field-tip {
+	font-size: 0.8em;
+	color: var(--color-panel-text-muted);
+}
+.field-container {
+	padding: 0.85em 0 0.5em;
+}
+.segment-slider-container {
+	width: 100%;
+	margin: auto;
+	padding: 1em 2em 0.75em;
+	background-color: var(--color-field-bg);
+	border: 1px solid var(--color-panel-border);
+	border-radius: var(--theme-rounded-corners);
+}
+.segment-slider-container .status-container {
+	width: 100%;
+	margin: 0.5em auto;
+	text-align: center;
+}
+.segment-slider-container .selected-value-note {
+	width: 100%;
+	margin: 3em auto 0;
+	text-align: center;
+	font-size: 0.75em;
+	line-height: normal;
+	color: var(--color-panel-text);
+	padding: 1em;
+	border-radius: var(--theme-rounded-corners);
+	background-color: var(--color-panel-bg);
+}
+.segment-tip {
+	width: 10em;
+	text-align: center;
+	margin: auto;
+	display: inline-block;
+}
+#selected-codec-note {
+	margin-top: 8px;
+	text-align: justify;
+	line-height: 1.4em;
+}
+
+/* ==== config-socialhandles.css ==== */
+.social-option .ant-select-item-option-content,
+.social-option .ant-select-selection-item,
+.social-dropdown .ant-select-item-option-content,
+.social-dropdown .ant-select-selection-item {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 0.25em;
+	line-height: normal;
+}
+.social-option .ant-select-item-option-content .option-icon,
+.social-option .ant-select-selection-item .option-icon,
+.social-dropdown .ant-select-item-option-content .option-icon,
+.social-dropdown .ant-select-selection-item .option-icon {
+	height: 1.5em;
+	width: 1.5em;
+	line-height: normal;
+}
+.social-option .ant-select-item-option-content .option-label,
+.social-option .ant-select-selection-item .option-label,
+.social-dropdown .ant-select-item-option-content .option-label,
+.social-dropdown .ant-select-selection-item .option-label {
+	display: inline-block;
+	margin-left: 1em;
+	line-height: normal;
+	word-break: break-word;
+}
+.social-links-edit-container .social-handles-table .social-handle-cell {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+}
+.social-links-edit-container .social-handles-table .social-handle-cell .option-icon {
+	height: 2em;
+	width: 2em;
+	line-height: normal;
+}
+.social-links-edit-container .social-handles-table .social-handle-cell .option-label {
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 0 1em;
+	line-height: 2;
+	font-size: 0.85em;
+	word-break: break-word;
+}
+.social-links-edit-container .social-handles-table .actions {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+	width: 6em;
+}
+
+/* ==== config-storage.css ==== */
+.edit-storage-container {
+	padding: 1em;
+}
+.edit-storage-container .form-fields {
+	display: none;
+	margin-bottom: 1em;
+}
+.edit-storage-container.enabled .form-fields {
+	display: block;
+}
+.edit-storage-container .button-container {
+	margin: 2em 0 1em 0;
+}
+.edit-storage-container .advanced-section {
+	margin: 1em 0;
+}
+.edit-server-details-container .field-streamkey-container {
+	margin-bottom: 1.5em;
+}
+.edit-server-details-container .field-streamkey-container .field-tip {
+	color: var(--ant-warning);
+}
+.edit-server-details-container .field-streamkey-container .left-side {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+}
+.edit-server-details-container .field-streamkey-container .textfield-with-submit-container {
+	margin-bottom: 0;
+}
+.edit-server-details-container .field-streamkey-container .streamkey-actions {
+	white-space: nowrap;
+}
+.edit-server-details-container .field-streamkey-container .streamkey-actions button {
+	margin: 0.25em;
+}
+@media (max-width: 800px) {
+	.edit-server-details-container .field-streamkey-container .streamkey-actions {
+		margin-top: 2em;
+	}
+}
+.edit-server-details-container .advanced-settings {
+	max-width: 800px;
+}
+
+/* ==== config-edit-string-tags.css ==== */
+.edit-current-strings .ant-tag {
+	margin: 0.1rem;
+	font-size: 0.85rem;
+	border-radius: 10em;
+	padding: 0.25em 1em;
+}
+.edit-current-strings .ant-tag:hover {
+	opacity: 1;
+}
+.edit-current-strings .ant-tag .ant-tag-close-icon {
+	transform: translateY(-1px);
+	margin-left: 0.3rem;
+	padding: 2px;
+	border-radius: 5rem;
+	border: 1px solid black;
+	transition-duration: var(--ant-transition-duration);
+}
+.edit-current-strings .ant-tag .ant-tag-close-icon:hover {
+	border-color: var(--theme-color-palette-6);
+	background-color: var(--theme-color-palette-4);
+}
+.edit-current-strings .ant-tag .ant-tag-close-icon:hover svg {
+	fill: black;
+	transition: fill var(--ant-transition-duration);
+}
+.add-new-string-section {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	margin-top: 2em;
+}
+.continuous-status-section {
+	margin-top: 1em;
+}
+
+/* ==== config-video-variants.css ==== */
+.config-video-variants .variants-table {
+	margin-top: 2em;
+}
+.config-video-variants .variants-table-module {
+	min-width: 400px;
+}
+.config-variant-form .description {
+	margin-top: 0;
+}
+/* The extra .ant-modal-root selectors out-rank the generic modal
+   "* { color: inherit }" rule so the warning keeps its error color. */
+.config-variant-form .passthrough-warning,
+.ant-modal-root .ant-modal-content .config-variant-form .passthrough-warning,
+.ant-modal-root .ant-modal-body .config-variant-form .passthrough-warning {
+	text-align: center;
+	padding: 1em;
+	color: var(--theme-color-palette-error);
+	font-size: 0.88em;
+	font-weight: 500;
+	background-color: var(--color-panel-bg-alt);
+	border-radius: var(--theme-rounded-corners);
+}
+.config-variant-form .cpu-usage-container,
+.config-variant-form .bitrate-container {
+	min-height: 22em;
+}
+.config-variant-form .advanced-settings {
+	margin-top: 1em;
+}
+.config-variant-form .advanced-settings .resolution-module,
+.config-variant-form .advanced-settings .video-passthrough-module {
+	min-height: 30em;
+}
+.config-variant-form.video-passthrough-enabled .form-module:not(.video-passthrough-module) {
+	opacity: 0.25;
+	cursor: not-allowed;
+}
+.variants-table .actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.variants-table .delete-button {
+	margin-left: 0.5em;
+	opacity: 0.8;
+}
+.read-more-subtext {
+	font-size: 0.8rem;
+}
+
+.video-text-field-container {
+	margin-left: 12px;
+	margin-bottom: 30px;
+}
+.video-varient-alert {
+	margin-bottom: 30px;
+}
+.advanced-switch-container {
+	margin-left: 80px;
+}
+.advanced-description-switch-container {
+	display: flex;
+	flex-direction: row;
+}
+.advanced-description-wrapper {
+	/* Color inherited from the themed modal body — do not hardcode. */
+	display: flex;
+	align-items: center;
+	margin-top: 16px;
+}
+.video-varient-alert-button-container {
+	width: 100vh;
+}
+
+.config-video-latency-container .segment-slider-container .ant-slider-mark-text:first-of-type {
+	margin-left: 20px;
+}
+
+.config-video-latency-container .segment-slider-container .ant-slider-mark-text:last-of-type {
+	left: 95% !important;
+}
+
+/* ==== config-public-details.css ==== */
+.config-public-details-page {
+	width: 100%;
+}
+.config-public-details-page .top-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+@media (max-width: 1200px) {
+	.config-public-details-page .top-container {
+		flex-wrap: wrap;
+	}
+	.config-public-details-page .top-container .social-items-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		flex-wrap: nowrap;
+		margin: 1em 0;
+		width: 100%;
+		max-width: none;
+	}
+	.config-public-details-page .top-container .social-items-container .tags-module {
+		margin-right: 1em;
+	}
+	.config-public-details-page .top-container .social-items-container .form-module {
+		max-width: none;
+	}
+}
+@media (max-width: 1200px) and (max-width: 980px) {
+	.config-public-details-page .top-container .social-items-container {
+		flex-direction: column;
+	}
+	.config-public-details-page .top-container .social-items-container .form-module {
+		width: 100%;
+	}
+	.config-public-details-page .top-container .social-items-container .tags-module {
+		margin-bottom: 0;
+	}
+}
+.config-public-details-page .instance-details-container {
+	width: 100%;
+	border-right: 1px solid var(--color-panel-border);
+}
+.config-public-details-page .social-items-container {
+	padding: 0 0.75em;
+	margin-left: 1em;
+	max-width: 450px;
+}
+.config-public-details-page .social-items-container .social-handles-container {
+	min-width: 350px;
+}
+.config-public-details-page .instance-details-container,
+.config-public-details-page .page-content-module {
+	margin: 1em 0;
+}
+.config-public-details-page .field-summary textarea {
+	height: 6em !important;
+}
+.config-public-details-page .edit-custom-css #field-customStyles {
+	height: 15em;
+	width: 100%;
+	font-family: monospace;
+	resize: auto;
+}
+.other-field-container {
+	margin: 0.5em 0;
+}
+.logo-upload-container .input-group {
+	align-items: center;
+}
+.logo-upload-container img.logo-preview {
+	min-height: 120px;
+	min-width: 120px;
+	max-height: 256px;
+	max-width: 256px;
+	margin-right: 1em;
+	display: inline-block;
+	border: 1px solid var(--theme-color-palette-5);
+}
+
+/* ==== home.css ==== */
+.home-container .online-status-section {
+	margin-bottom: 1em;
+}
+
+.home-container .online-status-section .online-details-card {
+	border-color: var(--color-panel-border-soft);
+}
+
+.home-container .stream-details-item-container {
+	margin: 1em 0;
+}
+
+.home-container .stream-details-item-container:first-of-type {
+	margin-top: 0;
+}
+
+.home-container .stream-details > .ant-card-bordered {
+	border-color: var(--color-panel-border-soft);
+}
+
+.home-container .ant-card-small > .ant-card-head {
+	/* Subdued panel header (was a loud brand-purple bar with white text). The
+	   panel tokens flip with data-theme, so one rule covers both admin themes;
+	   the brand purple survives only as a slim left accent. */
+	background-color: var(--color-panel-bg-alt);
+	color: var(--color-panel-text);
+	border-left: 3px solid var(--theme-color-action);
+	font-weight: 600;
+}
+
+/* Card, table-header and default-button backgrounds are provided by antd's
+   ConfigProvider theme (dark/light algorithm) — do not pin them here. */
+.home-container .ant-card-body {
+	border-radius: var(--theme-rounded-corners);
+}
+
+#admin-page .line-chart-container {
+	background-color: var(--color-panel-bg-alt);
+	border-radius: var(--theme-rounded-corners);
+	margin: 10px 0px 10px 0px;
+}
+
+.home-container .outbound-details {
+	margin-bottom: 1em;
+}
+
+.offline-content .list-section {
+	background-color: var(--color-panel-bg-alt);
+	border-radius: var(--theme-rounded-corners);
+	padding: 1em;
+}
+
+.offline-content .list-section > .ant-card {
+	margin-bottom: 1em;
+}
+
+.offline-intro {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	margin-bottom: 2em;
+}
+
+.offline-intro .logo-svg {
+	height: 6em;
+	width: 6em;
+	/* The configured logo image is shown as a round badge. */
+	object-fit: cover;
+	border-radius: 9999px;
+}
+
+.news-feed {
+	margin-top: 0;
+	padding: 1.5em;
+	border: 1px solid var(--color-panel-border-soft);
+	background-color: var(--color-panel-bg-alt);
+	border-radius: var(--theme-rounded-corners);
+}
+
+.news-feed h2 {
+	font-size: 1.2em;
+	margin-top: 0;
+	color: var(--color-panel-text);
+}
+
+.news-feed article {
+	padding: 1em 0.25em;
+	font-size: 0.9rem;
+	color: var(--color-panel-text-muted);
+	border-bottom: 1px solid var(--color-panel-border-soft);
+}
+
+.news-feed article h3 {
+	font-size: 1.2em;
+}
+
+.news-feed article h3 a {
+	font-weight: 400;
+	font-size: 1em;
+}
+
+.news-feed article .timestamp {
+	margin-top: 0;
+	font-size: 0.75em;
+}
+
+/* Collapse surfaces come from the antd theme; only round the corners here. */
+.ant-collapse > .ant-collapse-item:last-child,
+.ant-collapse > .ant-collapse-item:last-child > .ant-collapse-header {
+	border-radius: var(--theme-rounded-corners);
+}
+
+
+/* ==== chat.css ==== */
+.chat-management .ant-table-cell.name-col {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.chat-management .ant-table-cell.toggle-col label {
+	font-size: 0.7rem;
+}
+.chat-management .ant-table-cell .message-contents {
+	overflow: auto;
+	max-height: 200px;
+}
+.chat-management .ant-table-cell .message-contents img {
+	position: relative;
+	margin-top: -5px;
+	width: 3rem;
+	padding: 0.25rem;
+}
+.chat-management .ant-table-cell .message-contents p {
+	margin-bottom: 0;
+}
+.chat-management .bulk-editor {
+	margin: 0.5rem 0;
+	padding: 0.5rem;
+	border: 1px solid var(--color-panel-border);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+	border-radius: 4px;
+}
+
+.chat-management .bulk-editor .label {
+	font-size: 0.75rem;
+	color: var(--color-panel-text-muted);
+	margin-right: 0.5rem;
+}
+.chat-management .bulk-editor button {
+	margin: 0 0.2rem;
+	font-size: 0.75rem;
+}
+.ant-table-filter-dropdown {
+	max-width: 250px;
+}
+.toggle-switch {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: nowrap;
+	justify-content: flex-end;
+	transition: opacity 0.15s;
+}
+.toggle-switch .outcome-icon {
+	margin-right: 0.5rem;
+}
+.toggle-switch.hidden {
+	opacity: 0.25;
+}
+.toggle-switch.hidden:hover {
+	opacity: 1;
+}
+.toggle-switch .ant-btn .anticon {
+	opacity: 0.5;
+}
+.toggle-switch .ant-btn:hover .anticon {
+	opacity: 1;
+}
+.toggle-switch .ant-btn-text:hover {
+	background-color: var(--color-hover-bg);
+}
+.blockuser-popover {
+	max-width: 400px;
+}
+.user-item-container {
+	border: none;
+	background: none;
+	/* Raw <button>: without this it falls back to the UA buttontext color
+	   (black) instead of following the themed table cell. */
+	color: inherit;
+	text-align: left;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	outline: none;
+}
+.user-item-container .display-name {
+	color: var(--color-panel-text);
+	border-bottom: 1px dotted var(--color-panel-border);
+}
+.user-item-container:hover .display-name {
+	border-color: var(--color-panel-text);
+}
+.user-details h5 {
+	color: var(--theme-color-palette-0);
+}
+.user-details .created-at {
+	font-size: 0.75em;
+	font-style: italic;
+}
+.user-details .connection-info {
+	font-size: 0.88em;
+}
+.user-details .previous-names-list {
+	font-size: 0.88em;
+}
+.user-details .previous-names-list .user-name-item {
+	font-family: monospace;
+}
+.user-details .previous-names-list .latest {
+	font-style: italic;
+}
+.user-details .previous-names-list .latest .user-name-item {
+	font-weight: bold;
+	font-style: normal;
+	color: var(--theme-color-palette-12);
+}
+
+.block-user-button {
+	text-transform: capitalize;
+}

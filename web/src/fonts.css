@@ -1,0 +1,10 @@
+/*
+ * Font CSS variables, formerly provided by next/font/google in pages/_app.tsx.
+ * The actual @font-face rules are loaded from @fontsource packages in the entry
+ * modules; here we only expose the family names as the CSS variables that
+ * styles/variables.css consumes (--font-aoitube-body / --font-aoitube-display).
+ */
+:root {
+	--font-inter: 'Inter Variable';
+	--font-poppins: 'Poppins';
+}

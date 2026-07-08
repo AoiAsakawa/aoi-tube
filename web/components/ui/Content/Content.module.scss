@@ -1,0 +1,271 @@
+@use '../../../styles/mixins.scss' as mixins;
+
+.lowerSection {
+	padding: 1rem;
+}
+
+.lowerSectionMobileTabbed {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	flex-shrink: 0;
+	position: relative;
+	bottom: 0;
+	width: 100%;
+
+	@include mixins.screen(tablet) {
+		top: 0;
+		position: relative;
+	}
+
+	:global(.ant-tabs-nav) {
+		margin-bottom: 0px;
+		padding-top: 0.5vh;
+		padding-left: 1vw;
+	}
+}
+
+// Single layout container for the top page: the shell reserves space for the
+// fixed chat column, the column centers content at a max width with one
+// shared gutter and a consistent 24px section rhythm (replaces the five
+// inline-padded antd Rows).
+.contentShell {
+	&.withChat {
+		padding-right: var(--chat-col-width);
+	}
+}
+
+.contentColumn {
+	max-width: 1440px;
+	margin-inline: auto;
+	padding: 0 var(--content-gutter) 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	@include mixins.screen(tablet) {
+		padding-inline: 0;
+		gap: 16px;
+	}
+}
+
+// Geometry-true loading placeholder for the video player: reserves the 16:9
+// box so the page doesn't shift when the player chunk arrives.
+.playerPlaceholder {
+	aspect-ratio: 16 / 9;
+	width: 100%;
+	background: linear-gradient(135deg, var(--color-panel-bg-alt), var(--color-panel-bg-deep));
+	border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+
+	@include mixins.screen(tablet) {
+		border-radius: 0;
+	}
+}
+
+.topSectionElement {
+	background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%);
+
+	// The offline banner shares this shell but is a TEXT surface, not a video
+	// one: it must follow the theme instead of staying a near-black band that
+	// swallows the light-mode card.
+	&.offlineBanner {
+		background: linear-gradient(180deg, var(--color-panel-bg-deep) 0%, var(--color-panel-bg) 100%);
+	}
+	border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+	overflow: hidden;
+	box-shadow: var(--shadow-panel);
+
+	@include mixins.screen(tablet) {
+		position: sticky;
+		z-index: 100;
+		border-radius: 0;
+	}
+}
+
+.offlineBanner {
+	color: var(--theme-color-background-main);
+}
+
+.playerContainer {
+	position: relative;
+}
+
+.lowLatencyToggle {
+	// Overlay on the top-right corner of the video; the player fills its
+	// section (the column owns the gutter), so a constant inset works.
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	z-index: 20;
+
+	@include mixins.screen(tablet) {
+		right: 12px;
+	}
+
+	// Give the toggle an explicit dark pill so its label stays legible on any
+	// backdrop and in either theme (antd's default button rendered dark text
+	// that vanished against the dark player / light page).
+	button {
+		color: #fff;
+		background: rgba(20, 20, 30, 0.78);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(4px);
+
+		span {
+			color: #fff;
+		}
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: #fff;
+			background: rgba(42, 42, 58, 0.92);
+			border-color: rgba(255, 255, 255, 0.55);
+		}
+	}
+}
+
+.mobileActionButtons {
+	display: none;
+
+	@include mixins.screen(tablet) {
+		display: flex;
+		align-items: center;
+		position: absolute;
+		top: 4px;
+		right: 10px;
+		z-index: 199;
+	}
+
+	> * {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+}
+
+.desktopActionButtons {
+	display: block;
+
+	@include mixins.screen(tablet) {
+		display: none;
+	}
+}
+
+.statusBar {
+	flex-shrink: 0;
+}
+
+.loadingSpinner {
+	display: grid;
+}
+
+.defaultTabBar {
+	width: 85%;
+}
+
+.bottomPageContentContainer {
+	@include mixins.surface-translucent;
+
+	padding: 2rem;
+	width: 100%;
+	margin-bottom: 0.5rem;
+	color: rgba(255, 255, 255, 0.9);
+
+	h1,
+	h2,
+	h3 {
+		line-height: 1.4;
+		color: #ffffff;
+		font-weight: 700;
+	}
+
+	h1:first-child,
+	h2:first-child,
+	h3:first-child {
+		margin-top: unset;
+	}
+
+	p,
+	li,
+	span {
+		color: rgba(255, 255, 255, 0.85);
+		line-height: 1.7;
+	}
+
+	a {
+		color: #a78bfa;
+		text-decoration: none;
+
+		&:hover {
+			color: var(--theme-color-action-hover);
+			text-decoration: underline;
+		}
+	}
+
+	ul {
+		padding-left: 1.5rem;
+
+		li {
+			margin-bottom: 0.5rem;
+
+			&::marker {
+				color: #a78bfa;
+			}
+		}
+	}
+}
+
+.floatingMobileChatModalButton {
+	position: fixed;
+	width: 110px;
+	height: 48px;
+	bottom: 30px;
+	right: 20px;
+	font-weight: 700;
+	font-size: 1em;
+	z-index: 99;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border-width: 0;
+	border-radius: var(--radius-pill);
+	// Brand glow shadows stay literal on purpose (colored, not elevation).
+	box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	color: white;
+
+	&:hover {
+		transform: translateY(-3px) scale(1.02);
+		box-shadow: 0 12px 40px rgba(102, 126, 234, 0.7);
+	}
+
+	&:active {
+		transform: translateY(-1px);
+	}
+}
+
+// Light theme: the surface tokens flip automatically; only the hardcoded
+// child text colors still need re-theming. The video area stays a dark card.
+:global(:root[data-theme='light']) {
+	.bottomPageContentContainer {
+		color: #1a202c;
+
+		h1,
+		h2,
+		h3 {
+			color: #1a202c;
+		}
+
+		p,
+		li,
+		span {
+			color: #2d3748;
+		}
+
+		a {
+			color: #6544e9;
+		}
+
+		ul li::marker {
+			color: #6544e9;
+		}
+	}
+}

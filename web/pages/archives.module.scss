@@ -1,0 +1,65 @@
+// Responsive card grid for the archive list; cards flow into as many
+// 300px-minimum columns as fit the PageShell content width. min(300px, 100%)
+// keeps the track from forcing horizontal overflow on ultra-narrow phones
+// (PageShell leaves ~288px of content at a 320px viewport).
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+	gap: 20px;
+}
+
+// Broadcast metadata chips (start date+time / length / rendition) shown above
+// the replay player.
+.replayMeta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: -8px 0 14px;
+}
+
+.replayMetaItem {
+	padding: 3px 10px;
+	border-radius: var(--radius-pill);
+	background: var(--color-chip-bg);
+	color: var(--color-panel-text-muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+// Hero slot: the newest recording spans two columns on wide screens (list
+// view only — the replay page's "more archives" strip opts out).
+@media (min-width: 900px) {
+	.grid:not(.gridNoHero) > *:first-child {
+		grid-column: span 2;
+	}
+}
+
+// Loading skeletons shaped like the archive cards.
+.skeletonCard {
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--color-panel-border-soft);
+	background: var(--color-panel-bg);
+	padding: 0 0 12px;
+	overflow: hidden;
+
+	:global(.ant-skeleton) {
+		padding: 12px 14px 0;
+	}
+}
+
+.skeletonThumb {
+	aspect-ratio: 16 / 9;
+	background: var(--color-overlay-faint);
+}
+
+// "More archives" strip under the replay player.
+.moreSection {
+	margin-top: 28px;
+}
+
+.moreTitle {
+	margin: 0 0 14px;
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: var(--color-panel-text);
+}

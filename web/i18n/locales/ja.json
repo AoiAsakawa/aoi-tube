@@ -1,0 +1,2393 @@
+{
+	"ui": {
+		"cookieConsent": {
+			"message": "このサイトでは、認証やセッション管理のためにCookieを使用しています。サイトを利用することで、Cookieの使用に同意したものとみなされます。",
+			"accept": "同意する"
+		},
+		"donationAlert": {
+			"anonymous": "匿名",
+			"fromSuffix": "さんから"
+		},
+		"footer": {
+			"tokushoho": "特定商取引法に基づく表記",
+			"faq": "よくあるご質問",
+			"documentation": "ドキュメント",
+			"contribute": "貢献する",
+			"sourceCode": "ソースコード",
+			"archives": "アーカイブ"
+		},
+		"header": {
+			"skipToPlayer": "プレーヤーへスキップ",
+			"skipToOfflineMessage": "オフラインメッセージへスキップ",
+			"skipToContent": "ページコンテンツへスキップ",
+			"skipToFooter": "フッターへスキップ",
+			"chatAvailableWhenLive": "チャットは配信がライブになると利用可能になります。",
+			"chatOffline": "チャットはオフラインです",
+			"language": "言語",
+			"toggleTheme": "テーマ切替",
+			"login": "ログイン",
+			"home": "ホームへ"
+		},
+		"noscript": {
+			"poweredByPrefix": "このサイトは",
+			"poweredBySuffix": "で提供されています。",
+			"jsRequired": "このサイトは、HTTP Live Streaming (HLS) 動画の再生やチャット機能のために JavaScript を使用します。しかし、お使いのブラウザは JavaScript に対応していないか、無効になっているようです。",
+			"enableJs": "快適に視聴するには、JavaScript に対応した別のブラウザをご利用ください。ブラウザで JavaScript を無効にしている場合は、有効にしてください。",
+			"watchWithoutJsTitle": "JavaScriptなしで視聴するには？",
+			"mediaPlayerPrefix": "このサイトのURLをメディアプレイヤー（例:",
+			"mediaPlayerSuffix": "）で開くと視聴できます。",
+			"chatWithoutJsTitle": "JavaScriptなしでチャットするには？",
+			"chatWithoutJsBody": "現時点では、JavaScriptなしでチャットを利用する方法はありません。"
+		},
+		"notifyReminder": {
+			"title": "最新情報を受け取る！",
+			"line1": "クリックして今後の",
+			"line2": "配信を見逃さない！"
+		},
+		"offlineBanner": {
+			"offline": "この配信はオフラインです。",
+			"getNotified": "通知を受け取る",
+			"notifySuffix": "ことで{{streamName}}の次回の配信開始時にお知らせを受け取れます。",
+			"orFollowFediverse": "または、Fediverseで",
+			"orFollowTwitter": "または、Xで",
+			"onTwitterPrefix": "Xで",
+			"followFediverseAccount": "{{fediverseAccount}}をフォロー",
+			"followSuffix": "してください。",
+			"alsoFollowTwitterPrefix": "さらに、Xでも",
+			"follow": "フォロー",
+			"alsoFollowTwitterSuffix": "できます。",
+			"checkBackSuffix": "して{{streamName}}の次回の配信を確認してください。",
+			"checkBackNoNameSuffix": "して次回の配信を確認してください。",
+			"offlineCheckBackLater": "この配信はオフラインです。また後でご確認ください！",
+			"lastLive": "最後の配信: {{time}}前"
+		},
+		"statusbar": {
+			"durationDaysHours": "{{days}}日 {{hours}}時間",
+			"durationHoursMinutes": "{{hours}}時間 {{minutes}}分",
+			"durationMinutesSeconds": "{{minutes}}分 {{seconds}}秒",
+			"streamingFor": "配信中: {{duration}}",
+			"offline": "オフライン",
+			"lastLive": "最終配信: {{time}}前"
+		},
+		"userMenu": {
+			"changeName": "名前を変更",
+			"auth": "認証",
+			"hideChat": "チャットを非表示",
+			"showChat": "チャットを表示",
+			"logout": "ログアウト",
+			"guestName": "ゲスト: {{name}}",
+			"purchases": "購入履歴"
+		},
+		"buttons": {
+			"follow": "フォロー",
+			"notify": "通知を受け取る"
+		},
+		"tabs": {
+			"about": "概要",
+			"followers": "フォロワー"
+		},
+		"modals": {
+			"browserNotifications": "ブラウザ通知",
+			"followName": "{{name}}をフォロー"
+		}
+	},
+	"video": {
+		"protocolBadge": {
+			"defaultLatency": "10-30秒",
+			"webrtcDescription": "WebRTC超低遅延配信",
+			"llhlsDescription": "Low-Latency HLS（低遅延）",
+			"hlsDescription": "標準HLSストリーミング",
+			"title": "{{description}} - 予想遅延: {{latency}}"
+		},
+		"webrtcPlayer": {
+			"notAvailable": "WebRTCストリーミングは利用できません",
+			"disconnectedRetrying": "接続が切断されました。再接続を試みます...",
+			"connectionFailed": "WebRTC接続に失敗しました",
+			"retry": "再接続",
+			"connecting": "WebRTC接続中...",
+			"latency": "1秒以下"
+		},
+		"lowLatencyToggle": {
+			"enable": "低遅延モードを試す（WebRTC）",
+			"disable": "通常再生に戻す"
+		}
+	},
+	"chat": {
+		"anonymous": "匿名",
+		"joinedChat": "がチャットに参加しました。",
+		"leftChat": "がチャットから退出しました。",
+		"hideMessage": "メッセージを非表示",
+		"banUser": "ユーザーをBAN",
+		"moreInfo": "詳細情報...",
+		"becameModerator": "あなたはモデレーターになりました。",
+		"sendMessage": "メッセージを送信",
+		"chatUnavailable": "チャットは現在利用できません。",
+		"chatTextInput": "チャットテキスト入力",
+		"emojiPicker": "絵文字ピッカー",
+		"sendDonation": "スーパーチャットを購入",
+		"discordAuthenticated": "Discord認証済み",
+		"googleAuthenticated": "Google認証済み",
+		"xAuthenticated": "X認証済み",
+		"authenticatedViaX": "認証済み（X）",
+		"system": {
+			"streamStarting": "まもなく配信が始まります。お楽しみに！",
+			"streamEnding": "配信が終了します。",
+			"userAuthenticatedWith": "{{name}} が {{provider}} で認証されました！",
+			"userAuthenticatedAs": "{{newName}} が {{oldName}} として認証されました"
+		},
+		"openChat": "チャットを開く",
+		"title": "チャット",
+		"emptyState": "まだメッセージはありません",
+		"emptyStateHint": "最初のコメントを送ってみましょう！"
+	},
+	"donation": {
+		"sendDonation": "スーパーチャットを購入",
+		"itemTypeLabel": "購入する商品",
+		"itemTypeSuperchat": "スーパーチャット",
+		"itemTypeEffect": "画面演出",
+		"effectTypeLabel": "演出を選ぶ",
+		"effectCryptoRateNote": "相場変動により実際の円換算額が前後する場合があります",
+		"effectPriceLoading": "価格情報を取得しています…",
+		"effectPriceUnavailable": "価格情報を取得できないため、このトークンでは演出を購入できません。別のトークンをお選びください",
+		"purchaseThanks": "ご購入ありがとうございます！",
+		"purchaseError": "購入処理中にエラーが発生しました",
+		"paymentMethod": "支払い方法",
+		"crypto": "暗号通貨",
+		"amount": "金額",
+		"amountWithCurrency": "金額 ({{currency}})",
+		"enterAmount": "金額を入力してください",
+		"amountTooSmall": "金額が小さすぎます",
+		"inputInCurrency": "{{currency}}で入力",
+		"inputInJpy": "日本円で入力",
+		"max": "最大",
+		"displayName": "表示名",
+		"yourName": "あなたの名前",
+		"sendAnonymously": "匿名で送る",
+		"enterNameOrAnonymous": "表示名を入力するか、匿名にチェックしてください",
+		"messageOptional": "メッセージ（任意）",
+		"messageToStreamer": "配信者へのメッセージ...",
+		"totalAmountLabel": "送信額:",
+		"tokushohoLink": "特定商取引法に基づく表記",
+		"cancel": "キャンセル",
+		"close": "閉じる",
+		"payWith": "{{provider}}で支払う",
+		"sendWithCurrency": "{{currency}}で送金",
+		"donateVia": "{{name}}でスーパーチャットを購入",
+		"donateWith": "{{name}}でスーパーチャットを購入",
+		"kofiDescription": "下のボタンをクリックすると、Ko-fiのスーパーチャット購入ページが新しいタブで開きます。Ko-fiで購入を完了すると、購入されたスーパーチャットはチャットに自動的に表示されます。",
+		"kofiEffectCommandHint": "メッセージ欄の先頭に下記のコマンドを入力し、その演出の金額以上を支払うと画面演出が発動します。コマンドを付けなければ通常のスーパーチャットになります。",
+		"doneruDescription": "下のボタンをクリックすると、Doneruのスーパーチャット購入ページが新しいタブで開きます。Doneruで購入を完了してください。",
+		"pageOpenedInNewTab": "{{name}}のページが新しいタブで開きました",
+		"paymentUnavailable": "{{provider}}決済が利用できません",
+		"paymentRedirecting": "{{provider}}決済ページに移動します...",
+		"paymentCompleteInNewTab": "{{provider}}の新しいタブで決済を完了してください。完了すると自動的にチャットに表示されます。",
+		"paymentCreateFailed": "{{provider}}決済の作成に失敗しました",
+		"paymentCreateError": "{{provider}}決済の作成中にエラーが発生しました",
+		"paypalMinimumNote": "※ PayPalは手数料（約3.6% + 40円）のため、最低300円からとなります",
+		"stripeTestModeNote": "🧪 テストモード: テストカード（4242 4242 4242 4242）を使用してください",
+		"wallet": "ウォレット",
+		"solanaWallet": "Solanaウォレット",
+		"connectWallet": "ウォレットに接続",
+		"connectSolanaWallet": "Solanaウォレットに接続",
+		"connectedToWallet": "{{wallet}}に接続しました",
+		"walletConnected": "{{wallet}}を接続しました",
+		"walletConnectedAndSwitched": "{{wallet}}を接続し、{{network}}に切り替えました",
+		"walletConnectFailed": "ウォレットの接続に失敗しました",
+		"walletNotInstalled": "ウォレットがインストールされていません（MetaMaskまたはTrust Wallet）",
+		"phantomDetected": "✓ Phantom検出済",
+		"solanaWalletDetected": "✓ Solanaウォレット検出済",
+		"phantomRecommended": "Phantom推奨（MetaMask Snapは制限あり）",
+		"connectedWith": "接続済 ({{wallet}})",
+		"balanceLabel": "残高:",
+		"loading": "読み込み中...",
+		"checkBalance": "残高を確認",
+		"disconnect": "接続解除",
+		"connectMetamaskFirst": "先にMetamaskに接続してください",
+		"connectWalletFirst": "先にウォレットを接続してください",
+		"metamaskConfigInvalid": "Metamask設定が正しくありません",
+		"networkAndToken": "ネットワーク＆トークン",
+		"withBalanceOnly": "残高あり",
+		"selectNetwork": "ネットワーク選択",
+		"selectToken": "トークン選択",
+		"selectNetworkAndToken": "ネットワークとトークンを選択してください",
+		"metamaskSwitchedNetwork": "MetaMaskが{{network}}に切り替わりました",
+		"pleaseSwitchNetwork": "ネットワークを{{network}}に切り替えてください",
+		"switchToNetwork": "{{network}}に切替",
+		"networkAddCancelled": "ネットワークの追加がキャンセルされました",
+		"networkAddFailed": "ネットワークの追加に失敗しました: {{error}}",
+		"networkSwitchCancelled": "ネットワークの切り替えがキャンセルされました",
+		"networkSwitchFailed": "ネットワークの切り替えに失敗しました: {{error}}",
+		"checkWalletRequest": "{{wallet}}でリクエストを確認してください",
+		"unknownError": "不明なエラー",
+		"unknownErrorOccurred": "不明なエラーが発生しました",
+		"errorOccurred": "エラーが発生しました",
+		"operationCancelled": "操作がキャンセルされました",
+		"cancelledByUser": "ユーザーによってキャンセルされました",
+		"connectionCancelled": "接続がキャンセルされました",
+		"transactionCancelled": "トランザクションがキャンセルされました",
+		"bitcoinAddressNotConfigured": "Bitcoin送金先アドレスが設定されていません",
+		"recipientAddressNotConfigured": "送金先アドレスが設定されていません",
+		"bitcoinAddressNotConfiguredAdmin": "Bitcoin送金先アドレスが設定されていません。管理画面で設定してください。",
+		"solanaAddressNotConfiguredAdmin": "Solana送金先アドレスが設定されていません。管理画面で設定してください。",
+		"sendingTransaction": "トランザクションを送信中...",
+		"donationSentThanks": "スーパーチャットのご購入ありがとうございます！",
+		"txSentButConfirmFailed": "トランザクションは送信されましたが、確認に失敗しました",
+		"sendErrorOccurred": "送金中にエラーが発生しました",
+		"priceFetchFailed": "価格を取得できませんでした。しばらく待ってから再度お試しください。",
+		"metamaskNotDetected": "MetaMaskが検出できません",
+		"snapsNotSupported": "MetaMask Snapsがサポートされていません。MetaMask v11.0以降をお使いください。",
+		"bitcoinSnapInstallCancelled": "Bitcoin Snapのインストールがキャンセルされました",
+		"bitcoinAccountFailed": "Bitcoinアカウントの取得に失敗しました",
+		"solanaAccountFailed": "Solanaアカウントの取得に失敗しました",
+		"trustWalletBitcoinUnsupported": "Trust WalletではBitcoin Snapが利用できません。\nTrust Walletアプリから直接BTC送金をお願いします。\n送金先アドレスは「送金」ボタンを押すと表示されます。",
+		"solanaSnapOriginRestricted": "MetaMaskのSolana Snapはこのサイトでは利用できません。\nSolanaを送金するには、以下の方法をお試しください：\n• Phantomウォレット拡張機能をインストール\n• Trust Walletアプリ内ブラウザを使用",
+		"solanaSnapInstallFailed": "Solana Snapのインストールに失敗しました。\nPhantomウォレットの使用をお勧めします。",
+		"trustWalletSolanaNotDetected": "Trust WalletでSolanaが検出できません。Trust Walletアプリ内ブラウザからアクセスしてください。",
+		"solanaWalletNotFound": "Solana対応ウォレットが見つかりません。Phantomウォレット等をインストールしてください。",
+		"solanaConnectError": "Solana接続エラー: {{error}}",
+		"phantomConnectError": "Phantom接続エラー: {{error}}",
+		"solanaSendError": "Solana送金エラー: {{error}}",
+		"utxoFetchFailed": "UTXOの取得に失敗しました",
+		"noConfirmedBalance": "確認済みの残高がありません。未確認残高: {{amount}} BTC（確認を待ってください）",
+		"noBalanceAtAddress": "残高がありません。アドレス: {{address}}",
+		"insufficientBalance": "残高不足です。残高: {{balance}} BTC, 必要額: {{required}} BTC (手数料込み)",
+		"txSignFailed": "トランザクションの署名に失敗しました",
+		"txSignFailedCheckAccount": "トランザクションの署名に失敗しました。MetaMaskのBitcoinアカウントを確認してください。アドレスが一致しない可能性があります。",
+		"txSendFailed": "トランザクションの送信に失敗しました",
+		"broadcastFailed": "ブロードキャスト失敗: {{error}}",
+		"bitcoinSendComplete": "Bitcoin送金完了！ TXID: {{txid}}...",
+		"solanaSendComplete": "Solana送金完了！ Signature: {{signature}}...",
+		"bitcoinSendTitle": "Bitcoin送金",
+		"stepConnectSnap": "Bitcoin Snap接続",
+		"addressShort": "アドレス: {{address}}...",
+		"connectingToSnap": "Snapに接続中...",
+		"installingSnap": "MetaMask Snapをインストール中...",
+		"stepCheckBalance": "残高確認",
+		"fetchingUtxo": "UTXOを取得中...",
+		"stepBuildTransaction": "トランザクション構築",
+		"buildingPsbt": "PSBTを構築中...",
+		"stepSignTransaction": "トランザクション署名",
+		"approveSignatureInWallet": "{{wallet}}で署名を承認してください",
+		"stepBroadcast": "ブロードキャスト",
+		"broadcasting": "Bitcoinネットワークに送信中...",
+		"stepComplete": "完了",
+		"sendComplete": "送金が完了しました！",
+		"waitingForCompletion": "送金完了を待機中...",
+		"sendErrorTitle": "送金エラー",
+		"sendAmountLabel": "送金額:",
+		"feeLabel": "手数料:",
+		"fromLabel": "送金元:"
+	},
+	"screenEffects": {
+		"confetti": "紙吹雪",
+		"hearts": "ハート",
+		"stars": "流れ星",
+		"fireworks": "花火",
+		"celebration": "お祝い",
+		"rainbow": "虹",
+		"meteor": "流星群",
+		"goldrush": "ゴールドラッシュ",
+		"sentEffect": "{{name}}さんが{{effect}}を贈りました"
+	},
+	"modals": {
+		"common": {
+			"error": "エラー",
+			"alreadyAuthenticated": "既に認証済みです",
+			"reauthHint": "。ただし、別の{{provider}}アカウントで認証することもできます。",
+			"reauthHintDomain": "。ただし、他のドメインを追加したり、別のユーザーとしてログインすることもできます。",
+			"redirectUrlMissing": "リダイレクトURLが取得できませんでした。",
+			"authAccountPrefix": "{{provider}}アカウントを使って",
+			"authAccountSuffix": "を認証できます。認証すると、以前と同じアカウントでチャットにログインできるようになります。",
+			"authRedirectExplanation": "「{{provider}}で認証」ボタンをクリックすると、{{provider}}の認証ページに移動します。そこでアプリを承認すると、このサイトに戻ってきて認証が完了します。",
+			"authWithProvider": "{{provider}}で認証",
+			"authRequiredTitle": "{{provider}}認証が必要です",
+			"authRequiredDescription": "この配信を視聴・参加するには{{provider}}アカウントでの認証が必要です。",
+			"authPrivacyNote": "認証情報は視聴者識別のためにのみ使用され、投稿などの操作は行いません。",
+			"indieAuthUrlInvalid": "指定されたURLは無効か、IndieAuthに対応していません。",
+			"noteLabel": "注意",
+			"privacyNote": "これは認証目的のみに使用され、個人情報がアクセスされたり保存されることはありません。"
+		},
+		"auth": {
+			"tab": "{{provider}}認証"
+		},
+		"browserNotify": {
+			"notSupported": "お使いのブラウザではブラウザ通知はサポートされていません。",
+			"notSupportedLocal": "ローカルサーバーではブラウザ通知はサポートされていません。",
+			"showNotifications": "通知を表示",
+			"allow": "許可する",
+			"block": "ブロック",
+			"enabledTitle": "通知が有効になっています",
+			"enabledDescription": "{{host}}からのプッシュ通知を無効にするには、このサイトのブラウザ権限にアクセスして通知をオフにしてください。",
+			"learnMore": "詳細を見る",
+			"registrationError": "ライブ通知の登録エラー: {{message}}。プライベートブラウザ環境でないこと、またはこの配信の通知を以前に無効にしていないことを確認してください。",
+			"description": "この配信がライブになるたびにブラウザで通知を受け取ります。",
+			"docsLink": "AoiTubeブラウザ通知の詳細",
+			"descriptionSuffix": "をご覧ください。"
+		},
+		"fediAuth": {
+			"messagePrefix": "Fediverseのダイレクトメッセージを受信して、アカウントを",
+			"messageSuffix": "にリンクするか、以前にリンクしたチャットユーザーとしてログインできます。",
+			"codeInstructions": "Fediverseアカウントに送信されたコードを入力してください。コードを受信していない場合は、ダイレクトメッセージを受信できるか確認してください。",
+			"verifyCode": "コードを確認",
+			"accountLabel": "あなたのFediverseアカウント",
+			"learnMoreHeader": "Fediverseを使った認証について詳しく",
+			"learnMoreBody": "チャットIDをFediverseのIDとリンクできます。次回このチャットIDを使用する際は、再度Fediverse認証を行うことでログインできます。"
+		},
+		"follow": {
+			"headerPrefix": "この配信をフォローすると、ライブ開始時にFediverseで通知を受け取れます。 初めての方は",
+			"learnFediverseLink": "Fediverseについて学ぶ",
+			"headerSuffix": "良い機会です。",
+			"errorTitle": "フォローエラー",
+			"instructions": "フォローするには @ユーザー名@サーバー の形式で入力してください",
+			"accountPlaceholder": "Fediverseアカウント @account@server",
+			"footer": "Fediverseサーバーにリダイレクトされ、アクションの確認が求められます。",
+			"followButton": "フォロー",
+			"joinButton": "Fediverseに参加"
+		},
+		"indieAuth": {
+			"messagePrefix": "自分のドメインを使って",
+			"messageSuffix": "を認証するか、IndieAuthを使用して以前に認証したチャットユーザーとしてログインできます。",
+			"domainLabel": "あなたのドメイン",
+			"learnMoreHeader": "IndieAuthを使った認証について詳しく",
+			"learnMoreBody1": "IndieAuthは、自分のドメインを使って完全に独立した分散型の方法で自分自身を証明できる仕組みです。",
+			"learnMoreBody2Prefix": "AoiTubeインスタンスを運営している場合は、そのドメインをここで使用できます。それ以外の場合は、",
+			"learnMoreLink": "IndieAuthに対応する方法",
+			"learnMoreBody2Suffix": "をご確認ください。"
+		},
+		"nameChange": {
+			"description": "チャット表示名は、チャットメッセージ送信時に他の人に表示される名前です。",
+			"changeButton": "名前を変更",
+			"placeholder": "チャット表示名",
+			"colorLabel": "色"
+		},
+		"nsfwWarning": {
+			"title": "年齢確認",
+			"message1": "このサイトには成人向け（18歳以上）のコンテンツが含まれている可能性があります。",
+			"message2": "あなたは18歳以上ですか？",
+			"confirm": "はい、18歳以上です",
+			"decline": "いいえ、18歳未満です",
+			"note": "「はい」を選択すると、この確認は今後表示されません。"
+		},
+		"socialAuthRequired": {
+			"titleMulti": "ソーシャル認証が必要です",
+			"descriptionMulti": "この配信を視聴・参加するには{{providers}}のいずれかのアカウントでの認証が必要です。",
+			"clickButtonPrompt": "下記のボタンをクリックして認証を行ってください。"
+		},
+		"twitterAuthRequired": {
+			"clickButtonPrompt": "「認証する」ボタンをクリックしてX認証を行ってください。",
+			"authButton": "認証する"
+		}
+	},
+	"admin": {
+		"config": {
+			"chat": {
+				"title": "チャット設定",
+				"groups": {
+					"usage": "利用",
+					"moderation": "モデレーション",
+					"usernames": "ユーザー名・ウェルカム"
+				}
+			},
+			"doneru": {
+				"aboutBody1": "Doneruは日本のスーパーチャットサービスです。",
+				"aboutBody2": "でクリエイターアカウントを作成し、スーパーチャットを受け取れるようになります。 PayPalやStripeなどの決済に対応しています。",
+				"aboutLinkText": "Doneru公式サイト",
+				"aboutTitle": "Doneruとは",
+				"creatorSettingsTitle": "クリエイター設定",
+				"creatorUrlDescription": "あなたのDoneruクリエイターページのURLを入力してください。 例: https://doneru.jp/your-username",
+				"creatorUrlLabel": "DoneruクリエイターページURL",
+				"enableDescription": "有効にすると、スーパーチャットフォームにDoneruオプションが表示されます。",
+				"enableLabel": "Doneruを有効にする",
+				"howToTitle": "使い方",
+				"intro": "Doneruを有効にすると、視聴者がDoneruを通じてスーパーチャットを送れるようになります。 Doneruでクリエイターアカウントを作成し、あなたのクリエイターページURLを設定してください。",
+				"noteBody": "Doneruでのスーパーチャットは、Doneruのサイトで処理されます。スーパーチャットの履歴はDoneruのダッシュボードで確認できます。",
+				"noteTitle": "注意",
+				"saveSuccess": "Doneru設定を保存しました",
+				"step1Suffix": "でクリエイターアカウントを作成します",
+				"step2": "プロフィール設定で決済方法（PayPal、Stripeなど）を設定します",
+				"step3": "あなたのクリエイターページURL（https://doneru.jp/your-username）をコピーします",
+				"step4": "上記の「DoneruクリエイターページURL」に貼り付けます",
+				"step5": "「Doneruを有効にする」をオンにして保存します",
+				"title": "Doneru設定",
+				"urlValidation": "DoneruのURLは https://doneru.jp/ で始まる必要があります"
+			},
+			"faq": {
+				"basicSyntaxTitle": "基本的な記法",
+				"contentCardTitle": "FAQ内容（Markdown形式）",
+				"enableLabel": "FAQページを有効にする",
+				"insertSample": "サンプルを挿入",
+				"intro": "視聴者向けのFAQページを設定します。Markdown形式で記述できます。",
+				"markdownGuideTitle": "Markdownの書き方",
+				"mdBoldLabel": "太字",
+				"mdBoldSample": "**太字**",
+				"mdH1Label": "大見出し",
+				"mdH1Sample": "# 見出し1",
+				"mdH2Label": "中見出し",
+				"mdH2Sample": "## 見出し2",
+				"mdH3Label": "小見出し",
+				"mdH3Sample": "### 見出し3",
+				"mdHrLabel": "水平線",
+				"mdLinkLabel": "リンク",
+				"mdLinkSample": "[リンク](URL)",
+				"mdListLabel": "箇条書き",
+				"mdListSample": "- 項目",
+				"saveError": "FAQ設定の保存に失敗しました",
+				"saveSuccess": "FAQ設定を保存しました",
+				"statusDisabled": "無効",
+				"statusEnabled": "有効",
+				"title": "よくあるご質問（FAQ）設定",
+				"urlAlertTitle": "FAQページのURL"
+			},
+			"kofi": {
+				"aboutBody1": "Ko-fiはクリエイター向けのスーパーチャット・支援プラットフォームです。",
+				"aboutBody2": "でアカウントを作成し、PayPalやStripeを接続して支援を受け取れます。 Webhookを設定することで、Ko-fiでのスーパーチャットがAoiTubeのチャットにリアルタイムで表示されます。",
+				"aboutLinkText": "Ko-fi公式サイト",
+				"aboutTitle": "Ko-fiとは",
+				"columnCommand": "コマンド",
+				"columnEffect": "演出",
+				"columnPriceJpy": "価格（JPY）",
+				"columnPriceUsd": "価格（USD）",
+				"copySuccess": "{{label}}をコピーしました",
+				"copyUrlTooltip": "URLをコピー",
+				"effectsCardTitle": "画面演出コマンド",
+				"effectsExample": "例: メッセージを「!fireworks いつも応援しています！」として ¥1,000 以上を支払うと、花火の演出が発動します。",
+				"effectsIntro": "Ko-fiのメッセージを以下のコマンドで始めて、演出価格以上の金額を支払うと、配信画面に演出が発動します。金額が価格に満たない場合は通常のスーパーチャットとして扱われます。",
+				"enableDescription": "有効にすると、Ko-fiからのWebhook通知を受け付けて、スーパーチャットをチャットに表示します。",
+				"enableLabel": "Ko-fiを有効にする",
+				"intro": "Ko-fiを有効にすると、視聴者がKo-fiを通じてスーパーチャットを送れるようになります。 Ko-fiでアカウントを作成し、Webhook設定を行ってください。",
+				"pageSettingsTitle": "ページ設定（任意）",
+				"pageUrlDescription": "あなたのKo-fiページのURLを入力してください。スーパーチャットフォームにリンクボタンとして表示されます。 例: https://ko-fi.com/your-username",
+				"pageUrlLabel": "Ko-fiページURL",
+				"realtimeBody": "Ko-fiでのスーパーチャットは、Webhookを通じてAoiTubeに自動的に送信され、チャットにリアルタイムで表示されます。寄付者の名前、金額、メッセージがチャットに表示されます（寄付者が非公開を選択した場合は匿名として表示されます）。",
+				"realtimeTitle": "リアルタイム連携",
+				"saveSuccess": "Ko-fi設定を保存しました",
+				"step1Suffix": "でアカウントを作成します",
+				"step2LinkText": "設定",
+				"step2Suffix": "でPayPalまたはStripeを接続して決済を有効化します",
+				"step3Suffix": "を開きます",
+				"step4": "上記の「Webhook URL」をKo-fiのWebhook URL欄に貼り付けます",
+				"step5": "Ko-fiに表示される「Verification Token」をコピーして、上記のVerification Token欄に貼り付けます",
+				"step6": "「Ko-fiを有効にする」をオンにして保存します",
+				"step7": "Ko-fiで「Send Test」ボタンをクリックして、設定が正しいことを確認します",
+				"title": "Ko-fi設定",
+				"urlValidation": "Ko-fiのURLは https://ko-fi.com/ で始まる必要があります",
+				"verificationTokenDescription": "Ko-fiのWebhook設定ページに表示される「Verification Token」を入力してください。 セキュリティのため、この設定を強くお勧めします。",
+				"verificationTokenPlaceholder": "Ko-fiのVerification Token",
+				"verificationTokenTooltip": "Ko-fiのWebhook設定ページに表示されるトークンをコピーして貼り付けてください。これにより、正当なKo-fiからのリクエストのみを受け付けます。",
+				"webhookAlertPrefix": "Ko-fiの",
+				"webhookAlertSuffix": "で、以下のURLを設定してください：",
+				"webhookAlertTitle": "Webhook URLをKo-fiに設定してください",
+				"webhookCardTitle": "Webhook設定",
+				"webhookSettingsPage": "Webhook設定ページ"
+			},
+			"metamask": {
+				"aboutBody": "Metamask決済では仲介手数料は発生しませんが、ネットワーク手数料（ガス代）は送金者が負担します。 Polygon等のL2ネットワークやステーブルコイン（USDT/USDC）を使用すると、手数料を抑えることができます。",
+				"aboutTitle": "暗号通貨決済について",
+				"btcAddressDescription": "Bitcoin Native SegWitでスーパーチャットを受け取る場合は、bc1で始まるBech32アドレスを入力してください。 MetaMaskの最新バージョンでBitcoin送金に対応しています。",
+				"btcAddressInvalid": "有効なBech32アドレス形式ではありません（bc1で始まるアドレスを入力してください）",
+				"btcAddressLabel": "Bitcoin受取ウォレットアドレス（任意）",
+				"currencyCardTitle": "通貨設定（参考用）",
+				"currentCurrencyLabel": "通貨",
+				"currentNetworkLabel": "ネットワーク",
+				"currentPriceIdLabel": "価格参照ID",
+				"currentSettingsLabel": "現在の設定",
+				"defaultNetworkDescription": "この設定は参考値です。実際のスーパーチャットでは視聴者が自由にネットワークを選択できます。",
+				"defaultNetworkLabel": "参考用デフォルトネットワーク",
+				"enableLabel": "Metamask決済を有効にする",
+				"evmAddressDescription": "Ethereum、PolygonなどEVM系チェーンでスーパーチャットを受け取るウォレットのアドレスを入力してください。",
+				"evmAddressInvalid": "有効なEVMアドレス形式ではありません（0xで始まる42文字のアドレスを入力してください）",
+				"evmAddressLabel": "EVM受取ウォレットアドレス",
+				"intro": "Metamask/Web3決済を有効にすると、視聴者が暗号通貨でスーパーチャットを送れるようになります。 複数のチェーンとトークンに対応しています。",
+				"nativeCurrencyOption": "{{currency}}（ネイティブ通貨）",
+				"networkAlertBody": "スーパーチャット画面では、視聴者が複数のネットワーク（Bitcoin、VirBiCoin、Ethereum、Polygon等）から自由に選択できます。ここでの設定は管理用の参考値です。",
+				"networkAlertTitle": "ネットワーク選択について",
+				"networkCardTitle": "デフォルトネットワーク設定（参考用）",
+				"receiveCurrencyDescription": "ネイティブ通貨（ETH、MATIC等）またはERC-20トークン（USDT、USDC等）を選択できます。 ステーブルコインは価格変動がないため、受け取り額が安定します。",
+				"receiveCurrencyLabel": "受け取り通貨",
+				"saveSuccess": "Metamask設定を保存しました",
+				"showJpyDescription": "CoinGecko APIを使用してリアルタイムの日本円換算を表示します。",
+				"showJpyLabel": "日本円換算を表示",
+				"testAlertBody": "本番環境で使用する前に、Sepolia（Ethereum）やAmoy（Polygon）などのテストネットで 動作確認することをお勧めします。テストネットのトークンは無料で入手できます。",
+				"testAlertTitle": "テストについて",
+				"title": "Metamask設定",
+				"tokenAddressAutoSet": "プリセットのトークンを選択すると自動設定されます",
+				"tokenAddressLabel": "トークンコントラクトアドレス",
+				"tokenDecimalsLabel": "トークン小数点桁数",
+				"tokenUnavailable": "{{symbol}}はこのネットワークでは利用できません",
+				"validateTokenRequired": "トークンコントラクトアドレスを入力してください",
+				"validateWalletFormat": "有効なEthereumアドレスを入力してください（0xで始まる42文字）",
+				"validateWalletRequired": "ウォレットアドレスを入力してください",
+				"walletCardTitle": "ウォレット設定"
+			},
+			"notify": {
+				"createButton": "作成",
+				"customDescription": "Webhook（ウェブフック）を使用して独自の通知を構築できます。",
+				"customTitle": "カスタム",
+				"description": "以下の通知チャンネルを利用して、配信開始を視聴者に知らせることができます。",
+				"instanceUrlRequired": "この機能を有効にするには、まずサーバーURLを設定する必要があります。",
+				"learnMore": "通知について詳しく",
+				"silentModeDescription": "有効にすると、配信開始・終了時の外部通知（Webhook、ブラウザプッシュ、Discord、X、Fediverse、ディレクトリ）をすべて抑止します。テスト配信の際にご利用ください。",
+				"silentModeTitle": "サイレントテストモード",
+				"thumbnailTitle": "通知サムネイル",
+				"title": "通知"
+			},
+			"paypal": {
+				"aboutBody1": "PayPalは世界200以上の国と地域で利用可能な決済サービスです。",
+				"aboutBody2": "でアプリを作成し、API認証情報を取得してください。 手数料は約3.6% + 40円（日本の場合）です。",
+				"aboutTitle": "PayPalについて",
+				"clientIdPlaceholder": "例: AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz",
+				"credentialsMissingBody": "{{env}}環境のClient IDとClient Secretを設定してください。",
+				"enableLabel": "PayPal決済を有効にする",
+				"envProduction": "本番",
+				"envSandbox": "サンドボックス",
+				"intro": "PayPalは世界中で利用されている決済サービスです。 PayPal Developer Portalでアプリを作成し、Client IDとClient Secretを取得してください。",
+				"liveClientIdDescription": "PayPal Developer Portalの「Live」タブで取得したClient ID",
+				"liveClientSecretDescription": "PayPal Developer Portalの「Live」タブで取得したClient Secret",
+				"liveClientSecretPlaceholder": "Live Client Secretを入力",
+				"merchantIdDescription": "PayPalビジネスアカウントのMerchant ID（必須ではありません）",
+				"merchantIdLabel": "Merchant ID（オプション）",
+				"merchantIdPlaceholder": "例: ABCDEFGHIJKLM",
+				"modeProductionNote": "🔴 本番環境（実際の決済が行われます）",
+				"modeSandboxNote": "🧪 テスト環境（実際の決済は行われません）",
+				"productionEnvAlertBody": "実際の決済に使用される認証情報です。本番環境では実際のお金が動きます。",
+				"productionEnvAlertTitle": "本番環境",
+				"productionTabLabel": "🔴 本番環境",
+				"sandboxClientIdDescription": "PayPal Developer Portalの「Sandbox」タブで取得したClient ID",
+				"sandboxClientSecretDescription": "PayPal Developer Portalの「Sandbox」タブで取得したClient Secret",
+				"sandboxClientSecretPlaceholder": "Sandbox Client Secretを入力",
+				"sandboxEnvAlertBody": "テスト用の認証情報です。サンドボックスアカウントを使用してテスト決済を行えます。",
+				"sandboxEnvAlertTitle": "サンドボックス環境",
+				"sandboxTabLabel": "🧪 サンドボックス環境",
+				"sandboxTestAlertTitle": "サンドボックステスト",
+				"sandboxTestBody1": "サンドボックスモードでは、",
+				"sandboxTestBody2": "を使用してテスト決済を行えます。実際のお金は動きません。",
+				"sandboxTestLinkText": "サンドボックスアカウント",
+				"saveSuccess": "PayPal設定を保存しました",
+				"separateCredsBody": "PayPal Developer Portalでは、サンドボックス用と本番用で異なるClient IDとClient Secretが発行されます。それぞれの環境に対応する認証情報を入力してください。",
+				"separateCredsTitle": "サンドボックスと本番環境で別々の認証情報を使用します",
+				"step1Suffix": "にログインします",
+				"step2": "「Apps & Credentials」セクションで新しいアプリを作成します",
+				"step3Body": "：「Sandbox」タブでClient IDとClient Secretを取得し、上記の「サンドボックス環境」タブに入力します",
+				"step3Strong": "サンドボックス用",
+				"step4Body": "：「Live」タブでClient IDとClient Secretを取得し、上記の「本番環境」タブに入力します",
+				"step4Strong": "本番用",
+				"step5": "（オプション）Webhook URLをPayPal Developer Portalに設定します",
+				"step6": "環境モードを「サンドボックス」にしてテストします",
+				"step7": "テスト完了後、環境モードを「本番」に切り替えます",
+				"title": "PayPal設定",
+				"webhookEventNote": "Webhookイベントとして「PAYMENT.CAPTURE.COMPLETED」を選択してください。"
+			},
+			"paypay": {
+				"aboutBody1": "PayPayのAPI認証情報は",
+				"aboutBody2": "から取得できます。まずはサンドボックス環境でテストすることをお勧めします。",
+				"apiKeyLabel": "APIキー",
+				"apiKeyPlaceholder": "APIキーを入力",
+				"apiSecretLabel": "APIシークレット",
+				"apiSecretPlaceholder": "APIシークレットを入力",
+				"credentialsMissingBody": "{{env}}環境のAPIキーとAPIシークレットを設定してください。",
+				"enableLabel": "PayPay決済を有効にする",
+				"intro": "PayPay決済を有効にすると、視聴者がPayPayでスーパーチャットを送れるようになります。 PayPay for Developersでアカウントを作成し、API認証情報を取得してください。",
+				"merchantIdLabel": "Merchant ID（加盟店ID）",
+				"merchantIdPlaceholder": "加盟店IDを入力",
+				"productionWarningBody": "実際の決済が行われます。API認証情報が正しいことを確認してください。",
+				"saveSuccess": "PayPay設定を保存しました",
+				"separateCredsBody": "PayPay for Developersでは、サンドボックス用と本番用で異なるAPIキーとAPIシークレットが発行されます。それぞれの環境に対応する認証情報を入力してください。",
+				"title": "PayPay設定"
+			},
+			"shared": {
+				"apiCredentials": "API認証情報",
+				"basicSettings": "基本設定",
+				"credentialsMissing": "認証情報が未設定です",
+				"currencies": {
+					"AUD": "AUD - 豪ドル",
+					"BRL": "BRL - ブラジルレアル",
+					"CAD": "CAD - カナダドル",
+					"CHF": "CHF - スイスフラン",
+					"CNY": "CNY - 中国元",
+					"CZK": "CZK - チェココルナ",
+					"DKK": "DKK - デンマーククローネ",
+					"EUR": "EUR - ユーロ",
+					"GBP": "GBP - 英ポンド",
+					"HKD": "HKD - 香港ドル",
+					"INR": "INR - インドルピー",
+					"JPY": "JPY - 日本円",
+					"KRW": "KRW - 韓国ウォン",
+					"MXN": "MXN - メキシコペソ",
+					"MYR": "MYR - マレーシアリンギット",
+					"NOK": "NOK - ノルウェークローネ",
+					"NZD": "NZD - ニュージーランドドル",
+					"PHP": "PHP - フィリピンペソ",
+					"PLN": "PLN - ポーランドズウォティ",
+					"SEK": "SEK - スウェーデンクローナ",
+					"SGD": "SGD - シンガポールドル",
+					"THB": "THB - タイバーツ",
+					"TWD": "TWD - 台湾ドル",
+					"USD": "USD - 米ドル"
+				},
+				"currency": "通貨",
+				"displayNameDescription": "スーパーチャットボタンに表示する名前をカスタマイズできます。空欄の場合は「{{name}}」と表示されます。",
+				"displayNameOptional": "表示名（任意）",
+				"environmentMode": "環境モード",
+				"loading": "読み込み中...",
+				"productionModeActiveBody": "実際の決済が行われます。設定が正しいことを確認してください。",
+				"productionModeActiveTitle": "本番モードが有効です",
+				"sandboxTestFirst": "本番環境で使用する前に、サンドボックスでテストしてください。",
+				"saveSettings": "設定を保存",
+				"setupSteps": "設定手順",
+				"webhookEndpoint": "Webhookエンドポイント",
+				"webhookUrlDescription": "このURLを決済サービス側のWebhook設定に登録してください。",
+				"saveSuccess": "設定を保存しました",
+				"saveError": "設定の保存に失敗しました"
+			},
+			"socialItems": {
+				"authDescription": "視聴者がソーシャルアカウントでチャットに認証できるようにします。 チャット設定で「ソーシャル認証を必須にする」を有効にすると、これらのアカウントでの認証が必須になります。",
+				"authTitle": "ソーシャル認証設定",
+				"title": "ソーシャル設定"
+			},
+			"stripe": {
+				"aboutBody1": "Stripeは135以上の通貨と多数の決済方法をサポートする決済プラットフォームです。",
+				"aboutBody2": "でアカウントを作成し、APIキーを取得してください。 手数料は約3.6%（日本の場合）です。",
+				"aboutTitle": "Stripeについて",
+				"apiKeysTitle": "APIキー",
+				"credentialsMissingBody": "{{env}}環境のAPIキーを設定してください。",
+				"enableLabel": "Stripe決済を有効にする",
+				"envProduction": "本番",
+				"envTest": "テスト",
+				"intro": "Stripeは世界中で利用されている決済プラットフォームです。 Stripe Dashboardでアカウントを作成し、APIキーを取得してください。",
+				"liveModeAlertBody": "本番用のAPIキーです。実際のクレジットカードで決済が行われます。",
+				"liveModeAlertTitle": "本番モード",
+				"livePublishableKeyDescription": "Stripe Dashboardの「開発者」→「APIキー」で取得（pk_live_で始まる）",
+				"liveSecretKeyDescription": "Stripe Dashboardの「開発者」→「APIキー」で取得（sk_live_で始まる）",
+				"liveTabLabel": "🔴 本番モード",
+				"liveWebhookSecretLabel": "Live Webhook Secret（オプション）",
+				"modeProductionNote": "🔴 本番モード（実際の決済が行われます）",
+				"modeTestNote": "テストモード（テスト用カードで決済できます）",
+				"saveSuccess": "Stripe設定を保存しました",
+				"separateKeysBody": "Stripe Dashboardでは、テスト用と本番用で異なるAPIキーが発行されます。それぞれの環境に対応するキーを入力してください。",
+				"separateKeysTitle": "テストモードと本番モードで別々のAPIキーを使用します",
+				"step1Suffix": "にログインします（アカウントがない場合は作成）",
+				"step2": "「開発者」→「APIキー」セクションでAPIキーを確認します",
+				"step3Body": "：「テストモード」のトグルをONにして、pk_test_とsk_test_で始まるキーを取得し、上記の「テストモード」タブに入力します",
+				"step3Strong": "テスト用",
+				"step4Body": "：「テストモード」のトグルをOFFにして、pk_live_とsk_live_で始まるキーを取得し、上記の「本番モード」タブに入力します",
+				"step4Strong": "本番用",
+				"step5": "（オプション）「開発者」→「Webhook」でWebhookエンドポイントを作成します",
+				"step6": "環境モードを「テスト」にしてテストします",
+				"step7": "テスト完了後、環境モードを「本番」に切り替えます",
+				"testCardAlertTitle": "テストカード",
+				"testCardFailure": "失敗する決済",
+				"testCardIntro": "テストモードでは、以下のテストカード番号を使用できます：",
+				"testCardNote": "有効期限は将来の任意の日付、CVCは任意の3桁を使用してください。",
+				"testCardSuccess": "成功する決済",
+				"testModeAlertBody": "テスト用のAPIキーです。テストカード（4242 4242 4242 4242）を使用してテスト決済を行えます。",
+				"testModeAlertTitle": "テストモード",
+				"testModeFirst": "本番環境で使用する前に、テストモードでテストしてください。",
+				"testPublishableKeyDescription": "Stripe Dashboardの「開発者」→「APIキー」で取得（pk_test_で始まる）",
+				"testSecretKeyDescription": "Stripe Dashboardの「開発者」→「APIキー」で取得（sk_test_で始まる）",
+				"testTabLabel": "🧪 テストモード",
+				"testWebhookSecretLabel": "Test Webhook Secret（オプション）",
+				"title": "Stripe設定",
+				"webhookEventNote": "Webhookイベントとして「checkout.session.completed」を選択してください。",
+				"webhookSecretDescription": "Webhookエンドポイント作成時に取得（whsec_で始まる）"
+			},
+			"tokushoho": {
+				"contentCardTitle": "表記内容（マークダウン形式）",
+				"contentPlaceholder": "マークダウン形式で入力...",
+				"contentRequired": "表記内容を入力してください",
+				"enableLabel": "特定商取引法に基づく表記ページを有効にする",
+				"intro": "スーパーチャット（有料サービス）を提供する場合、特定商取引法に基づく表記が必要です。 マークダウン形式で自由に編集できます。",
+				"legalAlertTitle": "法的要件について",
+				"legalBody1": "日本国内で決済サービスを提供する場合、特定商取引法に基づく表記が義務付けられています。 詳細は",
+				"legalBody2": "をご確認ください。",
+				"legalLinkText": "消費者庁のサイト",
+				"markdownGuideSuffix": "などが使えます。 プレビューは保存後、表記ページで確認できます。",
+				"markdownGuideTitle": "マークダウン記法について",
+				"mdBoldSample": "**太字**",
+				"mdH1Sample": "# 見出し1",
+				"mdH2Sample": "## 見出し2",
+				"mdListSample": "* リスト",
+				"saveError": "保存に失敗しました: {{message}}",
+				"saveSuccess": "特定商取引法に基づく表記を保存しました",
+				"title": "特定商取引法に基づく表記",
+				"urlAlertTitle": "表記ページURL",
+				"validationError": "入力内容を確認してください"
+			},
+			"video": {
+				"advancedSettings": "詳細設定",
+				"docLinkText": "動画ドキュメント",
+				"introPrefix": "動画設定を変更する前に、",
+				"introSuffix": "を確認し、配信パフォーマンスへの影響を理解してください。まずは中程度の品質の出力を1つ用意し、 必要に応じて画質のバリエーションを追加していく運用がおすすめです。",
+				"tabQuality": "画質設定",
+				"tabStreaming": "配信プロトコル",
+				"title": "動画設定"
+			},
+			"recording": {
+				"tabLabel": "録画",
+				"title": "録画設定",
+				"description": "配信を自動的に録画し、アーカイブ（VOD）として保存します。録画は非公開の状態で保存されるため、内容の確認や価格設定を行ってから「ユーティリティ > アーカイブ」で公開してください。公開された録画は視聴者向けの一覧ページ（/archives）に表示されます。"
+			},
+			"backup": {
+				"title": "バックアップ設定",
+				"description": "データベース（設定・ユーザー・購入履歴・アーカイブ視聴権限）を自動的にバックアップします。決済が絡むため、購入記録の消失を防ぐバックアップを推奨します。"
+			}
+		},
+		"pages": {
+			"common": {
+				"cancel": "キャンセル",
+				"delete": "削除",
+				"docsIntro": "使い方や例については、以下のドキュメントをご覧ください。",
+				"documentation": "ドキュメント",
+				"name": "名前",
+				"pleaseWait": "しばらくお待ちください",
+				"selectAll": "すべて選択"
+			},
+			"accessTokens": {
+				"title": "アクセストークン",
+				"intro": "アクセストークンは、外部のサードパーティーツールがAoiTubeサーバー上で特定の操作を行うために使用します。必ず安全に管理し、クライアントコードに含めず、管理できるサーバー側で保管してください。",
+				"createButton": "アクセストークンを作成",
+				"modalTitle": "新規アクセストークンを作成",
+				"nameHint": "このアクセストークンでメッセージを送信するとき、チャット上のユーザー名として表示されます。",
+				"namePlaceholder": "ボット/サービス/連携の名前",
+				"scopeHint": "このアクセストークンに付与する権限を選択してください。作成後は編集できません。",
+				"neverUsed": "未使用",
+				"columns": {
+					"token": "トークン",
+					"scopes": "権限",
+					"lastUsed": "最終使用"
+				},
+				"scopes": {
+					"systemMessages": {
+						"name": "システムメッセージ",
+						"description": "システムとして公式メッセージを送信できます。"
+					},
+					"chatMessages": {
+						"name": "チャットメッセージ",
+						"description": "このトークンの所有者としてチャットメッセージを送信できます。"
+					},
+					"admin": {
+						"name": "管理者権限",
+						"description": "モデレーション、サーバーステータス取得などの管理操作ができます。"
+					}
+				}
+			},
+			"actions": {
+				"title": "外部アクション",
+				"intro": "外部アクションURLは、ユーザーがボタンをクリックしたときにAoiTubeページ内に埋め込み表示できるサードパーティーUIです。",
+				"createAction": "新規アクションを作成",
+				"editAction": "アクションを編集",
+				"saved": "更新しました。",
+				"htmlEmbed": "HTML埋め込み",
+				"sameTab": "同じタブ",
+				"newTab": "新しいタブ",
+				"columns": {
+					"description": "説明",
+					"urlEmbed": "URL / 埋め込み",
+					"icon": "アイコン",
+					"color": "色",
+					"openMode": "開き方"
+				},
+				"modal": {
+					"urlIntro": "表示したい外部アクションのURLを追加します。",
+					"httpsOnly": "HTTPSのURLと埋め込みのみ対応しています。",
+					"learnMore": "外部アクションについて詳しく",
+					"typePlaceholder": "アクションの種類を選択",
+					"typeUrl": "リンクまたはURLを埋め込む",
+					"typeHtml": "カスタムHTML",
+					"htmlPlaceholder": "HTML埋め込みコード（必須）",
+					"urlPlaceholder": "https://myserver.com/action（必須）",
+					"titlePlaceholder": "アクション名（必須）",
+					"descriptionPlaceholder": "説明（任意）",
+					"iconPlaceholder": "https://myserver.com/action/icon.png（任意）",
+					"colorLabel": "ボタンの背景色（任意）",
+					"openExternally": "ページ内ではなく新しいタブで開く"
+				}
+			},
+			"chat": {
+				"title": "チャット管理",
+				"columns": {
+					"time": "時刻",
+					"user": "ユーザー",
+					"message": "メッセージ"
+				},
+				"filters": {
+					"visible": "表示中",
+					"hidden": "非表示"
+				},
+				"tabs": {
+					"connected": "接続中",
+					"offline": "（オフライン）",
+					"banned": "ブロック済みユーザー",
+					"ipBans": "IPブロック",
+					"moderators": "モデレーター"
+				},
+				"viewerDocsPre": "視聴者の追加情報の設定については",
+				"viewerDocsPost": "を参照してください。",
+				"offlineDescription": "配信が開始され、チャットが有効な場合に、接続中のチャットクライアントがここに表示されます。",
+				"messageHistory": "メッセージ履歴 ({{num}}件)",
+				"messageHistoryIntro": "配信画面に表示される、視聴者からのメッセージを管理します。",
+				"bulkLabel": "複数のメッセージを選択して、表示状態を変更します：",
+				"bulkShow": "表示",
+				"bulkHide": "非表示"
+			},
+			"configGeneral": {
+				"tabs": {
+					"general": "一般",
+					"customCss": "カスタムCSS",
+					"customScripts": "カスタムスクリプト"
+				}
+			},
+			"configServer": {
+				"tabs": {
+					"server": "サーバー設定",
+					"storage": "S3オブジェクトストレージ",
+					"streamKeys": "ストリームキー",
+					"backup": "バックアップ"
+				}
+			},
+			"donations": {
+				"title": "購入管理",
+				"intro": "視聴者の購入（スーパーチャット・画面演出）の売上ダッシュボードと購入履歴です。外部の決済サービスからWebhook経由で自動登録することも、手動で登録することもできます。テスト決済（サンドボックス）は売上集計から除外されます。",
+				"addManually": "手動で追加",
+				"anonymous": "匿名",
+				"show": "表示する",
+				"hide": "非表示にする",
+				"visible": "表示中",
+				"hiddenLabel": "非表示",
+				"showTest": "テスト決済を表示",
+				"testTag": "テスト",
+				"testTooltip": "サンドボックス/テストモードの決済のため、売上集計には含まれません。",
+				"testCountTag": "テスト {{num}}件（集計対象外）",
+				"columns": {
+					"date": "日時",
+					"item": "商品",
+					"provider": "決済方法",
+					"amount": "金額",
+					"purchaser": "購入者",
+					"message": "メッセージ",
+					"status": "状態",
+					"action": "操作"
+				},
+				"items": {
+					"superchat": "スーパーチャット",
+					"screenEffect": "画面演出（{{name}}）",
+					"unknown": "不明",
+					"archive": "アーカイブ購入: {{title}}",
+					"archiveDeleted": "（削除済みアーカイブ）",
+					"archiveStat": "アーカイブ購入"
+				},
+				"providers": {
+					"manual": "手動",
+					"unknown": "不明"
+				},
+				"stats": {
+					"thisMonth": "今月の売上",
+					"momLabel": "前月比",
+					"noLastMonth": "前月の実績なし",
+					"total": "累計売上",
+					"cryptoJpy": "暗号資産（円換算）",
+					"cryptoJpyNote": "確定時のレートで換算した合計",
+					"purchaseCount": "購入総数",
+					"countSuffix": "件",
+					"average": "平均購入額",
+					"uniquePurchasers": "ユニーク購入者",
+					"peopleSuffix": "人",
+					"excludingAnonymous": "匿名購入を除く"
+				},
+				"charts": {
+					"daily": "日別売上（過去30日）",
+					"dailyTooltip": "{{currency}}: {{amount}}（{{num}}件）",
+					"byProvider": "決済方法別",
+					"providerTooltip": "{{label}}: {{num}}件（{{amounts}}）",
+					"byItem": "商品別購入数",
+					"itemTooltip": "{{num}}件",
+					"emptyDaily": "まだ売上データがありません",
+					"emptyProviders": "決済データがまだありません",
+					"emptyItems": "購入データがまだありません"
+				},
+				"deleteConfirm": {
+					"title": "スーパーチャットを削除",
+					"content": "このスーパーチャットを完全に削除しますか？この操作は取り消せません。"
+				},
+				"messages": {
+					"created": "スーパーチャットを登録しました",
+					"createFailed": "登録に失敗しました",
+					"shown": "表示しました",
+					"hidden": "非表示にしました",
+					"updateFailed": "更新に失敗しました",
+					"deleted": "削除しました",
+					"deleteFailed": "削除に失敗しました"
+				},
+				"modal": {
+					"title": "スーパーチャットを手動登録",
+					"register": "登録",
+					"amountLabel": "金額",
+					"amountRequired": "金額を入力してください",
+					"amountPlaceholder": "金額を入力",
+					"currencyLabel": "通貨",
+					"currencyJpy": "日本円 (JPY)",
+					"currencyUsd": "米ドル (USD)",
+					"currencyEur": "ユーロ (EUR)",
+					"displayNameLabel": "表示名",
+					"displayNamePlaceholder": "購入者の名前",
+					"messageLabel": "メッセージ",
+					"messagePlaceholder": "メッセージ（任意）",
+					"anonymousLabel": "匿名にする"
+				},
+				"filter": {
+					"all": "全て",
+					"superchat": "スーパーチャット",
+					"effect": "画面演出",
+					"archive": "アーカイブ"
+				},
+				"revoke": {
+					"button": "取消",
+					"confirmTitle": "視聴権を取り消しますか？",
+					"confirmContent": "このユーザーはこのアーカイブを視聴できなくなります。",
+					"success": "視聴権を取り消しました",
+					"failed": "取消に失敗しました"
+				},
+				"grant": {
+					"button": "視聴権を付与",
+					"title": "アーカイブ視聴権を付与",
+					"archiveLabel": "アーカイブ",
+					"userLabel": "ユーザー",
+					"submit": "付与",
+					"success": "視聴権を付与しました",
+					"failed": "付与に失敗しました",
+					"alreadyOwned": "このユーザーは既に視聴権を持っています"
+				}
+			},
+			"emojis": {
+				"title": "絵文字",
+				"intro": "チャットで使用するカスタム絵文字をアップロードできます。新しい絵文字をアップロードすると、ファイル名が絵文字名として使用されます。",
+				"uploadButton": "新しい絵文字をアップロード",
+				"deleteEmoji": "絵文字を削除",
+				"deleting": "絵文字を削除しています…",
+				"deleted": "絵文字を削除しました",
+				"converting": "絵文字を変換しています…",
+				"uploading": "絵文字をアップロードしています…",
+				"uploaded": "絵文字をアップロードしました！",
+				"unsupportedFileType": "対応していないファイル形式です: {{type}}"
+			},
+			"hardwareInfo": {
+				"title": "ハードウェア情報",
+				"noDataDescription": "ハードウェア情報がまだ収集されていません。",
+				"memory": "メモリ",
+				"disk": "ディスク",
+				"chartTitle": "使用率"
+			},
+			"help": {
+				"title": "どのようなご用件ですか？",
+				"troubleshooting": "トラブルシューティング",
+				"troubleshootingButton": "問題を解決する",
+				"readDocs": "ドキュメントを読む",
+				"commonTasks": "よくある作業",
+				"otherTitle": "その他",
+				"learnMore": "詳しく見る",
+				"questions": {
+					"configure": "AoiTubeの設定を行いたい",
+					"broadcasting": "配信ソフトの設定方法を知りたい",
+					"embed": "配信を他のサイトに埋め込みたい",
+					"customize": "サイトをカスタマイズしたい",
+					"video": "映像出力を調整したい",
+					"storage": "外部ストレージを使いたい"
+				},
+				"other": {
+					"foundBug": "バグを見つけた",
+					"foundBugPre": "バグを見つけた場合は、",
+					"foundBugLink": "お知らせください",
+					"question": "一般的な質問がある",
+					"questionPre": "多くの質問は",
+					"questionAnd": "や",
+					"questionPost": "にあります。",
+					"addon": "AoiTube向けアドオンを作りたい",
+					"addonBody": "開発者向けAPIを使って、ボット/オーバーレイ/ツール/アドオンを作成できます。",
+					"addonLink": "開発者向けAPIはこちら。"
+				}
+			},
+			"home": {
+				"viewers": "視聴者",
+				"peakViewers": "ピーク視聴者数",
+				"input": "入力",
+				"inboundDetails": "受信ストリーム詳細",
+				"inboundVideoStream": "受信ビデオストリーム",
+				"inboundAudioStream": "受信オーディオストリーム",
+				"outboundDetails": "送信ストリーム詳細",
+				"outboundVideoStream": "送信ビデオストリーム",
+				"outboundAudioStream": "送信オーディオストリーム",
+				"streamStarted": "{{relative}}に配信開始"
+			},
+			"loginSettings": {
+				"title": "ログイン設定",
+				"intro": "管理画面へのログインに使うパスワード・パスキー・セキュリティキー・ワンタイムパスワードを管理します。",
+				"currentUser": "現在のユーザー:",
+				"rename": "名前を変更",
+				"deleteKeyConfirm": "「{{name}}」を削除しますか？",
+				"proxyError": {
+					"message": "認証プロキシに接続できません",
+					"description": "このページには認証プロキシ（Authelia）が /authelia/ で稼働している必要があります。セッションが切れている場合はページを再読み込みしてください。"
+				},
+				"columns": {
+					"registeredAt": "登録日",
+					"lastUsed": "最終使用",
+					"actions": "操作"
+				},
+				"keysCard": {
+					"title": "パスキー・セキュリティキー",
+					"addKey": "キーを追加",
+					"empty": "登録済みのキーはありません"
+				},
+				"totpCard": {
+					"title": "ワンタイムパスワード（認証アプリ）",
+					"setup": "設定する",
+					"registered": "認証アプリによるワンタイムパスワードが登録されています。",
+					"notRegistered": "未設定です。認証アプリ（1Password等）で6桁コードを使えます。",
+					"deleteConfirm": "ワンタイムパスワードを削除しますか？"
+				},
+				"passwordCard": {
+					"title": "パスワード変更",
+					"current": "現在のパスワード",
+					"new": "新しいパスワード",
+					"confirm": "新しいパスワード（確認）",
+					"submit": "パスワードを変更"
+				},
+				"messages": {
+					"codeAutoFetched": "確認コードを自動取得しました",
+					"codeRequired": "確認コードを入力してください",
+					"codeInvalid": "確認コードが正しくないか期限切れです",
+					"codeNotReady": "コードをまだ取得できません。数秒後に再度お試しください",
+					"securityKeyFailed": "セキュリティキーでの確認に失敗しました",
+					"securityKeyCancelled": "セキュリティキーでの確認がキャンセルされました",
+					"totpRequired": "ワンタイムパスワードを入力してください",
+					"totpInvalid": "ワンタイムパスワードが正しくありません",
+					"keyNameRequired": "キーの名前を入力してください",
+					"keyAdded": "キーを追加しました",
+					"keyAddFailed": "キーの追加に失敗しました",
+					"keyAddCancelled": "キーの追加がキャンセルされました",
+					"keyDeleted": "「{{name}}」を削除しました",
+					"deleteFailed": "削除に失敗しました",
+					"renamed": "名前を変更しました",
+					"renameFailed": "名前の変更に失敗しました",
+					"totpStartFailed": "ワンタイムパスワードの設定を開始できませんでした",
+					"totpCodeRequired": "アプリに表示された6桁のコードを入力してください",
+					"totpRegistered": "ワンタイムパスワードを登録しました",
+					"totpMismatch": "コードが一致しません。もう一度お試しください",
+					"totpDeleted": "ワンタイムパスワードを削除しました",
+					"passwordMismatch": "新しいパスワードが一致しません",
+					"passwordChanged": "パスワードを変更しました",
+					"passwordChangeFailed": "パスワードの変更に失敗しました。現在のパスワードを確認してください"
+				},
+				"elevationModal": {
+					"title": "本人確認",
+					"codeIntro": "セキュリティ設定の変更には確認コードが必要です。コードは自動取得されます（数秒かかる場合は再取得を押してください）。",
+					"codePlaceholder": "確認コード（8桁）",
+					"verify": "確認する",
+					"secondFactorIntro": "続けて、登録済みの認証方法で本人確認を行ってください。",
+					"securityKeyConfirm": "セキュリティキー / パスキーで確認",
+					"totpPlaceholder": "ワンタイムパスワード（6桁）",
+					"confirm": "確認"
+				},
+				"addKeyModal": {
+					"title": "セキュリティキー / パスキーを追加",
+					"okText": "追加する",
+					"intro": "キーの名前を入力して「追加する」を押すと、ブラウザのセキュリティキー登録が始まります。",
+					"placeholder": "例: YubiKey 5C、1Password"
+				},
+				"renameModal": {
+					"title": "キーの名前を変更",
+					"okText": "変更する"
+				},
+				"totpModal": {
+					"title": "ワンタイムパスワードの設定",
+					"okText": "登録する",
+					"scanQr": "認証アプリでこのQRコードをスキャンしてください。",
+					"manualSecret": "手動入力用シークレット: {{secret}}",
+					"codePlaceholder": "アプリに表示された6桁のコード"
+				}
+			},
+			"streamHealth": {
+				"title": "配信パフォーマンス",
+				"noData": "データがまだ収集されていません。配信が開始され、視聴者がいるとこのページが利用できます。",
+				"intro1": "このページは、配信で発生している可能性のある問題を見つけて切り分けるためのものです。視聴者全体の体験を集約しているため、特定の視聴者だけが極端に悪い状況だと、少人数配信では全体の数値が影響を受けることがあります。",
+				"intro2": "このデータはAoiTubeのWeb視聴ページを利用している視聴者からのみ収集されます。VLC/MPV/QuickTimeなど外部プレイヤーで視聴している場合は反映されません。",
+				"unitSeconds": "秒",
+				"slowDownloads": "ダウンロードが遅い",
+				"slowNetwork": "回線が遅い視聴者がいます",
+				"bitrateChartTitle": "視聴者の最低ビットレート",
+				"bitrateError": "視聴者のうち少なくとも1人が {{speed}}kbps で再生しており、提供している最小の画質（{{lowest}}kbps）より遅くなっています。エラーが継続する場合は、より低ビットレートの画質を追加することを検討してください。",
+				"speedError": "視聴者側の再生が必要な速度に追いついていない可能性があります。原因は回線の遅さや遅延設定の場合があります。視聴者が動画を消費するのにかかる時間を短くする必要があります。低ビットレートの画質を追加する、または遅延バッファ設定を増やすなどを試してください。",
+				"stats": {
+					"playerSpeed": "視聴者の再生速度",
+					"playerLatency": "視聴者の遅延",
+					"recentErrors": "直近の再生エラー"
+				},
+				"charts": {
+					"errors": "エラー",
+					"qualityChanges": "画質変更",
+					"latencyMedian": "配信遅延（中央値）",
+					"latencyMin": "配信遅延（最小）",
+					"latencyMax": "配信遅延（最大）",
+					"downloadMax": "ダウンロード時間（最大）",
+					"downloadMedian": "ダウンロード時間（中央値）",
+					"downloadMin": "ダウンロード時間（最小）",
+					"targetLimit": "目安の上限",
+					"bitrateMin": "再生速度（最小）",
+					"bitrateMedian": "再生速度（中央値）",
+					"bitrateMax": "再生速度（最大）",
+					"availableBitrates": "利用可能なビットレート"
+				},
+				"segmentSection": {
+					"title": "セグメントのダウンロード",
+					"p1": "動画セグメントのダウンロードに時間がかかりすぎると、視聴者はバッファリングを体験します。ダウンロードが遅い場合は、低画質（低ビットレート）を用意する、外部ストレージ/CDN/より高速な回線などで改善する、といった対策が考えられます。視聴者によっては遅延バッファを増やすことで改善することもあります。",
+					"p2": "目安として、ピンクの線が継続的に青い線へ近づく場合、視聴者側で問題が起きている可能性が高いです。"
+				},
+				"networkSection": {
+					"title": "視聴者のネットワーク速度",
+					"p1": "視聴者の再生ビットレート（回線状況の目安）です。視聴者のビットレートが、提供している最小の画質のビットレートを下回ると、バッファリングが発生しやすくなります。遅い回線の視聴者がいる場合は、さらに低画質を追加することを検討してください。",
+					"p2": "目安として、ピンクの線が一番低い青い線に近づく場合、少なくとも1人の視聴者で問題が起きている可能性があります。"
+				},
+				"errorsSection": {
+					"title": "エラーと画質変更",
+					"p1": "直近のエラー数（バッファリング等）と、全視聴者で発生した画質変更の回数です。エラーはブラウザの問題、拡張機能、Wi‑Fi不調など様々な要因で起きます。すべてが致命的、または配信側で制御できるものとは限りません。",
+					"p2": "画質変更自体は必ずしも悪いことではありませんが、頻発していてエラーも同時に増えている場合は、別の画質バリエーションを追加することを検討してください。"
+				},
+				"latencySection": {
+					"title": "視聴者の遅延",
+					"description": "視聴者がライブ映像からどれくらい遅れているか（秒）の目安です。遅延が跳ね上がる最大の原因はバッファリングです。遅延が高いこと自体は問題ではなく、低遅延に最適化しすぎるとバッファリングが起きて、結果的に遅延がさらに大きくなることがあります。"
+				}
+			},
+			"userData": {
+				"title": "ユーザーデータ管理",
+				"intro": "ユーザーの閲覧・削除ができます。ユーザーを削除すると、認証情報とアクセストークンも削除されます。",
+				"searchPlaceholder": "ユーザー名またはIDで検索",
+				"refresh": "更新",
+				"deleteSelected": "選択削除 ({{num}})",
+				"deleteAll": "全削除",
+				"totalItems": "{{num}} 件",
+				"stats": {
+					"totalUsers": "総ユーザー数",
+					"authenticated": "認証済み",
+					"blocked": "ブロック中",
+					"moderators": "モデレーター"
+				},
+				"columns": {
+					"displayName": "表示名",
+					"status": "状態",
+					"createdAt": "作成日時",
+					"authenticatedAt": "認証日時",
+					"action": "操作"
+				},
+				"tags": {
+					"authenticated": "認証済み",
+					"blocked": "ブロック",
+					"moderator": "モデレーター",
+					"unauthenticated": "未認証"
+				},
+				"deleteUserConfirm": {
+					"title": "このユーザーを削除しますか？",
+					"description": "認証情報とアクセストークンも削除されます"
+				},
+				"deleteSelectedConfirm": {
+					"title": "{{num}}件のユーザーを削除しますか？",
+					"content": "この操作は取り消せません。選択したユーザーの認証情報とアクセストークンも削除されます。"
+				},
+				"deleteAllConfirm": {
+					"title": "全ユーザーを削除しますか？",
+					"content": "この操作は取り消せません。全てのユーザーデータ、認証情報、アクセストークンが削除されます。",
+					"okText": "全削除"
+				},
+				"messages": {
+					"fetchFailed": "ユーザーの取得に失敗しました",
+					"deleted": "ユーザーを削除しました",
+					"deleteFailed": "ユーザーの削除に失敗しました",
+					"selectUsers": "削除するユーザーを選択してください",
+					"allDeleted": "全ユーザーを削除しました",
+					"deleteAllFailed": "全ユーザーの削除に失敗しました"
+				}
+			},
+			"viewerInfo": {
+				"title": "視聴者情報",
+				"currentViewers": "現在の視聴者数",
+				"maxViewersThisStream": "この配信の最大視聴者数",
+				"maxViewersLastStream": "前回配信の最大視聴者数",
+				"allTimeMaxViewers": "累計最大視聴者数",
+				"noDataDescription": "視聴者データがまだ収集されていません。",
+				"chartTitle": "視聴者数",
+				"unitPeople": "人",
+				"timeWindows": {
+					"currentStream": "現在の配信",
+					"last12Hours": "過去12時間",
+					"last24Hours": "過去24時間",
+					"last7Days": "過去7日",
+					"last30Days": "過去30日",
+					"last3Months": "過去3か月",
+					"last6Months": "過去6か月"
+				}
+			},
+			"webhooks": {
+				"intro": "Webhookは、AoiTube内で発生したイベントに応じて外部APIへ送信されるコールバックです。チャットボットの実装や、配信開始の自動通知などに利用できます。",
+				"createButton": "Webhookを作成",
+				"modalTitle": "新規Webhookを作成",
+				"eventsHint": "このWebhookに送信するイベントを選択してください。",
+				"columns": {
+					"events": "イベント"
+				},
+				"events": {
+					"chat": {
+						"name": "チャットメッセージ",
+						"description": "ユーザーがチャットメッセージを送信したとき"
+					},
+					"userJoined": {
+						"name": "ユーザー参加",
+						"description": "ユーザーがチャットに参加したとき"
+					},
+					"nameChange": {
+						"name": "ユーザー名変更",
+						"description": "ユーザーが名前を変更したとき"
+					},
+					"visibilityUpdate": {
+						"name": "メッセージ表示状態の変更",
+						"description": "モデレーション等によりメッセージの表示状態が変わったとき"
+					},
+					"streamStarted": {
+						"name": "配信開始",
+						"description": "配信が開始したとき"
+					},
+					"streamStopped": {
+						"name": "配信終了",
+						"description": "配信が終了したとき"
+					},
+					"streamTitleUpdated": {
+						"name": "配信タイトル変更",
+						"description": "配信タイトルが変更されたとき"
+					},
+					"donation": {
+						"name": "スーパーチャット",
+						"description": "スーパーチャットが購入されたとき"
+					}
+				}
+			},
+			"federation": {
+				"actions": {
+					"title": "Fediverse アクション",
+					"description": "ここには、あなたの投稿に対して他の人が行った反応（いいね/共有など）や、フォロー要求の一覧が表示されます。",
+					"columnAction": "アクション",
+					"columnFrom": "送信元",
+					"columnTimestamp": "日時",
+					"repost": "共有",
+					"like": "いいね",
+					"follow": "フォロー"
+				},
+				"followers": {
+					"columnName": "名前",
+					"approve": "承認",
+					"reject": "拒否",
+					"remove": "解除",
+					"requestedDate": "申請日",
+					"blockedDate": "拒否/ブロック日",
+					"addedDate": "追加日",
+					"tabFollowers": "フォロワー",
+					"tabPending": "申請",
+					"tabBlocked": "ブロック済み",
+					"followersIntro": "以下のアカウントは、配信開始や投稿時に通知を受け取ります。",
+					"pendingIntro": "以下のユーザーが、あなたのAoiTubeサーバーを <fediverse>Fediverse</fediverse> 上でフォローし、配信開始通知を受け取ることを希望しています。各申請は承認が必要です。",
+					"blockedIntro": "以下のユーザーは、拒否またはブロックされています。フォロワーとして承認し直すこともできます。"
+				}
+			},
+			"archives": {
+				"title": "アーカイブ管理",
+				"description": "録画された配信（VOD）の一覧です。公開/非公開の切り替えや削除ができます。",
+				"empty": "録画はまだありません",
+				"untitled": "無題の配信",
+				"unfinished": "録画未完了",
+				"play": "再生",
+				"visible": "公開",
+				"hidden": "非公開",
+				"columns": {
+					"title": "タイトル",
+					"startedAt": "配信日時",
+					"duration": "長さ",
+					"visible": "公開状態",
+					"actions": "操作",
+					"size": "容量"
+				},
+				"deleteConfirm": {
+					"title": "アーカイブを削除",
+					"content": "この録画を完全に削除しますか？この操作は取り消せません。"
+				},
+				"messages": {
+					"shown": "公開しました",
+					"hidden": "非公開にしました",
+					"deleted": "削除しました",
+					"updateFailed": "更新に失敗しました",
+					"deleteFailed": "削除に失敗しました",
+					"fetchFailed": "アーカイブの取得に失敗しました",
+					"bulkDeleted": "{{count}}件のアーカイブを削除しました",
+					"titleSaved": "タイトルを更新しました"
+				},
+				"bulkDeleteButton": "選択した{{count}}件を削除",
+				"bulkDeleteConfirm": {
+					"title": "選択したアーカイブを削除しますか？",
+					"content": "{{count}}件のアーカイブを完全に削除します。この操作は取り消せません。"
+				},
+				"pricing": {
+					"columnTitle": "アクセス・価格",
+					"public": "公開",
+					"authenticated": "会員限定",
+					"paid": "有料",
+					"priceLabel": "価格",
+					"priceRequired": "有料アーカイブには1以上の価格を設定してください",
+					"save": "保存",
+					"saved": "価格設定を保存しました"
+				},
+				"editTitle": "タイトルを編集"
+			}
+		},
+		"layout": {
+			"banUserButton": {
+				"actionBan": "BAN",
+				"actionUnban": "BAN解除",
+				"confirmContent": "を{{action}}しますか？",
+				"confirmTitle": "{{action}}の確認",
+				"deleteMessagesNote": "（メッセージも削除します）",
+				"okBan": "BANする",
+				"okUnban": "BANを解除する",
+				"banAction": "BANする",
+				"unbanAction": "BANを解除"
+			},
+			"moderatorUserButton": {
+				"actionGrant": "モデレーター付与",
+				"actionRevoke": "モデレーター解除",
+				"confirmContent": "を{{action}}しますか？",
+				"confirmTitle": "{{action}}の確認",
+				"okGrant": "付与する",
+				"okRevoke": "解除する"
+			},
+			"bannedIPsTable": {
+				"colIpAddress": "IPアドレス",
+				"colReason": "理由",
+				"colCreatedAt": "作成日時",
+				"unbanTitle": "IPアドレスのBANを解除"
+			},
+			"clientTable": {
+				"colDisplayName": "表示名",
+				"searchPlaceholder": "表示名を検索...",
+				"colMessageCount": "送信数",
+				"colConnectedTime": "接続時間",
+				"colUserAgent": "ユーザーエージェント",
+				"colLocation": "地域"
+			},
+			"userTable": {
+				"colDisplayName": "最後に確認された表示名",
+				"colCreatedAt": "作成日時",
+				"colDisabledAt": "無効化日時"
+			},
+			"composeFederatedPost": {
+				"postSuccess": "完了",
+				"postError": "失敗",
+				"postButton": "投稿",
+				"title": "フォロワーに投稿",
+				"heading": "今後の配信予定を共有したり、フォロワーに視聴を呼びかけたりできます。",
+				"placeholder": "配信中です。ぜひ見に来てください！"
+			},
+			"socialDropdown": {
+				"description": "この一覧にないプラットフォーム名を使う場合は「その他」を選択し、任意の名前を入力してください。 ロゴは表示されません。",
+				"platformLabel": "プラットフォーム",
+				"selectPlaceholder": "プラットフォームを選択...",
+				"other": "その他..."
+			},
+			"editLogo": {
+				"loadFailed": "ロゴデータの読み込みに失敗しました",
+				"updated": "ロゴが更新されました"
+			},
+			"common": {
+				"advancedSettings": "詳細設定",
+				"cancel": "キャンセル",
+				"delete": "削除",
+				"edit": "編集",
+				"error": "エラーが発生しました: {{message}}",
+				"no": "いいえ",
+				"resetFailed": "リセットに失敗しました",
+				"save": "保存",
+				"statusLabel": "状態:",
+				"uploadFailed": "アップロードに失敗しました",
+				"yes": "はい"
+			},
+			"codecSelector": {
+				"updated": "動画コーデックを更新しました。",
+				"appliesNextStream": "動画コーデック設定の変更は、次回の配信開始時に反映されます。",
+				"codecDefault": "既定 (libx264)",
+				"codecNvidia": "NVIDIA GPU アクセラレーション",
+				"codecVaapi": "VA-API ハードウェアエンコード",
+				"codecV4l2": "Video4Linux ハードウェアエンコード",
+				"codecOmx": "Raspberry Pi 用 OpenMax (omx)",
+				"codecVideoToolbox": "Apple VideoToolbox（ハードウェア）",
+				"descLibx264": "libx264 は既定のコーデックで、共有VPS環境では実質的に唯一の選択肢になることが多いです。ほかのオプションを有効にしている確信がない限り、これを使うことを推奨します。",
+				"descNvenc": "エンコード用のコアを搭載した比較的新しい NVIDIA GPU がある場合、GPUでエンコードできます。",
+				"descVaapi": "VA-API は NVIDIA のプロプライエタリドライバーや、AMD/Intel向けの Mesa ドライバーで利用できる場合があります。",
+				"descQsv": "Quick Sync は Intel のビデオエンコード/デコード用ハードウェアです。内蔵GPUを搭載した比較的新しい Intel CPU がある場合に選択肢になります。",
+				"descV4l2": "Video4Linux は、Intel/AMD など複数のハードウェアエンコード基盤にアクセスするためのインターフェースです。",
+				"descOmx": "OpenMax は主に Raspberry Pi で使用されるコーデックです。",
+				"descVideoToolbox": "Apple VideoToolbox は、ハードウェアエンコーダー/デコーダーへ直接アクセスするための低レベルフレームワークです。",
+				"title": "動画コーデック",
+				"intro": "対応ハードウェアと必要なドライバー/ソフトウェアが揃っている場合、動画エンコード性能を改善できる可能性があります。",
+				"warningLink": "設定を変更すると配信が再生できなくなる可能性があります。変更前にドキュメントを確認してください。",
+				"confirmChange": "動画コーデックを {{codec}} に変更します。影響を理解した上で続行しますか？"
+			},
+			"currentVariantsTable": {
+				"updated": "バリアントを更新しました",
+				"appliesNextStream": "動画設定の変更は、次回の配信開始時に反映されます。",
+				"colName": "名前",
+				"unnamed": "（名前なし）",
+				"colVideoBitrate": "動画ビットレート",
+				"sameAsSource": "ソースと同じ",
+				"colCpuUsage": "CPU使用率",
+				"notApplicable": "対象外",
+				"resetWarning": "警告: 編集してリセットしてください",
+				"title": "ストリーム出力",
+				"modalTitle": "動画バリアントを編集",
+				"addVariant": "バリアントを追加"
+			},
+			"editCustomJavascript": {
+				"placeholder": "/* ここにカスタムJavaScriptを入力 */",
+				"title": "JavaScriptでページをカスタマイズ",
+				"desc": "AoiTube のページにカスタムJavaScriptを挿入して、独自の機能を追加したりサードパーティのスクリプトを組み込んだりできます。 使い方の詳細は",
+				"docsLink": "Webページのドキュメント",
+				"descSuffix": "を参照してください。",
+				"plainJsNote": "HTML や script タグは使わず、素のJavaScriptのみを記述してください。"
+			},
+			"editCustomStyles": {
+				"placeholder": "/* ここにカスタムCSSを入力 */",
+				"title": "CSSでページの見た目をカスタマイズ",
+				"desc": "ページ内の各コンポーネントのCSSを上書きして、AoiTubeの見た目をカスタマイズできます。詳しくは",
+				"docsLink": "「CSSとコンポーネント」ガイド",
+				"descSuffix": "を参照してください。",
+				"plainCssNote": "ここに入力したCSSは、ページ読み込み時にそのまま挿入されます。プレーンなCSSテキストを入力してください。"
+			},
+			"editNotificationThumbnail": {
+				"invalidFileType": "対応していないファイル形式です（jpg, png, gif, webp のみ）",
+				"fileTooLarge": "ファイルサイズが大きすぎます（最大 10MB）",
+				"updated": "通知サムネイルが更新されました。サーバーを再起動すると反映されます。",
+				"resetDone": "通知サムネイルをリセットしました",
+				"label": "通知サムネイル",
+				"current": "現在のサムネイル",
+				"usingLogo": "（ロゴを使用中）",
+				"previewAlt": "通知サムネイルプレビュー",
+				"uploadButton": "サムネイルをアップロード",
+				"resetButton": "リセット",
+				"statusCustom": "カスタム設定済み",
+				"statusNone": "未設定（ロゴを使用）",
+				"tip": "DiscordやXで配信開始通知を送る際に表示される画像です。設定しない場合はロゴが使用されます。変更後はサーバーの再起動が必要です。"
+			},
+			"editOfflineClip": {
+				"invalidFileType": "対応していないファイル形式です（.ts / .tsclip のみ）",
+				"fileTooLarge": "ファイルサイズが大きすぎます（最大 25MB）",
+				"updated": "待機動画（オフライン時の動画）が更新されました",
+				"resetDone": "待機動画をデフォルトに戻しました",
+				"label": "待機画面（オフライン時の動画）",
+				"uploadButton": "待機動画をアップロード",
+				"resetButton": "デフォルトに戻す",
+				"statusCustom": "カスタム設定済み",
+				"statusDefault": "デフォルト",
+				"tip": "配信がオフラインの間にHLSとして配信される「待機動画（単一TSセグメント）」を差し替えます。AoiTubeの想定により、長さが約8秒の .ts / .tsclip を推奨します（長さが違うと再生が不安定になる場合があります）。",
+				"previewLabel": "プレビュー（{{type}}）:",
+				"previewCustom": "カスタム",
+				"previewDefault": "デフォルト"
+			},
+			"editOfflineMedia": {
+				"invalidFileType": "対応していないファイル形式です（.mp4 / .jpg / .png / .gif / .webp）",
+				"fileTooLarge": "ファイルサイズが大きすぎます（最大 50MB）",
+				"updated": "オフライン表示用メディアを更新しました",
+				"deleted": "オフライン表示用メディアを削除しました",
+				"deleteFailed": "削除に失敗しました",
+				"configured": "設定済み（{{type}}: {{path}}）",
+				"notConfigured": "未設定",
+				"label": "オフライン表示（画像/MP4）",
+				"uploadButton": "画像/MP4をアップロード",
+				"tip": "配信がオフラインのときに、オフライン画面に画像またはMP4を表示します。MP4は自動再生（ミュート/ループ）で表示されます。",
+				"previewLabel": "プレビュー:",
+				"previewAlt": "オフラインメディアプレビュー"
+			},
+			"editServerDetails": {
+				"restartRequired": "サーバー設定の更新を反映するには AoiTube サーバーの再起動が必要です。",
+				"ffmpegApplied": "変更後のFFmpegパスは、次回ライブ配信開始時に使用されます。",
+				"socketOverrideDesc": "AoiTube インスタンス全体の前段にCDNがある場合は、WebSocket が接続するオリジンサーバーをここで指定します。 ほとんどの場合、この設定は不要です。"
+			},
+			"logTable": {
+				"levelInfo": "情報",
+				"levelWarning": "警告",
+				"levelError": "エラー",
+				"colLevel": "レベル",
+				"colTime": "日時",
+				"colMessage": "メッセージ",
+				"title": "ログ"
+			},
+			"mainLayout": {
+				"statusOnline": "配信中 {{duration}}",
+				"statusOffline": "オフライン",
+				"menu": {
+					"accessTokens": "アクセストークン",
+					"externalActions": "外部アクション",
+					"donationsAdmin": "購入管理",
+					"paypaySettings": "PayPay設定",
+					"paypalSettings": "PayPal設定",
+					"stripeSettings": "Stripe設定",
+					"metamaskSettings": "Metamask設定",
+					"kofiSettings": "Ko-fi設定",
+					"doneruSettings": "Doneru設定",
+					"tokushoho": "特商法表記",
+					"faqSettings": "FAQ設定",
+					"viewers": "視聴者",
+					"chatManagement": "チャット管理",
+					"userData": "ユーザーデータ",
+					"emojis": "絵文字",
+					"hardware": "ハードウェア",
+					"streamHealth": "配信状態",
+					"logs": "ログ",
+					"socialActions": "ソーシャルアクション",
+					"loginSettings": "ログイン設定",
+					"generalSettings": "一般設定",
+					"serverSettings": "サーバー設定",
+					"videoSettings": "動画設定",
+					"chatSettings": "チャット設定",
+					"socialSettings": "ソーシャル設定",
+					"notificationSettings": "通知設定",
+					"home": "ホーム",
+					"chatAndUsers": "チャット・ユーザー",
+					"followers": "フォロワー",
+					"donations": "購入・収益",
+					"configuration": "設定",
+					"utilities": "ユーティリティ",
+					"integrations": "連携",
+					"help": "ヘルプ",
+					"logout": "ログアウト",
+					"archives": "アーカイブ"
+				},
+				"menuGroups": {
+					"management": "管理",
+					"providers": "決済プロバイダ",
+					"legal": "表記・規約"
+				},
+				"pageTitle": "{{name}} 管理",
+				"serverUnreachable": "サーバーに接続できません",
+				"adminDashboardTitle": "{{name}} 管理画面",
+				"composePostTooltip": "ソーシャルフォロワーに投稿する",
+				"composePost": "投稿作成",
+				"streamTitlePlaceholder": "今何を配信していますか？（配信タイトル）",
+				"switchToLight": "ライトテーマに切替",
+				"switchToDark": "ダークテーマに切替",
+				"themeToggle": "テーマ切替",
+				"language": "言語",
+				"aboutAoiTube": "AoiTube について（v{{version}}）"
+			},
+			"offline": {
+				"broadcastSoftware": "配信ソフトウェアを使用する",
+				"broadcastSoftwareLink": "既存のソフトウェアを新しいサーバーに接続して配信を開始する方法を学ぶ。",
+				"streamUrl": "配信URL:",
+				"streamKey": "ストリームキー:",
+				"view": "表示",
+				"overriddenByCli": "コマンドラインでオーバーライドされています。",
+				"forkFeatures": "このフォークの主な機能",
+				"featureOauthTitle": "OAuth 2.0認証",
+				"featureOauthDesc": "X/Discord/Google/GitHubアカウントでのログインに対応",
+				"featureDonationTitle": "スーパーチャット機能",
+				"featureDonationDesc": "PayPay/PayPal/Stripe/Metamask/Ko-fi/Doneru対応",
+				"featureRtmpsTitle": "RTMPSサポート",
+				"featureRtmpsDesc": "セキュアなRTMPストリーミングをサポート",
+				"configureSocialAuth": "ソーシャル設定で認証を構成",
+				"donationSetup": "スーパーチャット機能を設定する",
+				"donationIntro": "決済プロバイダを設定すると視聴者からのスーパーチャットを受け付けられます。",
+				"donationPaypay": "QRコード決済",
+				"donationPaypal": "国際決済（200以上の国と地域）",
+				"donationMetamask": "暗号資産決済（ETH・SOL・BTC等）",
+				"donationKofi": "国際スーパーチャットサービス（Webhook連携）",
+				"donationDoneru": "外部スーパーチャットサービス連携",
+				"openDonationAdmin": "スーパーチャット管理画面を開く",
+				"embed": "他のサイトにビデオを埋め込む",
+				"embedLink": "AoiTubeストリームを他のサイトに追加する方法を学ぶ。",
+				"chatDisabledTitle": "チャットは無効になっています",
+				"chatDisabledDesc": "ライブ配信を開始するまでチャットは無効のままです。",
+				"directoryTitle": "AoiTubeディレクトリで視聴者を見つける",
+				"directoryPromo": "AoiTubeディレクトリに登録して配信をアピール。",
+				"directorySettings": "設定",
+				"directoryEnableSuffix": "で有効にしてください。",
+				"fediverseTitle": "AoiTubeインスタンスをFediverseに追加",
+				"fediverseEnableLink": "AoiTubeFediverse機能を有効にして",
+				"fediverseDesc": "、Fediverseに参加し、フォロー、シェア、エンゲージメントを可能にしましょう。",
+				"notActiveTitle": "配信がアクティブではありません",
+				"notActiveDesc": "配信ソフトウェアから接続すると配信が始まります。",
+				"featureStreamingTitle": "低遅延配信",
+				"featureStreamingDesc": "LL-HLS（2-4秒）とWebRTC（1秒以下）の低遅延配信に対応",
+				"featureRecordingTitle": "配信録画・アーカイブ",
+				"featureRecordingDesc": "配信を録画してVOD公開。有料アーカイブ（PPV）・演出付きリプレイ対応",
+				"featureI18nTitle": "多言語対応",
+				"featureI18nDesc": "視聴者・管理画面のUIが5言語対応（日・英・簡体中・繁体中・韓）",
+				"featureBackupTitle": "自動バックアップ",
+				"featureBackupDesc": "データベースの定期バックアップ、S3退避、ワンコマンド移行",
+				"donationStripe": "クレジットカード決済（国際対応）"
+			},
+			"resetYP": {
+				"title": "ディレクトリ登録をリセット",
+				"desc": "AoiTube Directory の掲載に問題があり、接続の「リセット」を案内された場合はここから実行できます。 次回ライブ配信を開始したときに、ディレクトリへ最初から再登録を試みます。",
+				"confirm": "AoiTube Directory への接続をリセットしますか？",
+				"resetButton": "ディレクトリ接続をリセット"
+			},
+			"userPopover": {
+				"createdAt": "作成日時: {{date}}",
+				"clickForDetails": "クリックで詳細を表示",
+				"viewDetailsAria": "このユーザーの詳細を表示",
+				"close": "閉じる",
+				"title": "ユーザー詳細: {{name}}",
+				"connectedNow": "このユーザーは現在チャットに接続しています。",
+				"connectionDuration": "接続時間:",
+				"messageCount": "送信数:",
+				"userAgent": "ユーザーエージェント:",
+				"previousNames": "このユーザーの過去の表示名:",
+				"nameChangedAgo": "（{{duration}}前に変更）",
+				"bannedAtPrefix": "このユーザーは",
+				"bannedAtSuffix": "にBANされました。"
+			},
+			"videoLatency": {
+				"markLowest": "最小",
+				"markHighest": "最大",
+				"comment0": "最小の遅延 / エラー耐性は低い（非推奨。配信内容や設定によっては動作しない場合があります）",
+				"comment1": "低遅延 / エラー耐性は低い",
+				"comment2": "中程度の遅延 / エラー耐性は中程度（既定）",
+				"comment3": "高遅延 / エラー耐性は高い",
+				"comment4": "最大の遅延 / エラー耐性は最大",
+				"updated": "遅延バッファレベルを更新しました。",
+				"appliesNextStream": "遅延バッファ設定の変更は、次回の配信開始時に反映されます。",
+				"title": "遅延バッファ",
+				"desc1": "遅延は低いほど良いように見えますが、遅延を下げるほどエラー耐性や安定性が低下する場合があります。 最小設定は推奨しません。",
+				"desc2": "視聴者とのやり取りが多い配信では低遅延を、そうでない配信では遅延を上げると安定しやすいです。",
+				"learnMore": "詳しくはこちら。"
+			},
+			"videoVariantForm": {
+				"passthroughBitrateNote": "ビデオパススルーが有効な場合、ビットレートの選択はできません。",
+				"bitrateLow": "低帯域の環境向け。",
+				"bitrateMedium": "多くの回線環境に適しています。",
+				"bitrateHigh": "高帯域の環境向け。",
+				"passthroughFramerateNote": "ビデオパススルーが有効な場合、フレームレートの選択はできません。",
+				"passthroughCpuNote": "ビデオパススルーが有効な場合、CPU/GPU使用率の選択はできません。",
+				"learnMoreSettings": "各設定がサーバー性能に与える影響について詳しくはこちら。",
+				"passthroughWarningPrefix": "注意: この出力バリアントでは",
+				"passthroughWarningEm": "ビデオパススルー",
+				"passthroughWarningSuffix": "が有効です。以下のエンコード設定は無効になります。",
+				"cpuUsageTitle": "CPU/GPU 使用率",
+				"cpuUsageDesc": "低くするとサーバー負荷を下げられます。高くすると画質が向上する場合があります。",
+				"cpuUsageSubtext": "お使いの環境によっては CPU ではなく GPU の使用率を意味します。",
+				"learnMoreHardware": "ハードウェア性能について詳しくはこちら。",
+				"videoBitrateTitle": "動画ビットレート",
+				"learnMoreBitrate": "ビットレートについて詳しくはこちら。",
+				"resolutionTitle": "解像度",
+				"resolutionDesc1": "リサイズはサーバーの追加リソースを使用します。この出力に対してリサイズする場合は、 アスペクト比を保つために幅",
+				"resolutionDescOr": "または",
+				"resolutionDesc2": "高さのどちらか一方を指定してください。",
+				"learnMoreResolution": "解像度について詳しくはこちら。",
+				"passthroughTitle": "ビデオパススルー",
+				"passthroughDesc1Prefix": "ビデオパススルーを有効にするとハードウェア使用率を抑えられる場合がありますが、 配信が",
+				"passthroughDesc1Strong": "再生できなくなる",
+				"passthroughDesc1Suffix": "可能性もあります。",
+				"passthroughDesc2": "パススルーを使用すると、この出力の他の設定はすべて無効になります。",
+				"passthroughDocsLink": "影響が大きい設定のため、有効化する前にドキュメントを確認してください。",
+				"passthroughConfirm": "ビデオパススルーのドキュメントを読み、有効化に伴うリスクを理解しましたか？",
+				"usePassthrough": "ビデオパススルーを使用しますか？",
+				"framerateTitle": "フレームレート",
+				"learnMoreFramerate": "フレームレートについて詳しくはこちら。"
+			}
+		},
+		"sections": {
+			"streamKeys": {
+				"defaultComment": "新しいキー",
+				"keyLabel": "キー",
+				"keyTooltip": "配信ソフトに入力するキーです。キーは8文字以上で、英大文字・英小文字・記号・数字をそれぞれ少なくとも1文字以上含める必要があります。",
+				"keyPlaceholder": "キーを入力",
+				"commentLabel": "コメント",
+				"commentTooltip": "このキーを追加した理由のメモ",
+				"commentPlaceholder": "OBS用キー",
+				"add": "追加",
+				"copied": "クリップボードにコピーしました",
+				"copyFailed": "クリップボードにコピーできませんでした",
+				"columns": {
+					"key": "キー",
+					"comment": "コメント"
+				},
+				"intro1": "配信用キーは、配信ソフトが AoiTube に接続するための認証に使用します。多くの場合は1つで十分ですが、サーバーを複数人で共有している場合や、配信元ごとにキーを分けたい場合はここで追加できます。",
+				"intro2": "これらのキーは管理者パスワードとは無関係で、AoiTube の設定変更権限を付与するものではありません。",
+				"docs": {
+					"beforeLink": "配信について詳しくは",
+					"linkText": "ドキュメント"
+				},
+				"saveError": "キーの保存エラー",
+				"noKeysTitle": "配信用キーがありません",
+				"noKeysDescription": "少なくとも1つ配信用キーを作成し、配信ソフトに設定するまで配信できません。"
+			},
+			"rtmps": {
+				"restartRequired": "RTMPS設定の更新を反映するにはAoiTubeサーバーの再起動が必要です。",
+				"enableSaveError": "RTMPS有効化設定の保存に失敗しました。",
+				"title": "RTMPS（暗号化ストリーミング）",
+				"aboutTitle": "RTMPSについて",
+				"aboutDescription": "RTMPS（RTMP over TLS）は、配信ソフトウェアからサーバーへの通信をエンドツーエンドで暗号化します。この機能を使用するには、有効なSSL/TLS証明書が必要です。",
+				"exampleUrlLabel": "配信URL例：",
+				"enableLabel": "RTMPSを有効にする",
+				"pathsWarning": "証明書と秘密鍵のパスを設定してください",
+				"portLabel": "RTMPSポート",
+				"portTip": "RTMPS接続を受け付けるポート番号。デフォルトは1936です。",
+				"certPathLabel": "SSL証明書パス",
+				"certPathTip": "SSL/TLS証明書ファイルへの絶対パス（例: /etc/letsencrypt/live/example.com/fullchain.pem）",
+				"keyPathLabel": "秘密鍵パス",
+				"keyPathTip": "SSL/TLS秘密鍵ファイルへの絶対パス（例: /etc/letsencrypt/live/example.com/privkey.pem）",
+				"configuredTitle": "RTMPSが設定されています",
+				"configuredDescription": "配信ソフトウェア（OBSなど）で以下のURLを使用してください：",
+				"serverLabel": "サーバー："
+			},
+			"pageContent": {
+				"title": "カスタムページ内容",
+				"description": {
+					"beforeLink": "簡単な",
+					"linkText": "Markdown 記法",
+					"afterLink": "を使ってページ内容を編集できます。"
+				},
+				"placeholder": "ここにカスタムページ内容を入力してください...",
+				"save": "保存"
+			},
+			"socialLinks": {
+				"saveError": "エラーが発生しました: {{message}}",
+				"columnTitle": "ソーシャルリンク",
+				"edit": "編集",
+				"otherPlatformPlaceholder": "その他のプラットフォーム名",
+				"title": "ソーシャルリンク",
+				"description": "各SNSのハンドル名や、他のプロフィールへのリンクを追加できます。",
+				"modalTitle": "ソーシャルリンクを編集",
+				"urlPlaceholder": "ページのURL",
+				"addButton": "ソーシャルリンクを追加"
+			},
+			"general": {
+				"description": "以下の内容は、あなたの配信とコンテンツを説明するためにサイト上へ表示されます。",
+				"learnMore": "詳しくはこちら。"
+			},
+			"serverConfig": {
+				"description": "管理者パスワードはデフォルトから変更し、安全な場所に保管してください。多くの場合、他の設定を変更する必要はありません。"
+			},
+			"instanceTags": {
+				"updateSuccess": "タグを更新しました。",
+				"emptyWarning": "タグを入力してください",
+				"duplicateWarning": "このタグはすでに使用されています",
+				"title": "タグを追加",
+				"description": "ディレクトリ上で AoiTube サーバーを分類するのに便利です。"
+			},
+			"instanceDetails": {
+				"title": "インスタンス詳細を設定",
+				"offlineMessageLabel": "オフラインメッセージ:",
+				"offlineMessageTip": "配信していない間、ページ訪問者に表示されるメッセージです。Markdown も使用できます。",
+				"saveMessage": "メッセージを保存",
+				"directory": {
+					"beforeLink": "視聴者を増やすために、",
+					"afterLink": "に掲載することができます。これは AoiTube プロジェクトが運営する外部サービスです。",
+					"learnMore": "詳しくはこちら"
+				},
+				"directoryRequiresUrl": {
+					"beforeStrong": "ディレクトリを有効にするには、上で",
+					"strongText": "サーバーURL",
+					"afterStrong": "を設定する必要があります。"
+				}
+			},
+			"storage": {
+				"intro": {
+					"beforeLink": "AoiTube は、外部ストレージプロバイダーを使用して配信することもできます。詳しくは",
+					"linkText": "ストレージのドキュメント"
+				},
+				"warning": "設定を誤ると、動画が再生できなくなる可能性があります。ストレージプロバイダー側のドキュメントで、AoiTube 用に作成したバケットの設定方法を必ず確認してください。",
+				"liveOnly": "これはライブ配信用の設定であり、アーカイブ・録画・VOD 目的ではありません。",
+				"updated": "更新しました。",
+				"restartNote": "ストレージ設定の変更は、次回の配信開始時に反映されます。",
+				"useS3": "S3ストレージプロバイダーを使用",
+				"optionalSettings": "任意の設定",
+				"save": "保存"
+			},
+			"appearance": {
+				"colorNames": {
+					"background": "背景",
+					"action": "アクション",
+					"actionHover": "アクション（ホバー）",
+					"primaryButtonBorder": "プライマリボタン枠線",
+					"primaryButtonText": "プライマリボタン文字",
+					"chatBackground": "チャット背景",
+					"chatText": "文字（チャット）",
+					"textOnDark": "文字（明）",
+					"textOnLight": "文字（暗）",
+					"headerFooter": "ヘッダー/フッター",
+					"pageContent": "ページ内容",
+					"videoStatusBarBackground": "動画ステータスバー背景",
+					"videoStatusBarForeground": "動画ステータスバー前景",
+					"roundedCorners": "角丸"
+				},
+				"updated": "更新しました。",
+				"loading": "読み込み中...",
+				"title": "外観をカスタマイズ",
+				"description": "以下の色はユーザーインターフェース全体で使用されます。",
+				"sectionColors": "セクションの色",
+				"sectionColorsDescription": "UIの一部セクションは、色を選択してカスタマイズできます。",
+				"chatUserColors": "チャットユーザーの色",
+				"otherSettings": "その他の設定",
+				"roundedCornersAmount": "角丸の大きさ",
+				"saveColors": "色を保存",
+				"resetToDefaults": "既定値に戻す"
+			},
+			"browserNotify": {
+				"updated": "更新しました。",
+				"title": "ブラウザ通知",
+				"description1": "視聴者はブラウザで、配信開始時の通知を受け取れるようにできます。",
+				"description2": "すべてのブラウザが対応しているわけではありません。",
+				"enableLabel": "ブラウザ通知を有効にする",
+				"save": "保存"
+			},
+			"discordNotify": {
+				"updated": "更新しました。",
+				"description": "配信を開始するたびに、Discord チャンネルへ通知します。",
+				"webhookLinkText": "Webhook を作成する",
+				"instructionsBeforeItalic": "Discord のチャンネルで",
+				"instructionsItalicText": "チャンネルを編集 / 連携サービス",
+				"instructionsAfterItalic": "からWebhookを作成し、下に入力してください。",
+				"enableLabel": "Discord通知を有効にする",
+				"save": "保存",
+				"title": "Discord通知"
+			},
+			"twitterNotify": {
+				"enableLabel": "X通知を有効化",
+				"consumerKeyTip": "X Developer PortalのAPI Key",
+				"consumerKeyPlaceholder": "API Key を入力",
+				"consumerSecretTip": "X Developer PortalのAPI Secret",
+				"consumerSecretPlaceholder": "API Secret を入力",
+				"accessTokenTip": "アプリに関連付けられたAccess Token",
+				"accessTokenPlaceholder": "Access Token を入力",
+				"accessTokenSecretPlaceholder": "Access Token Secret を入力",
+				"goLiveMessageLabel": "配信開始メッセージ",
+				"goLiveMessageTip": "配信開始時にツイートする本文",
+				"goLiveMessagePlaceholder": "🔴 ライブ配信を開始しました！遊びに来てね♪",
+				"hashtagsLabel": "ハッシュタグ",
+				"hashtagsTip": "ツイートに追加するハッシュタグ（例: #配信 #ゲーム実況）",
+				"hashtagsPlaceholder": "#配信 #ライブ #ゲーム実況",
+				"includeTitleLabel": "配信タイトルを含める",
+				"includeServerNameLabel": "配信者名を含める",
+				"saved": "保存しました",
+				"previewServerName": "📺 あなたのチャンネル名",
+				"previewTitle": "🎬 配信タイトルがここに入ります",
+				"previewUrl": "🔗 https://あなたの配信URL",
+				"title": "X 通知",
+				"description": "配信開始時にXに自動でツイートします。",
+				"apiRequiredTitle": "X API設定が必要です",
+				"apiRequiredLine1": "X Developer Portalでアプリを作成し、OAuth 1.0a認証情報を取得してください。",
+				"importantLabel": "重要:",
+				"apiRequiredLine2": "App permissions を「Read and Write」に設定してください。",
+				"apiCredentials": "API認証情報",
+				"postContent": "ツイート内容設定",
+				"postPreview": "ツイートプレビュー",
+				"previewImageAlt": "ツイート添付画像",
+				"previewImageNote": "※ 通知サムネイルまたはロゴが添付されます",
+				"saveSettings": "設定を保存"
+			},
+			"discordAuth": {
+				"clientIdTip": "Discord Developer PortalのClient ID",
+				"clientIdPlaceholder": "Client ID を入力",
+				"clientSecretTip": "Discord Developer PortalのClient Secret",
+				"clientSecretPlaceholder": "Client Secret を入力",
+				"saved": "保存しました",
+				"title": "Discord認証",
+				"description": "Discord認証を設定すると、視聴者がDiscordアカウントでチャットに参加できるようになります。",
+				"stepsTitle": "設定手順：",
+				"step1AfterLink": "にアクセス",
+				"step2": "「New Application」で新しいアプリを作成",
+				"step3": "OAuth2 → General から Client ID と Client Secret をコピー",
+				"step4": "OAuth2 → Redirects に以下のURLを追加：",
+				"configuredTitle": "Discord認証が設定されています",
+				"configuredDescription": "視聴者がDiscordアカウントで認証できます。",
+				"save": "保存"
+			},
+			"googleAuth": {
+				"clientIdTip": "Google Cloud ConsoleのClient ID",
+				"clientIdPlaceholder": "Client ID を入力",
+				"clientSecretTip": "Google Cloud ConsoleのClient Secret",
+				"clientSecretPlaceholder": "Client Secret を入力",
+				"saved": "保存しました",
+				"title": "Google認証",
+				"description": "Google認証を設定すると、視聴者がGoogleアカウントでチャットに参加できるようになります。",
+				"stepsTitle": "設定手順：",
+				"step1AfterLink": "にアクセス",
+				"step2": "プロジェクトを作成または選択",
+				"step3": "「認証情報を作成」→「OAuth クライアント ID」を選択",
+				"step4": "アプリケーションの種類で「ウェブ アプリケーション」を選択",
+				"step5": "「承認済みのリダイレクト URI」に以下のURLを追加：",
+				"step6": "Client ID と Client Secret をコピー",
+				"oauthConsentNote": "注意: OAuth同意画面の設定も必要です。「OAuth 同意画面」から設定を行い、必要なスコープ（email, profile, openid）を追加してください。",
+				"configuredTitle": "Google認証が設定されています",
+				"configuredDescription": "視聴者がGoogleアカウントで認証できます。",
+				"save": "保存"
+			},
+			"githubAuth": {
+				"clientIdTip": "GitHub OAuth AppのClient ID",
+				"clientIdPlaceholder": "Client ID を入力",
+				"clientSecretTip": "GitHub OAuth AppのClient Secret",
+				"clientSecretPlaceholder": "Client Secret を入力",
+				"saved": "保存しました",
+				"title": "GitHub認証",
+				"description": "GitHub認証を設定すると、視聴者がGitHubアカウントでチャットに参加できるようになります。",
+				"stepsTitle": "設定手順：",
+				"step1AfterLink": "にアクセス",
+				"step2": "「OAuth Apps」タブを選択",
+				"step3": "「New OAuth App」をクリック",
+				"step4": "アプリケーション名とホームページURLを入力",
+				"step5": "「Authorization callback URL」に以下のURLを設定：",
+				"step6": "「Register application」をクリックし、Client Secret を生成して Client ID と Client Secret をコピー",
+				"clientSecretNote": "注意: Client Secret は生成直後に一度しか表示されません。すぐにコピーしてください。紛失した場合は新しく生成し直してください。",
+				"configuredTitle": "GitHub認証が設定されています",
+				"configuredDescription": "視聴者がGitHubアカウントで認証できます。",
+				"save": "保存"
+			},
+			"xAuth": {
+				"clientIdTip": "X Developer PortalのClient ID (OAuth 2.0)",
+				"clientIdPlaceholder": "Client ID を入力",
+				"clientSecretTip": "X Developer PortalのClient Secret (OAuth 2.0)",
+				"clientSecretPlaceholder": "Client Secret を入力",
+				"saved": "保存しました",
+				"title": "X認証 (OAuth 2.0)",
+				"description": "X認証を設定すると、視聴者がXアカウントでチャットに参加できるようになります。 OAuth 2.0を使用しているため、既存のX通知設定とは別の設定が必要です。",
+				"stepsTitle": "設定手順：",
+				"step1AfterLink": "にアクセス",
+				"step2": "プロジェクトとアプリを作成（または既存のものを使用）",
+				"step3": "「User authentication settings」でOAuth 2.0を有効化",
+				"step4": "App permissions: 「Read」を選択",
+				"step5": "Type of App: 「Web App, Automated App or Bot」を選択",
+				"step6": "Callback URI / Redirect URL に以下のURLを追加：",
+				"step7": "Website URL を設定（このサイトのURL）",
+				"step8": "Client ID と Client Secret をコピー",
+				"configuredTitle": "X認証が設定されています",
+				"configuredDescription": "視聴者がXアカウントで認証できます。",
+				"save": "保存"
+			},
+			"federation": {
+				"modal": {
+					"title": "Fediverse機能を有効にする",
+					"cancelButton": "有効にしない",
+					"okButton": "Fediverse機能を有効にする",
+					"howItWorksTitle": "AoiTubeのFediverse機能はどう動きますか？",
+					"intro": {
+						"beforeLink": "AoiTubeのFediverse機能は、あなたのサーバーが",
+						"linkText": "Fediverse",
+						"afterLink": "（分散型でオープンな、独立したサーバー群）に参加することで実現されます。"
+					},
+					"docs": {
+						"beforeLink": "これらの機能の詳細や仕組みについては",
+						"linkText": "ドキュメント",
+						"afterLink": "をご覧ください。"
+					},
+					"thingsToKnowTitle": "知っておくべきこと",
+					"point1": "これらの機能はまだ新しく、外部との連携の性質上、問題が発生する可能性があります。動作が不安定だと感じた場合は、ぜひ報告してください。",
+					"point2": "AoiTubeサーバーは必ずHTTPS（SSL）で公開してください。",
+					"point3": "フォローされ始めた後にサーバーURLやソーシャルユーザー名を変更すると、Fediverse上では別ユーザーとして扱われ、以前のユーザーは消えたように見える場合があります。",
+					"point4Term": "プライベートモード",
+					"point4AfterTerm": "を有効にすると、フォロワーを手動で承認でき、投稿の公開範囲をフォロワーのみに制限できます。",
+					"learnMoreTitle": "Fediverseについてもっと知る",
+					"learnMore": {
+						"beforeLink": "これらの概念が初めての場合は、Fediverseが提供する機能や文化について、もう少し理解を深めるのがおすすめです。詳しくは",
+						"linkText": "ドキュメント",
+						"afterLink": "を参照してください。始めるための参考情報が見つかります。"
+					}
+				},
+				"httpsWarning": "この機能を有効にするには、まずサーバーURLをHTTPSで設定する必要があります。",
+				"portWarning": "この機能は、SSLの標準ポート（443）で公開されているAoiTubeのみ対応しています。",
+				"title": "Fediverse連携",
+				"intro": {
+					"beforeStrong": "AoiTubeの",
+					"strongText": "Fediverse機能",
+					"afterStrong": "は、あなたのインスタンスをFediverse（Mastodon等の分散型SNS）に接続します。フォロワーが配信開始の通知を受け取ったり、投稿にリアクションしたりできます。"
+				},
+				"enableNotice": "有効にすると、配信開始時にFediverseフォロワーへ自動通知したり、任意の内容で投稿を作成できます。",
+				"learnMoreLink": "Fediverse機能の詳細はこちら"
+			},
+			"streamProtocol": {
+				"fetchError": "設定の取得に失敗しました",
+				"iceServersArrayError": "ICEサーバーは配列形式で指定してください",
+				"iceServersJsonError": "無効なJSON形式です",
+				"iceServersInvalid": "ICEサーバーの設定が無効です",
+				"saveSuccess": "設定を保存しました",
+				"saveError": "保存に失敗しました",
+				"latencySaveError": "遅延レベルの保存に失敗しました",
+				"viewerDisconnected": "視聴者を切断しました",
+				"disconnectError": "切断に失敗しました",
+				"allViewersDisconnected": "すべての視聴者を切断しました",
+				"columns": {
+					"connectedAt": "接続時刻",
+					"ipAddress": "IPアドレス",
+					"actions": "操作"
+				},
+				"disconnect": "切断",
+				"loading": "読み込み中...",
+				"title": "ストリーミングプロトコル設定",
+				"description": "視聴者向けのストリーミングプロトコルを設定します。WebRTCは超低遅延（~1秒以下）、LL-HLSは低遅延（~2-3秒）を実現します。",
+				"experimentalTitle": "実験的機能",
+				"experimentalDescription": "WebRTCおよびLL-HLSは実験的機能です。配信中に設定を変更した場合、再起動が必要な場合があります。",
+				"standardHls": "標準HLS",
+				"enabledLabel": "有効",
+				"standardHlsDescription": "標準的なHLSストリーミング。最も互換性が高く、安定しています。 遅延: ~10-30秒",
+				"experimentalTag": "実験的",
+				"latencyLevel": "遅延レベル",
+				"marks": {
+					"lowest": "最低",
+					"low": "低",
+					"medium": "中",
+					"standard": "標準",
+					"reliable": "高信頼"
+				},
+				"llhlsDescription": "Apple LL-HLSプロトコル。Safari、iOS、新しいブラウザで対応。 遅延: ~2-5秒",
+				"maxViewers": "最大視聴者数",
+				"maxViewersTip": "0 = 無制限。サーバーリソースに応じて設定してください。",
+				"webrtcDescription": "リアルタイム通信プロトコル。最も低い遅延を実現。 遅延: ~0.5-2秒",
+				"webrtcAdvanced": "WebRTC詳細設定",
+				"iceServers": "ICEサーバー設定",
+				"iceServersTip": "STUN/TURNサーバーをJSON配列で指定します。urlsは配列形式で指定してください。NAT越えが必要な場合はTURNサーバーの設定を推奨します。",
+				"webrtcStats": "WebRTC統計",
+				"currentViewers": "現在の視聴者",
+				"status": "ステータス",
+				"statusEnabled": "有効",
+				"statusDisabled": "無効",
+				"connectedViewers": "接続中の視聴者",
+				"disconnectAll": "全員切断",
+				"saveButton": "設定を保存",
+				"reload": "再読み込み"
+			}
+		},
+		"fields": {
+			"serverName": {
+				"placeholder": "AoiTubeサイト名",
+				"label": "サイト名",
+				"tip": "AoiTubeサーバーの名前"
+			},
+			"streamTitle": {
+				"placeholder": "今日は何をしている...",
+				"label": "配信タイトル",
+				"tip": "今日の配信は何についてですか？"
+			},
+			"serverSummary": {
+				"label": "概要",
+				"tip": "あなた、サーバー、または配信についての簡単な説明。"
+			},
+			"offlineMessage": {
+				"placeholder": "配信がオフラインのときに表示するメッセージ。",
+				"label": "オフラインメッセージ",
+				"tip": "配信がオフラインのときに視聴者に表示するオプションのメッセージ。"
+			},
+			"welcomeMessage": {
+				"label": "ウェルカムメッセージ",
+				"tip": "視聴者が初めてチャットに接続したときに送信されるシステムチャットメッセージ。空白にすると無効になります。"
+			},
+			"logo": {
+				"label": "ロゴ",
+				"tip": "サイト全体で使われるアイコン画像です。ヘッダー・favicon・通知・Fediverseのプロフィール画像に反映されます。正方形（例: 512×512以上）のJPG/PNGを推奨します。変更は即時反映されますが、ブラウザのタブアイコンは再訪問時に更新されます。",
+				"statusCustom": "設定済み（{{file}}）",
+				"statusDefault": "デフォルト"
+			},
+			"adminPassword": {
+				"label": "管理者パスワード",
+				"tip": "このパスワードを安全な場所に保存してください。管理ダッシュボードにログインする際に必要になります！"
+			},
+			"ffmpegPath": {
+				"label": "FFmpegパス",
+				"tip": "サーバー上のFFMPEGアプリケーションの絶対ファイルパス"
+			},
+			"webPort": {
+				"label": "AoiTubeポート",
+				"tip": "AoiTube Webサーバーがリッスンするポート。デフォルトは8080"
+			},
+			"rtmpPort": {
+				"label": "RTMPポート",
+				"tip": "配信を受信するポート。デフォルトは1935"
+			},
+			"instanceUrl": {
+				"label": "サーバーURL",
+				"tip": "AoiTubeサーバーのフルURL。"
+			},
+			"socketHostOverride": {
+				"label": "Websocketホストオーバーライド",
+				"tip": "AoiTubeサーバーのダイレクトURL。"
+			},
+			"tags": {
+				"placeholder": "新しいタグを追加"
+			},
+			"nsfw": {
+				"label": "成人向けコンテンツ？",
+				"tip": "アダルトコンテンツを配信する予定がある場合はオンにしてください。ディレクトリで正しく表示されるよう設定してください。"
+			},
+			"directoryEnabled": {
+				"label": "ディレクトリを有効化",
+				"tip": "ディレクトリに表示するにはオンにしてください。"
+			},
+			"hideViewerCount": {
+				"label": "視聴者数を非表示",
+				"tip": "Webページ上の視聴者数を非表示にするにはオンにしてください。"
+			},
+			"silentStreamMode": {
+				"label": "サイレントモード（テスト配信）",
+				"tip": "有効にすると、配信開始時の外部通知をすべて送信せず、配信は管理者とモデレーターにのみ表示されます（S3/CDNにも公開されません）。切り替えは次の配信開始から適用されます。"
+			},
+			"chatDisable": {
+				"label": "チャット",
+				"tip": "AoiTubeサーバーのチャット機能のオン/オフを切り替えます。"
+			},
+			"chatJoinMessages": {
+				"label": "参加メッセージ",
+				"tip": "視聴者がチャットに参加したときに表示します。"
+			},
+			"chatEstablishedUsers": {
+				"label": "既存ユーザーのみ",
+				"tip": "一定期間前から登録されているユーザーのみチャットできます。"
+			},
+			"chatSpamProtection": {
+				"label": "スパム保護",
+				"tip": "連続投稿の速度を制限してスパムを防ぎます。無効にするとレート制限がなくなります。"
+			},
+			"chatSlurFilter": {
+				"label": "不適切な言葉のフィルタ",
+				"tip": "差別的・攻撃的な言葉（主に英語）を含むメッセージをブロックします。"
+			},
+			"requireSocialAuth": {
+				"label": "ソーシャル認証を必須にする",
+				"tip": "チャットに参加するにはXまたはDiscord認証が必要になります。事前に通知設定で各サービスのAPI認証情報を設定してください。"
+			},
+			"forbiddenUsernames": {
+				"placeholder": "ユーザー名",
+				"label": "禁止ユーザー名",
+				"tip": "チャットユーザー名で禁止する単語のリスト。"
+			},
+			"suggestedUsernames": {
+				"placeholder": "ユーザー名",
+				"label": "デフォルトユーザー名",
+				"tip": "新規ユーザーに割り当てられるチャットユーザー名のオプションリスト。10件未満の場合はランダムな名前が生成されます。ユーザーは後から変更でき、同じユーザー名が複数回割り当てられることがあります。",
+				"minNotReached": "この機能には最低10件必要です。",
+				"noEntries": "デフォルトの名前ジェネレーターが使用されます。"
+			},
+			"federationEnabled": {
+				"label": "Fediverse機能を有効化",
+				"tip": "Fediverseでアクティビティを送受信します。"
+			},
+			"federationPrivate": {
+				"label": "プライベート",
+				"tip": "フォローリクエストは承認が必要になり、フォロワーのみがアクティビティを見ることができます。"
+			},
+			"federationShowEngagement": {
+				"label": "エンゲージメントを表示",
+				"tip": "フォロー、いいね、シェアがチャットフィードに表示されます。"
+			},
+			"federationLiveMessage": {
+				"placeholder": "配信が始まりました！見に来てください！",
+				"label": "配信開始メッセージ",
+				"tip": "ライブ配信が開始されたことを告知するメッセージ。タグは自動的に追加されます。空白にすると無効になります。"
+			},
+			"federationDefaultUser": {
+				"label": "ユーザー名",
+				"tip": "Fediverseでアクティビティを送受信するために使用するユーザー名。例えば「bob」を使用すると、@bob@yourserverからメッセージを送信します。フォロワーがついたら変更しないでください。"
+			},
+			"federationInstanceUrl": {
+				"label": "サーバーURL",
+				"tip": "Fediverse機能を有効にするにはAoiTubeサーバーのフルURLが必要です。SSL（https）を使用する必要があります。フォロワーがついたら変更しないでください。"
+			},
+			"federationNsfw": {
+				"label": "成人向けコンテンツの可能性",
+				"tip": "アダルトコンテンツを配信する予定がある場合はオンにして、配信のプレビューをセンシティブとしてマークできるようにします。"
+			},
+			"federationBlockedDomains": {
+				"label": "ブロックするドメイン",
+				"tip": "特定のドメインからのインタラクションをブロックできます。"
+			},
+			"videoVariant": {
+				"videoPassthroughTip": "有効にすると他の設定はすべて無効になります。無効のまま通常どおり設定してください。",
+				"audioPassthroughTip": "「いいえ」を選択した場合は、希望する音声ビットレートを設定してください。",
+				"scaledWidth": {
+					"label": "リサイズ後の幅",
+					"tip": "必要に応じて横幅をリサイズします。"
+				},
+				"scaledHeight": {
+					"label": "リサイズ後の高さ",
+					"tip": "必要に応じて高さをリサイズします。"
+				},
+				"name": {
+					"label": "名前",
+					"placeholder": "高画質または低画質",
+					"tip": "プレーヤーに表示するための人間が読める名前。"
+				}
+			},
+			"framerate": {
+				"tip": "フレームレートを下げると、エンコードして視聴者へ送信する動画量が減り、CPUと帯域を節約できます（その分なめらかさは低下します）。多くのコンテンツでは低めでも問題ありません。",
+				"tooltips": {
+					"fps24": "24fps - 映画/プレゼン/音楽/低スペック・低帯域サーバー向け。",
+					"fps25": "25fps - 映画/プレゼン/音楽/低スペック・低帯域サーバー向け。",
+					"fps30": "30fps - 低速/カジュアルなゲーム、チャット、汎用向け。",
+					"fps50": "50fps - 高速/アクションゲーム、スポーツ、HD動画向け。",
+					"fps60": "60fps - 高速/アクションゲーム、スポーツ、HD動画向け。",
+					"fps90": "90fps - 最新の高速ゲームや高性能ハードウェア向け。",
+					"fps120": "120fps - 実験的です。自己責任で使用してください。"
+				}
+			},
+			"videoBitrate": {
+				"tip": "配信の総合的な画質は、一般的にビットレートの影響が最も大きいです。"
+			},
+			"encoderPreset": {
+				"lowest": "最低",
+				"highest": "最高",
+				"tooltips": {
+					"level0": "最低のハードウェア使用率 - 最低品質のビデオ",
+					"level1": "低いハードウェア使用率 - 低品質のビデオ",
+					"level2": "中程度のハードウェア使用率 - 平均品質のビデオ",
+					"level3": "高いハードウェア使用率 - 高品質のビデオ",
+					"level4": "最高のハードウェア使用率 - より高品質のビデオ"
+				}
+			},
+			"encoderRecommendation": {
+				"helpText": "ビデオ品質のバリアントが1つしか設定されていません。サーバーに十分なコンピューティングリソースがある場合は、より多くの人がコンテンツを視聴できるように、別の低品質のバリアントを追加することを検討してください！"
+			},
+			"s3": {
+				"region": {
+					"label": "リージョン"
+				},
+				"secret": {
+					"label": "シークレットキー",
+					"placeholder": "シークレットキー"
+				},
+				"servingEndpoint": {
+					"label": "配信エンドポイント",
+					"tip": "コンテンツをデフォルト以外のURLから配信したい場合に指定します（CDNや一部ストレージプロバイダで利用）。通常は不要です。"
+				},
+				"forcePathStyle": {
+					"label": "パス形式を強制",
+					"tip": "S3プロバイダが virtual-hosted-style URL をサポートしない場合はオンにしてください（例: Oracle Cloud Object Storage）。"
+				}
+			},
+			"discord": {
+				"webhookUrl": {
+					"tip": "チャンネルに割り当てられたWebhook。"
+				},
+				"goLiveMessage": {
+					"label": "配信開始テキスト",
+					"tip": "配信開始時に送信するテキスト。",
+					"placeholder": "配信が始まりました！見に来てください！"
+				}
+			},
+			"browserPush": {
+				"goLiveMessage": {
+					"label": "配信開始テキスト",
+					"tip": "配信開始時に送信するテキスト。",
+					"placeholder": "配信が始まりました！見に来てください！"
+				}
+			},
+			"passwordComplexity": {
+				"minLength": "- 最低8文字",
+				"maxLength": "- 最大192文字",
+				"lowercase": "- 小文字を1文字以上",
+				"uppercase": "- 大文字を1文字以上",
+				"number": "- 数字を1文字以上",
+				"specialCharacter": "- 特殊文字を1文字以上: !@#$%^&*"
+			},
+			"toggle": {
+				"on": "オン",
+				"off": "オフ",
+				"error": "エラーが発生しました: {{message}}"
+			},
+			"recordingEnabled": {
+				"label": "配信を録画する",
+				"tip": "有効にすると、配信終了後に自動的にアーカイブ（VOD）として保存され、視聴者が後から視聴できるようになります。設定変更は次の配信開始から適用されます。"
+			},
+			"recordingRetention": {
+				"label": "録画の保持数",
+				"tip": "保存する非公開録画の最大数。超過分は古い順に自動削除されます。0で無制限。公開済み・会員限定・有料・購入実績のあるアーカイブは自動削除の対象外です。"
+			},
+			"livePoster": {
+				"label": "配信中ポスター",
+				"tip": "配信開始直後（最初のサムネイル生成前）や、視聴者が再生ボタンを押す前のプレイヤーに表示される画像です。16:9（例: 1280×720以上）のJPG/PNGを推奨します。未設定の場合は内蔵の「LIVE」画像が使われます。配信が始まって約20秒後からは自動生成されるサムネイルに切り替わります。",
+				"uploadButton": "画像をアップロード",
+				"resetButton": "デフォルトに戻す",
+				"statusCustom": "設定済み",
+				"statusDefault": "デフォルト",
+				"previewLabel": "プレビュー（{{type}}）:",
+				"updated": "配信中ポスターを更新しました",
+				"resetSuccess": "デフォルトに戻しました",
+				"loadFailed": "画像の読み込みに失敗しました"
+			},
+			"recordingStoreS3": {
+				"label": "録画をS3に保存",
+				"tip": "有効にすると、配信終了後に録画のメディアをS3オブジェクトストレージ（ライブ配信と同じバケットのarchives/配下）に保存し、ローカルディスクを解放します。視聴はサーバー経由で配信されるため非公開アーカイブの保護は維持されます。先に「サーバー設定 > ストレージ」でS3認証情報の設定が必要です。"
+			},
+			"backupEnabled": {
+				"label": "自動バックアップを有効にする",
+				"tip": "有効にすると、データベースを定期的にバックアップします。"
+			},
+			"backupInterval": {
+				"label": "バックアップ間隔（時間）",
+				"tip": "バックアップを実行する間隔（時間）。最小1時間、既定24時間。"
+			},
+			"backupRetention": {
+				"label": "ローカル保持数",
+				"tip": "ローカルに保持するバックアップファイルの最大数。超過分は古い順に自動削除。0で無制限。"
+			},
+			"backupStoreS3": {
+				"label": "バックアップをS3に保存",
+				"tip": "各バックアップをS3オブジェクトストレージ（ライブ配信と同じバケットのbackups/配下）にもアップロードします。ディスク障害での消失を防ぎ、別ノードへの移行を容易にします。先にS3認証情報の設定が必要です。"
+			}
+		}
+	},
+	"archives": {
+		"title": "配信アーカイブ",
+		"description": "過去の配信の録画を視聴できます。",
+		"empty": "録画はまだありません",
+		"backToHome": "ホームに戻る",
+		"untitled": "無題の配信",
+		"chatReplay": "チャットリプレイ",
+		"backToList": "一覧に戻る",
+		"recentTitle": "過去の配信",
+		"viewAll": "すべて見る",
+		"paid": {
+			"ownedBadge": "購入済み",
+			"membersBadge": "会員限定",
+			"purchaseTitle": "アーカイブを購入",
+			"loginModalTitle": "ログイン",
+			"purchasedTitle": "購入が完了しました",
+			"purchasedBinding": "「{{name}}」で購入しました。視聴するには同じアカウントでログインしてください。",
+			"watchNow": "視聴する",
+			"loginRequired": "このアーカイブは有料です。購入するにはログインしてください。",
+			"loginToPurchase": "ログインして購入",
+			"loggedInAs": "ログイン中のアカウント",
+			"bindingNote": "この購入はアカウント「{{name}}」に紐付きます。別の端末では同じSNSアカウントでログインしてください。",
+			"payWith": "{{provider}}で購入",
+			"noProviders": "現在利用できる決済方法がありません。",
+			"returnHint": "決済が完了したら、このページに戻ると視聴できます。",
+			"paymentOpenedTab": "決済ページを新しいタブで開きました。完了後、このページに戻ってください。",
+			"paymentFailed": "決済の開始に失敗しました。",
+			"lockedBadge": "有料"
+		},
+		"members": {
+			"title": "会員限定アーカイブ",
+			"loginRequired": "このアーカイブの視聴にはログインが必要です。",
+			"loginToWatch": "ログインして視聴",
+			"loggedInTitle": "ログインしました。視聴できます。"
+		},
+		"count": "{{count}}件の録画",
+		"copyLink": "リンクをコピー",
+		"linkCopied": "リンクをコピーしました",
+		"moreArchives": "他のアーカイブ"
+	},
+	"page": {
+		"notFound": "ページが見つかりません",
+		"backToHome": "ホームに戻る",
+		"loading": "読み込み中..."
+	},
+	"purchases": {
+		"title": "購入履歴",
+		"empty": "まだ購入はありません",
+		"loginHint": "ログインすると購入履歴が表示されます",
+		"watch": "視聴する",
+		"itemSuperchat": "スーパーチャット",
+		"itemEffect": "画面演出",
+		"itemArchive": "アーカイブ",
+		"archiveDeleted": "（削除済みアーカイブ）",
+		"testTag": "テスト"
+	}
+}

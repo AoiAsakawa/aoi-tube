@@ -1,0 +1,2393 @@
+{
+	"ui": {
+		"cookieConsent": {
+			"message": "本網站使用Cookie進行身分驗證與工作階段管理。繼續使用本網站，即表示您同意使用Cookie。",
+			"accept": "同意"
+		},
+		"donationAlert": {
+			"anonymous": "匿名",
+			"fromSuffix": "的超級留言"
+		},
+		"footer": {
+			"tokushoho": "依《特定商業交易法》標示",
+			"faq": "常見問題",
+			"documentation": "文件",
+			"contribute": "參與貢獻",
+			"sourceCode": "原始碼",
+			"archives": "封存"
+		},
+		"header": {
+			"skipToPlayer": "跳至播放器",
+			"skipToOfflineMessage": "跳至離線訊息",
+			"skipToContent": "跳至頁面內容",
+			"skipToFooter": "跳至頁尾",
+			"chatAvailableWhenLive": "聊天室將在直播開始後開放。",
+			"chatOffline": "聊天室已離線",
+			"language": "語言",
+			"toggleTheme": "切換主題",
+			"login": "登入",
+			"home": "首頁"
+		},
+		"noscript": {
+			"poweredByPrefix": "本網站由",
+			"poweredBySuffix": "提供支援。",
+			"jsRequired": "本網站使用 JavaScript 來播放 HTTP Live Streaming (HLS) 影片並提供聊天功能。但您的瀏覽器似乎不支援 JavaScript，或已將其停用。",
+			"enableJs": "為了獲得更好的觀看體驗，請使用支援 JavaScript 的瀏覽器。如果您在瀏覽器中停用了 JavaScript，請將其啟用。",
+			"watchWithoutJsTitle": "如何在沒有 JavaScript 的情況下觀看？",
+			"mediaPlayerPrefix": "您可以使用媒體播放器（例如",
+			"mediaPlayerSuffix": "）開啟本網站的網址進行觀看。",
+			"chatWithoutJsTitle": "如何在沒有 JavaScript 的情況下聊天？",
+			"chatWithoutJsBody": "目前尚無在沒有 JavaScript 的情況下使用聊天的方法。"
+		},
+		"notifyReminder": {
+			"title": "掌握最新動態！",
+			"line1": "點擊一下，",
+			"line2": "不錯過任何直播！"
+		},
+		"offlineBanner": {
+			"offline": "此直播目前離線。",
+			"getNotified": "接收通知",
+			"notifySuffix": "，即可在{{streamName}}下次開播時收到提醒。",
+			"orFollowFediverse": "或者，在Fediverse上",
+			"orFollowTwitter": "或者，在X上",
+			"onTwitterPrefix": "在X上",
+			"followFediverseAccount": "追蹤{{fediverseAccount}}",
+			"followSuffix": "。",
+			"alsoFollowTwitterPrefix": "此外，您也可以在X上",
+			"follow": "追蹤",
+			"alsoFollowTwitterSuffix": "。",
+			"checkBackSuffix": "，以掌握{{streamName}}的下次直播。",
+			"checkBackNoNameSuffix": "，以掌握下次直播動態。",
+			"offlineCheckBackLater": "此直播目前離線，請稍後再來看看！",
+			"lastLive": "上次直播：{{time}}前"
+		},
+		"statusbar": {
+			"durationDaysHours": "{{days}}天 {{hours}}小時",
+			"durationHoursMinutes": "{{hours}}小時 {{minutes}}分鐘",
+			"durationMinutesSeconds": "{{minutes}}分鐘 {{seconds}}秒",
+			"streamingFor": "直播中：{{duration}}",
+			"offline": "離線",
+			"lastLive": "上次直播：{{time}}前"
+		},
+		"userMenu": {
+			"changeName": "修改名稱",
+			"auth": "身分驗證",
+			"hideChat": "隱藏聊天",
+			"showChat": "顯示聊天",
+			"logout": "登出",
+			"guestName": "訪客: {{name}}",
+			"purchases": "購買記錄"
+		},
+		"buttons": {
+			"follow": "關注",
+			"notify": "接收通知"
+		},
+		"tabs": {
+			"about": "簡介",
+			"followers": "關注者"
+		},
+		"modals": {
+			"browserNotifications": "瀏覽器通知",
+			"followName": "關注{{name}}"
+		}
+	},
+	"video": {
+		"protocolBadge": {
+			"defaultLatency": "10-30秒",
+			"webrtcDescription": "WebRTC超低延遲直播",
+			"llhlsDescription": "Low-Latency HLS（低延遲）",
+			"hlsDescription": "標準HLS串流",
+			"title": "{{description}} - 預計延遲：{{latency}}"
+		},
+		"webrtcPlayer": {
+			"notAvailable": "WebRTC直播無法使用",
+			"disconnectedRetrying": "連線已中斷，正在嘗試重新連線...",
+			"connectionFailed": "WebRTC連線失敗",
+			"retry": "重新連線",
+			"connecting": "正在連線WebRTC...",
+			"latency": "<1秒"
+		},
+		"lowLatencyToggle": {
+			"enable": "嘗試低延遲模式（WebRTC）",
+			"disable": "返回標準播放"
+		}
+	},
+	"chat": {
+		"anonymous": "匿名",
+		"joinedChat": "加入了聊天室。",
+		"leftChat": "離開了聊天室。",
+		"hideMessage": "隱藏訊息",
+		"banUser": "封鎖使用者",
+		"moreInfo": "更多資訊...",
+		"becameModerator": "您已成為管理員。",
+		"sendMessage": "傳送訊息",
+		"chatUnavailable": "聊天室目前無法使用。",
+		"chatTextInput": "聊天輸入框",
+		"emojiPicker": "表情符號選擇器",
+		"sendDonation": "購買超級留言",
+		"discordAuthenticated": "已透過Discord驗證",
+		"googleAuthenticated": "已透過Google驗證",
+		"xAuthenticated": "已透過X驗證",
+		"authenticatedViaX": "已驗證（X）",
+		"system": {
+			"streamStarting": "敬請期待，直播馬上開始！",
+			"streamEnding": "直播即將結束。",
+			"userAuthenticatedWith": "{{name}} 已透過 {{provider}} 驗證！",
+			"userAuthenticatedAs": "{{newName}} 已驗證為 {{oldName}}"
+		},
+		"openChat": "開啟聊天",
+		"title": "聊天",
+		"emptyState": "還沒有訊息",
+		"emptyStateHint": "來發送第一則留言吧！"
+	},
+	"donation": {
+		"sendDonation": "購買超級留言",
+		"itemTypeLabel": "購買項目",
+		"itemTypeSuperchat": "超級留言",
+		"itemTypeEffect": "畫面特效",
+		"effectTypeLabel": "選擇特效",
+		"effectCryptoRateNote": "實際的日圓換算金額可能因行情波動而略有變動",
+		"effectPriceLoading": "正在取得目前代幣價格…",
+		"effectPriceUnavailable": "該代幣沒有價格資訊，無法用於購買畫面特效。請選擇其他代幣",
+		"purchaseThanks": "感謝您的購買！",
+		"purchaseError": "處理購買時發生錯誤",
+		"paymentMethod": "付款方式",
+		"crypto": "加密貨幣",
+		"amount": "金額",
+		"amountWithCurrency": "金額（{{currency}}）",
+		"enterAmount": "請輸入金額",
+		"amountTooSmall": "金額太小",
+		"inputInCurrency": "以{{currency}}輸入",
+		"inputInJpy": "以日圓輸入",
+		"max": "最大",
+		"displayName": "顯示名稱",
+		"yourName": "您的名字",
+		"sendAnonymously": "匿名傳送",
+		"enterNameOrAnonymous": "請輸入顯示名稱，或勾選匿名",
+		"messageOptional": "留言（選填）",
+		"messageToStreamer": "給實況主的留言...",
+		"totalAmountLabel": "傳送金額：",
+		"tokushohoLink": "依《特定商業交易法》標示",
+		"cancel": "取消",
+		"close": "關閉",
+		"payWith": "使用{{provider}}付款",
+		"sendWithCurrency": "傳送{{currency}}",
+		"donateVia": "透過{{name}}購買超級留言",
+		"donateWith": "使用{{name}}購買超級留言",
+		"kofiDescription": "點擊下方按鈕，將在新分頁中開啟Ko-fi的超級留言購買頁面。在Ko-fi完成購買後，購買的超級留言會自動顯示在聊天室中。",
+		"kofiEffectCommandHint": "在Ko-fi留言開頭輸入下列指令之一，並支付不低於該演出價格的金額即可觸發畫面演出。不加指令則為普通超級留言。",
+		"doneruDescription": "點擊下方按鈕，將在新分頁中開啟Doneru的超級留言購買頁面。請在Doneru完成購買。",
+		"pageOpenedInNewTab": "{{name}}頁面已在新分頁中開啟",
+		"paymentUnavailable": "{{provider}}付款無法使用",
+		"paymentRedirecting": "正在前往{{provider}}付款頁面...",
+		"paymentCompleteInNewTab": "請在新開啟的{{provider}}分頁中完成付款。完成後會自動顯示在聊天室中。",
+		"paymentCreateFailed": "建立{{provider}}付款失敗",
+		"paymentCreateError": "建立{{provider}}付款時發生錯誤",
+		"paypalMinimumNote": "※ 由於PayPal手續費（約3.6% + ¥40），最低金額為¥300",
+		"stripeTestModeNote": "🧪 測試模式：請使用測試卡（4242 4242 4242 4242）",
+		"wallet": "錢包",
+		"solanaWallet": "Solana錢包",
+		"connectWallet": "連接錢包",
+		"connectSolanaWallet": "連接Solana錢包",
+		"connectedToWallet": "已連接到{{wallet}}",
+		"walletConnected": "已連接{{wallet}}",
+		"walletConnectedAndSwitched": "已連接{{wallet}}並切換到{{network}}",
+		"walletConnectFailed": "連接錢包失敗",
+		"walletNotInstalled": "未安裝錢包（MetaMask或Trust Wallet）",
+		"phantomDetected": "✓ 已偵測到Phantom",
+		"solanaWalletDetected": "✓ 已偵測到Solana錢包",
+		"phantomRecommended": "建議使用Phantom（MetaMask Snap有限制）",
+		"connectedWith": "已連接（{{wallet}}）",
+		"balanceLabel": "餘額：",
+		"loading": "載入中...",
+		"checkBalance": "查詢餘額",
+		"disconnect": "中斷連接",
+		"connectMetamaskFirst": "請先連接MetaMask",
+		"connectWalletFirst": "請先連接錢包",
+		"metamaskConfigInvalid": "MetaMask設定不正確",
+		"networkAndToken": "網路與代幣",
+		"withBalanceOnly": "有餘額",
+		"selectNetwork": "選擇網路",
+		"selectToken": "選擇代幣",
+		"selectNetworkAndToken": "請選擇網路和代幣",
+		"metamaskSwitchedNetwork": "MetaMask已切換到{{network}}",
+		"pleaseSwitchNetwork": "請將網路切換到{{network}}",
+		"switchToNetwork": "切換到{{network}}",
+		"networkAddCancelled": "已取消新增網路",
+		"networkAddFailed": "新增網路失敗：{{error}}",
+		"networkSwitchCancelled": "已取消切換網路",
+		"networkSwitchFailed": "切換網路失敗：{{error}}",
+		"checkWalletRequest": "請在{{wallet}}中確認請求",
+		"unknownError": "未知錯誤",
+		"unknownErrorOccurred": "發生未知錯誤",
+		"errorOccurred": "發生錯誤",
+		"operationCancelled": "操作已取消",
+		"cancelledByUser": "已被使用者取消",
+		"connectionCancelled": "連接已取消",
+		"transactionCancelled": "交易已取消",
+		"bitcoinAddressNotConfigured": "未設定Bitcoin收款地址",
+		"recipientAddressNotConfigured": "未設定收款地址",
+		"bitcoinAddressNotConfiguredAdmin": "未設定Bitcoin收款地址，請在管理後台進行設定。",
+		"solanaAddressNotConfiguredAdmin": "未設定Solana收款地址，請在管理後台進行設定。",
+		"sendingTransaction": "正在傳送交易...",
+		"donationSentThanks": "感謝您購買超級留言！",
+		"txSentButConfirmFailed": "交易已傳送，但確認失敗",
+		"sendErrorOccurred": "轉帳時發生錯誤",
+		"priceFetchFailed": "無法取得價格，請稍後再試。",
+		"metamaskNotDetected": "未偵測到MetaMask",
+		"snapsNotSupported": "不支援MetaMask Snaps，請使用MetaMask v11.0或更新版本。",
+		"bitcoinSnapInstallCancelled": "已取消安裝Bitcoin Snap",
+		"bitcoinAccountFailed": "取得Bitcoin帳戶失敗",
+		"solanaAccountFailed": "取得Solana帳戶失敗",
+		"trustWalletBitcoinUnsupported": "Trust Wallet不支援Bitcoin Snap。\n請直接透過Trust Wallet應用程式傳送BTC。\n點擊「傳送」按鈕後將顯示收款地址。",
+		"solanaSnapOriginRestricted": "MetaMask的Solana Snap無法在本網站使用。\n如需傳送Solana，請嘗試以下方法：\n• 安裝Phantom錢包擴充功能\n• 使用Trust Wallet應用程式內建瀏覽器",
+		"solanaSnapInstallFailed": "安裝Solana Snap失敗。\n建議使用Phantom錢包。",
+		"trustWalletSolanaNotDetected": "無法在Trust Wallet中偵測到Solana。請透過Trust Wallet應用程式內建瀏覽器存取。",
+		"solanaWalletNotFound": "找不到支援Solana的錢包。請安裝Phantom等錢包。",
+		"solanaConnectError": "Solana連線錯誤：{{error}}",
+		"phantomConnectError": "Phantom連線錯誤：{{error}}",
+		"solanaSendError": "Solana轉帳錯誤：{{error}}",
+		"utxoFetchFailed": "取得UTXO失敗",
+		"noConfirmedBalance": "沒有已確認的餘額。未確認餘額：{{amount}} BTC（請等待確認）",
+		"noBalanceAtAddress": "沒有餘額。地址：{{address}}",
+		"insufficientBalance": "餘額不足。餘額：{{balance}} BTC，所需金額：{{required}} BTC（含手續費）",
+		"txSignFailed": "交易簽署失敗",
+		"txSignFailedCheckAccount": "交易簽署失敗。請檢查MetaMask中的Bitcoin帳戶，地址可能不相符。",
+		"txSendFailed": "交易傳送失敗",
+		"broadcastFailed": "廣播失敗：{{error}}",
+		"bitcoinSendComplete": "Bitcoin轉帳完成！TXID：{{txid}}...",
+		"solanaSendComplete": "Solana轉帳完成！Signature：{{signature}}...",
+		"bitcoinSendTitle": "Bitcoin轉帳",
+		"stepConnectSnap": "連接Bitcoin Snap",
+		"addressShort": "地址：{{address}}...",
+		"connectingToSnap": "正在連接Snap...",
+		"installingSnap": "正在安裝MetaMask Snap...",
+		"stepCheckBalance": "查詢餘額",
+		"fetchingUtxo": "正在取得UTXO...",
+		"stepBuildTransaction": "建立交易",
+		"buildingPsbt": "正在建立PSBT...",
+		"stepSignTransaction": "簽署交易",
+		"approveSignatureInWallet": "請在{{wallet}}中核准簽署",
+		"stepBroadcast": "廣播",
+		"broadcasting": "正在傳送到Bitcoin網路...",
+		"stepComplete": "完成",
+		"sendComplete": "轉帳完成！",
+		"waitingForCompletion": "正在等待轉帳完成...",
+		"sendErrorTitle": "轉帳錯誤",
+		"sendAmountLabel": "轉帳金額：",
+		"feeLabel": "手續費：",
+		"fromLabel": "傳送地址："
+	},
+	"screenEffects": {
+		"confetti": "彩紙",
+		"hearts": "愛心",
+		"stars": "流星",
+		"fireworks": "煙火",
+		"celebration": "慶典",
+		"rainbow": "彩虹",
+		"meteor": "流星雨",
+		"goldrush": "黃金雨",
+		"sentEffect": "{{name}}送出了{{effect}}"
+	},
+	"modals": {
+		"common": {
+			"error": "錯誤",
+			"alreadyAuthenticated": "您已完成驗證",
+			"reauthHint": "。不過，您也可以使用其他{{provider}}帳號進行驗證。",
+			"reauthHintDomain": "。不過，您也可以新增其他網域，或以其他使用者身分登入。",
+			"redirectUrlMissing": "無法取得重新導向網址。",
+			"authAccountPrefix": "您可以使用{{provider}}帳號來驗證",
+			"authAccountSuffix": "並在之後以相同的帳號再次登入聊天室。",
+			"authRedirectExplanation": "點擊「使用{{provider}}驗證」按鈕後，將前往{{provider}}的授權頁面。在那裡核准應用程式後，您將返回本網站並完成驗證。",
+			"authWithProvider": "使用{{provider}}驗證",
+			"authRequiredTitle": "需要{{provider}}驗證",
+			"authRequiredDescription": "觀看和參與本直播需要使用{{provider}}帳號進行驗證。",
+			"authPrivacyNote": "驗證資訊僅用於識別觀眾，不會執行發文等操作。",
+			"indieAuthUrlInvalid": "指定的網址無效，或不支援IndieAuth。",
+			"noteLabel": "注意",
+			"privacyNote": "這僅用於驗證目的，不會存取或儲存任何個人資訊。"
+		},
+		"auth": {
+			"tab": "{{provider}}驗證"
+		},
+		"browserNotify": {
+			"notSupported": "您的瀏覽器不支援瀏覽器通知。",
+			"notSupportedLocal": "本機伺服器不支援瀏覽器通知。",
+			"showNotifications": "顯示通知",
+			"allow": "允許",
+			"block": "封鎖",
+			"enabledTitle": "通知已啟用",
+			"enabledDescription": "如需停用來自{{host}}的推播通知，請前往瀏覽器中此網站的權限設定並關閉通知。",
+			"learnMore": "瞭解更多",
+			"registrationError": "註冊直播通知時發生錯誤：{{message}}。請確認您未處於無痕瀏覽模式，且先前未停用過此直播的通知。",
+			"description": "每當本直播開播時，您都會在瀏覽器中收到通知。",
+			"docsLink": "請參閱AoiTube瀏覽器通知詳情",
+			"descriptionSuffix": "。"
+		},
+		"fediAuth": {
+			"messagePrefix": "透過接收Fediverse私訊，您可以將帳號連結到",
+			"messageSuffix": "，或以先前已連結的聊天使用者身分登入。",
+			"codeInstructions": "請輸入傳送到您Fediverse帳號的驗證碼。如果未收到驗證碼，請確認您能否接收私訊。",
+			"verifyCode": "驗證代碼",
+			"accountLabel": "您的Fediverse帳號",
+			"learnMoreHeader": "瞭解更多關於使用Fediverse驗證的資訊",
+			"learnMoreBody": "您可以將聊天ID與Fediverse ID連結。下次使用此聊天ID時，只需再次透過Fediverse驗證即可登入。"
+		},
+		"follow": {
+			"headerPrefix": "追蹤本直播後，開播時您將在Fediverse上收到通知。如果您是新手，現在正是",
+			"learnFediverseLink": "瞭解Fediverse",
+			"headerSuffix": "的好機會。",
+			"errorTitle": "追蹤錯誤",
+			"instructions": "如需追蹤，請按 @使用者名稱@伺服器 的格式輸入",
+			"accountPlaceholder": "Fediverse帳號 @account@server",
+			"footer": "您將被重新導向到您的Fediverse伺服器，並需要確認此操作。",
+			"followButton": "追蹤",
+			"joinButton": "加入Fediverse"
+		},
+		"indieAuth": {
+			"messagePrefix": "您可以使用自己的網域來驗證",
+			"messageSuffix": "或以先前透過IndieAuth驗證過的聊天使用者身分登入。",
+			"domainLabel": "您的網域",
+			"learnMoreHeader": "瞭解更多關於使用IndieAuth驗證的資訊",
+			"learnMoreBody1": "IndieAuth是一種利用自己的網域，以完全獨立、去中心化的方式證明自己身分的機制。",
+			"learnMoreBody2Prefix": "如果您有經營自己的AoiTube實例，可以在此使用其網域。否則，請參閱",
+			"learnMoreLink": "如何支援IndieAuth",
+			"learnMoreBody2Suffix": "。"
+		},
+		"nameChange": {
+			"description": "聊天顯示名稱是您傳送聊天訊息時其他人看到的名字。",
+			"changeButton": "變更名稱",
+			"placeholder": "聊天顯示名稱",
+			"colorLabel": "顏色"
+		},
+		"nsfwWarning": {
+			"title": "年齡確認",
+			"message1": "本網站可能包含成人內容（18歲以上）。",
+			"message2": "您已年滿18歲嗎？",
+			"confirm": "是，我已年滿18歲",
+			"decline": "否，我未滿18歲",
+			"note": "選擇「是」後，將不再顯示此確認。"
+		},
+		"socialAuthRequired": {
+			"titleMulti": "需要社群帳號驗證",
+			"descriptionMulti": "觀看和參與本直播需要使用{{providers}}其中一個帳號進行驗證。",
+			"clickButtonPrompt": "請點擊下方按鈕進行驗證。"
+		},
+		"twitterAuthRequired": {
+			"clickButtonPrompt": "請點擊「驗證」按鈕進行X驗證。",
+			"authButton": "驗證"
+		}
+	},
+	"admin": {
+		"config": {
+			"chat": {
+				"title": "聊天設定",
+				"groups": {
+					"usage": "使用",
+					"moderation": "審核",
+					"usernames": "使用者名稱與歡迎訊息"
+				}
+			},
+			"doneru": {
+				"aboutBody1": "Doneru是日本的超級留言服務。",
+				"aboutBody2": "上建立創作者帳號後，即可收取超級留言。支援PayPal、Stripe等付款方式。",
+				"aboutLinkText": "Doneru官方網站",
+				"aboutTitle": "關於Doneru",
+				"creatorSettingsTitle": "創作者設定",
+				"creatorUrlDescription": "請輸入您的Doneru創作者頁面網址。例: https://doneru.jp/your-username",
+				"creatorUrlLabel": "Doneru創作者頁面網址",
+				"enableDescription": "啟用後，超級留言表單中會顯示Doneru選項。",
+				"enableLabel": "啟用Doneru",
+				"howToTitle": "使用方法",
+				"intro": "啟用Doneru後，觀眾即可透過Doneru購買超級留言。請在Doneru建立創作者帳號，並設定您的創作者頁面網址。",
+				"noteBody": "Doneru的超級留言由Doneru網站處理。超級留言的紀錄可於Doneru的儀表板中查看。",
+				"noteTitle": "注意",
+				"saveSuccess": "已儲存Doneru設定",
+				"step1Suffix": "上建立創作者帳號",
+				"step2": "在個人資料設定中設定付款方式（PayPal、Stripe等）",
+				"step3": "複製您的創作者頁面網址（https://doneru.jp/your-username）",
+				"step4": "貼到上方的「Doneru創作者頁面網址」欄位",
+				"step5": "開啟「啟用Doneru」並儲存",
+				"title": "Doneru設定",
+				"urlValidation": "Doneru的網址必須以 https://doneru.jp/ 開頭"
+			},
+			"faq": {
+				"basicSyntaxTitle": "基本語法",
+				"contentCardTitle": "FAQ內容（Markdown格式）",
+				"enableLabel": "啟用FAQ頁面",
+				"insertSample": "插入範例",
+				"intro": "設定給觀眾看的FAQ頁面。可使用Markdown格式撰寫。",
+				"markdownGuideTitle": "Markdown寫法",
+				"mdBoldLabel": "粗體",
+				"mdBoldSample": "**粗體**",
+				"mdH1Label": "大標題",
+				"mdH1Sample": "# 標題1",
+				"mdH2Label": "中標題",
+				"mdH2Sample": "## 標題2",
+				"mdH3Label": "小標題",
+				"mdH3Sample": "### 標題3",
+				"mdHrLabel": "水平線",
+				"mdLinkLabel": "連結",
+				"mdLinkSample": "[連結](URL)",
+				"mdListLabel": "項目符號",
+				"mdListSample": "- 項目",
+				"saveError": "儲存FAQ設定失敗",
+				"saveSuccess": "已儲存FAQ設定",
+				"statusDisabled": "停用",
+				"statusEnabled": "啟用",
+				"title": "常見問題（FAQ）設定",
+				"urlAlertTitle": "FAQ頁面網址"
+			},
+			"kofi": {
+				"aboutBody1": "Ko-fi是專為創作者打造的超級留言與贊助平台。",
+				"aboutBody2": "上建立帳號，連接PayPal或Stripe即可收取贊助。設定Webhook後，Ko-fi上的超級留言會即時顯示在AoiTube的聊天室中。",
+				"aboutLinkText": "Ko-fi官方網站",
+				"aboutTitle": "關於Ko-fi",
+				"columnCommand": "指令",
+				"columnEffect": "特效",
+				"columnPriceJpy": "價格（JPY）",
+				"columnPriceUsd": "價格（USD）",
+				"copySuccess": "已複製{{label}}",
+				"copyUrlTooltip": "複製URL",
+				"effectsCardTitle": "畫面特效指令",
+				"effectsExample": "例: 將訊息設為「!fireworks 一直支持你！」並支付 ¥1,000 以上，即可觸發煙火特效。",
+				"effectsIntro": "以下列指令作為Ko-fi訊息的開頭，並支付不低於特效價格的金額，即可在直播畫面觸發特效。若金額未達價格，則會作為一般超級留言處理。",
+				"enableDescription": "啟用後，會接收來自Ko-fi的Webhook通知，並將超級留言顯示在聊天室中。",
+				"enableLabel": "啟用Ko-fi",
+				"intro": "啟用Ko-fi後，觀眾即可透過Ko-fi購買超級留言。請在Ko-fi建立帳號，並完成Webhook設定。",
+				"pageSettingsTitle": "頁面設定（選填）",
+				"pageUrlDescription": "請輸入您的Ko-fi頁面網址。將在超級留言表單中以連結按鈕顯示。例: https://ko-fi.com/your-username",
+				"pageUrlLabel": "Ko-fi頁面網址",
+				"realtimeBody": "Ko-fi的超級留言會透過Webhook自動傳送至AoiTube，並即時顯示在聊天室中。贊助者的名稱、金額與訊息都會顯示在聊天室（若贊助者選擇不公開，則以匿名顯示）。",
+				"realtimeTitle": "即時連動",
+				"saveSuccess": "已儲存Ko-fi設定",
+				"step1Suffix": "上建立帳號",
+				"step2LinkText": "設定",
+				"step2Suffix": "中連接PayPal或Stripe以啟用付款",
+				"step3Suffix": "，將其開啟",
+				"step4": "將上方的「Webhook URL」貼到Ko-fi的Webhook URL欄位",
+				"step5": "複製Ko-fi顯示的「Verification Token」，並貼到上方的Verification Token欄位",
+				"step6": "開啟「啟用Ko-fi」並儲存",
+				"step7": "在Ko-fi點擊「Send Test」按鈕，確認設定是否正確",
+				"title": "Ko-fi設定",
+				"urlValidation": "Ko-fi的網址必須以 https://ko-fi.com/ 開頭",
+				"verificationTokenDescription": "請輸入Ko-fi的Webhook設定頁面所顯示的「Verification Token」。為了安全起見，強烈建議進行此設定。",
+				"verificationTokenPlaceholder": "Ko-fi的Verification Token",
+				"verificationTokenTooltip": "請複製並貼上Ko-fi的Webhook設定頁面所顯示的Token。如此一來，只會接收來自正當Ko-fi的請求。",
+				"webhookAlertPrefix": "在Ko-fi的",
+				"webhookAlertSuffix": "中，設定以下URL：",
+				"webhookAlertTitle": "請將Webhook URL設定到Ko-fi",
+				"webhookCardTitle": "Webhook設定",
+				"webhookSettingsPage": "Webhook設定頁面"
+			},
+			"metamask": {
+				"aboutBody": "Metamask付款不會產生仲介手續費，但網路手續費（gas費）由轉帳者負擔。使用Polygon等L2網路或穩定幣（USDT/USDC），可降低手續費。",
+				"aboutTitle": "關於加密貨幣付款",
+				"btcAddressDescription": "若要透過Bitcoin Native SegWit收取超級留言，請輸入以bc1開頭的Bech32地址。MetaMask的最新版本支援Bitcoin轉帳。",
+				"btcAddressInvalid": "並非有效的Bech32地址格式（請輸入以bc1開頭的地址）",
+				"btcAddressLabel": "Bitcoin收款錢包地址（選填）",
+				"currencyCardTitle": "貨幣設定（參考用）",
+				"currentCurrencyLabel": "貨幣",
+				"currentNetworkLabel": "網路",
+				"currentPriceIdLabel": "價格參照ID",
+				"currentSettingsLabel": "目前的設定",
+				"defaultNetworkDescription": "此設定為參考值。實際購買超級留言時，觀眾可自由選擇網路。",
+				"defaultNetworkLabel": "參考用預設網路",
+				"enableLabel": "啟用Metamask付款",
+				"evmAddressDescription": "請輸入用於在Ethereum、Polygon等EVM系鏈上收取超級留言的錢包地址。",
+				"evmAddressInvalid": "並非有效的EVM地址格式（請輸入以0x開頭的42字元地址）",
+				"evmAddressLabel": "EVM收款錢包地址",
+				"intro": "啟用Metamask/Web3付款後，觀眾即可使用加密貨幣購買超級留言。支援多種鏈與代幣。",
+				"nativeCurrencyOption": "{{currency}}（原生貨幣）",
+				"networkAlertBody": "在超級留言畫面中，觀眾可從多種網路（Bitcoin、VirBiCoin、Ethereum、Polygon等）自由選擇。此處的設定為管理用的參考值。",
+				"networkAlertTitle": "關於網路選擇",
+				"networkCardTitle": "預設網路設定（參考用）",
+				"receiveCurrencyDescription": "可選擇原生貨幣（ETH、MATIC等）或ERC-20代幣（USDT、USDC等）。穩定幣沒有價格波動，因此收款金額較為穩定。",
+				"receiveCurrencyLabel": "收款貨幣",
+				"saveSuccess": "已儲存Metamask設定",
+				"showJpyDescription": "使用CoinGecko API顯示即時的日圓換算金額。",
+				"showJpyLabel": "顯示日圓換算",
+				"testAlertBody": "在正式環境使用前，建議先在Sepolia（Ethereum）或Amoy（Polygon）等測試網路上確認運作。測試網路的代幣可免費取得。",
+				"testAlertTitle": "關於測試",
+				"title": "Metamask設定",
+				"tokenAddressAutoSet": "選擇預設代幣後會自動設定",
+				"tokenAddressLabel": "代幣合約地址",
+				"tokenDecimalsLabel": "代幣小數位數",
+				"tokenUnavailable": "{{symbol}}無法在此網路使用",
+				"validateTokenRequired": "請輸入代幣合約地址",
+				"validateWalletFormat": "請輸入有效的Ethereum地址（以0x開頭的42字元）",
+				"validateWalletRequired": "請輸入錢包地址",
+				"walletCardTitle": "錢包設定"
+			},
+			"notify": {
+				"createButton": "建立",
+				"customDescription": "可使用Webhook建立自訂通知。",
+				"customTitle": "自訂",
+				"description": "可利用以下通知管道，將直播開始的消息通知觀眾。",
+				"instanceUrlRequired": "若要啟用此功能，必須先設定伺服器URL。",
+				"learnMore": "深入瞭解通知",
+				"silentModeDescription": "啟用後，會抑止直播開始與結束時的所有外部通知（Webhook、瀏覽器推播、Discord、X、Fediverse、目錄）。請於測試直播時使用。",
+				"silentModeTitle": "靜音測試模式",
+				"thumbnailTitle": "通知縮圖",
+				"title": "通知"
+			},
+			"paypal": {
+				"aboutBody1": "PayPal是可在全球200多個國家與地區使用的付款服務。",
+				"aboutBody2": "上建立應用程式並取得API驗證資訊。手續費約為3.6% + 40日圓（以日本為例）。",
+				"aboutTitle": "關於PayPal",
+				"clientIdPlaceholder": "例：AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz",
+				"credentialsMissingBody": "請設定{{env}}環境的Client ID與Client Secret。",
+				"enableLabel": "啟用PayPal付款",
+				"envProduction": "正式",
+				"envSandbox": "沙盒",
+				"intro": "PayPal是全球廣泛使用的付款服務。請在PayPal Developer Portal建立應用程式，並取得Client ID與Client Secret。",
+				"liveClientIdDescription": "在PayPal Developer Portal的「Live」分頁取得的Client ID",
+				"liveClientSecretDescription": "在PayPal Developer Portal的「Live」分頁取得的Client Secret",
+				"liveClientSecretPlaceholder": "輸入Live Client Secret",
+				"merchantIdDescription": "PayPal商業帳號的Merchant ID（非必填）",
+				"merchantIdLabel": "Merchant ID（選填）",
+				"merchantIdPlaceholder": "例：ABCDEFGHIJKLM",
+				"modeProductionNote": "🔴 正式環境（將進行實際付款）",
+				"modeSandboxNote": "🧪 測試環境（不會進行實際付款）",
+				"productionEnvAlertBody": "這是用於實際付款的驗證資訊。在正式環境中會有真實金流。",
+				"productionEnvAlertTitle": "正式環境",
+				"productionTabLabel": "🔴 正式環境",
+				"sandboxClientIdDescription": "在PayPal Developer Portal的「Sandbox」分頁取得的Client ID",
+				"sandboxClientSecretDescription": "在PayPal Developer Portal的「Sandbox」分頁取得的Client Secret",
+				"sandboxClientSecretPlaceholder": "輸入Sandbox Client Secret",
+				"sandboxEnvAlertBody": "這是測試用的驗證資訊。可使用沙盒帳號進行測試付款。",
+				"sandboxEnvAlertTitle": "沙盒環境",
+				"sandboxTabLabel": "🧪 沙盒環境",
+				"sandboxTestAlertTitle": "沙盒測試",
+				"sandboxTestBody1": "在沙盒模式下，可使用",
+				"sandboxTestBody2": "進行測試付款。不會有真實金流。",
+				"sandboxTestLinkText": "沙盒帳號",
+				"saveSuccess": "已儲存PayPal設定",
+				"separateCredsBody": "在PayPal Developer Portal中，沙盒用與正式環境用會核發不同的Client ID與Client Secret。請輸入對應各環境的驗證資訊。",
+				"separateCredsTitle": "沙盒與正式環境使用各自不同的驗證資訊",
+				"step1Suffix": "登入",
+				"step2": "在「Apps & Credentials」區段建立新的應用程式",
+				"step3Body": "：在「Sandbox」分頁取得Client ID與Client Secret，並輸入到上方的「沙盒環境」分頁",
+				"step3Strong": "沙盒用",
+				"step4Body": "：在「Live」分頁取得Client ID與Client Secret，並輸入到上方的「正式環境」分頁",
+				"step4Strong": "正式用",
+				"step5": "（選填）在PayPal Developer Portal設定Webhook URL",
+				"step6": "將環境模式設為「沙盒」並進行測試",
+				"step7": "測試完成後，將環境模式切換為「正式」",
+				"title": "PayPal設定",
+				"webhookEventNote": "請將Webhook事件選擇為「PAYMENT.CAPTURE.COMPLETED」。"
+			},
+			"paypay": {
+				"aboutBody1": "PayPay的API驗證資訊可從",
+				"aboutBody2": "取得。建議先在沙盒環境進行測試。",
+				"apiKeyLabel": "API金鑰",
+				"apiKeyPlaceholder": "輸入API金鑰",
+				"apiSecretLabel": "API Secret",
+				"apiSecretPlaceholder": "輸入API Secret",
+				"credentialsMissingBody": "請設定{{env}}環境的API金鑰與API Secret。",
+				"enableLabel": "啟用PayPay付款",
+				"intro": "啟用PayPay付款後，觀眾即可使用PayPay購買超級留言。請在PayPay for Developers建立帳號，並取得API驗證資訊。",
+				"merchantIdLabel": "Merchant ID（商店ID）",
+				"merchantIdPlaceholder": "輸入商店ID",
+				"productionWarningBody": "將進行實際付款。請確認API驗證資訊是否正確。",
+				"saveSuccess": "已儲存PayPay設定",
+				"separateCredsBody": "在PayPay for Developers中，沙盒用與正式環境用會核發不同的API金鑰與API Secret。請輸入對應各環境的驗證資訊。",
+				"title": "PayPay設定"
+			},
+			"shared": {
+				"apiCredentials": "API驗證資訊",
+				"basicSettings": "基本設定",
+				"credentialsMissing": "尚未設定驗證資訊",
+				"currencies": {
+					"AUD": "AUD - 澳幣",
+					"BRL": "BRL - 巴西雷亞爾",
+					"CAD": "CAD - 加拿大幣",
+					"CHF": "CHF - 瑞士法郎",
+					"CNY": "CNY - 人民幣",
+					"CZK": "CZK - 捷克克朗",
+					"DKK": "DKK - 丹麥克朗",
+					"EUR": "EUR - 歐元",
+					"GBP": "GBP - 英鎊",
+					"HKD": "HKD - 港幣",
+					"INR": "INR - 印度盧比",
+					"JPY": "JPY - 日圓",
+					"KRW": "KRW - 韓元",
+					"MXN": "MXN - 墨西哥披索",
+					"MYR": "MYR - 馬來西亞令吉",
+					"NOK": "NOK - 挪威克朗",
+					"NZD": "NZD - 紐西蘭幣",
+					"PHP": "PHP - 菲律賓披索",
+					"PLN": "PLN - 波蘭茲羅提",
+					"SEK": "SEK - 瑞典克朗",
+					"SGD": "SGD - 新加坡幣",
+					"THB": "THB - 泰銖",
+					"TWD": "TWD - 新台幣",
+					"USD": "USD - 美元"
+				},
+				"currency": "貨幣",
+				"displayNameDescription": "可自訂顯示在超級留言按鈕上的名稱。若留空，則會顯示為「{{name}}」。",
+				"displayNameOptional": "顯示名稱（選填）",
+				"environmentMode": "環境模式",
+				"loading": "載入中...",
+				"productionModeActiveBody": "將進行實際付款。請確認設定是否正確。",
+				"productionModeActiveTitle": "正式模式已啟用",
+				"sandboxTestFirst": "在正式環境使用前，請先在沙盒中測試。",
+				"saveSettings": "儲存設定",
+				"setupSteps": "設定步驟",
+				"webhookEndpoint": "Webhook端點",
+				"webhookUrlDescription": "請將此URL註冊到支付服務商的Webhook設定中。",
+				"saveSuccess": "設定已儲存",
+				"saveError": "設定儲存失敗"
+			},
+			"socialItems": {
+				"authDescription": "讓觀眾能夠使用社群帳號在聊天室進行驗證。在聊天設定中啟用「將社群驗證設為必要」後，就必須使用這些帳號進行驗證。",
+				"authTitle": "社群驗證設定",
+				"title": "社群設定"
+			},
+			"stripe": {
+				"aboutBody1": "Stripe是支援135種以上貨幣與多種付款方式的付款平台。",
+				"aboutBody2": "上建立帳號並取得API金鑰。手續費約為3.6%（以日本為例）。",
+				"aboutTitle": "關於Stripe",
+				"apiKeysTitle": "API金鑰",
+				"credentialsMissingBody": "請設定{{env}}環境的API金鑰。",
+				"enableLabel": "啟用Stripe付款",
+				"envProduction": "正式",
+				"envTest": "測試",
+				"intro": "Stripe是全球廣泛使用的付款平台。請在Stripe Dashboard建立帳號，並取得API金鑰。",
+				"liveModeAlertBody": "這是正式用的API金鑰。將使用實際的信用卡進行付款。",
+				"liveModeAlertTitle": "正式模式",
+				"livePublishableKeyDescription": "在Stripe Dashboard的「開發者」→「API金鑰」中取得（以pk_live_開頭）",
+				"liveSecretKeyDescription": "在Stripe Dashboard的「開發者」→「API金鑰」中取得（以sk_live_開頭）",
+				"liveTabLabel": "🔴 正式模式",
+				"liveWebhookSecretLabel": "Live Webhook Secret（選填）",
+				"modeProductionNote": "🔴 正式模式（將進行實際付款）",
+				"modeTestNote": "測試模式（可使用測試卡進行付款）",
+				"saveSuccess": "已儲存Stripe設定",
+				"separateKeysBody": "在Stripe Dashboard中，測試用與正式用會核發不同的API金鑰。請輸入對應各環境的金鑰。",
+				"separateKeysTitle": "測試模式與正式模式使用各自不同的API金鑰",
+				"step1Suffix": "登入（若尚無帳號請先建立）",
+				"step2": "在「開發者」→「API金鑰」區段中確認API金鑰",
+				"step3Body": "：將「測試模式」的開關切換為ON，取得以pk_test_與sk_test_開頭的金鑰，並輸入到上方的「測試模式」分頁",
+				"step3Strong": "測試用",
+				"step4Body": "：將「測試模式」的開關切換為OFF，取得以pk_live_與sk_live_開頭的金鑰，並輸入到上方的「正式模式」分頁",
+				"step4Strong": "正式用",
+				"step5": "（選填）在「開發者」→「Webhook」中建立Webhook端點",
+				"step6": "將環境模式設為「測試」並進行測試",
+				"step7": "測試完成後，將環境模式切換為「正式」",
+				"testCardAlertTitle": "測試卡",
+				"testCardFailure": "失敗的付款",
+				"testCardIntro": "在測試模式下，可使用以下測試卡號：",
+				"testCardNote": "有效期限請使用未來的任意日期，CVC請使用任意3位數。",
+				"testCardSuccess": "成功的付款",
+				"testModeAlertBody": "這是測試用的API金鑰。可使用測試卡（4242 4242 4242 4242）進行測試付款。",
+				"testModeAlertTitle": "測試模式",
+				"testModeFirst": "在正式環境使用前，請先在測試模式中測試。",
+				"testPublishableKeyDescription": "在Stripe Dashboard的「開發者」→「API金鑰」中取得（以pk_test_開頭）",
+				"testSecretKeyDescription": "在Stripe Dashboard的「開發者」→「API金鑰」中取得（以sk_test_開頭）",
+				"testTabLabel": "🧪 測試模式",
+				"testWebhookSecretLabel": "Test Webhook Secret（選填）",
+				"title": "Stripe設定",
+				"webhookEventNote": "請將Webhook事件選擇為「checkout.session.completed」。",
+				"webhookSecretDescription": "建立Webhook端點時取得（以whsec_開頭）"
+			},
+			"tokushoho": {
+				"contentCardTitle": "標示內容（Markdown格式）",
+				"contentPlaceholder": "以Markdown格式輸入...",
+				"contentRequired": "請輸入標示內容",
+				"enableLabel": "啟用依《特定商業交易法》標示頁面",
+				"intro": "提供超級留言（付費服務）時，需要依《特定商業交易法》標示。可使用Markdown格式自由編輯。",
+				"legalAlertTitle": "關於法律要求",
+				"legalBody1": "在日本國內提供付款服務時，依法必須依《特定商業交易法》標示。詳情請至",
+				"legalBody2": "確認。",
+				"legalLinkText": "消費者廳網站",
+				"markdownGuideSuffix": "等語法皆可使用。預覽可在儲存後於標示頁面查看。",
+				"markdownGuideTitle": "關於Markdown語法",
+				"mdBoldSample": "**粗體**",
+				"mdH1Sample": "# 標題1",
+				"mdH2Sample": "## 標題2",
+				"mdListSample": "* 清單",
+				"saveError": "儲存失敗：{{message}}",
+				"saveSuccess": "已儲存依《特定商業交易法》標示",
+				"title": "依《特定商業交易法》標示",
+				"urlAlertTitle": "標示頁面URL",
+				"validationError": "請確認輸入內容"
+			},
+			"video": {
+				"advancedSettings": "進階設定",
+				"docLinkText": "影片文件",
+				"introPrefix": "在變更影片設定之前，請先參閱",
+				"introSuffix": "，瞭解其對直播效能的影響。建議先準備一個中等品質的輸出，再視需求逐步增加畫質變化。",
+				"tabQuality": "畫質設定",
+				"tabStreaming": "串流協定",
+				"title": "影片設定"
+			},
+			"recording": {
+				"title": "錄製設定",
+				"tabLabel": "錄製",
+				"description": "自動錄製直播並儲存為存檔（VOD）。錄製以未公開狀態儲存，請在「實用工具 > 存檔」中確認內容（並可設定價格）後再公開。公開的錄製會顯示在面向觀眾的列表頁（/archives）。"
+			},
+			"backup": {
+				"title": "備份",
+				"description": "自動備份資料庫（設定、使用者、購買紀錄和存檔觀看權限）。由於涉及付款，建議開啟備份以保護購買紀錄。"
+			}
+		},
+		"pages": {
+			"common": {
+				"cancel": "取消",
+				"delete": "刪除",
+				"docsIntro": "如需使用方法與範例，請參閱以下文件。",
+				"documentation": "文件",
+				"name": "名稱",
+				"pleaseWait": "請稍候",
+				"selectAll": "全選"
+			},
+			"accessTokens": {
+				"title": "Access Token",
+				"intro": "Access Token 供外部第三方工具在 AoiTube 伺服器上執行特定操作時使用。請務必妥善保管，切勿放入用戶端程式碼中，而應保存在您可管理的伺服器端。",
+				"createButton": "建立 Access Token",
+				"modalTitle": "建立新的 Access Token",
+				"nameHint": "使用此 Access Token 傳送訊息時，這會顯示為聊天室中的使用者名稱。",
+				"namePlaceholder": "機器人／服務／整合的名稱",
+				"scopeHint": "請選擇要授予此 Access Token 的權限。建立後即無法編輯。",
+				"neverUsed": "未使用",
+				"columns": {
+					"token": "Token",
+					"scopes": "權限",
+					"lastUsed": "最後使用"
+				},
+				"scopes": {
+					"systemMessages": {
+						"name": "系統訊息",
+						"description": "可以系統身分傳送官方訊息。"
+					},
+					"chatMessages": {
+						"name": "聊天訊息",
+						"description": "可以此 Token 擁有者的身分傳送聊天訊息。"
+					},
+					"admin": {
+						"name": "管理員權限",
+						"description": "可執行審核、取得伺服器狀態等管理操作。"
+					}
+				}
+			},
+			"actions": {
+				"title": "外部動作",
+				"intro": "外部動作網址是一種第三方 UI，可在使用者點擊按鈕時嵌入顯示於 AoiTube 頁面中。",
+				"createAction": "建立新動作",
+				"editAction": "編輯動作",
+				"saved": "已更新。",
+				"htmlEmbed": "HTML 嵌入",
+				"sameTab": "相同分頁",
+				"newTab": "新分頁",
+				"columns": {
+					"description": "說明",
+					"urlEmbed": "URL／嵌入",
+					"icon": "圖示",
+					"color": "顏色",
+					"openMode": "開啟方式"
+				},
+				"modal": {
+					"urlIntro": "新增您想顯示的外部動作網址。",
+					"httpsOnly": "僅支援 HTTPS 的網址與嵌入內容。",
+					"learnMore": "深入瞭解外部動作",
+					"typePlaceholder": "選擇動作類型",
+					"typeUrl": "嵌入連結或網址",
+					"typeHtml": "自訂 HTML",
+					"htmlPlaceholder": "HTML 嵌入程式碼（必填）",
+					"urlPlaceholder": "https://myserver.com/action（必填）",
+					"titlePlaceholder": "動作名稱（必填）",
+					"descriptionPlaceholder": "說明（選填）",
+					"iconPlaceholder": "https://myserver.com/action/icon.png（選填）",
+					"colorLabel": "按鈕背景色（選填）",
+					"openExternally": "在新分頁中開啟，而非頁面內"
+				}
+			},
+			"chat": {
+				"title": "聊天管理",
+				"columns": {
+					"time": "時間",
+					"user": "使用者",
+					"message": "訊息"
+				},
+				"filters": {
+					"visible": "顯示中",
+					"hidden": "已隱藏"
+				},
+				"tabs": {
+					"connected": "連線中",
+					"offline": "（離線）",
+					"banned": "已封鎖使用者",
+					"ipBans": "IP 封鎖",
+					"moderators": "版主"
+				},
+				"viewerDocsPre": "如需設定觀眾的額外資訊，請參閱",
+				"viewerDocsPost": "。",
+				"offlineDescription": "當直播開始且聊天室啟用時，連線中的聊天用戶端會顯示在此處。",
+				"messageHistory": "訊息記錄（{{num}} 則）",
+				"messageHistoryIntro": "管理顯示在直播畫面上、來自觀眾的訊息。",
+				"bulkLabel": "選取多則訊息以變更其顯示狀態：",
+				"bulkShow": "顯示",
+				"bulkHide": "隱藏"
+			},
+			"configGeneral": {
+				"tabs": {
+					"general": "一般",
+					"customCss": "自訂 CSS",
+					"customScripts": "自訂指令碼"
+				}
+			},
+			"configServer": {
+				"tabs": {
+					"server": "伺服器設定",
+					"storage": "S3 物件儲存",
+					"streamKeys": "串流金鑰",
+					"backup": "備份"
+				}
+			},
+			"donations": {
+				"title": "購買管理",
+				"intro": "這是觀眾購買（超級留言、畫面特效）的營收儀表板與購買記錄。可透過外部付款服務的 Webhook 自動登錄，也可手動登錄。測試付款（沙盒）不會計入營收統計。",
+				"addManually": "手動新增",
+				"anonymous": "匿名",
+				"show": "顯示",
+				"hide": "隱藏",
+				"visible": "顯示中",
+				"hiddenLabel": "已隱藏",
+				"showTest": "顯示測試付款",
+				"testTag": "測試",
+				"testTooltip": "此為沙盒／測試模式的付款，不會計入營收統計。",
+				"testCountTag": "測試 {{num}} 筆（不計入統計）",
+				"columns": {
+					"date": "日期時間",
+					"item": "商品",
+					"provider": "付款方式",
+					"amount": "金額",
+					"purchaser": "購買者",
+					"message": "訊息",
+					"status": "狀態",
+					"action": "操作"
+				},
+				"items": {
+					"superchat": "超級留言",
+					"screenEffect": "畫面特效（{{name}}）",
+					"unknown": "未知",
+					"archive": "封存購買：{{title}}",
+					"archiveDeleted": "（已刪除的封存）",
+					"archiveStat": "封存購買"
+				},
+				"providers": {
+					"manual": "手動",
+					"unknown": "未知"
+				},
+				"stats": {
+					"thisMonth": "本月營收",
+					"momLabel": "與上月相比",
+					"noLastMonth": "上月無資料",
+					"total": "累計營收",
+					"cryptoJpy": "加密資產（日圓換算）",
+					"cryptoJpyNote": "以確認當時的匯率換算的合計",
+					"purchaseCount": "購買總數",
+					"countSuffix": "筆",
+					"average": "平均購買金額",
+					"uniquePurchasers": "不重複購買者",
+					"peopleSuffix": "人",
+					"excludingAnonymous": "不含匿名購買"
+				},
+				"charts": {
+					"daily": "每日營收（過去 30 天）",
+					"dailyTooltip": "{{currency}}：{{amount}}（{{num}} 筆）",
+					"byProvider": "依付款方式",
+					"providerTooltip": "{{label}}：{{num}} 筆（{{amounts}}）",
+					"byItem": "依商品購買數",
+					"itemTooltip": "{{num}} 筆",
+					"emptyDaily": "暫無營收資料",
+					"emptyProviders": "暫無付款資料",
+					"emptyItems": "暫無購買資料"
+				},
+				"deleteConfirm": {
+					"title": "刪除超級留言",
+					"content": "確定要永久刪除此超級留言嗎？此操作無法復原。"
+				},
+				"messages": {
+					"created": "已登錄超級留言",
+					"createFailed": "登錄失敗",
+					"shown": "已顯示",
+					"hidden": "已隱藏",
+					"updateFailed": "更新失敗",
+					"deleted": "已刪除",
+					"deleteFailed": "刪除失敗"
+				},
+				"modal": {
+					"title": "手動登錄超級留言",
+					"register": "登錄",
+					"amountLabel": "金額",
+					"amountRequired": "請輸入金額",
+					"amountPlaceholder": "輸入金額",
+					"currencyLabel": "貨幣",
+					"currencyJpy": "日圓 (JPY)",
+					"currencyUsd": "美元 (USD)",
+					"currencyEur": "歐元 (EUR)",
+					"displayNameLabel": "顯示名稱",
+					"displayNamePlaceholder": "購買者的名稱",
+					"messageLabel": "訊息",
+					"messagePlaceholder": "訊息（選填）",
+					"anonymousLabel": "設為匿名"
+				},
+				"filter": {
+					"all": "全部",
+					"superchat": "超級留言",
+					"effect": "畫面特效",
+					"archive": "封存"
+				},
+				"revoke": {
+					"button": "撤銷",
+					"confirmTitle": "撤銷觀看權限？",
+					"confirmContent": "該用戶將無法再觀看此封存。",
+					"success": "已撤銷觀看權限",
+					"failed": "撤銷失敗"
+				},
+				"grant": {
+					"button": "授予觀看權限",
+					"title": "授予封存觀看權限",
+					"archiveLabel": "封存",
+					"userLabel": "用戶",
+					"submit": "授予",
+					"success": "已授予觀看權限",
+					"failed": "授予失敗",
+					"alreadyOwned": "該用戶已擁有此封存的觀看權限"
+				}
+			},
+			"emojis": {
+				"title": "表情符號",
+				"intro": "您可以上傳用於聊天室的自訂表情符號。上傳新表情符號時，檔名將做為表情符號名稱。",
+				"uploadButton": "上傳新表情符號",
+				"deleteEmoji": "刪除表情符號",
+				"deleting": "正在刪除表情符號…",
+				"deleted": "已刪除表情符號",
+				"converting": "正在轉換表情符號…",
+				"uploading": "正在上傳表情符號…",
+				"uploaded": "已上傳表情符號！",
+				"unsupportedFileType": "不支援的檔案格式：{{type}}"
+			},
+			"hardwareInfo": {
+				"title": "硬體資訊",
+				"noDataDescription": "尚未收集到硬體資訊。",
+				"memory": "記憶體",
+				"disk": "磁碟",
+				"chartTitle": "使用率"
+			},
+			"help": {
+				"title": "有什麼需要協助的嗎？",
+				"troubleshooting": "疑難排解",
+				"troubleshootingButton": "解決問題",
+				"readDocs": "閱讀文件",
+				"commonTasks": "常見作業",
+				"otherTitle": "其他",
+				"learnMore": "瞭解詳情",
+				"questions": {
+					"configure": "我想設定 AoiTube",
+					"broadcasting": "我想瞭解直播軟體的設定方法",
+					"embed": "我想將直播嵌入其他網站",
+					"customize": "我想自訂網站",
+					"video": "我想調整影像輸出",
+					"storage": "我想使用外部儲存空間"
+				},
+				"other": {
+					"foundBug": "我發現了程式錯誤",
+					"foundBugPre": "如果您發現程式錯誤，請",
+					"foundBugLink": "告訴我們",
+					"question": "我有一般性問題",
+					"questionPre": "許多問題都能在",
+					"questionAnd": "和",
+					"questionPost": "中找到解答。",
+					"addon": "我想製作 AoiTube 的附加元件",
+					"addonBody": "您可以使用開發者 API 來製作機器人／疊加層／工具／附加元件。",
+					"addonLink": "開發者 API 請按這裡。"
+				}
+			},
+			"home": {
+				"viewers": "觀眾",
+				"peakViewers": "尖峰觀眾數",
+				"input": "輸入",
+				"inboundDetails": "接收串流詳細資訊",
+				"inboundVideoStream": "接收影像串流",
+				"inboundAudioStream": "接收音訊串流",
+				"outboundDetails": "傳送串流詳細資訊",
+				"outboundVideoStream": "傳送影像串流",
+				"outboundAudioStream": "傳送音訊串流",
+				"streamStarted": "開始直播於{{relative}}"
+			},
+			"loginSettings": {
+				"title": "登入設定",
+				"intro": "管理用於登入管理後台的密碼、密碼金鑰、安全金鑰與一次性密碼。",
+				"currentUser": "目前使用者：",
+				"rename": "重新命名",
+				"deleteKeyConfirm": "確定要刪除「{{name}}」嗎？",
+				"proxyError": {
+					"message": "無法連接到驗證代理伺服器",
+					"description": "此頁面需要驗證代理伺服器（Authelia）在 /authelia/ 下運作。如果工作階段已過期，請重新載入頁面。"
+				},
+				"columns": {
+					"registeredAt": "註冊日期",
+					"lastUsed": "最後使用",
+					"actions": "操作"
+				},
+				"keysCard": {
+					"title": "密碼金鑰、安全金鑰",
+					"addKey": "新增金鑰",
+					"empty": "尚無已註冊的金鑰"
+				},
+				"totpCard": {
+					"title": "一次性密碼（驗證應用程式）",
+					"setup": "設定",
+					"registered": "已註冊透過驗證應用程式的一次性密碼。",
+					"notRegistered": "尚未設定。您可透過驗證應用程式（如 1Password）使用 6 位數代碼。",
+					"deleteConfirm": "確定要刪除一次性密碼嗎？"
+				},
+				"passwordCard": {
+					"title": "變更密碼",
+					"current": "目前密碼",
+					"new": "新密碼",
+					"confirm": "新密碼（確認）",
+					"submit": "變更密碼"
+				},
+				"messages": {
+					"codeAutoFetched": "已自動取得確認碼",
+					"codeRequired": "請輸入確認碼",
+					"codeInvalid": "確認碼不正確或已過期",
+					"codeNotReady": "尚無法取得代碼，請於數秒後再試一次",
+					"securityKeyFailed": "使用安全金鑰確認失敗",
+					"securityKeyCancelled": "已取消使用安全金鑰確認",
+					"totpRequired": "請輸入一次性密碼",
+					"totpInvalid": "一次性密碼不正確",
+					"keyNameRequired": "請輸入金鑰名稱",
+					"keyAdded": "已新增金鑰",
+					"keyAddFailed": "新增金鑰失敗",
+					"keyAddCancelled": "已取消新增金鑰",
+					"keyDeleted": "已刪除「{{name}}」",
+					"deleteFailed": "刪除失敗",
+					"renamed": "已重新命名",
+					"renameFailed": "重新命名失敗",
+					"totpStartFailed": "無法開始設定一次性密碼",
+					"totpCodeRequired": "請輸入應用程式中顯示的 6 位數代碼",
+					"totpRegistered": "已註冊一次性密碼",
+					"totpMismatch": "代碼不相符，請再試一次",
+					"totpDeleted": "已刪除一次性密碼",
+					"passwordMismatch": "新密碼不相符",
+					"passwordChanged": "已變更密碼",
+					"passwordChangeFailed": "變更密碼失敗，請確認目前的密碼"
+				},
+				"elevationModal": {
+					"title": "身分確認",
+					"codeIntro": "變更安全性設定需要確認碼。系統會自動取得代碼（若需數秒，請點擊重新取得）。",
+					"codePlaceholder": "確認碼（8 位數）",
+					"verify": "確認",
+					"secondFactorIntro": "接著，請使用已註冊的驗證方式進行身分確認。",
+					"securityKeyConfirm": "使用安全金鑰／密碼金鑰確認",
+					"totpPlaceholder": "一次性密碼（6 位數）",
+					"confirm": "確認"
+				},
+				"addKeyModal": {
+					"title": "新增安全金鑰／密碼金鑰",
+					"okText": "新增",
+					"intro": "輸入金鑰名稱並點擊「新增」後，將開始瀏覽器的安全金鑰註冊程序。",
+					"placeholder": "例如：YubiKey 5C、1Password"
+				},
+				"renameModal": {
+					"title": "重新命名金鑰",
+					"okText": "變更"
+				},
+				"totpModal": {
+					"title": "設定一次性密碼",
+					"okText": "註冊",
+					"scanQr": "請使用驗證應用程式掃描此 QR 碼。",
+					"manualSecret": "手動輸入用密鑰：{{secret}}",
+					"codePlaceholder": "應用程式中顯示的 6 位數代碼"
+				}
+			},
+			"streamHealth": {
+				"title": "直播效能",
+				"noData": "尚未收集到資料。當直播開始且有觀眾時，即可使用此頁面。",
+				"intro1": "此頁面用於找出並釐清直播中可能發生的問題。由於它彙整了所有觀眾的整體體驗，若只有特定觀眾的狀況極差，在觀眾人數較少的直播中可能會影響整體數值。",
+				"intro2": "此資料僅收集自使用 AoiTube 網頁觀看頁面的觀眾。若透過 VLC／MPV／QuickTime 等外部播放器觀看，則不會反映在內。",
+				"unitSeconds": "秒",
+				"slowDownloads": "下載速度緩慢",
+				"slowNetwork": "有觀眾的網路連線緩慢",
+				"bitrateChartTitle": "觀眾的最低位元率",
+				"bitrateError": "至少有 1 位觀眾以 {{speed}}kbps 播放，比您提供的最低畫質（{{lowest}}kbps）還要慢。如果錯誤持續發生，請考慮新增更低位元率的畫質。",
+				"speedError": "觀眾端的播放速度可能跟不上所需的速度。原因可能是網路連線緩慢或延遲設定。您需要縮短觀眾消化影片所花費的時間。請嘗試新增低位元率的畫質，或增加延遲緩衝設定等。",
+				"stats": {
+					"playerSpeed": "觀眾的播放速度",
+					"playerLatency": "觀眾的延遲",
+					"recentErrors": "近期播放錯誤"
+				},
+				"charts": {
+					"errors": "錯誤",
+					"qualityChanges": "畫質變更",
+					"latencyMedian": "直播延遲（中位數）",
+					"latencyMin": "直播延遲（最小）",
+					"latencyMax": "直播延遲（最大）",
+					"downloadMax": "下載時間（最大）",
+					"downloadMedian": "下載時間（中位數）",
+					"downloadMin": "下載時間（最小）",
+					"targetLimit": "參考上限",
+					"bitrateMin": "播放速度（最小）",
+					"bitrateMedian": "播放速度（中位數）",
+					"bitrateMax": "播放速度（最大）",
+					"availableBitrates": "可用的位元率"
+				},
+				"segmentSection": {
+					"title": "分段下載",
+					"p1": "如果影片分段的下載花費太多時間，觀眾就會遇到緩衝。若下載速度緩慢，可考慮的對策包括：提供低畫質（低位元率）、透過外部儲存／CDN／更高速的網路連線來改善等。對部分觀眾而言，增加延遲緩衝也可能有所改善。",
+					"p2": "作為參考，若粉紅色線條持續接近藍色線條，觀眾端很可能正發生問題。"
+				},
+				"networkSection": {
+					"title": "觀眾的網路速度",
+					"p1": "這是觀眾的播放位元率（網路連線狀況的參考）。當觀眾的位元率低於您提供的最低畫質位元率時，就容易發生緩衝。若有網路連線緩慢的觀眾，請考慮再新增更低的畫質。",
+					"p2": "作為參考，若粉紅色線條接近最低的藍色線條，可能至少有 1 位觀眾正發生問題。"
+				},
+				"errorsSection": {
+					"title": "錯誤與畫質變更",
+					"p1": "這是近期的錯誤數（緩衝等）以及所有觀眾發生畫質變更的次數。錯誤可能因瀏覽器問題、擴充功能、Wi‑Fi 不穩等各種因素而發生。並非全部都是致命的，也不一定是直播端能控制的。",
+					"p2": "畫質變更本身不一定是壞事，但如果頻繁發生且錯誤也同時增加，請考慮新增其他畫質變體。"
+				},
+				"latencySection": {
+					"title": "觀眾的延遲",
+					"description": "這是觀眾落後即時影像多少（秒）的參考。延遲暴增的最大原因是緩衝。延遲高本身並不是問題，若過度針對低延遲進行最佳化，反而可能發生緩衝，導致延遲變得更大。"
+				}
+			},
+			"userData": {
+				"title": "使用者資料管理",
+				"intro": "您可以檢視與刪除使用者。刪除使用者時，其驗證資訊與 Access Token 也會一併刪除。",
+				"searchPlaceholder": "以使用者名稱或 ID 搜尋",
+				"refresh": "重新整理",
+				"deleteSelected": "刪除所選（{{num}}）",
+				"deleteAll": "全部刪除",
+				"totalItems": "{{num}} 筆",
+				"stats": {
+					"totalUsers": "總使用者數",
+					"authenticated": "已驗證",
+					"blocked": "封鎖中",
+					"moderators": "版主"
+				},
+				"columns": {
+					"displayName": "顯示名稱",
+					"status": "狀態",
+					"createdAt": "建立時間",
+					"authenticatedAt": "驗證時間",
+					"action": "操作"
+				},
+				"tags": {
+					"authenticated": "已驗證",
+					"blocked": "封鎖",
+					"moderator": "版主",
+					"unauthenticated": "未驗證"
+				},
+				"deleteUserConfirm": {
+					"title": "確定要刪除此使用者嗎？",
+					"description": "驗證資訊與 Access Token 也會一併刪除"
+				},
+				"deleteSelectedConfirm": {
+					"title": "確定要刪除 {{num}} 位使用者嗎？",
+					"content": "此操作無法復原。所選使用者的驗證資訊與 Access Token 也會一併刪除。"
+				},
+				"deleteAllConfirm": {
+					"title": "確定要刪除所有使用者嗎？",
+					"content": "此操作無法復原。所有使用者資料、驗證資訊與 Access Token 都會被刪除。",
+					"okText": "全部刪除"
+				},
+				"messages": {
+					"fetchFailed": "取得使用者失敗",
+					"deleted": "已刪除使用者",
+					"deleteFailed": "刪除使用者失敗",
+					"selectUsers": "請選擇要刪除的使用者",
+					"allDeleted": "已刪除所有使用者",
+					"deleteAllFailed": "刪除所有使用者失敗"
+				}
+			},
+			"viewerInfo": {
+				"title": "觀眾資訊",
+				"currentViewers": "目前觀眾數",
+				"maxViewersThisStream": "本次直播的最高觀眾數",
+				"maxViewersLastStream": "上次直播的最高觀眾數",
+				"allTimeMaxViewers": "歷來最高觀眾數",
+				"noDataDescription": "尚未收集到觀眾資料。",
+				"chartTitle": "觀眾數",
+				"unitPeople": "人",
+				"timeWindows": {
+					"currentStream": "目前的直播",
+					"last12Hours": "過去 12 小時",
+					"last24Hours": "過去 24 小時",
+					"last7Days": "過去 7 天",
+					"last30Days": "過去 30 天",
+					"last3Months": "過去 3 個月",
+					"last6Months": "過去 6 個月"
+				}
+			},
+			"webhooks": {
+				"intro": "Webhook 是根據 AoiTube 內發生的事件傳送至外部 API 的回呼。可用於實作聊天機器人、直播開始的自動通知等。",
+				"createButton": "建立 Webhook",
+				"modalTitle": "建立新的 Webhook",
+				"eventsHint": "請選擇要傳送至此 Webhook 的事件。",
+				"columns": {
+					"events": "事件"
+				},
+				"events": {
+					"chat": {
+						"name": "聊天訊息",
+						"description": "當使用者傳送聊天訊息時"
+					},
+					"userJoined": {
+						"name": "使用者加入",
+						"description": "當使用者加入聊天室時"
+					},
+					"nameChange": {
+						"name": "使用者名稱變更",
+						"description": "當使用者變更名稱時"
+					},
+					"visibilityUpdate": {
+						"name": "訊息顯示狀態變更",
+						"description": "當因審核等原因造成訊息顯示狀態改變時"
+					},
+					"streamStarted": {
+						"name": "直播開始",
+						"description": "當直播開始時"
+					},
+					"streamStopped": {
+						"name": "直播結束",
+						"description": "當直播結束時"
+					},
+					"streamTitleUpdated": {
+						"name": "直播標題變更",
+						"description": "當直播標題被變更時"
+					},
+					"donation": {
+						"name": "超級留言",
+						"description": "當有人購買超級留言時"
+					}
+				}
+			},
+			"federation": {
+				"actions": {
+					"title": "Fediverse 動作",
+					"description": "此處會顯示其他人對您貼文的互動（讚／轉發等），以及追蹤要求的清單。",
+					"columnAction": "動作",
+					"columnFrom": "來源",
+					"columnTimestamp": "日期時間",
+					"repost": "轉發",
+					"like": "讚",
+					"follow": "追蹤"
+				},
+				"followers": {
+					"columnName": "名稱",
+					"approve": "核准",
+					"reject": "拒絕",
+					"remove": "移除",
+					"requestedDate": "申請日期",
+					"blockedDate": "拒絕／封鎖日期",
+					"addedDate": "新增日期",
+					"tabFollowers": "追蹤者",
+					"tabPending": "申請中",
+					"tabBlocked": "已封鎖",
+					"followersIntro": "以下帳號會在直播開始或發布貼文時收到通知。",
+					"pendingIntro": "以下使用者希望在 <fediverse>Fediverse</fediverse> 上追蹤您的 AoiTube 伺服器，並接收直播開始通知。每項申請都需要核准。",
+					"blockedIntro": "以下使用者已被拒絕或封鎖。您也可以重新將他們核准為追蹤者。"
+				}
+			},
+			"archives": {
+				"title": "存檔管理",
+				"description": "已錄製的直播（VOD）。可切換公開狀態或刪除。",
+				"empty": "暫無錄影",
+				"untitled": "無標題直播",
+				"unfinished": "錄製未完成",
+				"play": "播放",
+				"visible": "公開",
+				"hidden": "隱藏",
+				"columns": {
+					"title": "標題",
+					"startedAt": "直播時間",
+					"duration": "時長",
+					"visible": "公開狀態",
+					"actions": "操作",
+					"size": "大小"
+				},
+				"deleteConfirm": {
+					"title": "刪除存檔",
+					"content": "永久刪除此錄影？此操作無法復原。"
+				},
+				"messages": {
+					"shown": "已公開",
+					"hidden": "已隱藏",
+					"deleted": "已刪除",
+					"updateFailed": "更新失敗",
+					"deleteFailed": "刪除失敗",
+					"fetchFailed": "取得存檔失敗",
+					"bulkDeleted": "已刪除{{count}}個存檔",
+					"titleSaved": "標題已更新"
+				},
+				"bulkDeleteButton": "刪除所選的{{count}}項",
+				"bulkDeleteConfirm": {
+					"title": "刪除所選的存檔嗎？",
+					"content": "將永久刪除{{count}}個存檔。此操作無法復原。"
+				},
+				"pricing": {
+					"columnTitle": "存取權限 / 價格",
+					"public": "公開",
+					"authenticated": "會員專屬",
+					"paid": "付費",
+					"priceLabel": "價格",
+					"priceRequired": "付費存檔的價格必須至少為 1",
+					"save": "儲存",
+					"saved": "已儲存價格設定"
+				},
+				"editTitle": "編輯標題"
+			}
+		},
+		"layout": {
+			"banUserButton": {
+				"actionBan": "封鎖",
+				"actionUnban": "解除封鎖",
+				"confirmContent": "要{{action}}嗎？",
+				"confirmTitle": "{{action}}確認",
+				"deleteMessagesNote": "（同時刪除訊息）",
+				"okBan": "封鎖",
+				"okUnban": "解除封鎖",
+				"banAction": "封鎖",
+				"unbanAction": "解除封鎖"
+			},
+			"moderatorUserButton": {
+				"actionGrant": "授予版主",
+				"actionRevoke": "移除版主",
+				"confirmContent": "要{{action}}嗎？",
+				"confirmTitle": "{{action}}確認",
+				"okGrant": "授予",
+				"okRevoke": "移除"
+			},
+			"bannedIPsTable": {
+				"colIpAddress": "IP位址",
+				"colReason": "原因",
+				"colCreatedAt": "建立時間",
+				"unbanTitle": "解除此IP位址的封鎖"
+			},
+			"clientTable": {
+				"colDisplayName": "顯示名稱",
+				"searchPlaceholder": "搜尋顯示名稱...",
+				"colMessageCount": "訊息數",
+				"colConnectedTime": "連線時間",
+				"colUserAgent": "使用者代理",
+				"colLocation": "地區"
+			},
+			"userTable": {
+				"colDisplayName": "最後確認的顯示名稱",
+				"colCreatedAt": "建立時間",
+				"colDisabledAt": "停用時間"
+			},
+			"composeFederatedPost": {
+				"postSuccess": "完成",
+				"postError": "失敗",
+				"postButton": "發布",
+				"title": "向追蹤者發布貼文",
+				"heading": "您可以分享未來的直播計畫，或邀請追蹤者前來觀看。",
+				"placeholder": "正在直播中，歡迎前來觀看！"
+			},
+			"socialDropdown": {
+				"description": "若要使用清單中沒有的平台名稱，請選擇「其他」並輸入任意名稱。將不會顯示標誌。",
+				"platformLabel": "平台",
+				"selectPlaceholder": "選擇平台...",
+				"other": "其他..."
+			},
+			"editLogo": {
+				"loadFailed": "載入標誌資料失敗",
+				"updated": "標誌已更新"
+			},
+			"common": {
+				"advancedSettings": "進階設定",
+				"cancel": "取消",
+				"delete": "刪除",
+				"edit": "編輯",
+				"error": "發生錯誤：{{message}}",
+				"no": "否",
+				"resetFailed": "重設失敗",
+				"save": "儲存",
+				"statusLabel": "狀態：",
+				"uploadFailed": "上傳失敗",
+				"yes": "是"
+			},
+			"codecSelector": {
+				"updated": "已更新影片編解碼器。",
+				"appliesNextStream": "影片編解碼器設定的變更將於下次開始直播時生效。",
+				"codecDefault": "預設 (libx264)",
+				"codecNvidia": "NVIDIA GPU 加速",
+				"codecVaapi": "VA-API 硬體編碼",
+				"codecV4l2": "Video4Linux 硬體編碼",
+				"codecOmx": "Raspberry Pi 專用 OpenMax (omx)",
+				"codecVideoToolbox": "Apple VideoToolbox（硬體）",
+				"descLibx264": "libx264 是預設的編解碼器，在共用 VPS 環境中通常是實際上唯一的選項。除非您確定已啟用其他選項，否則建議使用此項。",
+				"descNvenc": "若您擁有搭載編碼核心的較新款 NVIDIA GPU，即可使用 GPU 進行編碼。",
+				"descVaapi": "VA-API 可能可透過 NVIDIA 的專有驅動程式，或適用於 AMD/Intel 的 Mesa 驅動程式使用。",
+				"descQsv": "Quick Sync 是 Intel 用於影片編碼/解碼的硬體。若您擁有內建 GPU 的較新款 Intel CPU，即可作為選項。",
+				"descV4l2": "Video4Linux 是用於存取 Intel/AMD 等多種硬體編碼基礎架構的介面。",
+				"descOmx": "OpenMax 是主要用於 Raspberry Pi 的編解碼器。",
+				"descVideoToolbox": "Apple VideoToolbox 是用於直接存取硬體編碼器/解碼器的低階框架。",
+				"title": "影片編解碼器",
+				"intro": "若備妥支援的硬體及必要的驅動程式/軟體，可能改善影片編碼效能。",
+				"warningLink": "變更設定可能導致直播無法播放。變更前請先確認文件。",
+				"confirmChange": "即將將影片編解碼器變更為 {{codec}}。您是否已了解影響並繼續？"
+			},
+			"currentVariantsTable": {
+				"updated": "已更新變體",
+				"appliesNextStream": "影片設定的變更將於下次開始直播時生效。",
+				"colName": "名稱",
+				"unnamed": "（未命名）",
+				"colVideoBitrate": "影片位元率",
+				"sameAsSource": "與來源相同",
+				"colCpuUsage": "CPU使用率",
+				"notApplicable": "不適用",
+				"resetWarning": "警告：請編輯並重設",
+				"title": "串流輸出",
+				"modalTitle": "編輯影片變體",
+				"addVariant": "新增變體"
+			},
+			"editCustomJavascript": {
+				"placeholder": "/* 在此輸入自訂 JavaScript */",
+				"title": "使用 JavaScript 自訂頁面",
+				"desc": "您可以在 AoiTube 的頁面中插入自訂 JavaScript，以新增獨有功能或整合第三方指令碼。詳細用法請參閱",
+				"docsLink": "網頁文件",
+				"descSuffix": "。",
+				"plainJsNote": "請勿使用 HTML 或 script 標籤，僅撰寫純 JavaScript。"
+			},
+			"editCustomStyles": {
+				"placeholder": "/* 在此輸入自訂 CSS */",
+				"title": "使用 CSS 自訂頁面外觀",
+				"desc": "您可以覆寫頁面中各元件的 CSS，以自訂 AoiTube 的外觀。詳情請參閱",
+				"docsLink": "「CSS 與元件」指南",
+				"descSuffix": "。",
+				"plainCssNote": "此處輸入的 CSS 會在頁面載入時原樣插入。請輸入純 CSS 文字。"
+			},
+			"editNotificationThumbnail": {
+				"invalidFileType": "不支援的檔案格式（僅限 jpg, png, gif, webp）",
+				"fileTooLarge": "檔案大小過大（最大 10MB）",
+				"updated": "通知縮圖已更新。重新啟動伺服器後即會生效。",
+				"resetDone": "已重設通知縮圖",
+				"label": "通知縮圖",
+				"current": "目前的縮圖",
+				"usingLogo": "（使用標誌中）",
+				"previewAlt": "通知縮圖預覽",
+				"uploadButton": "上傳縮圖",
+				"resetButton": "重設",
+				"statusCustom": "已自訂設定",
+				"statusNone": "未設定（使用標誌）",
+				"tip": "在 Discord 或 X 傳送開播通知時顯示的圖片。若未設定則使用標誌。變更後需要重新啟動伺服器。"
+			},
+			"editOfflineClip": {
+				"invalidFileType": "不支援的檔案格式（僅限 .ts / .tsclip）",
+				"fileTooLarge": "檔案大小過大（最大 25MB）",
+				"updated": "待機影片（離線時的影片）已更新",
+				"resetDone": "已將待機影片還原為預設值",
+				"label": "待機畫面（離線時的影片）",
+				"uploadButton": "上傳待機影片",
+				"resetButton": "還原為預設值",
+				"statusCustom": "已自訂設定",
+				"statusDefault": "預設",
+				"tip": "替換直播離線期間以 HLS 形式播放的「待機影片（單一 TS 片段）」。基於 AoiTube 的設計，建議使用長度約 8 秒的 .ts / .tsclip（長度不同可能導致播放不穩定）。",
+				"previewLabel": "預覽（{{type}}）：",
+				"previewCustom": "自訂",
+				"previewDefault": "預設"
+			},
+			"editOfflineMedia": {
+				"invalidFileType": "不支援的檔案格式（.mp4 / .jpg / .png / .gif / .webp）",
+				"fileTooLarge": "檔案大小過大（最大 50MB）",
+				"updated": "已更新離線顯示用媒體",
+				"deleted": "已刪除離線顯示用媒體",
+				"deleteFailed": "刪除失敗",
+				"configured": "已設定（{{type}}: {{path}}）",
+				"notConfigured": "未設定",
+				"label": "離線顯示（圖片/MP4）",
+				"uploadButton": "上傳圖片/MP4",
+				"tip": "當直播離線時，在離線畫面顯示圖片或 MP4。MP4 會以自動播放（靜音/循環）的方式顯示。",
+				"previewLabel": "預覽：",
+				"previewAlt": "離線媒體預覽"
+			},
+			"editServerDetails": {
+				"restartRequired": "若要套用伺服器設定的更新，需要重新啟動 AoiTube 伺服器。",
+				"ffmpegApplied": "變更後的 FFmpeg 路徑將於下次開始直播時使用。",
+				"socketOverrideDesc": "若整個 AoiTube 實例前端有 CDN，請在此指定 WebSocket 連接的來源伺服器。多數情況下不需要此設定。"
+			},
+			"logTable": {
+				"levelInfo": "資訊",
+				"levelWarning": "警告",
+				"levelError": "錯誤",
+				"colLevel": "等級",
+				"colTime": "時間",
+				"colMessage": "訊息",
+				"title": "記錄"
+			},
+			"mainLayout": {
+				"statusOnline": "直播中 {{duration}}",
+				"statusOffline": "離線",
+				"menu": {
+					"accessTokens": "存取權杖",
+					"externalActions": "外部動作",
+					"donationsAdmin": "購買管理",
+					"paypaySettings": "PayPay 設定",
+					"paypalSettings": "PayPal 設定",
+					"stripeSettings": "Stripe 設定",
+					"metamaskSettings": "Metamask 設定",
+					"kofiSettings": "Ko-fi 設定",
+					"doneruSettings": "Doneru 設定",
+					"tokushoho": "特定商業交易法標示",
+					"faqSettings": "FAQ 設定",
+					"viewers": "觀眾",
+					"chatManagement": "聊天管理",
+					"userData": "使用者資料",
+					"emojis": "表情符號",
+					"hardware": "硬體",
+					"streamHealth": "直播狀態",
+					"logs": "記錄",
+					"socialActions": "社群動作",
+					"loginSettings": "登入設定",
+					"generalSettings": "一般設定",
+					"serverSettings": "伺服器設定",
+					"videoSettings": "影片設定",
+					"chatSettings": "聊天設定",
+					"socialSettings": "社群設定",
+					"notificationSettings": "通知設定",
+					"home": "首頁",
+					"chatAndUsers": "聊天與使用者",
+					"followers": "追蹤者",
+					"donations": "購買與收益",
+					"configuration": "設定",
+					"utilities": "工具程式",
+					"integrations": "整合",
+					"help": "說明",
+					"logout": "登出",
+					"archives": "存檔"
+				},
+				"menuGroups": {
+					"management": "管理",
+					"providers": "付款服務商",
+					"legal": "標示與條款"
+				},
+				"pageTitle": "{{name}} 管理",
+				"serverUnreachable": "無法連接伺服器",
+				"adminDashboardTitle": "{{name}} 管理後台",
+				"composePostTooltip": "向社群追蹤者發布貼文",
+				"composePost": "撰寫貼文",
+				"streamTitlePlaceholder": "您現在正在直播什麼？（直播標題）",
+				"switchToLight": "切換至淺色主題",
+				"switchToDark": "切換至深色主題",
+				"themeToggle": "切換主題",
+				"language": "語言",
+				"aboutAoiTube": "關於 AoiTube（v{{version}}）"
+			},
+			"offline": {
+				"broadcastSoftware": "使用直播軟體",
+				"broadcastSoftwareLink": "了解如何將現有軟體連接到新伺服器以開始直播。",
+				"streamUrl": "直播網址：",
+				"streamKey": "串流金鑰：",
+				"view": "顯示",
+				"overriddenByCli": "已由命令列覆寫。",
+				"forkFeatures": "此分支的主要功能",
+				"featureOauthTitle": "OAuth 2.0 驗證",
+				"featureOauthDesc": "支援使用 X / Discord / Google / GitHub 帳戶登入",
+				"featureDonationTitle": "超級留言功能",
+				"featureDonationDesc": "支援 PayPay / PayPal / Stripe / Metamask / Ko-fi / Doneru",
+				"featureRtmpsTitle": "RTMPS 支援",
+				"featureRtmpsDesc": "支援安全的 RTMP 串流",
+				"configureSocialAuth": "在社群設定中設定驗證",
+				"donationSetup": "設定超級留言功能",
+				"donationIntro": "設定支付服務商後即可接收觀眾的超級留言。",
+				"donationPaypay": "QR Code 付款",
+				"donationPaypal": "國際付款（200 個以上的國家與地區）",
+				"donationMetamask": "加密資產支付（ETH、SOL、BTC等）",
+				"donationKofi": "國際超級留言服務（Webhook 整合）",
+				"donationDoneru": "外部超級留言服務整合",
+				"openDonationAdmin": "開啟超級留言管理後台",
+				"embed": "在其他網站嵌入影片",
+				"embedLink": "了解如何將 AoiTube 串流新增至其他網站。",
+				"chatDisabledTitle": "聊天已停用",
+				"chatDisabledDesc": "在開始直播之前，聊天將維持停用狀態。",
+				"directoryTitle": "在 AoiTube 目錄中尋找觀眾",
+				"directoryPromo": "註冊 AoiTube 目錄以推廣您的直播。",
+				"directorySettings": "設定",
+				"directoryEnableSuffix": "中啟用。",
+				"fediverseTitle": "將 AoiTube 實例加入 Fediverse",
+				"fediverseEnableLink": "啟用 AoiTube Fediverse 功能",
+				"fediverseDesc": "，加入 Fediverse，實現追蹤、分享與互動。",
+				"notActiveTitle": "直播尚未啟用",
+				"notActiveDesc": "從直播軟體連線後即開始直播。",
+				"featureStreamingTitle": "低延遲直播",
+				"featureStreamingDesc": "支援 LL-HLS（2-4秒）和 WebRTC（1秒以下）低延遲傳輸",
+				"featureRecordingTitle": "錄製與存檔",
+				"featureRecordingDesc": "錄製直播並發布為隨選影片，支援付費觀看存檔與特效同步重播",
+				"featureI18nTitle": "多語言介面",
+				"featureI18nDesc": "觀眾端與管理端介面支援5種語言（日、英、簡中、繁中、韓）",
+				"featureBackupTitle": "自動備份",
+				"featureBackupDesc": "定期資料庫備份、S3轉存與一鍵遷移",
+				"donationStripe": "信用卡支付（國際）"
+			},
+			"resetYP": {
+				"title": "重設目錄註冊",
+				"desc": "若您的 AoiTube Directory 刊登發生問題並被建議「重設」連線，可從此處執行。下次開始直播時，將嘗試從頭重新註冊至目錄。",
+				"confirm": "要重設與 AoiTube Directory 的連線嗎？",
+				"resetButton": "重設目錄連線"
+			},
+			"userPopover": {
+				"createdAt": "建立時間：{{date}}",
+				"clickForDetails": "點擊以顯示詳細資訊",
+				"viewDetailsAria": "顯示此使用者的詳細資訊",
+				"close": "關閉",
+				"title": "使用者詳細資訊：{{name}}",
+				"connectedNow": "此使用者目前已連接到聊天室。",
+				"connectionDuration": "連線時間：",
+				"messageCount": "訊息數：",
+				"userAgent": "使用者代理：",
+				"previousNames": "此使用者過去的顯示名稱：",
+				"nameChangedAgo": "（{{duration}}前變更）",
+				"bannedAtPrefix": "此使用者已於",
+				"bannedAtSuffix": "遭到封鎖。"
+			},
+			"videoLatency": {
+				"markLowest": "最小",
+				"markHighest": "最大",
+				"comment0": "最小延遲 / 錯誤容忍度低（不建議使用。視直播內容或設定，可能無法正常運作）",
+				"comment1": "低延遲 / 錯誤容忍度低",
+				"comment2": "中等延遲 / 錯誤容忍度中等（預設）",
+				"comment3": "高延遲 / 錯誤容忍度高",
+				"comment4": "最大延遲 / 錯誤容忍度最高",
+				"updated": "已更新延遲緩衝等級。",
+				"appliesNextStream": "延遲緩衝設定的變更將於下次開始直播時生效。",
+				"title": "延遲緩衝",
+				"desc1": "延遲看似越低越好，但延遲越低，錯誤容忍度與穩定性可能越差。不建議使用最小設定。",
+				"desc2": "與觀眾互動較多的直播適合低延遲；互動較少的直播則調高延遲較容易維持穩定。",
+				"learnMore": "了解詳情。"
+			},
+			"videoVariantForm": {
+				"passthroughBitrateNote": "啟用影片直通時，無法選擇位元率。",
+				"bitrateLow": "適合低頻寬環境。",
+				"bitrateMedium": "適合多數的網路環境。",
+				"bitrateHigh": "適合高頻寬環境。",
+				"passthroughFramerateNote": "啟用影片直通時，無法選擇影格率。",
+				"passthroughCpuNote": "啟用影片直通時，無法選擇 CPU/GPU 使用率。",
+				"learnMoreSettings": "了解各項設定對伺服器效能影響的詳情。",
+				"passthroughWarningPrefix": "注意：此輸出變體已啟用",
+				"passthroughWarningEm": "影片直通",
+				"passthroughWarningSuffix": "。以下編碼設定將失效。",
+				"cpuUsageTitle": "CPU/GPU 使用率",
+				"cpuUsageDesc": "調低可降低伺服器負載。調高則可能提升畫質。",
+				"cpuUsageSubtext": "視您的環境而定，這可能代表的是 GPU 而非 CPU 的使用率。",
+				"learnMoreHardware": "了解硬體效能的詳情。",
+				"videoBitrateTitle": "影片位元率",
+				"learnMoreBitrate": "了解位元率的詳情。",
+				"resolutionTitle": "解析度",
+				"resolutionDesc1": "調整大小會使用伺服器的額外資源。若要對此輸出調整大小，為保持長寬比，請指定寬度",
+				"resolutionDescOr": "或",
+				"resolutionDesc2": "高度其中一項。",
+				"learnMoreResolution": "了解解析度的詳情。",
+				"passthroughTitle": "影片直通",
+				"passthroughDesc1Prefix": "啟用影片直通可能降低硬體使用率，但直播也可能",
+				"passthroughDesc1Strong": "變得無法播放",
+				"passthroughDesc1Suffix": "。",
+				"passthroughDesc2": "使用直通時，此輸出的所有其他設定都將失效。",
+				"passthroughDocsLink": "由於這是影響重大的設定，啟用前請先確認文件。",
+				"passthroughConfirm": "您是否已閱讀影片直通的文件，並了解啟用所伴隨的風險？",
+				"usePassthrough": "要使用影片直通嗎？",
+				"framerateTitle": "影格率",
+				"learnMoreFramerate": "了解影格率的詳情。"
+			}
+		},
+		"sections": {
+			"streamKeys": {
+				"defaultComment": "新金鑰",
+				"keyLabel": "金鑰",
+				"keyTooltip": "這是要輸入到直播軟體中的金鑰。金鑰長度須至少 8 個字元，且必須分別包含至少一個大寫字母、小寫字母、符號和數字。",
+				"keyPlaceholder": "請輸入金鑰",
+				"commentLabel": "備註",
+				"commentTooltip": "記錄新增此金鑰原因的備註",
+				"commentPlaceholder": "OBS 專用金鑰",
+				"add": "新增",
+				"copied": "已複製到剪貼簿",
+				"copyFailed": "無法複製到剪貼簿",
+				"columns": {
+					"key": "金鑰",
+					"comment": "備註"
+				},
+				"intro1": "直播金鑰用於直播軟體連接 AoiTube 時的驗證。多數情況下一個就足夠了，但如果您與多人共用伺服器，或想為每個直播來源分別設定金鑰，可以在此新增。",
+				"intro2": "這些金鑰與管理員密碼無關，也不會賦予變更 AoiTube 設定的權限。",
+				"docs": {
+					"beforeLink": "如需瞭解更多關於直播的資訊，請參閱",
+					"linkText": "文件"
+				},
+				"saveError": "金鑰儲存錯誤",
+				"noKeysTitle": "沒有直播金鑰",
+				"noKeysDescription": "在您建立至少一個直播金鑰並設定到直播軟體之前，將無法進行直播。"
+			},
+			"rtmps": {
+				"restartRequired": "若要套用 RTMPS 設定的更新，需要重新啟動 AoiTube 伺服器。",
+				"enableSaveError": "儲存 RTMPS 啟用設定失敗。",
+				"title": "RTMPS（加密串流）",
+				"aboutTitle": "關於 RTMPS",
+				"aboutDescription": "RTMPS（RTMP over TLS）會將直播軟體到伺服器之間的通訊進行端對端加密。使用此功能需要有效的 SSL/TLS 憑證。",
+				"exampleUrlLabel": "直播網址範例：",
+				"enableLabel": "啟用 RTMPS",
+				"pathsWarning": "請設定憑證與私密金鑰的路徑",
+				"portLabel": "RTMPS 連接埠",
+				"portTip": "接受 RTMPS 連線的連接埠號碼。預設為 1936。",
+				"certPathLabel": "SSL 憑證路徑",
+				"certPathTip": "SSL/TLS 憑證檔案的絕對路徑（例如：/etc/letsencrypt/live/example.com/fullchain.pem）",
+				"keyPathLabel": "私密金鑰路徑",
+				"keyPathTip": "SSL/TLS 私密金鑰檔案的絕對路徑（例如：/etc/letsencrypt/live/example.com/privkey.pem）",
+				"configuredTitle": "RTMPS 已設定完成",
+				"configuredDescription": "請在直播軟體（例如 OBS）中使用以下網址：",
+				"serverLabel": "伺服器："
+			},
+			"pageContent": {
+				"title": "自訂頁面內容",
+				"description": {
+					"beforeLink": "您可以使用簡單的",
+					"linkText": "Markdown 語法",
+					"afterLink": "來編輯頁面內容。"
+				},
+				"placeholder": "請在此輸入自訂頁面內容...",
+				"save": "儲存"
+			},
+			"socialLinks": {
+				"saveError": "發生錯誤：{{message}}",
+				"columnTitle": "社群連結",
+				"edit": "編輯",
+				"otherPlatformPlaceholder": "其他平台名稱",
+				"title": "社群連結",
+				"description": "您可以新增各社群媒體的帳號名稱，或其他個人檔案的連結。",
+				"modalTitle": "編輯社群連結",
+				"urlPlaceholder": "頁面網址",
+				"addButton": "新增社群連結"
+			},
+			"general": {
+				"description": "以下內容將顯示在網站上，用於說明您的直播與內容。",
+				"learnMore": "瞭解更多。"
+			},
+			"serverConfig": {
+				"description": "請將管理員密碼從預設值變更，並妥善保管於安全的地方。多數情況下，您不需要變更其他設定。"
+			},
+			"instanceTags": {
+				"updateSuccess": "已更新標籤。",
+				"emptyWarning": "請輸入標籤",
+				"duplicateWarning": "此標籤已被使用",
+				"title": "新增標籤",
+				"description": "有助於在目錄中分類您的 AoiTube 伺服器。"
+			},
+			"instanceDetails": {
+				"title": "設定實例詳細資訊",
+				"offlineMessageLabel": "離線訊息：",
+				"offlineMessageTip": "在您未直播期間，顯示給頁面訪客的訊息。也可以使用 Markdown。",
+				"saveMessage": "儲存訊息",
+				"directory": {
+					"beforeLink": "為了吸引更多觀眾，您可以刊登於",
+					"afterLink": "。這是由 AoiTube 專案營運的外部服務。",
+					"learnMore": "瞭解更多"
+				},
+				"directoryRequiresUrl": {
+					"beforeStrong": "若要啟用目錄，您必須在上方設定",
+					"strongText": "伺服器網址",
+					"afterStrong": "。"
+				}
+			},
+			"storage": {
+				"intro": {
+					"beforeLink": "AoiTube 也可以使用外部儲存空間供應商來進行直播。詳情請參閱",
+					"linkText": "儲存空間文件"
+				},
+				"warning": "設定錯誤可能會導致影片無法播放。請務必在儲存空間供應商的文件中，確認為 AoiTube 建立的儲存桶（bucket）的設定方式。",
+				"liveOnly": "這是用於即時直播的設定，並非用於封存、錄影或 VOD 用途。",
+				"updated": "已更新。",
+				"restartNote": "儲存空間設定的變更將在下次開始直播時生效。",
+				"useS3": "使用 S3 儲存空間供應商",
+				"optionalSettings": "選用設定",
+				"save": "儲存"
+			},
+			"appearance": {
+				"colorNames": {
+					"background": "背景",
+					"action": "動作",
+					"actionHover": "動作（滑鼠懸停）",
+					"primaryButtonBorder": "主要按鈕邊框",
+					"primaryButtonText": "主要按鈕文字",
+					"chatBackground": "聊天背景",
+					"chatText": "文字（聊天）",
+					"textOnDark": "文字（亮色）",
+					"textOnLight": "文字（暗色）",
+					"headerFooter": "頁首／頁尾",
+					"pageContent": "頁面內容",
+					"videoStatusBarBackground": "影片狀態列背景",
+					"videoStatusBarForeground": "影片狀態列前景",
+					"roundedCorners": "圓角"
+				},
+				"updated": "已更新。",
+				"loading": "載入中...",
+				"title": "自訂外觀",
+				"description": "以下顏色將套用於整個使用者介面。",
+				"sectionColors": "區塊顏色",
+				"sectionColorsDescription": "UI 的部分區塊可以選擇顏色進行自訂。",
+				"chatUserColors": "聊天使用者顏色",
+				"otherSettings": "其他設定",
+				"roundedCornersAmount": "圓角大小",
+				"saveColors": "儲存顏色",
+				"resetToDefaults": "還原為預設值"
+			},
+			"browserNotify": {
+				"updated": "已更新。",
+				"title": "瀏覽器通知",
+				"description1": "您可以讓觀眾透過瀏覽器接收開播通知。",
+				"description2": "並非所有瀏覽器都支援此功能。",
+				"enableLabel": "啟用瀏覽器通知",
+				"save": "儲存"
+			},
+			"discordNotify": {
+				"updated": "已更新。",
+				"description": "每次開始直播時，都會通知 Discord 頻道。",
+				"webhookLinkText": "建立 Webhook",
+				"instructionsBeforeItalic": "在您的 Discord 頻道中，從",
+				"instructionsItalicText": "編輯頻道 / 整合",
+				"instructionsAfterItalic": "建立 Webhook，並輸入到下方。",
+				"enableLabel": "啟用 Discord 通知",
+				"save": "儲存",
+				"title": "Discord通知"
+			},
+			"twitterNotify": {
+				"enableLabel": "啟用 X 通知",
+				"consumerKeyTip": "X Developer Portal 的 API Key",
+				"consumerKeyPlaceholder": "請輸入 API Key",
+				"consumerSecretTip": "X Developer Portal 的 API Secret",
+				"consumerSecretPlaceholder": "請輸入 API Secret",
+				"accessTokenTip": "與應用程式關聯的 Access Token",
+				"accessTokenPlaceholder": "請輸入 Access Token",
+				"accessTokenSecretPlaceholder": "請輸入 Access Token Secret",
+				"goLiveMessageLabel": "開播訊息",
+				"goLiveMessageTip": "開始直播時要發布的推文內容",
+				"goLiveMessagePlaceholder": "🔴 直播開始囉！快來一起玩吧♪",
+				"hashtagsLabel": "主題標籤",
+				"hashtagsTip": "要加入推文的主題標籤（例如：#直播 #遊戲實況）",
+				"hashtagsPlaceholder": "#直播 #實況 #遊戲實況",
+				"includeTitleLabel": "包含直播標題",
+				"includeServerNameLabel": "包含實況主名稱",
+				"saved": "已儲存",
+				"previewServerName": "📺 您的頻道名稱",
+				"previewTitle": "🎬 直播標題會顯示在這裡",
+				"previewUrl": "🔗 https://您的直播網址",
+				"title": "X 通知",
+				"description": "開始直播時自動發布推文到 X。",
+				"apiRequiredTitle": "需要 X API 設定",
+				"apiRequiredLine1": "請在 X Developer Portal 建立應用程式，並取得 OAuth 1.0a 驗證資訊。",
+				"importantLabel": "重要：",
+				"apiRequiredLine2": "請將 App permissions 設定為「Read and Write」。",
+				"apiCredentials": "API 驗證資訊",
+				"postContent": "推文內容設定",
+				"postPreview": "推文預覽",
+				"previewImageAlt": "推文附加圖片",
+				"previewImageNote": "※ 將附加通知縮圖或標誌",
+				"saveSettings": "儲存設定"
+			},
+			"discordAuth": {
+				"clientIdTip": "Discord Developer Portal 的 Client ID",
+				"clientIdPlaceholder": "請輸入 Client ID",
+				"clientSecretTip": "Discord Developer Portal 的 Client Secret",
+				"clientSecretPlaceholder": "請輸入 Client Secret",
+				"saved": "已儲存",
+				"title": "Discord 驗證",
+				"description": "設定 Discord 驗證後，觀眾即可使用 Discord 帳號參與聊天。",
+				"stepsTitle": "設定步驟：",
+				"step1AfterLink": "進行存取",
+				"step2": "點擊「New Application」建立新的應用程式",
+				"step3": "從 OAuth2 → General 複製 Client ID 與 Client Secret",
+				"step4": "在 OAuth2 → Redirects 中新增以下網址：",
+				"configuredTitle": "Discord 驗證已設定完成",
+				"configuredDescription": "觀眾可以使用 Discord 帳號進行驗證。",
+				"save": "儲存"
+			},
+			"googleAuth": {
+				"clientIdTip": "Google Cloud Console 的 Client ID",
+				"clientIdPlaceholder": "請輸入 Client ID",
+				"clientSecretTip": "Google Cloud Console 的 Client Secret",
+				"clientSecretPlaceholder": "請輸入 Client Secret",
+				"saved": "已儲存",
+				"title": "Google 驗證",
+				"description": "設定 Google 驗證後，觀眾即可使用 Google 帳號參與聊天。",
+				"stepsTitle": "設定步驟：",
+				"step1AfterLink": "進行存取",
+				"step2": "建立或選擇專案",
+				"step3": "選擇「建立憑證」→「OAuth 用戶端 ID」",
+				"step4": "在應用程式類型中選擇「網頁應用程式」",
+				"step5": "在「已授權的重新導向 URI」中新增以下網址：",
+				"step6": "複製 Client ID 與 Client Secret",
+				"oauthConsentNote": "注意：您還需要設定 OAuth 同意畫面。請在「OAuth 同意畫面」中進行設定，並新增必要的範圍（email、profile、openid）。",
+				"configuredTitle": "Google 驗證已設定完成",
+				"configuredDescription": "觀眾可以使用 Google 帳號進行驗證。",
+				"save": "儲存"
+			},
+			"githubAuth": {
+				"clientIdTip": "GitHub OAuth App 的 Client ID",
+				"clientIdPlaceholder": "請輸入 Client ID",
+				"clientSecretTip": "GitHub OAuth App 的 Client Secret",
+				"clientSecretPlaceholder": "請輸入 Client Secret",
+				"saved": "已儲存",
+				"title": "GitHub 驗證",
+				"description": "設定 GitHub 驗證後，觀眾即可使用 GitHub 帳號參與聊天。",
+				"stepsTitle": "設定步驟：",
+				"step1AfterLink": "進行存取",
+				"step2": "選擇「OAuth Apps」分頁",
+				"step3": "點選「New OAuth App」",
+				"step4": "輸入應用程式名稱與首頁網址",
+				"step5": "在「Authorization callback URL」中設定以下網址：",
+				"step6": "點選「Register application」，產生 Client Secret 並複製 Client ID 與 Client Secret",
+				"clientSecretNote": "注意：Client Secret 只會在產生後顯示一次，請立即複製。若遺失請重新產生。",
+				"configuredTitle": "GitHub 驗證已設定完成",
+				"configuredDescription": "觀眾可以使用 GitHub 帳號進行驗證。",
+				"save": "儲存"
+			},
+			"xAuth": {
+				"clientIdTip": "X Developer Portal 的 Client ID（OAuth 2.0）",
+				"clientIdPlaceholder": "請輸入 Client ID",
+				"clientSecretTip": "X Developer Portal 的 Client Secret（OAuth 2.0）",
+				"clientSecretPlaceholder": "請輸入 Client Secret",
+				"saved": "已儲存",
+				"title": "X 驗證（OAuth 2.0）",
+				"description": "設定 X 驗證後，觀眾即可使用 X 帳號參與聊天。由於使用 OAuth 2.0，因此需要與現有的 X 通知設定分開設定。",
+				"stepsTitle": "設定步驟：",
+				"step1AfterLink": "進行存取",
+				"step2": "建立專案與應用程式（或使用現有的）",
+				"step3": "在「User authentication settings」中啟用 OAuth 2.0",
+				"step4": "App permissions：選擇「Read」",
+				"step5": "Type of App：選擇「Web App, Automated App or Bot」",
+				"step6": "在 Callback URI / Redirect URL 中新增以下網址：",
+				"step7": "設定 Website URL（本網站的網址）",
+				"step8": "複製 Client ID 與 Client Secret",
+				"configuredTitle": "X 驗證已設定完成",
+				"configuredDescription": "觀眾可以使用 X 帳號進行驗證。",
+				"save": "儲存"
+			},
+			"federation": {
+				"modal": {
+					"title": "啟用 Fediverse 功能",
+					"cancelButton": "不啟用",
+					"okButton": "啟用 Fediverse 功能",
+					"howItWorksTitle": "AoiTube 的 Fediverse 功能如何運作？",
+					"intro": {
+						"beforeLink": "AoiTube 的 Fediverse 功能，是透過讓您的伺服器加入",
+						"linkText": "Fediverse",
+						"afterLink": "（一個去中心化、開放且由獨立伺服器組成的網路）來實現的。"
+					},
+					"docs": {
+						"beforeLink": "如需瞭解這些功能的詳情與運作方式，請參閱",
+						"linkText": "文件",
+						"afterLink": "。"
+					},
+					"thingsToKnowTitle": "須知事項",
+					"point1": "這些功能仍屬新功能，且由於涉及與外部的連動，可能會發生問題。如果您覺得運作不穩定，歡迎回報給我們。",
+					"point2": "請務必以 HTTPS（SSL）公開您的 AoiTube 伺服器。",
+					"point3": "在開始被追蹤之後，若變更伺服器網址或社群使用者名稱，在 Fediverse 上會被視為不同的使用者，先前的使用者可能會看起來像是消失了。",
+					"point4Term": "私密模式",
+					"point4AfterTerm": "啟用後，您可以手動核准追蹤者，並將貼文的公開範圍限制為僅追蹤者可見。",
+					"learnMoreTitle": "進一步瞭解 Fediverse",
+					"learnMore": {
+						"beforeLink": "如果您初次接觸這些概念，建議您進一步瞭解 Fediverse 所提供的功能與文化。詳情請參閱",
+						"linkText": "文件",
+						"afterLink": "，您可以在其中找到入門所需的參考資訊。"
+					}
+				},
+				"httpsWarning": "若要啟用此功能，您必須先將伺服器網址設定為 HTTPS。",
+				"portWarning": "此功能僅支援以 SSL 標準連接埠（443）公開的 AoiTube。",
+				"title": "Fediverse 整合",
+				"intro": {
+					"beforeStrong": "AoiTube 的",
+					"strongText": "Fediverse 功能",
+					"afterStrong": "可將您的實例連接到 Fediverse（如 Mastodon 等去中心化社群媒體）。追蹤者可以接收開播通知，或對貼文做出回應。"
+				},
+				"enableNotice": "啟用後，您可以在開始直播時自動通知 Fediverse 追蹤者，或發布任意內容的貼文。",
+				"learnMoreLink": "瞭解更多 Fediverse 功能的詳情"
+			},
+			"streamProtocol": {
+				"fetchError": "取得設定失敗",
+				"iceServersArrayError": "請以陣列格式指定 ICE 伺服器",
+				"iceServersJsonError": "無效的 JSON 格式",
+				"iceServersInvalid": "ICE 伺服器的設定無效",
+				"saveSuccess": "已儲存設定",
+				"saveError": "儲存失敗",
+				"latencySaveError": "延遲等級儲存失敗",
+				"viewerDisconnected": "已中斷觀眾連線",
+				"disconnectError": "中斷連線失敗",
+				"allViewersDisconnected": "已中斷所有觀眾的連線",
+				"columns": {
+					"connectedAt": "連線時間",
+					"ipAddress": "IP 位址",
+					"actions": "操作"
+				},
+				"disconnect": "中斷連線",
+				"loading": "載入中...",
+				"title": "串流通訊協定設定",
+				"description": "設定提供給觀眾的串流通訊協定。WebRTC 可實現超低延遲（約 1 秒以下），LL-HLS 可實現低延遲（約 2-3 秒）。",
+				"experimentalTitle": "實驗性功能",
+				"experimentalDescription": "WebRTC 與 LL-HLS 為實驗性功能。若在直播期間變更設定，可能需要重新啟動。",
+				"standardHls": "標準 HLS",
+				"enabledLabel": "啟用",
+				"standardHlsDescription": "標準的 HLS 串流。相容性最高且穩定。延遲：約 10-30 秒",
+				"experimentalTag": "實驗性",
+				"latencyLevel": "延遲等級",
+				"marks": {
+					"lowest": "最低",
+					"low": "低",
+					"medium": "中",
+					"standard": "標準",
+					"reliable": "高可靠"
+				},
+				"llhlsDescription": "Apple LL-HLS 通訊協定。支援 Safari、iOS 及較新的瀏覽器。延遲：約 2-5 秒",
+				"maxViewers": "最大觀眾人數",
+				"maxViewersTip": "0 = 無限制。請依伺服器資源進行設定。",
+				"webrtcDescription": "即時通訊協定。可實現最低的延遲。延遲：約 0.5-2 秒",
+				"webrtcAdvanced": "WebRTC 進階設定",
+				"iceServers": "ICE 伺服器設定",
+				"iceServersTip": "以 JSON 陣列指定 STUN/TURN 伺服器。urls 請以陣列格式指定。若需要穿越 NAT，建議設定 TURN 伺服器。",
+				"webrtcStats": "WebRTC 統計",
+				"currentViewers": "目前觀眾",
+				"status": "狀態",
+				"statusEnabled": "啟用",
+				"statusDisabled": "停用",
+				"connectedViewers": "連線中的觀眾",
+				"disconnectAll": "中斷所有連線",
+				"saveButton": "儲存設定",
+				"reload": "重新載入"
+			}
+		},
+		"fields": {
+			"serverName": {
+				"placeholder": "AoiTube網站名稱",
+				"label": "網站名稱",
+				"tip": "AoiTube伺服器的名稱"
+			},
+			"streamTitle": {
+				"placeholder": "今天在做什麼...",
+				"label": "直播標題",
+				"tip": "今天的直播內容是什麼？"
+			},
+			"serverSummary": {
+				"label": "摘要",
+				"tip": "關於您、伺服器或直播的簡短說明。"
+			},
+			"offlineMessage": {
+				"placeholder": "直播離線時顯示的訊息。",
+				"label": "離線訊息",
+				"tip": "直播離線時向觀眾顯示的選擇性訊息。"
+			},
+			"welcomeMessage": {
+				"label": "歡迎訊息",
+				"tip": "觀眾首次連接聊天室時傳送的系統聊天訊息。留空則停用。"
+			},
+			"logo": {
+				"label": "Logo",
+				"tip": "在整個網站使用的圖示：頁首、favicon、通知和Fediverse頭像。推薦正方形（如512×512以上）的JPG/PNG。變更立即生效；瀏覽器分頁圖示將在下次造訪時重新整理。",
+				"statusCustom": "已設定（{{file}}）",
+				"statusDefault": "預設"
+			},
+			"adminPassword": {
+				"label": "管理員密碼",
+				"tip": "請將此密碼儲存在安全的地方。登入管理儀表板時將會用到！"
+			},
+			"ffmpegPath": {
+				"label": "FFmpeg路徑",
+				"tip": "伺服器上 FFMPEG 應用程式的絕對檔案路徑"
+			},
+			"webPort": {
+				"label": "AoiTube連接埠",
+				"tip": "AoiTube Web 伺服器監聽的連接埠。預設為 8080"
+			},
+			"rtmpPort": {
+				"label": "RTMP連接埠",
+				"tip": "接收直播的連接埠。預設為 1935"
+			},
+			"instanceUrl": {
+				"label": "伺服器網址",
+				"tip": "AoiTube伺服器的完整網址。"
+			},
+			"socketHostOverride": {
+				"label": "Websocket主機覆寫",
+				"tip": "AoiTube伺服器的直接網址。"
+			},
+			"tags": {
+				"placeholder": "新增標籤"
+			},
+			"nsfw": {
+				"label": "成人內容？",
+				"tip": "如果您打算直播成人內容，請將此開啟，以便在目錄中正確顯示。"
+			},
+			"directoryEnabled": {
+				"label": "啟用目錄",
+				"tip": "如需顯示在目錄中，請開啟。"
+			},
+			"hideViewerCount": {
+				"label": "隱藏觀眾人數",
+				"tip": "如需隱藏網頁上的觀眾人數，請開啟。"
+			},
+			"silentStreamMode": {
+				"label": "靜默模式（測試直播）",
+				"tip": "啟用後，直播開始時不會傳送任何外部通知，且直播僅對管理員和版主可見（也不會發布到 S3/CDN）。此切換會從下次直播開始時套用。"
+			},
+			"chatDisable": {
+				"label": "聊天",
+				"tip": "切換 AoiTube 伺服器聊天功能的開/關。"
+			},
+			"chatJoinMessages": {
+				"label": "加入訊息",
+				"tip": "當觀眾加入聊天室時顯示。"
+			},
+			"chatEstablishedUsers": {
+				"label": "僅限現有使用者",
+				"tip": "僅允許在一段時間前就已註冊的使用者聊天。"
+			},
+			"chatSpamProtection": {
+				"label": "垃圾訊息防護",
+				"tip": "限制連續發文的速度以防止垃圾訊息。停用後將沒有速率限制。"
+			},
+			"chatSlurFilter": {
+				"label": "不當言論過濾",
+				"tip": "封鎖包含歧視性或攻擊性言論（主要為英文）的訊息。"
+			},
+			"requireSocialAuth": {
+				"label": "要求社群驗證",
+				"tip": "加入聊天室將需要 X 或 Discord 驗證。請事先在通知設定中設定各服務的 API 驗證資訊。"
+			},
+			"forbiddenUsernames": {
+				"placeholder": "使用者名稱",
+				"label": "禁止的使用者名稱",
+				"tip": "在聊天使用者名稱中禁止使用的字詞清單。"
+			},
+			"suggestedUsernames": {
+				"placeholder": "使用者名稱",
+				"label": "預設使用者名稱",
+				"tip": "指派給新使用者的聊天使用者名稱選擇性清單。少於 10 筆時，將產生隨機名稱。使用者之後可以變更，且同一個使用者名稱可能被指派多次。",
+				"minNotReached": "此功能至少需要 10 筆。",
+				"noEntries": "將使用預設的名稱產生器。"
+			},
+			"federationEnabled": {
+				"label": "啟用Fediverse功能",
+				"tip": "在 Fediverse 上收發動態。"
+			},
+			"federationPrivate": {
+				"label": "私密",
+				"tip": "追蹤請求將需要核准，且只有追蹤者才能看到動態。"
+			},
+			"federationShowEngagement": {
+				"label": "顯示互動",
+				"tip": "追蹤、按讚和分享將顯示在聊天動態中。"
+			},
+			"federationLiveMessage": {
+				"placeholder": "直播開始了！快來看看吧！",
+				"label": "直播開始訊息",
+				"tip": "宣布直播已開始的訊息。標籤會自動加入。留空則停用。"
+			},
+			"federationDefaultUser": {
+				"label": "使用者名稱",
+				"tip": "用於在 Fediverse 上收發動態的使用者名稱。例如使用「bob」時，將從 @bob@yourserver 傳送訊息。有追蹤者後請勿變更。"
+			},
+			"federationInstanceUrl": {
+				"label": "伺服器網址",
+				"tip": "啟用 Fediverse 功能需要 AoiTube 伺服器的完整網址。必須使用 SSL（https）。有追蹤者後請勿變更。"
+			},
+			"federationNsfw": {
+				"label": "可能為成人內容",
+				"tip": "如果您打算直播成人內容，請開啟，以便將直播預覽標記為敏感內容。"
+			},
+			"federationBlockedDomains": {
+				"label": "封鎖的網域",
+				"tip": "您可以封鎖來自特定網域的互動。"
+			},
+			"videoVariant": {
+				"videoPassthroughTip": "啟用後，所有其他設定都會停用。請保持停用並照常設定。",
+				"audioPassthroughTip": "如果選擇「否」，請設定您想要的音訊位元率。",
+				"scaledWidth": {
+					"label": "縮放後的寬度",
+					"tip": "視需要縮放寬度。"
+				},
+				"scaledHeight": {
+					"label": "縮放後的高度",
+					"tip": "視需要縮放高度。"
+				},
+				"name": {
+					"label": "名稱",
+					"placeholder": "高畫質或低畫質",
+					"tip": "顯示給播放器的易讀名稱。"
+				}
+			},
+			"framerate": {
+				"tip": "降低影格率可減少需要編碼並傳送給觀眾的影片量，藉此節省 CPU 與頻寬（但流暢度會相應下降）。對於多數內容而言，較低的設定也不成問題。",
+				"tooltips": {
+					"fps24": "24fps - 適合電影/簡報/音樂/低規格、低頻寬伺服器。",
+					"fps25": "25fps - 適合電影/簡報/音樂/低規格、低頻寬伺服器。",
+					"fps30": "30fps - 適合低速/休閒遊戲、聊天及一般用途。",
+					"fps50": "50fps - 適合高速/動作遊戲、運動、HD影片。",
+					"fps60": "60fps - 適合高速/動作遊戲、運動、HD影片。",
+					"fps90": "90fps - 適合最新的高速遊戲或高效能硬體。",
+					"fps120": "120fps - 實驗性功能。請自行承擔風險使用。"
+				}
+			},
+			"videoBitrate": {
+				"tip": "直播的整體畫質通常受位元率的影響最大。"
+			},
+			"encoderPreset": {
+				"lowest": "最低",
+				"highest": "最高",
+				"tooltips": {
+					"level0": "最低的硬體使用率 - 最低品質的影片",
+					"level1": "低硬體使用率 - 低品質的影片",
+					"level2": "中等硬體使用率 - 一般品質的影片",
+					"level3": "高硬體使用率 - 高品質的影片",
+					"level4": "最高的硬體使用率 - 更高品質的影片"
+				}
+			},
+			"encoderRecommendation": {
+				"helpText": "目前只設定了一個影片品質變體。如果您的伺服器有足夠的運算資源，建議新增另一個較低品質的變體，讓更多人能夠觀看您的內容！"
+			},
+			"s3": {
+				"region": {
+					"label": "區域"
+				},
+				"secret": {
+					"label": "私密金鑰",
+					"placeholder": "私密金鑰"
+				},
+				"servingEndpoint": {
+					"label": "傳遞端點",
+					"tip": "如果您想從非預設的網址傳遞內容，請指定此項（用於 CDN 或部分儲存供應商）。通常不需要。"
+				},
+				"forcePathStyle": {
+					"label": "強制路徑格式",
+					"tip": "如果您的 S3 供應商不支援 virtual-hosted-style URL，請開啟（例如：Oracle Cloud Object Storage）。"
+				}
+			},
+			"discord": {
+				"webhookUrl": {
+					"tip": "指派給頻道的 Webhook。"
+				},
+				"goLiveMessage": {
+					"label": "直播開始文字",
+					"tip": "直播開始時傳送的文字。",
+					"placeholder": "直播開始了！快來看看吧！"
+				}
+			},
+			"browserPush": {
+				"goLiveMessage": {
+					"label": "直播開始文字",
+					"tip": "直播開始時傳送的文字。",
+					"placeholder": "直播開始了！快來看看吧！"
+				}
+			},
+			"passwordComplexity": {
+				"minLength": "- 至少 8 個字元",
+				"maxLength": "- 最多 192 個字元",
+				"lowercase": "- 至少一個小寫字母",
+				"uppercase": "- 至少一個大寫字母",
+				"number": "- 至少一個數字",
+				"specialCharacter": "- 至少一個特殊字元：!@#$%^&*"
+			},
+			"toggle": {
+				"on": "開",
+				"off": "關",
+				"error": "發生錯誤：{{message}}"
+			},
+			"livePoster": {
+				"label": "直播封面",
+				"tip": "在直播剛開始（首個縮圖產生前）以及觀眾按下播放鍵前顯示的圖片。推薦16:9（如1280×720以上）的JPG/PNG。未設定時使用內建\"LIVE\"圖片。開播約20秒後會切換為自動產生的縮圖。",
+				"uploadButton": "上傳圖片",
+				"resetButton": "恢復預設",
+				"statusCustom": "已設定",
+				"statusDefault": "預設",
+				"previewLabel": "預覽（{{type}}）:",
+				"updated": "直播封面已更新",
+				"resetSuccess": "已恢復預設",
+				"loadFailed": "圖片載入失敗"
+			},
+			"recordingEnabled": {
+				"label": "錄製直播",
+				"tip": "啟用後，直播結束時會自動儲存為存檔（VOD），觀眾可以稍後觀看。設定變更將從下次直播開始生效。"
+			},
+			"recordingRetention": {
+				"label": "錄製保留數量",
+				"tip": "保留的未公開錄製的最大數量，超出後按最舊順序自動刪除。0為不限制。已公開、會員限定、付費及有購買紀錄的存檔不會被自動刪除。"
+			},
+			"recordingStoreS3": {
+				"label": "將錄製儲存到S3",
+				"tip": "啟用後，直播結束時會將錄製媒體轉存到S3物件儲存（與直播分發相同的儲存桶，位於archives/下），釋放本機磁碟。播放透過伺服器代理，因此非公開存檔的保護得以保留。請先在「伺服器設定 > 儲存」中設定S3憑證。"
+			},
+			"backupEnabled": {
+				"label": "啟用自動備份",
+				"tip": "啟用後，資料庫將按排程備份。"
+			},
+			"backupInterval": {
+				"label": "備份間隔（小時）",
+				"tip": "執行備份的間隔（小時）。最小1，預設24。"
+			},
+			"backupRetention": {
+				"label": "本機保留數量",
+				"tip": "保留的本機備份檔案最大數量；超過的會自動刪除最舊的。0表示無限制。"
+			},
+			"backupStoreS3": {
+				"label": "將備份儲存到S3",
+				"tip": "同時將每個備份上傳到S3物件儲存（與直播分發相同的儲存桶，位於backups/下）。可在磁碟損壞時避免遺失並簡化節點遷移。請先設定S3憑證。"
+			}
+		}
+	},
+	"archives": {
+		"title": "直播封存",
+		"description": "觀看過往直播的錄影。",
+		"empty": "尚無錄影",
+		"backToHome": "返回首頁",
+		"untitled": "未命名直播",
+		"chatReplay": "聊天回放",
+		"backToList": "返回列表",
+		"recentTitle": "過往直播",
+		"viewAll": "查看全部",
+		"paid": {
+			"ownedBadge": "已購買",
+			"membersBadge": "會員專屬",
+			"purchaseTitle": "購買存檔",
+			"loginModalTitle": "登入",
+			"purchasedTitle": "購買完成",
+			"purchasedBinding": "已以「{{name}}」購買。請使用相同帳號登入以觀看。",
+			"watchNow": "觀看",
+			"loginRequired": "此存檔為付費內容。請登入後購買。",
+			"loginToPurchase": "登入以購買",
+			"loggedInAs": "目前登入帳號",
+			"bindingNote": "此次購買將綁定至帳號「{{name}}」。在其他裝置上請使用相同的社群帳號登入。",
+			"payWith": "使用 {{provider}} 購買",
+			"noProviders": "目前沒有可用的付款方式。",
+			"returnHint": "完成付款後，返回此頁面即可觀看。",
+			"paymentOpenedTab": "付款頁面已在新分頁中開啟。完成後請返回此頁面。",
+			"paymentFailed": "無法開始付款。",
+			"lockedBadge": "付費"
+		},
+		"members": {
+			"title": "會員限定存檔",
+			"loginRequired": "觀看此存檔需要登入。",
+			"loginToWatch": "登入後觀看",
+			"loggedInTitle": "已登入，現在可以觀看。"
+		},
+		"count": "{{count}}個錄製",
+		"copyLink": "複製連結",
+		"linkCopied": "已複製連結",
+		"moreArchives": "更多存檔"
+	},
+	"page": {
+		"notFound": "頁面未找到",
+		"backToHome": "返回首頁",
+		"loading": "載入中..."
+	},
+	"purchases": {
+		"title": "購買記錄",
+		"empty": "暫無購買記錄",
+		"loginHint": "登入後可查看購買記錄",
+		"watch": "觀看",
+		"itemSuperchat": "超級留言",
+		"itemEffect": "畫面特效",
+		"itemArchive": "封存",
+		"archiveDeleted": "（已刪除的封存）",
+		"testTag": "測試"
+	}
+}

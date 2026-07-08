@@ -1,0 +1,156 @@
+// Typography for marked-rendered markdown documents (/faq, /tokushoho).
+// Applied by MarkdownDocPage inside a prose PageShell. Colors come from the
+// themable panel tokens so the documents stay on-brand in both themes.
+.markdownProse {
+	color: var(--color-panel-text);
+	line-height: 1.8;
+	// Admin-authored content can contain long unbreakable strings (URLs,
+	// addresses); wrap them so they never force the page to scroll sideways.
+	overflow-wrap: break-word;
+	word-break: break-word;
+
+	h1 {
+		margin: 0 0 30px;
+		font-size: 24px;
+		color: var(--color-panel-text);
+		border-bottom: 2px solid var(--theme-color-action);
+		padding-bottom: 10px;
+	}
+
+	h2 {
+		margin: 30px 0 15px;
+		font-size: 18px;
+		color: var(--color-panel-text);
+		border-left: 4px solid var(--theme-color-action);
+		padding-left: 12px;
+	}
+
+	h3,
+	h4,
+	h5,
+	h6 {
+		margin: 20px 0 10px;
+		font-size: 16px;
+		color: var(--color-panel-text);
+	}
+
+	p {
+		margin: 0 0 15px;
+	}
+
+	strong {
+		color: var(--color-panel-text);
+		font-weight: 600;
+	}
+
+	ul,
+	ol {
+		margin: 15px 0;
+		padding-left: 25px;
+	}
+
+	li {
+		margin-bottom: 8px;
+	}
+
+	a {
+		color: var(--color-panel-link);
+		text-decoration: none;
+
+		&:hover {
+			color: var(--color-panel-link-hover);
+			text-decoration: underline;
+		}
+	}
+
+	code {
+		background: var(--color-chip-bg);
+		padding: 2px 6px;
+		border-radius: var(--radius-sm);
+		font-family: monospace;
+	}
+
+	pre {
+		background: var(--color-chip-bg);
+		padding: 12px 16px;
+		border-radius: var(--radius-md);
+		overflow-x: auto;
+
+		code {
+			background: none;
+			padding: 0;
+			border-radius: 0;
+		}
+	}
+
+	blockquote {
+		margin: 15px 0;
+		padding: 4px 16px;
+		border-left: 4px solid var(--theme-color-action);
+		color: var(--color-panel-text-muted);
+	}
+
+	table {
+		width: 100%;
+		max-width: 100%;
+		// Fixed layout keeps wide disclosure tables inside the prose column;
+		// long cell content wraps (via word-break above) instead of stretching
+		// the table past the page edge.
+		table-layout: fixed;
+		border-collapse: collapse;
+		margin: 15px 0;
+		border: 1px solid var(--color-panel-border-soft);
+	}
+
+	th {
+		background: var(--color-panel-bg-alt);
+		color: var(--color-panel-text);
+		font-weight: 600;
+		text-align: left;
+	}
+
+	th,
+	td {
+		padding: 10px;
+		border: 1px solid var(--color-panel-border-soft);
+	}
+
+	tbody tr:hover {
+		background: var(--color-overlay-faint);
+	}
+
+	details {
+		margin: 15px 0;
+		padding: 15px;
+		background: var(--color-panel-bg-alt);
+		border-radius: var(--radius-md);
+		border: 1px solid var(--color-panel-border-soft);
+	}
+
+	summary {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--color-panel-text);
+		padding: 5px 0;
+
+		&:hover {
+			color: var(--theme-color-action);
+		}
+	}
+
+	details[open] summary {
+		margin-bottom: 10px;
+		border-bottom: 1px solid var(--color-panel-border-soft);
+		padding-bottom: 10px;
+	}
+
+	@media (max-width: 600px) {
+		h1 {
+			font-size: 20px;
+		}
+
+		h2 {
+			font-size: 16px;
+		}
+	}
+}
