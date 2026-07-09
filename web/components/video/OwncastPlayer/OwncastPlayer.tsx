@@ -50,15 +50,12 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 
 	// Manual quality (rendition) selection, presented as a "Quality" menu button
 	// in the video.js control bar next to volume/fullscreen (YouTube-style).
-	//
-	// Default (no stored choice): pin the highest rendition — the source
-	// passthrough — instead of Auto. VHS's ABR oscillated 360<->720<->1080 (the
-	// source passthrough carries no CODECS attribute, so VHS repeatedly excludes
-	// and re-includes it), causing stutter and rewinds; pinning the top rendition
-	// removes ABR from the picture entirely so full quality stays stable. Viewers
-	// can still choose Auto or a lower quality from the menu, and that explicit
-	// choice is what gets persisted. Empty string = "no stored choice yet".
-	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || '');
+	// Default is Auto (ABR). The source passthrough now carries a CODECS
+	// attribute (injected server-side into the master playlist), so VHS no longer
+	// excludes/re-includes it and the ABR oscillation is gone. Viewers can still
+	// pin a specific rendition from the menu; that choice persists. 'auto'
+	// re-enables every rendition.
+	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
 	const qualityButtonRef = React.useRef<{ update: () => void } | null>(null);
 
 	// Read the VHS representation list off the active tech, tolerating the
@@ -102,19 +99,14 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 
 	// Re-assert the current choice after a manifest reload (the representation
 	// objects are recreated) and rebuild the control-bar menu from the current
-	// levels. With no stored choice, default to the highest rendition.
+	// levels. 'auto' re-enables every rendition (ABR); a pinned height enables
+	// only that one.
 	const refreshQualityLevels = () => {
 		const reps = getRepresentations();
-		if (selectedQualityRef.current === '') {
-			const heights = getQualityHeights();
-			if (heights.length > 0) {
-				selectedQualityRef.current = String(heights[0]); // highest (sorted desc)
-			}
-		}
 		const sel = selectedQualityRef.current;
 		if (sel === 'auto') {
 			reps.forEach(r => r.enabled(true));
-		} else if (sel !== '') {
+		} else {
 			const height = Number(sel);
 			if (reps.some(r => r.height === height)) {
 				reps.forEach(r => r.enabled(r.height === height));
@@ -133,10 +125,8 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const autoLabel = t('video.qualitySelector.auto');
 		const menuLabel = t('video.qualitySelector.label');
 
-		const qualityText = () => {
-			const v = selectedQualityRef.current;
-			return v === 'auto' || v === '' ? autoLabel : `${v}p`;
-		};
+		const qualityText = () =>
+			selectedQualityRef.current === 'auto' ? autoLabel : `${selectedQualityRef.current}p`;
 
 		class QualityMenuButton extends MenuButton {
 			labelEl_: HTMLElement | null = null;
@@ -199,7 +189,11 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 
 	const setSavedVolume = () => {
 		try {
-			playerRef.current.volume(getLocalStorage(PLAYER_VOLUME) || 1);
+			// Default to a low volume (0.3) rather than full, so autoplay — and the
+			// first unmute after the browser's muted-autoplay fallback — starts
+			// quiet instead of blasting. A stored preference (including 0) wins.
+			const saved = getLocalStorage(PLAYER_VOLUME);
+			playerRef.current.volume(saved !== null && saved !== '' ? Number(saved) : 0.3);
 		} catch (err) {
 			console.warn(err);
 		}
