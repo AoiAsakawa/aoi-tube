@@ -142,6 +142,13 @@ func TestMediaPipelineEndToEnd(t *testing.T) {
 		t.Fatalf("CreateViewerConnection: %v", err)
 	}
 
+	// The answer must advertise stereo Opus, otherwise browsers decode mono even
+	// though the SFU forwards a 2-channel stream (Pion echoes the offerer's mono
+	// fmtp, so forceOpusStereo injects stereo=1;sprop-stereo=1).
+	if !strings.Contains(answer.SDP, "sprop-stereo=1") {
+		t.Errorf("answer SDP missing stereo Opus fmtp:\n%s", answer.SDP)
+	}
+
 	if err := viewer.SetRemoteDescription(webrtc.SessionDescription{
 		Type: webrtc.SDPTypeAnswer,
 		SDP:  answer.SDP,

@@ -184,7 +184,12 @@ func (p *mediaPipeline) ffmpegArgsWithInput(ffmpegPath string, inputArgs []strin
 		// :a scoping keeps these on the encoder; a bare "-fec" collides with
 		// the RTP muxer's identically-named option and aborts the mux.
 		"-fec:a", "1",
-		"-packet_loss:a", "5",
+		// Assume a higher loss rate so libopus embeds a stronger in-band FEC copy
+		// of each frame in the next packet. WebRTC audio here rides direct UDP over
+		// the internet (no retransmission for audio), so isolated packet loss was
+		// audible as brief dropouts ("プツプツ"); a beefier FEC copy lets the browser
+		// reconstruct the lost frame instead of muting it.
+		"-packet_loss:a", "15",
 		// Constrained VBR at 192k: hard CBR (-vbr off) forces libopus to pad/clip
 		// its bit allocation, which produced the audible "warbly/stretchy" artifact
 		// on complex passages. Constrained VBR holds the same ~192k target but lets

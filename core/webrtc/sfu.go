@@ -394,8 +394,70 @@ func (s *SFU) CreateViewerConnection(viewerID string, offer SessionDescription, 
 
 	return &SessionDescription{
 		Type: "answer",
-		SDP:  peerConnection.LocalDescription().SDP,
+		SDP:  forceOpusStereo(peerConnection.LocalDescription().SDP),
 	}, nil
+}
+
+// forceOpusStereo rewrites an answer SDP so every Opus fmtp advertises stereo.
+// Pion builds the answer from the offerer's fmtp, and browsers offer Opus
+// without stereo=1, so the negotiated answer defaults to mono decoding even
+// though the SFU forwards a 2-channel stream. Appending stereo=1;sprop-stereo=1
+// to the Opus fmtp (adding the line if the offer carried none) makes the browser
+// decode both channels.
+func forceOpusStereo(sdp string) string {
+	lines := strings.Split(sdp, "\n")
+	opusPT := map[string]bool{}
+	for _, l := range lines {
+		t := strings.TrimRight(l, "\r")
+		if strings.HasPrefix(t, "a=rtpmap:") && strings.Contains(strings.ToLower(t), " opus/") {
+			f := strings.TrimPrefix(t, "a=rtpmap:")
+			if i := strings.IndexByte(f, ' '); i > 0 {
+				opusPT[f[:i]] = true
+			}
+		}
+	}
+	if len(opusPT) == 0 {
+		return sdp
+	}
+	seen := map[string]bool{}
+	for i, l := range lines {
+		cr := strings.HasSuffix(l, "\r")
+		t := strings.TrimRight(l, "\r")
+		if strings.HasPrefix(t, "a=fmtp:") {
+			f := strings.TrimPrefix(t, "a=fmtp:")
+			pt := f
+			if j := strings.IndexByte(f, ' '); j > 0 {
+				pt = f[:j]
+			}
+			if opusPT[pt] {
+				seen[pt] = true
+				if !strings.Contains(t, "stereo=1") {
+					t += ";stereo=1;sprop-stereo=1"
+				}
+			}
+		}
+		if cr {
+			lines[i] = t + "\r"
+		} else {
+			lines[i] = t
+		}
+	}
+	for pt := range opusPT {
+		if seen[pt] {
+			continue
+		}
+		for i, l := range lines {
+			if strings.HasPrefix(strings.TrimRight(l, "\r"), "a=rtpmap:"+pt+" ") {
+				nl := "a=fmtp:" + pt + " minptime=10;useinbandfec=1;stereo=1;sprop-stereo=1"
+				if strings.HasSuffix(l, "\r") {
+					nl += "\r"
+				}
+				lines = append(lines[:i+1], append([]string{nl}, lines[i+1:]...)...)
+				break
+			}
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
 // AddICECandidate adds an ICE candidate to a viewer's peer connection.
