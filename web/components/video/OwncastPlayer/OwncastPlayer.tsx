@@ -114,7 +114,11 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const hls = hlsRef.current;
 		if (hls) {
 			if (value === 'auto') {
-				hls.currentLevel = -1;
+				// nextLevel (not currentLevel) so the switch happens at the next
+				// segment boundary without flushing the current buffer — a hard
+				// currentLevel switch drops the buffer and rebuffers at the live edge,
+				// which the operator saw as a latency spike on every quality change.
+				hls.nextLevel = -1;
 			} else {
 				const height = Number(value);
 				let best = -1;
@@ -126,7 +130,7 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 					}
 				});
 				if (best >= 0) {
-					hls.currentLevel = best;
+					hls.nextLevel = best;
 				}
 			}
 		}
@@ -153,6 +157,12 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				lowLatencyMode: true,
 				backBufferLength: 15,
 				liveDurationInfinity: true,
+				// hls.js defaults the initial bandwidth guess to 500kbps, which makes
+				// ABR start (and, with LL-HLS blocking-reload part timing skewing the
+				// estimate low, stay) at the lowest rendition. Seed a generous 5Mbps
+				// so Auto starts at the top rendition and only drops if the connection
+				// genuinely can't sustain it.
+				abrEwmaDefaultEstimate: 5_000_000,
 				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
 					const decorated = decorateHlsUrl(url);
 					if (decorated !== url) {
