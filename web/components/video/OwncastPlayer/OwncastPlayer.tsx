@@ -104,14 +104,22 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	};
 
 	const updateLevels = () => {
-		const seen = new Set<number>();
-		setLevels(
-			(hlsRef.current?.levels || [])
-				.map(l => l.height)
-				.filter((h): h is number => typeof h === 'number' && h > 0)
-				.sort((a, b) => b - a)
-				.filter(h => (seen.has(h) ? false : seen.add(h))),
+		const raw = hlsRef.current?.levels || [];
+		// TEMP diagnostic for the "quality shows only Auto" report.
+		// eslint-disable-next-line no-console
+		console.log(
+			'[aoitube quality] hls.levels =',
+			raw.map(l => ({ height: l.height, width: l.width, bitrate: l.bitrate })),
 		);
+		const seen = new Set<number>();
+		const heights = raw
+			.map(l => l.height)
+			.filter((h): h is number => typeof h === 'number' && h > 0)
+			.sort((a, b) => b - a)
+			.filter(h => (seen.has(h) ? false : seen.add(h)));
+		// eslint-disable-next-line no-console
+		console.log('[aoitube quality] derived heights =', heights);
+		setLevels(heights);
 	};
 
 	const applyQuality = (value: string) => {
