@@ -81,7 +81,7 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 ### 配信・録画・アーカイブ
 - **LL-HLS**: `core/transcoder/llhls.go`（1秒セグメント強制・fMP4）。設定 `/admin/config-stream-protocol`
-- **WebRTC**: `core/webrtc/sfu.go`+`mediapipeline.go`。専用FFmpegでベースラインH.264+Opus再エンコード→RTP→Pion。**単一UDPポート52000（要FW開放）**、env `OWNCAST_WEBRTC_UDP_PORT`。RTMPは非ブロッキングtee（`core/webrtcMediaTee.go`）でHLS影響ゼロ。接続失敗時HLS自動フォールバック
+- **WebRTC**: `core/webrtc/sfu.go`+`mediapipeline.go`。専用FFmpegでベースラインH.264+Opus再エンコード→RTP→Pion。**単一UDPポート52000（要FW開放）**。ポートは管理画面「配信プロトコル」の `WebRTCUDPPort`（`StreamProtocolConfig`）またはenv `OWNCAST_WEBRTC_UDP_PORT`（env優先）で変更可、`sfu.go webRTCUDPPort()` が env→datastore→既定で解決。**起動時に一度だけbind**（`GetSFU`）のため変更は再起動後反映（`ReloadConfig`は再bindしない）。RTMPは非ブロッキングtee（`core/webrtcMediaTee.go`）でHLS影響ゼロ。接続失敗時HLS自動フォールバック
 - **録画**: `core/recording/recorder.go`。SegmentWrittenフックでライブプレイリストをVODへ増分ミラー。`recording_enabled` / `recording_highest_only`(既定ON=最高画質のみ) / `recording_retention_count` / `recording_store_on_s3`。セッションID=`YYYYMMDD-HHMMSS-<乱数8>`（列挙不能）。5秒未満は自動破棄。**オフラインクリップのセグメント（`-offline-`）は録画除外**（再接続時に混入するとTS/fMP4混合でreplay.mp4が壊れるため）
 - **アーカイブ**: 確定時にmanifest先行書き→バックグラウンドで remux（`-c copy`→replay.mp4、video.jsのfMP4 VOD A/Vずれ回避のためMP4ネイティブ再生優先）→サイズ記録→S3オフロード（8並列）。**プルーン可能=非公開かつ無制限かつ未購入のみ**（公開/会員/有料/購入実績ありは保護＆保持枠不算入）。3層アクセスは `canViewArchive` が毎リクエスト判定（S3プロキシ経由でも権威維持、Range/206対応）
 - **チャットセッションスコープ**: 視聴者向け履歴は「最終配信終了時刻より後」のみ（`persistence.go`、datetime()両側正規化）。クライアントはオフライン90秒後に再取得。モデレーション履歴は全件。DBは2時間プルーナー

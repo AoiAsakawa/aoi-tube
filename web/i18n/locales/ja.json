@@ -2114,7 +2114,9 @@
 				"connectedViewers": "接続中の視聴者",
 				"disconnectAll": "全員切断",
 				"saveButton": "設定を保存",
-				"reload": "再読み込み"
+				"reload": "再読み込み",
+				"udpPort": "WebRTC UDPポート",
+				"udpPortTip": "全WebRTC通信(ICE)を通す単一UDPポート。ファイアウォールでこのポートのinbound開放が必須です。変更はサーバー再起動後に反映されます(ポートは起動時に一度だけバインド)。環境変数 OWNCAST_WEBRTC_UDP_PORT が設定されている場合はそちらが優先されます。既定: 52000。"
 			}
 		},
 		"fields": {

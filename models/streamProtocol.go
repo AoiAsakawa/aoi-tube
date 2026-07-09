@@ -24,6 +24,12 @@ type StreamProtocolConfig struct {
 	WebRTCEnabled    bool   `json:"webrtcEnabled"`
 	WebRTCICEServers string `json:"webrtcIceServers"` // JSON array of ICE servers
 	WebRTCMaxViewers int    `json:"webrtcMaxViewers"` // Maximum concurrent WebRTC viewers (0 = unlimited)
+	// WebRTCUDPPort is the single UDP port all WebRTC media (ICE) is muxed onto.
+	// It MUST be opened inbound in the firewall. 0 = use the built-in default
+	// (52000). The OWNCAST_WEBRTC_UDP_PORT env var overrides this when set.
+	// Changing it takes effect after a server restart (the port binds once at
+	// startup).
+	WebRTCUDPPort int `json:"webrtcUdpPort"`
 }
 
 // DefaultStreamProtocolConfig returns default streaming protocol configuration.
@@ -36,6 +42,7 @@ func DefaultStreamProtocolConfig() StreamProtocolConfig {
 		WebRTCEnabled:     false,
 		WebRTCICEServers:  `[{"urls": ["stun:stun.l.google.com:19302"]}]`,
 		WebRTCMaxViewers:  50,
+		WebRTCUDPPort:     52000,
 	}
 }
 

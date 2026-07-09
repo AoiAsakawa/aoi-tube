@@ -47,6 +47,7 @@ interface StreamProtocolConfig {
 	webrtcEnabled: boolean;
 	webrtcIceServers: string;
 	webrtcMaxViewers: number;
+	webrtcUdpPort: number;
 }
 
 interface LLHLSLatencyLevel {
@@ -150,6 +151,7 @@ export function StreamProtocolSection() {
 					webrtcEnabled: config.webrtcEnabled,
 					webrtcIceServers: config.webrtcIceServers,
 					webrtcMaxViewers: config.webrtcMaxViewers,
+					webrtcUdpPort: config.webrtcUdpPort,
 				}),
 			});
 
@@ -424,6 +426,18 @@ export function StreamProtocolSection() {
 										)}
 										<Text type="secondary" style={{ fontSize: 12 }}>
 											{t('admin.sections.streamProtocol.iceServersTip')}
+										</Text>
+										<Divider style={{ margin: '12px 0' }} />
+										<Text strong>{t('admin.sections.streamProtocol.udpPort')}</Text>
+										<InputNumber
+											min={1024}
+											max={65535}
+											value={config.webrtcUdpPort}
+											onChange={value => updateConfig('webrtcUdpPort', value || 52000)}
+											style={{ width: '100%' }}
+										/>
+										<Text type="secondary" style={{ fontSize: 12, whiteSpace: 'pre-line' }}>
+											{t('admin.sections.streamProtocol.udpPortTip')}
 										</Text>
 									</Space>
 								</Col>

@@ -1472,6 +1472,11 @@ const (
 
 // GetStreamProtocolConfig returns the streaming protocol configuration.
 func GetStreamProtocolConfig() models.StreamProtocolConfig {
+	// Guard against being called before the datastore is initialized (e.g. from
+	// webRTCUDPPort when the SFU is built in unit tests without a data store).
+	if _datastore == nil {
+		return models.DefaultStreamProtocolConfig()
+	}
 	configEntry, err := _datastore.Get(streamProtocolConfigKey)
 	if err != nil {
 		return models.DefaultStreamProtocolConfig()

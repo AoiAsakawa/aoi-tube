@@ -2114,7 +2114,9 @@
 				"connectedViewers": "접속 중인 시청자",
 				"disconnectAll": "전체 연결 해제",
 				"saveButton": "설정 저장",
-				"reload": "새로고침"
+				"reload": "새로고침",
+				"udpPort": "WebRTC UDP 포트",
+				"udpPortTip": "모든 WebRTC 미디어(ICE)가 멀티플렉싱되는 단일 UDP 포트예요. 방화벽에서 이 포트의 인바운드를 반드시 열어야 해요. 변경은 서버 재시작 후에 적용돼요(포트는 시작 시 한 번만 바인딩). 환경 변수 OWNCAST_WEBRTC_UDP_PORT가 설정되어 있으면 그 값이 우선해요. 기본값: 52000."
 			}
 		},
 		"fields": {

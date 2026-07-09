@@ -2114,7 +2114,9 @@
 				"connectedViewers": "连接中的观众",
 				"disconnectAll": "断开全部",
 				"saveButton": "保存设置",
-				"reload": "重新加载"
+				"reload": "重新加载",
+				"udpPort": "WebRTC UDP端口",
+				"udpPortTip": "所有WebRTC媒体(ICE)复用的单一UDP端口。必须在防火墙中开放该端口的入站流量。更改在服务器重启后生效(端口在启动时绑定一次)。若设置了环境变量 OWNCAST_WEBRTC_UDP_PORT 则以其为准。默认: 52000。"
 			}
 		},
 		"fields": {

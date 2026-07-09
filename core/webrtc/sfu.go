@@ -76,10 +76,15 @@ func GetSFU() *SFU {
 // webRTCUDPPort returns the fixed UDP port WebRTC media is muxed onto, from
 // OWNCAST_WEBRTC_UDP_PORT or the default.
 func webRTCUDPPort() int {
+	// Env var wins (deployment-level override), then the admin-configured value,
+	// then the built-in default.
 	if v := os.Getenv("OWNCAST_WEBRTC_UDP_PORT"); v != "" {
 		if p, err := strconv.Atoi(v); err == nil && p > 0 && p < 65536 {
 			return p
 		}
+	}
+	if p := data.GetStreamProtocolConfig().WebRTCUDPPort; p > 0 && p < 65536 {
+		return p
 	}
 	return defaultWebRTCUDPPort
 }

@@ -24,12 +24,17 @@ client).
 ### WebRTC requirements
 
 - **One UDP port must be open to the world.** All WebRTC media is multiplexed onto a
-  single fixed UDP port — default `52000`, overridable with the `OWNCAST_WEBRTC_UDP_PORT`
-  environment variable. If the port is blocked, viewers hang on a "connecting" spinner.
+  single fixed UDP port — default `52000`. Set it on the **Stream protocol** settings page
+  (Admin → Settings → Stream protocol → *WebRTC UDP port*), or override it with the
+  `OWNCAST_WEBRTC_UDP_PORT` environment variable (the env var wins when set). If the port
+  is blocked, viewers hang on a "connecting" spinner.
 
   ```bash
   sudo ufw allow 52000/udp
   ```
+
+  The port binds once at startup, so **a port change takes effect only after a server
+  restart** — and remember to open the new port (and close the old one) in the firewall.
 
 - WebRTC media cannot be proxied through Cloudflare; browsers connect directly to the
   server's IP on that port.

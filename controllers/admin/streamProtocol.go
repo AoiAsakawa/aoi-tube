@@ -18,12 +18,20 @@ type StreamProtocolConfigRequest struct {
 	WebRTCEnabled     bool   `json:"webrtcEnabled"`
 	WebRTCICEServers  string `json:"webrtcIceServers"`
 	WebRTCMaxViewers  int    `json:"webrtcMaxViewers"`
+	WebRTCUDPPort     int    `json:"webrtcUdpPort"`
 }
 
 // GetStreamProtocolConfig returns the current stream protocol configuration.
 func GetStreamProtocolConfig(w http.ResponseWriter, r *http.Request) {
 	config := data.GetStreamProtocolConfig()
 	llhlsLevel := data.GetLLHLSLatencyLevel()
+
+	// Report the effective UDP port so existing installs (saved before this field
+	// existed, so stored as 0) show the real default rather than a blank/zero.
+	udpPort := config.WebRTCUDPPort
+	if udpPort <= 0 {
+		udpPort = 52000
+	}
 
 	response := map[string]interface{}{
 		"hlsEnabled":        config.HLSEnabled,
@@ -34,6 +42,7 @@ func GetStreamProtocolConfig(w http.ResponseWriter, r *http.Request) {
 		"webrtcEnabled":     config.WebRTCEnabled,
 		"webrtcIceServers":  config.WebRTCICEServers,
 		"webrtcMaxViewers":  config.WebRTCMaxViewers,
+		"webrtcUdpPort":     udpPort,
 	}
 
 	controllers.WriteResponse(w, response)
@@ -76,6 +85,13 @@ func SetStreamProtocolConfig(w http.ResponseWriter, r *http.Request) {
 	}
 	if request.WebRTCMaxViewers > 0 {
 		config.WebRTCMaxViewers = request.WebRTCMaxViewers
+	}
+	if request.WebRTCUDPPort > 0 {
+		if request.WebRTCUDPPort < 1024 || request.WebRTCUDPPort > 65535 {
+			controllers.WriteSimpleResponse(w, false, "WebRTC UDPポートは1024〜65535の範囲で指定してください")
+			return
+		}
+		config.WebRTCUDPPort = request.WebRTCUDPPort
 	}
 
 	if err := data.SetStreamProtocolConfig(config); err != nil {

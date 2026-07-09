@@ -2114,7 +2114,9 @@
 				"connectedViewers": "Connected viewers",
 				"disconnectAll": "Disconnect all",
 				"saveButton": "Save Settings",
-				"reload": "Reload"
+				"reload": "Reload",
+				"udpPort": "WebRTC UDP port",
+				"udpPortTip": "The single UDP port all WebRTC media (ICE) is muxed onto. It must be opened inbound in your firewall. Changes take effect after a server restart (the port binds once at startup). The OWNCAST_WEBRTC_UDP_PORT environment variable overrides this value. Default: 52000."
 			}
 		},
 		"fields": {

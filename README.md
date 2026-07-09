@@ -78,10 +78,10 @@ A customized fork of [Owncast](https://github.com/owncast/owncast).
 | LL-HLS | ~2–5s | ✅ Stable |
 | WebRTC | <1s | 🧪 Experimental |
 
-- **fMP4 format** — LL-HLS uses forced 1-second segments
+- **fMP4 format** — LL-HLS uses forced sub-second (0.5s) segments
 - **Measured-latency badge** — the player badge shows real measured latency and resolution/fps once samples arrive (both LL-HLS and WebRTC)
 - **Automatic fallback** — the viewer player falls back to HLS when a WebRTC connection fails
-- **WebRTC requires one open UDP port** (default `52000`, configurable via `OWNCAST_WEBRTC_UDP_PORT`)
+- **WebRTC requires one open UDP port** (default `52000`, set in **Admin → Stream protocol** or via `OWNCAST_WEBRTC_UDP_PORT`; it must be opened inbound in your firewall, and a port change takes effect after a server restart)
 
 ### 🇯🇵 Language & UI
 - 5-language UI: Japanese, English, Simplified/Traditional Chinese, Korean (viewer + admin)
