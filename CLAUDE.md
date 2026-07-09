@@ -24,7 +24,7 @@ AoiTubeはセルフホスト型のライブストリーミングサーバーで�
 ## 技術スタック
 
 - **バックエンド**: Go 1.25、SQLite（sqlc）、aws-sdk-go-v2（S3/R2）、Pion WebRTC v4（moduleパス: `github.com/aoiasakawa/aoitube`）
-- **フロントエンド**: Vite 8（rolldown）/ React 19 / TypeScript 6 / react-router 7 / Ant Design 6.5 / Zustand / react-i18next
+- **フロントエンド**: Vite 8（rolldown）/ React 19 / TypeScript 6 / react-router 7 / Ant Design 6.5 / Zustand / react-i18next / hls.js（プレイヤーエンジン、**video.jsは撤去**）
 - **テスト**: Vitest 4 / Testing Library / Storybook 10（react-viteフレームワーク）
 - **ストリーミング**: RTMP/RTMPS入力 → FFmpeg → HLS/LL-HLS出力 + WebRTC再エンコードtee
 - **リンタ**: ESLint 10（flat config）+ Prettier、golangci-lint v2
@@ -80,10 +80,11 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 ## 機能リファレンス（キー実装と設定キー）
 
 ### 配信・録画・アーカイブ
-- **LL-HLS**: `core/transcoder/llhls.go`（1秒セグメント強制・fMP4）。設定 `/admin/config-stream-protocol`
-- **WebRTC**: `core/webrtc/sfu.go`+`mediapipeline.go`。専用FFmpegでベースラインH.264+Opus再エンコード→RTP→Pion。**単一UDPポート52000（要FW開放）**。ポートは管理画面「配信プロトコル」の `WebRTCUDPPort`（`StreamProtocolConfig`）またはenv `OWNCAST_WEBRTC_UDP_PORT`（env優先）で変更可、`sfu.go webRTCUDPPort()` が env→datastore→既定で解決。**起動時に一度だけbind**（`GetSFU`）のため変更は再起動後反映（`ReloadConfig`は再bindしない）。RTMPは非ブロッキングtee（`core/webrtcMediaTee.go`）でHLS影響ゼロ。接続失敗時HLS自動フォールバック
-- **録画**: `core/recording/recorder.go`。SegmentWrittenフックでライブプレイリストをVODへ増分ミラー。`recording_enabled` / `recording_highest_only`(既定ON=最高画質のみ) / `recording_retention_count` / `recording_store_on_s3`。セッションID=`YYYYMMDD-HHMMSS-<乱数8>`（列挙不能）。5秒未満は自動破棄。**オフラインクリップのセグメント（`-offline-`）は録画除外**（再接続時に混入するとTS/fMP4混合でreplay.mp4が壊れるため）
-- **アーカイブ**: 確定時にmanifest先行書き→バックグラウンドで remux（`-c copy`→replay.mp4、video.jsのfMP4 VOD A/Vずれ回避のためMP4ネイティブ再生優先）→サイズ記録→S3オフロード（8並列）。**プルーン可能=非公開かつ無制限かつ未購入のみ**（公開/会員/有料/購入実績ありは保護＆保持枠不算入）。3層アクセスは `canViewArchive` が毎リクエスト判定（S3プロキシ経由でも権威維持、Range/206対応）
+- **LL-HLS**: `core/transcoder/`（`llhls.go`+`llhlsMuxer.go`+`llhlsFfmpeg.go`）。**gohlslib(v2)のLow-Latencyミキサーをレンディション毎に持つ真のLL-HLS**（EXT-X-PART+ブロッキング更新+PRELOAD-HINT）。1本のffmpegが各レンディションをMPEG-TSで吐き→mediacommonでデマックス→gohlslibミキサーへ`WriteH264/WriteMPEG4Audio`（音声PTSは90kHz→サンプルレートclockへ再スケール必須）。ABRマスターは合成（`masterPlaylist`）、**各レンディションに個別音声**（共有音声だとトランスコード映像のライブエッジ遅れでカクつくため）、**全ミキサー共有のPDT**（ソースPTS由来、`ntpForPTS`）、トランスコードは`-force_key_frames source`でパススルーとセグメント境界一致。**メモリ内配信＝ディスクに書かない**（録画/サムネは上記diskMirror併走で供給）。設定 `/admin/config-stream-protocol`
+- **WebRTC**: `core/webrtc/sfu.go`+`mediapipeline.go`。専用FFmpegで再エンコード→RTP→Pion。**コーデック**: 映像=constrained-baseline H.264 6Mbps（high profile 1080p60は4コアで実時間エンコードできずA/Vドリフト＝baseline確定）／音声=**ステレオOpus**（Pionはアンサーでオファー側のmono fmtpをエコーするため`sfu.go forceOpusStereo`がアンサーSDPに`stereo=1;sprop-stereo=1`を注入。SFUは`RegisterDefaultCodecs`をやめ必要コーデックだけ明示登録）+ constrained-VBR + FEC(`packet_loss=15`)。**単一UDPポート52000（要FW開放）**。ポートは管理画面「配信プロトコル」の `WebRTCUDPPort`（`StreamProtocolConfig`）またはenv `OWNCAST_WEBRTC_UDP_PORT`（env優先）で変更可、`sfu.go webRTCUDPPort()` が env→datastore→既定で解決。**起動時に一度だけbind**（`GetSFU`）のため変更は再起動後反映（`ReloadConfig`は再bindしない）。RTMPは非ブロッキングtee（`core/webrtcMediaTee.go`）でHLS影響ゼロ。接続失敗時HLS自動フォールバック
+- **録画**: `core/recording/recorder.go`。SegmentWrittenフックでライブプレイリストをVODへ増分ミラー。`recording_enabled` / `recording_highest_only`(既定ON=最高画質のみ) / `recording_retention_count` / `recording_store_on_s3`。セッションID=`YYYYMMDD-HHMMSS-<乱数8>`（列挙不能）。5秒未満は自動破棄。**オフラインクリップのセグメント（`-offline-`）は録画除外**（`HandleSegmentWritten`と`HandleVariantPlaylist`両方でスキップ。再接続時に混入するとreplay.mp4が壊れるため）
+- **【重要】LL-HLS(gohlslib)の録画・サムネはディスクミラーで供給**: gohlslibはライブをRAM配信しディスクに書かないため、録画（ディスク上HLSをミラー）とサムネ生成（最新ディスクセグメントからフレーム取得）が両方切れる。対策=**最高画質を`-c copy`でディスクにも書くffmpeg出力を`llhlsFfmpeg.go diskMirrorOutput`が常時併走**（録画トグルに依存しない＝録画OFFでもサムネ動作、`-c copy`で低CPU、`CleanupOldContent`オンライン掃除で有界）。内部file-writerリスナー(`fileWriterReceiverService.go`、書込前に親dirを`MkdirAll`)経由で従来のSegmentWrittenフローを発火→録画・S3退避・replay.mp4まで従来通り。**LL-HLS時はこのミラーをライブストレージ(S3)へ送らない**（`hlsHandler.go`、RAM配信で不要。オフラインクリップは例外で保存）。ライブ検証済み: finalize→replay.mp4→S3(remoteMedia)まで完全動作
+- **アーカイブ**: 確定時にmanifest先行書き→バックグラウンドで remux（`-c copy`→replay.mp4、プレーン`<video>`ネイティブ再生優先。video.js撤去済み）→サイズ記録→S3オフロード（8並列）。**プルーン可能=非公開かつ無制限かつ未購入のみ**（公開/会員/有料/購入実績ありは保護＆保持枠不算入）。3層アクセスは `canViewArchive` が毎リクエスト判定（S3プロキシ経由でも権威維持、Range/206対応）
 - **チャットセッションスコープ**: 視聴者向け履歴は「最終配信終了時刻より後」のみ（`persistence.go`、datetime()両側正規化）。クライアントはオフライン90秒後に再取得。モデレーション履歴は全件。DBは2時間プルーナー
 - **サイレントモード**: 通知全抑止+未認証には offline偽装。**視聴はadmin(Basic)とモデレーターのみ**（ステータス偽装とHLSゲートは同一述語 `canViewSilentStream`）。有効中の `/api/status` は未認証に offline を返すため、外形監視は認証付きで行うこと
 
@@ -131,7 +132,7 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 1. **依存の壊れ物ピン**: `CAFxX/httpcompression` は **v0.0.8固定**（v0.0.9はContent-Typeを落とし全ページがプレーンテキスト化）。aws-sdk-go-v2 はR2向けにチェックサム `WhenRequired`
 2. **antdはminor更新でもSelect内部DOMを変える**（`.ant-select-input`が外枠→内側inputに変化した前例）。テーマ上書きは新旧クラス併記+**スクリーンショット検証必須**（computed styleが正常でも視覚は壊れうる）
-3. **video.jsの罠**: ①引数なし `player.off()` は内部リスナーも破壊 ②`videojs.Vhs.xhr` はonRequestフック集合を担ぐ関数オブジェクト—素のクロージャで置換するとaccessToken付与が脱落（ラッパーには `Object.assign`+`original=false`）③VHSのfMP4 HLS VODはA/Vずれる→replay.mp4ネイティブ再生 ④メディアシーケンス後退でクラッシュ→ffmpeg `-start_number <epoch>` で単調増加化済み ⑤`<img>`/plain fetchはonRequestフックを通らずトークンが乗らない→URL構築時に`withAccessToken`かサーバー側除外
+3. **プレイヤーはvideo.js撤去済み・全てプレーン`<video>`+共通YouTube風UI**: 3プレイヤー（ライブLL-HLS=`OwncastPlayer`、ライブWebRTC=`WebRTCPlayer`、VOD=`VodPlayer`）は**プレーン`<video>`＋共有オーバーレイ`PlayerChrome`**（自作のシークバー/音量/設定メニュー/全画面/自動フェード）で統一。エンジンはライブHLS/VOD-HLS=**hls.js**、VOD-MP4=ネイティブ、WebRTC=`srcObject`。**video.jsは廃止（依存も削除）**：外部MediaSource/MediaStreamを追跡できずスピナー固着したため。教訓: ①hls.jsのトークンは`xhrSetup`でURL decorate（`/hls/`と`/api/archives/`のみ、外部CDNには付けない）②`<img>`/plain fetchはURL構築時に`withAccessToken`③メディアシーケンス後退クラッシュ回避にffmpeg `-start_number <epoch>` 単調増加は継続 ④コンテナは3つとも厳密16:9（`--player-container-height`から幅上限化。固定高さ+aspect-ratio併用は縦長化して黒帯が出る）⑤設定メニューは項目1種なら歯車で直接リスト展開（中間メニュー省略で1クリック）
 4. **検証哲学**: HTTP 200チェックはJS実行エラーを検出できない（SPA変更後は実ブラウザ必須）。ビルド/テスト全緑でもレスポンスヘッダ破壊は検出不能（実HTTPで確認）。minifiedで原因不明のReactエラーは**vite devサーバーで実名特定**
 5. **切断/接続のステートパスに同期ネットワークI/Oを置かない**（配信終了処理内の同期S3オフロードが全ストリームをデッドロックさせた前例。必ずバックグラウンド化）
 6. **CSS**: グローバルbox-sizingリセット無し（width:100%+paddingは静かにあふれる）。`.parent > div` 汎用子セレクタがあるコンテナへの名前付き子追加は詳細度確認。ポータル内antdはConfigProviderが効かない→パネルトークンで明示テーマ
