@@ -47,14 +47,18 @@ const udpSocketReadBufferBytes = 1 << 20 // 1 MiB
 // UDP sockets that will receive RTP from FFmpeg. It does not start FFmpeg; call
 // start for that. On any error every partially-created resource is released.
 func newMediaPipeline() (*mediaPipeline, error) {
-	// Constrained-baseline H.264 (profile-level-id=42e01f, packetization-mode=1)
-	// is registered by Pion's default media engine, so the SFU's peer
-	// connections offer it without any custom MediaEngine wiring.
+	// High-profile H.264 (profile-level-id=64001f, packetization-mode=1) is also
+	// registered by Pion's default media engine, so the SFU offers it without any
+	// custom MediaEngine wiring. High profile brings CABAC + 8x8 transform, a large
+	// quality win over constrained-baseline at the same bitrate. The advertised
+	// level (3.1) is below what a 1080p60 stream needs (4.2), but
+	// level-asymmetry-allowed=1 permits the higher-level stream — browsers decode
+	// per the actual SPS.
 	videoTrack, err := webrtc.NewTrackLocalStaticRTP(
 		webrtc.RTPCodecCapability{
 			MimeType:    webrtc.MimeTypeH264,
 			ClockRate:   90000,
-			SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+			SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f",
 		},
 		"video",
 		"aoitube-webrtc",
@@ -149,8 +153,8 @@ func (p *mediaPipeline) ffmpegArgsWithInput(ffmpegPath string, inputArgs []strin
 		"-map", "0:v:0",
 		"-an",
 		"-c:v", "libx264",
-		"-profile:v", "baseline",
-		"-level:v", "3.1",
+		"-profile:v", "high",
+		"-level:v", "4.2",
 		"-pix_fmt", "yuv420p",
 		"-preset", "veryfast",
 		"-tune", "zerolatency",
@@ -185,10 +189,12 @@ func (p *mediaPipeline) ffmpegArgsWithInput(ffmpegPath string, inputArgs []strin
 		// the RTP muxer's identically-named option and aborts the mux.
 		"-fec:a", "1",
 		"-packet_loss:a", "5",
-		// Fixed 192kbps CBR per operator preference (AAC on the HLS side runs
-		// at a fixed 320kbps; Opus achieves comparable quality at lower rates,
-		// and CBR keeps the rate constant instead of dipping on quiet passages).
-		"-vbr:a", "off",
+		// Constrained VBR at 192k: hard CBR (-vbr off) forces libopus to pad/clip
+		// its bit allocation, which produced the audible "warbly/stretchy" artifact
+		// on complex passages. Constrained VBR holds the same ~192k target but lets
+		// Opus allocate bits where the signal needs them, clearing the artifact
+		// while keeping the rate stable.
+		"-vbr:a", "constrained",
 		"-b:a", "192k",
 		"-ar", "48000",
 		"-ac", "2",

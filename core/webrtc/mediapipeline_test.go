@@ -34,7 +34,7 @@ func TestFfmpegArgsContainCodecsAndPorts(t *testing.T) {
 
 	args := strings.Join(p.ffmpegArgs("/usr/bin/ffmpeg"), " ")
 
-	for _, want := range []string{"-f flv", "libx264", "-profile:v baseline", "libopus", "-f rtp"} {
+	for _, want := range []string{"-f flv", "libx264", "-profile:v high", "libopus", "-f rtp"} {
 		if !strings.Contains(args, want) {
 			t.Errorf("ffmpeg args missing %q\nargs: %s", want, args)
 		}

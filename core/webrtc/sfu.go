@@ -94,10 +94,41 @@ func webRTCUDPPort() int {
 // default codecs (H.264/Opus). If the mux port cannot be bound it returns nil,
 // and callers fall back to the default ephemeral-port peer connection.
 func buildWebRTCAPI() *webrtc.API {
+	// Register exactly the codecs the SFU actually sends — high-profile H.264 and
+	// stereo Opus — instead of RegisterDefaultCodecs. Two reasons: (1) the default
+	// Opus is registered mono (no stereo=1 in its fmtp), so browsers decoded the
+	// stream as mono; (2) offering only one Opus with stereo=1 guarantees the
+	// browser negotiates stereo rather than possibly picking a mono variant. High
+	// profile (CABAC + 8x8) is a large quality win over constrained-baseline.
 	m := &webrtc.MediaEngine{}
-	if err := m.RegisterDefaultCodecs(); err != nil {
-		log.Errorln("WebRTC: failed to register default codecs:", err)
-		return nil
+	videoRTCPFeedback := []webrtc.RTCPFeedback{
+		{Type: "goog-remb", Parameter: ""},
+		{Type: "ccm", Parameter: "fir"},
+		{Type: "nack", Parameter: ""},
+		{Type: "nack", Parameter: "pli"},
+	}
+	codecs := []struct {
+		params webrtc.RTPCodecParameters
+		typ    webrtc.RTPCodecType
+	}{
+		{webrtc.RTPCodecParameters{
+			RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeOpus, ClockRate: 48000, Channels: 2, SDPFmtpLine: "minptime=10;useinbandfec=1;stereo=1;sprop-stereo=1"},
+			PayloadType:        111,
+		}, webrtc.RTPCodecTypeAudio},
+		{webrtc.RTPCodecParameters{
+			RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeH264, ClockRate: 90000, SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f", RTCPFeedback: videoRTCPFeedback},
+			PayloadType:        102,
+		}, webrtc.RTPCodecTypeVideo},
+		{webrtc.RTPCodecParameters{
+			RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: "video/rtx", ClockRate: 90000, SDPFmtpLine: "apt=102"},
+			PayloadType:        103,
+		}, webrtc.RTPCodecTypeVideo},
+	}
+	for _, c := range codecs {
+		if err := m.RegisterCodec(c.params, c.typ); err != nil {
+			log.Errorln("WebRTC: failed to register codec:", err)
+			return nil
+		}
 	}
 
 	// The default interceptors provide RTCP sender reports (browser jitter
