@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
-import type VideoJsPlayer from 'video.js/dist/types/player';
-import { VideoJS } from '../VideoJS/VideoJS';
+import Hls from 'hls.js';
 import { ComponentError } from '../../ui/ComponentError/ComponentError';
 import styles from './VodPlayer.module.scss';
 
@@ -13,17 +12,39 @@ export type VodPlayerProps = {
 	title?: string;
 	autoplay?: boolean;
 	className?: string;
-	// Called once the video.js player is ready. Used by the archive replay view
-	// to attach playhead listeners (timeupdate / seeking / seeked) that drive
-	// the synchronized chat and screen effects.
-	onPlayerReady?: (player: VideoJsPlayer) => void;
+	// Called with the underlying <video> element once mounted. The archive replay
+	// view attaches native timeupdate/seeking/seeked listeners to it to drive the
+	// synchronized chat and screen effects.
+	onPlayerReady?: (video: HTMLVideoElement) => void;
 };
 
-// On-demand (VOD) player for stream archives. Unlike the live OwncastPlayer
-// this deliberately omits every live-only feature: no low-latency/LL-HLS VHS
-// tuning, no live-edge tracking, no latency compensator, no viewer ping and
-// no protocol badge. It uses a normal (seekable) progress bar and exposes
-// playback-rate controls, which only make sense for recorded content.
+// Append the archive access token to same-origin /api/archives/ HLS requests so
+// gated (member/PPV) archives play. The MP4 source already carries its token in
+// its URL; this only matters for the legacy HLS fallback, whose playlist and
+// segments are fetched by hls.js and would otherwise miss the token.
+const decorateArchiveUrl = (url: string): string => {
+	try {
+		const u = new URL(url, window.location.origin);
+		if (u.origin !== window.location.origin || !u.pathname.startsWith('/api/archives/')) {
+			return url;
+		}
+		const token = window.localStorage.getItem('accessToken');
+		if (token) {
+			u.searchParams.set('accessToken', token);
+		}
+		return u.toString();
+	} catch {
+		return url;
+	}
+};
+
+// On-demand (VOD) player for stream archives. Built on a plain <video> with the
+// browser's native controls — the exact same shell as the live HLS and WebRTC
+// players — so all three players share one look. video.js is deliberately not
+// used: it could not drive the live players' hls.js / MediaStream engines
+// (playback stuck on a loading spinner), so the whole set standardised on native
+// controls. The single-file replay.mp4 plays natively; the legacy HLS playlist
+// is driven by hls.js in plain VOD mode (no low-latency, no live-edge tracking).
 export const VodPlayer: FC<VodPlayerProps> = ({
 	source,
 	sourceType,
@@ -32,45 +53,54 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 	className,
 	onPlayerReady,
 }) => {
-	const videoJsOptions = {
-		autoplay,
-		// video.js control bar (seek, volume, playback-rate menu, fullscreen),
-		// matching the live HLS player so all three players share one look.
-		controls: true,
-		playbackRates: [0.5, 1, 1.25, 1.5, 2],
-		bigPlayButton: false,
-		responsive: true,
-		fluid: false,
-		fill: true,
-		playsinline: true,
-		preload: 'auto',
-		sources: [
-			{
-				src: source,
-				type: sourceType || 'application/x-mpegURL',
-			},
-		],
-	};
+	const videoRef = useRef<HTMLVideoElement>(null);
+	const hlsRef = useRef<Hls | null>(null);
+	// Keep the latest onPlayerReady reachable without making it an effect
+	// dependency (it must fire exactly once, when the element mounts).
+	const onReadyRef = useRef(onPlayerReady);
+	onReadyRef.current = onPlayerReady;
 
-	const playerRef = useRef<VideoJsPlayer | null>(null);
+	// Attach the media engine to the <video> element.
+	useEffect(() => {
+		const video = videoRef.current;
+		if (!video) {
+			return undefined;
+		}
 
-	const handleReady = (player: VideoJsPlayer) => {
-		playerRef.current = player;
-		onPlayerReady?.(player);
-	};
+		const isHls =
+			sourceType === 'application/x-mpegURL' ||
+			sourceType === 'application/vnd.apple.mpegurl' ||
+			(!sourceType && source.includes('.m3u8'));
 
-	// Dispose the player on unmount (e.g. when the archive modal closes) so a
-	// detached <video> element doesn't keep playing audio in the background.
-	useEffect(
-		() => () => {
-			const player = playerRef.current;
-			if (player && !player.isDisposed()) {
-				player.dispose();
-			}
-			playerRef.current = null;
-		},
-		[],
-	);
+		if (isHls && Hls.isSupported()) {
+			const hls = new Hls({
+				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+					const decorated = decorateArchiveUrl(url);
+					if (decorated !== url) {
+						xhr.open('GET', decorated, true);
+					}
+				},
+			});
+			hlsRef.current = hls;
+			hls.attachMedia(video);
+			hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(source));
+		} else {
+			// MP4 (token already in the URL) or native HLS (Safari).
+			video.src = source;
+		}
+
+		return () => {
+			hlsRef.current?.destroy();
+			hlsRef.current = null;
+		};
+	}, [source, sourceType]);
+
+	// Hand the element to the replay hook once, after mount.
+	useEffect(() => {
+		if (videoRef.current) {
+			onReadyRef.current?.(videoRef.current);
+		}
+	}, []);
 
 	return (
 		<ErrorBoundary
@@ -83,7 +113,13 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 			)}
 		>
 			<div className={classNames(styles.container, className)} aria-label={title}>
-				<VideoJS options={videoJsOptions} onReady={handleReady} />
+				<video
+					ref={videoRef}
+					className={styles.video}
+					controls
+					autoPlay={autoplay}
+					playsInline
+				/>
 			</div>
 		</ErrorBoundary>
 	);

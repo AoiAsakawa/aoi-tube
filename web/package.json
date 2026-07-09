@@ -64,7 +64,6 @@
 		"slate": "^0.124.1",
 		"slate-react": "^0.125.1",
 		"ua-parser-js": "^2.0.7",
-		"video.js": "^8.21.1",
 		"xstate": "^5.25.0",
 		"zustand": "^5.0.0"
 	},

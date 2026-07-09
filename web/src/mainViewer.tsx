@@ -14,7 +14,6 @@ import './fonts.css';
 import '../styles/variables.css';
 import '../styles/globals.scss';
 import '../styles/ant-overrides.scss';
-import '../components/video/VideoJS/VideoJS.scss';
 
 import '../i18n';
 

@@ -3,9 +3,14 @@
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	background: #000;
+}
 
-	:global(.video-js) {
-		width: 100%;
-		height: 100%;
-	}
+// Matches the live HLS/WebRTC players so all three share one look.
+.video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	object-fit: contain;
+	background: #000;
 }

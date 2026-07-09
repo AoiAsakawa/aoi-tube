@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type VideoJsPlayer from 'video.js/dist/types/player';
 import { ChatMessage } from '../../../interfaces/chat-message.model';
 import { useEnqueueScreenEffect } from '../../stores/zustand-store';
 import {
@@ -14,7 +13,7 @@ export interface UseArchiveReplayResult {
 	// Chat lines reconstructed for the current playhead position.
 	messages: ChatMessage[];
 	// Pass to <VodPlayer onPlayerReady> to start driving the replay.
-	handlePlayerReady: (player: VideoJsPlayer) => void;
+	handlePlayerReady: (video: HTMLVideoElement) => void;
 }
 
 // Drives synchronized chat and screen effects from the VOD playhead. Chat lines
@@ -64,10 +63,10 @@ export function useArchiveReplay(events: ArchiveEvent[]): UseArchiveReplayResult
 	);
 
 	const handlePlayerReady = useCallback(
-		(player: VideoJsPlayer) => {
-			const positionMs = () => (player.currentTime() ?? 0) * 1000;
+		(video: HTMLVideoElement) => {
+			const positionMs = () => video.currentTime * 1000;
 
-			player.on('timeupdate', () => {
+			video.addEventListener('timeupdate', () => {
 				if (isSeekingRef.current) {
 					return;
 				}
@@ -77,11 +76,11 @@ export function useArchiveReplay(events: ArchiveEvent[]): UseArchiveReplayResult
 				}
 			});
 
-			player.on('seeking', () => {
+			video.addEventListener('seeking', () => {
 				isSeekingRef.current = true;
 			});
 
-			player.on('seeked', () => {
+			video.addEventListener('seeked', () => {
 				isSeekingRef.current = false;
 				const engine = engineRef.current;
 				if (engine) {
