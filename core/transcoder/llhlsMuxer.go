@@ -273,36 +273,54 @@ func (m *LLHLSMuxerManager) renditionByIndexString(s string) *llhlsRendition {
 }
 
 // masterPlaylist synthesizes an ABR master playlist that references every
-// rendition's gohlslib media playlists (discovered from each muxer's own
-// master). Each rendition carries its own audio group so switching video
-// renditions switches the paired audio. Returns ok=false until at least one
-// rendition muxer is online.
+// rendition's gohlslib video media playlist plus a SINGLE shared audio group.
+// All renditions carry the same source audio, so pointing every video variant
+// at one audio rendition means switching video quality doesn't force the player
+// to reload the audio track (per-rendition audio groups froze playback on a
+// quality change). Returns ok=false until at least one rendition is online.
 func (m *LLHLSMuxerManager) masterPlaylist() ([]byte, bool) {
-	var b strings.Builder
-	b.WriteString("#EXTM3U\n#EXT-X-VERSION:10\n#EXT-X-INDEPENDENT-SEGMENTS\n\n")
-
-	ready := 0
+	type info struct {
+		index     int
+		video     string
+		audio     string
+		streamInf string
+	}
+	var ready []info
 	for _, r := range m.renditions {
 		video, audio, streamInf, ok := m.renditionMasterInfo(r)
 		if !ok {
 			continue
 		}
-		ready++
-		group := fmt.Sprintf("aud%d", r.index)
-		if audio != "" {
-			b.WriteString(fmt.Sprintf(
-				"#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=%q,NAME=\"audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"%d/%s\"\n",
-				group, r.index, audio))
+		ready = append(ready, info{r.index, video, audio, streamInf})
+	}
+	if len(ready) == 0 {
+		return nil, false
+	}
+
+	var b strings.Builder
+	b.WriteString("#EXTM3U\n#EXT-X-VERSION:10\n#EXT-X-INDEPENDENT-SEGMENTS\n\n")
+
+	// One shared audio group from the first rendition that has audio.
+	sharedAudio, sharedAudioIdx := "", -1
+	for _, i := range ready {
+		if i.audio != "" {
+			sharedAudio, sharedAudioIdx = i.audio, i.index
+			break
 		}
-		inf := streamInf
-		if audio != "" {
-			inf = fmt.Sprintf("%s,AUDIO=%q", inf, group)
+	}
+	if sharedAudio != "" {
+		b.WriteString(fmt.Sprintf(
+			"#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"%d/%s\"\n\n",
+			sharedAudioIdx, sharedAudio))
+	}
+
+	for _, i := range ready {
+		inf := i.streamInf
+		if sharedAudio != "" {
+			inf = fmt.Sprintf("%s,AUDIO=\"audio\"", inf)
 		}
 		b.WriteString("#EXT-X-STREAM-INF:" + inf + "\n")
-		b.WriteString(fmt.Sprintf("%d/%s\n", r.index, video))
-	}
-	if ready == 0 {
-		return nil, false
+		b.WriteString(fmt.Sprintf("%d/%s\n", i.index, i.video))
 	}
 	return []byte(b.String()), true
 }

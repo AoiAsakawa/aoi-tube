@@ -1,9 +1,7 @@
 import React, { FC, useEffect, useRef, useState, useCallback } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import type VideoJsPlayer from 'video.js/dist/types/player';
 import { ProtocolBadge } from '../ProtocolBadge';
-import { VideoJS } from '../VideoJS/VideoJS';
 import ViewerPing from '../viewer-ping';
 import { withAccessToken } from '../../../utils/accessTokenUrl';
 import { getLocalStorage, setLocalStorage, PLAYER_VOLUME } from '../../../utils/localStorage';
@@ -44,13 +42,7 @@ export const WebRTCPlayer: FC<WebRTCPlayerProps> = ({
 	onConnectionStateChange,
 }) => {
 	const { t } = useTranslation();
-	// The <video> element is created by video.js; we grab it in onReady and set
-	// srcObject on it so the WebRTC MediaStream plays under the video.js control
-	// bar (matching the HLS/VOD players). pendingStream holds the stream if it
-	// arrives before the player is ready.
-	const videoRef = useRef<HTMLVideoElement | null>(null);
-	const vjsPlayerRef = useRef<VideoJsPlayer | null>(null);
-	const pendingStreamRef = useRef<MediaStream | null>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
 	const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
 	const viewerIdRef = useRef<string | null>(null);
 	const mountedRef = useRef(true);
@@ -63,9 +55,6 @@ export const WebRTCPlayer: FC<WebRTCPlayerProps> = ({
 	const onStateChangeRef = useRef(onConnectionStateChange);
 	const [connectionState, setConnectionState] = useState<RTCPeerConnectionState>('new');
 	const [error, setError] = useState<string | null>(null);
-	// Flipped once video.js has created the <video> element (videoRef is set),
-	// so the volume effect below re-runs against the real element.
-	const [videoElReady, setVideoElReady] = useState(false);
 	const [videoStats, setVideoStats] = useState<{
 		height: number;
 		fps: number;
@@ -137,16 +126,10 @@ export const WebRTCPlayer: FC<WebRTCPlayerProps> = ({
 			});
 			peerConnectionRef.current = pc;
 
-			// Handle incoming tracks. The video.js <video> may not exist yet when
-			// the track arrives, so stash the stream and apply it in onReady too.
+			// Handle incoming tracks
 			pc.ontrack = event => {
-				const stream = event.streams[0];
-				if (!stream) {
-					return;
-				}
-				pendingStreamRef.current = stream;
-				if (videoRef.current) {
-					videoRef.current.srcObject = stream;
+				if (videoRef.current && event.streams[0]) {
+					videoRef.current.srcObject = event.streams[0];
 				}
 			};
 
@@ -275,7 +258,7 @@ export const WebRTCPlayer: FC<WebRTCPlayerProps> = ({
 		};
 		v.addEventListener('volumechange', persist);
 		return () => v.removeEventListener('volumechange', persist);
-	}, [videoElReady]);
+	}, []);
 
 	// Track true mount/unmount so a pending reconnect timer never fires (or
 	// updates state) after the player is swapped out, e.g. on HLS fallback.
@@ -380,45 +363,9 @@ export const WebRTCPlayer: FC<WebRTCPlayerProps> = ({
 		? `${measuredLatency} · ${videoStats.height}p${videoStats.fps || ''}`
 		: t('video.webrtcPlayer.latency');
 
-	// video.js control bar (matching the HLS/VOD players). WebRTC is a live
-	// MediaStream with no seekable timeline, so hide the progress/time controls
-	// and keep play/volume/fullscreen.
-	const vjsOptions = {
-		autoplay: true,
-		controls: true,
-		bigPlayButton: false,
-		responsive: true,
-		fluid: false,
-		fill: true,
-		playsinline: true,
-		muted: false,
-		controlBar: {
-			progressControl: false,
-			currentTimeDisplay: false,
-			durationDisplay: false,
-			timeDivider: false,
-			remainingTimeDisplay: false,
-		},
-	};
-
-	const handleVjsReady = (player: VideoJsPlayer) => {
-		vjsPlayerRef.current = player;
-		const videoEl = player.el()?.querySelector('video') as HTMLVideoElement | null;
-		if (videoEl) {
-			videoRef.current = videoEl;
-			// Apply a stream that arrived before the player was ready.
-			if (pendingStreamRef.current) {
-				videoEl.srcObject = pendingStreamRef.current;
-			}
-			setVideoElReady(true);
-		}
-	};
-
 	return (
 		<div className={classNames(styles.container, className)}>
-			<div className={styles.video}>
-				<VideoJS options={vjsOptions} onReady={handleVjsReady} />
-			</div>
+			<video ref={videoRef} className={styles.video} autoPlay playsInline muted={false} controls />
 
 			{error && (
 				<div className={styles.errorOverlay}>
