@@ -306,11 +306,15 @@ func (m *LLHLSMuxerManager) renditionByIndexString(s string) *llhlsRendition {
 }
 
 // masterPlaylist synthesizes an ABR master playlist that references every
-// rendition's gohlslib video media playlist plus a SINGLE shared audio group.
-// All renditions carry the same source audio, so pointing every video variant
-// at one audio rendition means switching video quality doesn't force the player
-// to reload the audio track (per-rendition audio groups froze playback on a
-// quality change). Returns ok=false until at least one rendition is online.
+// rendition's gohlslib video media playlist, each paired with ITS OWN audio
+// group. A single shared audio group (rendition 0's) kept the audio track
+// steady across a switch, but it also pinned the audio to the passthrough's
+// live edge while a transcoded video rendition sits a beat behind (encode +
+// part latency) — so after switching to a transcoded rung the player chased a
+// video edge that never quite caught the shared audio and stuttered
+// continuously. Pairing each video rung with its own (copied, identical) audio
+// keeps a rung's audio and video on the same live edge. Returns ok=false until
+// at least one rendition is online.
 func (m *LLHLSMuxerManager) masterPlaylist() ([]byte, bool) {
 	type info struct {
 		index     int
@@ -333,24 +337,20 @@ func (m *LLHLSMuxerManager) masterPlaylist() ([]byte, bool) {
 	var b strings.Builder
 	b.WriteString("#EXTM3U\n#EXT-X-VERSION:10\n#EXT-X-INDEPENDENT-SEGMENTS\n\n")
 
-	// One shared audio group from the first rendition that has audio.
-	sharedAudio, sharedAudioIdx := "", -1
 	for _, i := range ready {
+		group := fmt.Sprintf("aud%d", i.index)
 		if i.audio != "" {
-			sharedAudio, sharedAudioIdx = i.audio, i.index
-			break
+			b.WriteString(fmt.Sprintf(
+				"#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=%q,NAME=\"audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"%d/%s\"\n",
+				group, i.index, i.audio))
 		}
 	}
-	if sharedAudio != "" {
-		b.WriteString(fmt.Sprintf(
-			"#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"audio\",DEFAULT=YES,AUTOSELECT=YES,URI=\"%d/%s\"\n\n",
-			sharedAudioIdx, sharedAudio))
-	}
+	b.WriteString("\n")
 
 	for _, i := range ready {
 		inf := i.streamInf
-		if sharedAudio != "" {
-			inf = fmt.Sprintf("%s,AUDIO=\"audio\"", inf)
+		if i.audio != "" {
+			inf = fmt.Sprintf("%s,AUDIO=%q", inf, fmt.Sprintf("aud%d", i.index))
 		}
 		b.WriteString("#EXT-X-STREAM-INF:" + inf + "\n")
 		b.WriteString(fmt.Sprintf("%d/%s\n", i.index, i.video))

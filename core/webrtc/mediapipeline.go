@@ -143,7 +143,9 @@ func (p *mediaPipeline) ffmpegArgsWithInput(ffmpegPath string, inputArgs []strin
 	args = append(args, inputArgs...)
 	args = append(args, []string{
 
-		// Video: constrained-baseline H.264, RTP payload type 96.
+		// Video: constrained-baseline H.264, RTP payload type 96, at the full
+		// source resolution/frame rate — WebRTC is the sub-second path and must
+		// keep full quality.
 		"-map", "0:v:0",
 		"-an",
 		"-c:v", "libx264",
