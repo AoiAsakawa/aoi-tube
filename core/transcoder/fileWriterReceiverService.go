@@ -1,6 +1,8 @@
 package transcoder
 
 import (
+	"bytes"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -19,6 +21,69 @@ import (
 // duration (e.g. 0.5s), which ffmpeg rounds down to an invalid "0", can be
 // clamped to the spec-required minimum of 1.
 var targetDurationRe = regexp.MustCompile(`(#EXT-X-TARGETDURATION:)(\d+)`)
+
+// variantIndexRe extracts the variant index from a master-playlist variant URI
+// ("0/stream.m3u8"), tolerating a leading path/host from remote-storage rewrites.
+var variantIndexRe = regexp.MustCompile(`(?:^|/)(\d+)/stream\.m3u8$`)
+
+// codecStringFromInit derives a CODECS value ("avc1.<profile><compat><level>"
+// plus ",mp4a.40.2" when audio is present) from a fMP4 init segment by reading
+// the avcC box. ffmpeg omits CODECS for passthrough (copy) renditions, and VHS
+// then repeatedly excludes/re-includes them, oscillating the ABR. Byte-scans for
+// the distinctive "avcC" fourcc rather than walking the full box tree.
+func codecStringFromInit(initPath string) (string, bool) {
+	data, err := os.ReadFile(initPath) //nolint: gosec
+	if err != nil {
+		return "", false
+	}
+	idx := bytes.Index(data, []byte("avcC"))
+	// Need the 4-byte type + at least 4 payload bytes (version, profile, compat,
+	// level) after it.
+	if idx < 0 || idx+8 > len(data) {
+		return "", false
+	}
+	// avcC payload starts at idx+4: [0]=configurationVersion, [1]=profile,
+	// [2]=profile_compatibility, [3]=level.
+	codec := fmt.Sprintf("avc1.%02x%02x%02x", data[idx+5], data[idx+6], data[idx+7])
+	if bytes.Contains(data, []byte("mp4a")) {
+		codec += ",mp4a.40.2" // AAC-LC, the RTMP audio codec
+	}
+	return codec, true
+}
+
+// injectPassthroughCodecs adds a CODECS attribute to any master-playlist
+// STREAM-INF that lacks one (the source passthrough), reading the codec
+// parameters from that variant's init segment. It leaves the playlist unchanged
+// when the init isn't readable yet; the master is rewritten every segment, so it
+// self-heals once the init exists.
+func injectPassthroughCodecs(master []byte) []byte {
+	lines := strings.Split(string(master), "\n")
+	changed := false
+	for i, line := range lines {
+		if !strings.HasPrefix(line, "#EXT-X-STREAM-INF:") || strings.Contains(line, "CODECS=") {
+			continue
+		}
+		for j := i + 1; j < len(lines); j++ {
+			uri := strings.TrimSpace(lines[j])
+			if uri == "" || strings.HasPrefix(uri, "#") {
+				continue
+			}
+			m := variantIndexRe.FindStringSubmatch(uri)
+			if m != nil {
+				initPath := filepath.Join(config.HLSStoragePath, m[1], "init-"+m[1]+".mp4")
+				if codec, ok := codecStringFromInit(initPath); ok {
+					lines[i] = strings.TrimRight(line, "\r") + `,CODECS="` + codec + `"`
+					changed = true
+				}
+			}
+			break
+		}
+	}
+	if !changed {
+		return master
+	}
+	return []byte(strings.Join(lines, "\n"))
+}
 
 // clampTargetDuration rewrites any EXT-X-TARGETDURATION below 1 to 1. RFC 8216
 // requires a positive integer; ffmpeg emits 0 for 0.5s LL-HLS segments, which
@@ -105,6 +170,9 @@ func (s *FileWriterReceiverService) uploadHandler(w http.ResponseWriter, r *http
 		body = clampTargetDuration(body)
 
 		if isMasterPlaylist {
+			// Fill in the CODECS attribute the passthrough rendition is missing so
+			// VHS stops excluding it and thrashing the ABR.
+			body = injectPassthroughCodecs(body)
 			// writePath already ends in ".tmp"; the callback promotes it after
 			// the storage provider rewrites the variant URIs.
 			if err := os.WriteFile(writePath, body, 0o600); err != nil { //nolint: gosec
