@@ -134,12 +134,15 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				hls.bandwidthEstimate = 10_000_000;
 				if (topIdx >= 0 && hls.currentLevel !== topIdx) {
 					autoRecoverTopRef.current = topIdx;
-					// nextLevel (not currentLevel) so the step-up lands on the next
-					// segment boundary without flushing the buffer and spiking latency.
-					hls.nextLevel = topIdx;
+					// loadLevel (not nextLevel/currentLevel) switches WITHOUT flushing
+					// the buffer: the already-buffered content keeps playing and the new
+					// rung takes effect after it, so there is no rebuffer stall. nextLevel
+					// flushed the ahead-buffer and was the visible stutter on every
+					// quality change.
+					hls.loadLevel = topIdx;
 				} else {
 					autoRecoverTopRef.current = null;
-					hls.nextLevel = -1;
+					hls.loadLevel = -1;
 				}
 			} else {
 				const height = Number(value);
@@ -152,7 +155,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 					}
 				});
 				if (best >= 0) {
-					hls.nextLevel = best;
+					// Non-flushing switch (see the auto branch above) for a stutter-free
+					// manual quality change.
+					hls.loadLevel = best;
 				}
 			}
 		}
@@ -213,7 +218,7 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				// still drop on genuine starvation instead of staying hard-pinned.
 				if (autoRecoverTopRef.current !== null && data.level === autoRecoverTopRef.current) {
 					autoRecoverTopRef.current = null;
-					hls.nextLevel = -1;
+					hls.loadLevel = -1;
 				}
 			});
 			hls.on(Hls.Events.ERROR, (_evt, data) => {

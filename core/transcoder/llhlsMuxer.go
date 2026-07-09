@@ -256,9 +256,13 @@ func (m *LLHLSMuxerManager) Serve(w http.ResponseWriter, req *http.Request, rela
 		w.WriteHeader(http.StatusNotFound)
 		return true
 	}
-	// gohlslib's Handle dispatches on the request path's last element.
-	inner := httptest.NewRequest(http.MethodGet, "/"+file, nil)
-	inner.URL.RawQuery = req.URL.RawQuery // preserve _HLS_msn/_HLS_part for blocking reload
+	// gohlslib's Handle dispatches on the request path's last element. Clone the
+	// REAL request (keeping its context and query) rather than fabricating one
+	// with httptest: the real context is cancelled when the client disconnects or
+	// aborts a pending blocking reload (which happens on every quality switch), so
+	// gohlslib stops holding that long-poll instead of leaking a blocked goroutine.
+	inner := req.Clone(req.Context())
+	inner.URL.Path = "/" + file // RawQuery (_HLS_msn/_HLS_part) is preserved by Clone
 	muxer.Handle(w, inner)
 	return true
 }
