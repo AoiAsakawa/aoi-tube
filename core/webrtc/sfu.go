@@ -115,8 +115,13 @@ func buildWebRTCAPI() *webrtc.API {
 			RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeOpus, ClockRate: 48000, Channels: 2, SDPFmtpLine: "minptime=10;useinbandfec=1;stereo=1;sprop-stereo=1"},
 			PayloadType:        111,
 		}, webrtc.RTPCodecTypeAudio},
+		// Constrained-baseline, not high/main: high-profile 1080p60 needs ~1.8
+		// cores to encode and could not hold real time on this 4-core box alongside
+		// the full 60fps HLS ladder, so the WebRTC video fell behind and drifted out
+		// of A/V sync. Baseline keeps real time (and A/V locked). Higher profiles
+		// need more CPU cores than are available.
 		{webrtc.RTPCodecParameters{
-			RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeH264, ClockRate: 90000, SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f", RTCPFeedback: videoRTCPFeedback},
+			RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeH264, ClockRate: 90000, SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: videoRTCPFeedback},
 			PayloadType:        102,
 		}, webrtc.RTPCodecTypeVideo},
 		{webrtc.RTPCodecParameters{

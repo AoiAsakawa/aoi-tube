@@ -47,18 +47,14 @@ const udpSocketReadBufferBytes = 1 << 20 // 1 MiB
 // UDP sockets that will receive RTP from FFmpeg. It does not start FFmpeg; call
 // start for that. On any error every partially-created resource is released.
 func newMediaPipeline() (*mediaPipeline, error) {
-	// High-profile H.264 (profile-level-id=64001f, packetization-mode=1) is also
-	// registered by Pion's default media engine, so the SFU offers it without any
-	// custom MediaEngine wiring. High profile brings CABAC + 8x8 transform, a large
-	// quality win over constrained-baseline at the same bitrate. The advertised
-	// level (3.1) is below what a 1080p60 stream needs (4.2), but
-	// level-asymmetry-allowed=1 permits the higher-level stream — browsers decode
-	// per the actual SPS.
+	// Constrained-baseline H.264 (profile-level-id=42e01f, packetization-mode=1).
+	// High profile would be higher quality but a 1080p60 high-profile encode can't
+	// hold real time on this 4-core box (it drifts A/V); see buildWebRTCAPI.
 	videoTrack, err := webrtc.NewTrackLocalStaticRTP(
 		webrtc.RTPCodecCapability{
 			MimeType:    webrtc.MimeTypeH264,
 			ClockRate:   90000,
-			SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f",
+			SDPFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
 		},
 		"video",
 		"aoitube-webrtc",
@@ -153,8 +149,8 @@ func (p *mediaPipeline) ffmpegArgsWithInput(ffmpegPath string, inputArgs []strin
 		"-map", "0:v:0",
 		"-an",
 		"-c:v", "libx264",
-		"-profile:v", "high",
-		"-level:v", "4.2",
+		"-profile:v", "baseline",
+		"-level:v", "3.1",
 		"-pix_fmt", "yuv420p",
 		"-preset", "veryfast",
 		"-tune", "zerolatency",
