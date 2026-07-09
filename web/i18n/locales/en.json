@@ -2103,7 +2103,6 @@
 				"maxViewers": "Maximum viewers",
 				"maxViewersTip": "0 = unlimited. Set this according to your server resources.",
 				"webrtcDescription": "Real-time communication protocol. Delivers the lowest latency. Latency: ~0.5-2 seconds",
-				"webrtcAdvanced": "WebRTC advanced settings",
 				"iceServers": "ICE server configuration",
 				"iceServersTip": "Specify STUN/TURN servers as a JSON array. The urls field must be an array. If NAT traversal is required, configuring a TURN server is recommended.",
 				"webrtcStats": "WebRTC statistics",

@@ -2103,7 +2103,6 @@
 				"maxViewers": "最大觀眾人數",
 				"maxViewersTip": "0 = 無限制。請依伺服器資源進行設定。",
 				"webrtcDescription": "即時通訊協定。可實現最低的延遲。延遲：約 0.5-2 秒",
-				"webrtcAdvanced": "WebRTC 進階設定",
 				"iceServers": "ICE 伺服器設定",
 				"iceServersTip": "以 JSON 陣列指定 STUN/TURN 伺服器。urls 請以陣列格式指定。若需要穿越 NAT，建議設定 TURN 伺服器。",
 				"webrtcStats": "WebRTC 統計",

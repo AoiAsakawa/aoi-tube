@@ -384,6 +384,40 @@ export function StreamProtocolSection() {
 									<Text type="secondary" style={{ fontSize: 12 }}>
 										{t('admin.sections.streamProtocol.maxViewersTip')}
 									</Text>
+
+									<Divider style={{ margin: '12px 0' }} />
+									<Text>{t('admin.sections.streamProtocol.iceServers')}</Text>
+									<TextArea
+										rows={4}
+										value={config.webrtcIceServers}
+										onChange={e => {
+											updateConfig('webrtcIceServers', e.target.value);
+											validateIceServers(e.target.value);
+										}}
+										placeholder='[{"urls": ["stun:stun.l.google.com:19302"]}]'
+										status={iceServersError ? 'error' : undefined}
+									/>
+									{iceServersError && (
+										<Text type="danger" style={{ fontSize: 12 }}>
+											{iceServersError}
+										</Text>
+									)}
+									<Text type="secondary" style={{ fontSize: 12 }}>
+										{t('admin.sections.streamProtocol.iceServersTip')}
+									</Text>
+
+									<Divider style={{ margin: '12px 0' }} />
+									<Text>{t('admin.sections.streamProtocol.udpPort')}</Text>
+									<InputNumber
+										min={1024}
+										max={65535}
+										value={config.webrtcUdpPort}
+										onChange={value => updateConfig('webrtcUdpPort', value || 52000)}
+										style={{ width: '100%' }}
+									/>
+									<Text type="secondary" style={{ fontSize: 12, whiteSpace: 'pre-line' }}>
+										{t('admin.sections.streamProtocol.udpPortTip')}
+									</Text>
 								</>
 							)}
 
@@ -394,113 +428,71 @@ export function StreamProtocolSection() {
 					</Card>
 				</Col>
 
-				{/* WebRTC advanced settings */}
-				{config.webrtcEnabled && (
+				{/* WebRTC live statistics (runtime monitoring, no LL-HLS equivalent) */}
+				{config.webrtcEnabled && webrtcStats && (
 					<Col xs={24}>
 						<Card
 							title={
 								<Space>
 									<SettingOutlined />
-									<span>{t('admin.sections.streamProtocol.webrtcAdvanced')}</span>
+									<span>{t('admin.sections.streamProtocol.webrtcStats')}</span>
 								</Space>
 							}
 						>
-							<Row gutter={24}>
-								<Col xs={24} md={12}>
-									<Space direction="vertical" style={{ width: '100%' }}>
-										<Text strong>{t('admin.sections.streamProtocol.iceServers')}</Text>
-										<TextArea
-											rows={6}
-											value={config.webrtcIceServers}
-											onChange={e => {
-												updateConfig('webrtcIceServers', e.target.value);
-												validateIceServers(e.target.value);
-											}}
-											placeholder='[{"urls": ["stun:stun.l.google.com:19302"]}]'
-											status={iceServersError ? 'error' : undefined}
+							<Space direction="vertical" style={{ width: '100%' }}>
+								<Row gutter={16}>
+									<Col span={12}>
+										<Statistic
+											title={t('admin.sections.streamProtocol.currentViewers')}
+											value={webrtcStats.viewerCount}
+											suffix={`/ ${webrtcStats.maxViewers || '∞'}`}
 										/>
-										{iceServersError && (
-											<Text type="danger" style={{ fontSize: 12 }}>
-												{iceServersError}
-											</Text>
-										)}
-										<Text type="secondary" style={{ fontSize: 12 }}>
-											{t('admin.sections.streamProtocol.iceServersTip')}
-										</Text>
-										<Divider style={{ margin: '12px 0' }} />
-										<Text strong>{t('admin.sections.streamProtocol.udpPort')}</Text>
-										<InputNumber
-											min={1024}
-											max={65535}
-											value={config.webrtcUdpPort}
-											onChange={value => updateConfig('webrtcUdpPort', value || 52000)}
-											style={{ width: '100%' }}
-										/>
-										<Text type="secondary" style={{ fontSize: 12, whiteSpace: 'pre-line' }}>
-											{t('admin.sections.streamProtocol.udpPortTip')}
-										</Text>
-									</Space>
-								</Col>
-								<Col xs={24} md={12}>
-									{webrtcStats && (
-										<Space direction="vertical" style={{ width: '100%' }}>
-											<Text strong>{t('admin.sections.streamProtocol.webrtcStats')}</Text>
-											<Row gutter={16}>
-												<Col span={12}>
-													<Statistic
-														title={t('admin.sections.streamProtocol.currentViewers')}
-														value={webrtcStats.viewerCount}
-														suffix={`/ ${webrtcStats.maxViewers || '∞'}`}
-													/>
-												</Col>
-												<Col span={12}>
-													<Statistic
-														title={t('admin.sections.streamProtocol.status')}
-														valueRender={() => (
-															<Tag color={webrtcStats.enabled ? 'green' : 'default'}>
-																{webrtcStats.enabled
-																	? t('admin.sections.streamProtocol.statusEnabled')
-																	: t('admin.sections.streamProtocol.statusDisabled')}
-															</Tag>
-														)}
-													/>
-												</Col>
-											</Row>
-
-											{webrtcStats.viewers.length > 0 && (
-												<>
-													<div
-														style={{
-															display: 'flex',
-															justifyContent: 'space-between',
-															alignItems: 'center',
-															marginTop: 16,
-														}}
-													>
-														<Text strong>{t('admin.sections.streamProtocol.connectedViewers')}</Text>
-														<Button
-															danger
-															size="small"
-															icon={<DisconnectOutlined />}
-															onClick={disconnectAllViewers}
-														>
-															{t('admin.sections.streamProtocol.disconnectAll')}
-														</Button>
-													</div>
-													<Table
-														dataSource={webrtcStats.viewers}
-														columns={webrtcViewerColumns}
-														rowKey="id"
-														size="small"
-														pagination={false}
-														scroll={{ y: 200 }}
-													/>
-												</>
+									</Col>
+									<Col span={12}>
+										<Statistic
+											title={t('admin.sections.streamProtocol.status')}
+											valueRender={() => (
+												<Tag color={webrtcStats.enabled ? 'green' : 'default'}>
+													{webrtcStats.enabled
+														? t('admin.sections.streamProtocol.statusEnabled')
+														: t('admin.sections.streamProtocol.statusDisabled')}
+												</Tag>
 											)}
-										</Space>
-									)}
-								</Col>
-							</Row>
+										/>
+									</Col>
+								</Row>
+
+								{webrtcStats.viewers.length > 0 && (
+									<>
+										<div
+											style={{
+												display: 'flex',
+												justifyContent: 'space-between',
+												alignItems: 'center',
+												marginTop: 16,
+											}}
+										>
+											<Text strong>{t('admin.sections.streamProtocol.connectedViewers')}</Text>
+											<Button
+												danger
+												size="small"
+												icon={<DisconnectOutlined />}
+												onClick={disconnectAllViewers}
+											>
+												{t('admin.sections.streamProtocol.disconnectAll')}
+											</Button>
+										</div>
+										<Table
+											dataSource={webrtcStats.viewers}
+											columns={webrtcViewerColumns}
+											rowKey="id"
+											size="small"
+											pagination={false}
+											scroll={{ y: 200 }}
+										/>
+									</>
+								)}
+							</Space>
 						</Card>
 					</Col>
 				)}

@@ -2103,7 +2103,6 @@
 				"maxViewers": "最大視聴者数",
 				"maxViewersTip": "0 = 無制限。サーバーリソースに応じて設定してください。",
 				"webrtcDescription": "リアルタイム通信プロトコル。最も低い遅延を実現。 遅延: ~0.5-2秒",
-				"webrtcAdvanced": "WebRTC詳細設定",
 				"iceServers": "ICEサーバー設定",
 				"iceServersTip": "STUN/TURNサーバーをJSON配列で指定します。urlsは配列形式で指定してください。NAT越えが必要な場合はTURNサーバーの設定を推奨します。",
 				"webrtcStats": "WebRTC統計",

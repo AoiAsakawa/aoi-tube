@@ -2103,7 +2103,6 @@
 				"maxViewers": "最大观众数",
 				"maxViewersTip": "0 = 无限制。请根据服务器资源进行设置。",
 				"webrtcDescription": "实时通信协议。可实现最低的延迟。延迟：~0.5-2秒",
-				"webrtcAdvanced": "WebRTC高级设置",
 				"iceServers": "ICE服务器设置",
 				"iceServersTip": "以JSON数组指定STUN/TURN服务器。urls请以数组格式指定。如需NAT穿透，建议配置TURN服务器。",
 				"webrtcStats": "WebRTC统计",
