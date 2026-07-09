@@ -1,10 +1,9 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
 import Hls from 'hls.js';
-import { VideoJS } from '../VideoJS/VideoJS';
 import ViewerPing from '../viewer-ping';
 import { VideoPoster } from '../VideoPoster/VideoPoster';
 import {
@@ -40,8 +39,7 @@ const decorateHlsUrl = (url: string): string => {
 		if (u.origin !== window.location.origin) {
 			return url;
 		}
-		const isHls = u.pathname.startsWith('/hls/') || u.pathname.startsWith('/api/archives/');
-		if (!isHls) {
+		if (!u.pathname.startsWith('/hls/') && !u.pathname.startsWith('/api/archives/')) {
 			return url;
 		}
 		const token = window.localStorage.getItem('accessToken');
@@ -57,6 +55,11 @@ const decorateHlsUrl = (url: string): string => {
 	}
 };
 
+// Live HLS player built on a plain <video> element with hls.js as the engine
+// (mature Low-Latency HLS: EXT-X-PART + blocking reload) and the browser's
+// native controls. video.js is deliberately not used here: it can't track an
+// externally-driven MediaSource and left a loading spinner stuck over the
+// playback. Quality selection is a small overlay bound to hls.js levels.
 export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	source,
 	online,
@@ -67,30 +70,46 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	protocol,
 }) => {
 	const { t } = useTranslation();
-	const playerRef = React.useRef(null);
-	const videoElRef = React.useRef<HTMLVideoElement | null>(null);
-	// hls.js is the playback engine (mature Low-Latency HLS support with real
-	// EXT-X-PART / blocking reload); video.js provides only the control-bar UI.
-	const hlsRef = React.useRef<Hls | null>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
+	const hlsRef = useRef<Hls | null>(null);
 	const videoPlaying = useIsVideoPlaying();
 	const setVideoPlaying = useSetIsVideoPlaying();
 
-	// Manual quality selection, shown as a "Quality" menu button in the control
-	// bar. Default is Auto (hls.js ABR); a pinned choice persists.
-	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
-	const qualityButtonRef = React.useRef<{ update: () => void } | null>(null);
+	const [levels, setLevels] = useState<number[]>([]);
+	const selectedQualityRef = useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
+	const [selectedQuality, setSelectedQuality] = useState<string>(selectedQualityRef.current);
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useRef<HTMLDivElement | null>(null);
+	const [videoStats, setVideoStats] = useState<{
+		height: number;
+		fps: number;
+		latencyMs?: number;
+	} | null>(null);
 
-	// Distinct rendition heights advertised by the manifest, high to low.
-	const getQualityHeights = (): number[] => {
-		const seen = new Set<number>();
-		return (hlsRef.current?.levels || [])
-			.map(l => l.height)
-			.filter((h): h is number => typeof h === 'number' && h > 0)
-			.sort((a, b) => b - a)
-			.filter(h => (seen.has(h) ? false : seen.add(h)));
+	const posterSrc = '/liveposter';
+
+	const attemptPlay = () => {
+		const el = videoRef.current;
+		if (!el) {
+			return;
+		}
+		el.play().catch(() => {
+			el.muted = true;
+			el.play().catch(() => {});
+		});
 	};
 
-	// Pin a specific rendition (by height) or return to Auto (-1).
+	const updateLevels = () => {
+		const seen = new Set<number>();
+		setLevels(
+			(hlsRef.current?.levels || [])
+				.map(l => l.height)
+				.filter((h): h is number => typeof h === 'number' && h > 0)
+				.sort((a, b) => b - a)
+				.filter(h => (seen.has(h) ? false : seen.add(h))),
+		);
+	};
+
 	const applyQuality = (value: string) => {
 		const hls = hlsRef.current;
 		if (hls) {
@@ -98,7 +117,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				hls.currentLevel = -1;
 			} else {
 				const height = Number(value);
-				// Highest-bitrate level at this height.
 				let best = -1;
 				let bestRate = -1;
 				hls.levels.forEach((l, i) => {
@@ -113,164 +131,86 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 			}
 		}
 		selectedQualityRef.current = value;
+		setSelectedQuality(value);
 		setLocalStorage(PLAYER_QUALITY, value);
-		qualityButtonRef.current?.update();
+		setMenuOpen(false);
 	};
 
-	// Re-assert a pinned choice (e.g. after the level list is (re)parsed) and
-	// rebuild the control-bar menu.
-	const refreshQualityLevels = () => {
-		const sel = selectedQualityRef.current;
-		if (sel !== 'auto') {
-			applyQuality(sel);
+	// Set up hls.js (or native HLS) on the plain <video> element.
+	useEffect(() => {
+		if (!online) {
+			return undefined;
 		}
-		qualityButtonRef.current?.update();
-	};
-
-	// Add the "Quality" menu button to the control bar before the fullscreen
-	// toggle. It shows the current quality as visible text (Auto / 720p).
-	const setupQualityMenu = (player, videojs) => {
-		const MenuButton = videojs.getComponent('MenuButton');
-		const MenuItem = videojs.getComponent('MenuItem');
-		const autoLabel = t('video.qualitySelector.auto');
-		const menuLabel = t('video.qualitySelector.label');
-
-		const qualityText = () =>
-			selectedQualityRef.current === 'auto' ? autoLabel : `${selectedQualityRef.current}p`;
-
-		class QualityMenuButton extends MenuButton {
-			labelEl_: HTMLElement | null = null;
-
-			constructor() {
-				super(player, {});
-				this.addClass('vjs-quality-menu');
-				this.controlText(menuLabel);
-				const placeholder = this.el().querySelector('.vjs-icon-placeholder');
-				this.labelEl_ = videojs.dom.createEl('span', {
-					className: 'vjs-quality-menu-value',
-					textContent: qualityText(),
-				});
-				(placeholder || this.el()).appendChild(this.labelEl_);
-			}
-
-			refreshLabel() {
-				if (this.labelEl_) {
-					this.labelEl_.textContent = qualityText();
-				}
-			}
-
-			createItems() {
-				const current = selectedQualityRef.current;
-				const makeItem = (value: string, label: string) => {
-					const item = new MenuItem(player, { label, selectable: true, multiSelectable: false });
-					item.selected(value === current);
-					item.handleClick = () => applyQuality(value);
-					return item;
-				};
-				const items = [makeItem('auto', autoLabel)];
-				getQualityHeights().forEach(h => items.push(makeItem(String(h), `${h}p`)));
-				return items;
-			}
+		const video = videoRef.current;
+		if (!video) {
+			return undefined;
 		}
+		const savedVol = getLocalStorage(PLAYER_VOLUME);
+		video.volume = savedVol !== null && savedVol !== '' ? Number(savedVol) : 0.3;
 
-		const button = new QualityMenuButton();
-		qualityButtonRef.current = {
-			update: () => {
-				button.update();
-				button.refreshLabel();
-			},
-		};
-		const { controlBar } = player;
-		const fsToggle = controlBar.getChild('fullscreenToggle');
-		const index = fsToggle ? controlBar.children().indexOf(fsToggle) : undefined;
-		controlBar.addChild(button, {}, index);
-	};
-
-	// Pre-play cover: the operator's live poster.
-	const posterSrc = '/liveposter';
-	const [videoStats, setVideoStats] = React.useState<{
-		height: number;
-		fps: number;
-		latencyMs?: number;
-	} | null>(null);
-
-	const setSavedVolume = () => {
-		try {
-			const saved = getLocalStorage(PLAYER_VOLUME);
-			playerRef.current.volume(saved !== null && saved !== '' ? Number(saved) : 0.3);
-		} catch (err) {
-			console.warn(err);
-		}
-	};
-
-	const handleVolume = () => {
-		setLocalStorage(PLAYER_VOLUME, playerRef.current.muted() ? 0 : playerRef.current.volume());
-	};
-
-	const togglePlayback = () => {
-		if (playerRef.current?.paused()) {
-			playerRef.current.play();
-		} else {
-			playerRef.current?.pause();
-		}
-	};
-
-	const toggleMute = () => {
-		if (playerRef.current.muted() || playerRef.current.volume() === 0) {
-			playerRef.current.volume(0.7);
-		} else {
-			playerRef.current.volume(0);
-		}
-	};
-
-	const toggleFullScreen = () => {
-		if (playerRef.current.isFullscreen()) {
-			playerRef.current.exitFullscreen();
-		} else {
-			playerRef.current.requestFullscreen();
-		}
-	};
-
-	const setupAirplay = (player, videojs) => {
-		if (Object.hasOwn(window, 'WebKitPlaybackTargetAvailabilityEvent')) {
-			const VJSButtonClass = videojs.getComponent('Button');
-
-			class ConcreteButtonClass extends VJSButtonClass {
-				constructor() {
-					super(player);
-				}
-
-				handleClick() {
-					try {
-						const videoElement = document.getElementsByTagName('video')[0];
-						(videoElement as any).webkitShowPlaybackTargetPicker();
-					} catch (e) {
-						console.error(e);
+		if (Hls.isSupported()) {
+			const hls = new Hls({
+				lowLatencyMode: true,
+				backBufferLength: 15,
+				liveDurationInfinity: true,
+				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+					const decorated = decorateHlsUrl(url);
+					if (decorated !== url) {
+						xhr.open('GET', decorated, true);
 					}
+				},
+			});
+			hlsRef.current = hls;
+			hls.attachMedia(video);
+			hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(source));
+			hls.on(Hls.Events.MANIFEST_PARSED, () => {
+				updateLevels();
+				if (selectedQualityRef.current !== 'auto') {
+					applyQuality(selectedQualityRef.current);
 				}
-			}
-
-			const ccbc = new ConcreteButtonClass();
-			const concreteButtonInstance = player.controlBar.addChild(ccbc);
-			concreteButtonInstance.addClass('vjs-airplay');
+				attemptPlay();
+			});
+			hls.on(Hls.Events.LEVEL_SWITCHED, updateLevels);
+			hls.on(Hls.Events.ERROR, (_evt, data) => {
+				if (!data.fatal) {
+					return;
+				}
+				if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+					hls.startLoad();
+				} else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+					hls.recoverMediaError();
+				} else {
+					console.error('hls.js fatal error', data);
+				}
+			});
+		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			video.src = decorateHlsUrl(source);
+			video.addEventListener('loadedmetadata', attemptPlay, { once: true });
 		}
-	};
 
-	useHotkeys('space', e => {
-		e.preventDefault();
-		togglePlayback();
-	});
-	useHotkeys('f', toggleFullScreen, { enableOnContentEditable: false });
-	useHotkeys('m', toggleMute, { enableOnContentEditable: false });
-	useHotkeys('0', () => playerRef.current.volume(playerRef.current.volume() + 0.1), {
-		enableOnContentEditable: false,
-	});
-	useHotkeys('9', () => playerRef.current.volume(playerRef.current.volume() - 0.1), {
-		enableOnContentEditable: false,
-	});
+		return () => {
+			hlsRef.current?.destroy();
+			hlsRef.current = null;
+			ping.stop();
+			setVideoPlaying(false);
+		};
+	}, [online, source]);
 
-	// Measure the actually-decoded resolution/fps and the hls.js live latency for
-	// the protocol badge.
+	// Close the quality menu on an outside click.
+	useEffect(() => {
+		if (!menuOpen) {
+			return undefined;
+		}
+		const onDown = (e: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+				setMenuOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', onDown);
+		return () => document.removeEventListener('mousedown', onDown);
+	}, [menuOpen]);
+
+	// Resolution/fps + hls.js live latency for the protocol badge.
 	useEffect(() => {
 		if (!videoPlaying) {
 			return undefined;
@@ -278,18 +218,17 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		let lastFrames = 0;
 		let lastTime = 0;
 		const timer = setInterval(() => {
-			const el = videoElRef.current;
+			const el = videoRef.current;
 			if (!el || !el.videoHeight) {
 				return;
 			}
 			const now = performance.now();
-			const quality = (
+			const q = (
 				el as HTMLVideoElement & {
 					getVideoPlaybackQuality?: () => { totalVideoFrames: number };
 				}
 			).getVideoPlaybackQuality?.();
-			const frames = quality?.totalVideoFrames ?? 0;
-			// hls.js reports the real live latency (segment/part edge vs playhead).
+			const frames = q?.totalVideoFrames ?? 0;
 			const latencyMs = hlsRef.current?.latency ? Math.round(hlsRef.current.latency * 1000) : 0;
 			if (lastTime > 0 && frames > lastFrames) {
 				const fps = Math.round(((frames - lastFrames) * 1000) / (now - lastTime));
@@ -302,6 +241,29 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		}, 2000);
 		return () => clearInterval(timer);
 	}, [videoPlaying]);
+
+	useHotkeys('space', e => {
+		e.preventDefault();
+		const el = videoRef.current;
+		if (el) {
+			if (el.paused) {
+				attemptPlay();
+			} else {
+				el.pause();
+			}
+		}
+	});
+	useHotkeys('f', () => videoRef.current?.requestFullscreen?.(), { enableOnContentEditable: false });
+	useHotkeys(
+		'm',
+		() => {
+			const el = videoRef.current;
+			if (el) {
+				el.muted = !el.muted;
+			}
+		},
+		{ enableOnContentEditable: false },
+	);
 
 	const measuredLatency =
 		videoStats?.latencyMs && videoStats.latencyMs > 0
@@ -318,121 +280,8 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 			}
 		: protocol;
 
-	const videoJsOptions = {
-		// hls.js drives playback; video.js only renders the control bar, so it
-		// gets no source and doesn't autoplay itself.
-		autoplay: false,
-		controls: true,
-		bigPlayButton: false,
-		responsive: true,
-		fluid: false,
-		fill: true,
-		playsinline: true,
-		liveui: true,
-		preload: 'auto',
-		muted: initiallyMuted,
-	};
-
-	const attemptPlay = () => {
-		const el = videoElRef.current;
-		if (!el) {
-			return;
-		}
-		el.play().catch(() => {
-			// Autoplay with sound was blocked; retry muted so playback still starts.
-			el.muted = true;
-			el.play().catch(() => {});
-		});
-	};
-
-	const handlePlayerReady = (player, videojs) => {
-		playerRef.current = player;
-		setSavedVolume();
-
-		const videoEl = player.el()?.querySelector('video') as HTMLVideoElement | null;
-		if (!videoEl) {
-			return;
-		}
-		videoElRef.current = videoEl;
-
-		setupAirplay(player, videojs);
-		setupQualityMenu(player, videojs);
-
-		player.on('dispose', () => {
-			ping.stop();
-			hlsRef.current?.destroy();
-			hlsRef.current = null;
-		});
-		player.on('playing', () => {
-			ping.start();
-			setVideoPlaying(true);
-		});
-		player.on('pause', () => {
-			ping.stop();
-			setVideoPlaying(false);
-		});
-		player.on('ended', () => {
-			ping.stop();
-			setVideoPlaying(false);
-		});
-		player.on('volumechange', handleVolume);
-		videojs.hookOnce();
-
-		if (Hls.isSupported()) {
-			const hls = new Hls({
-				lowLatencyMode: true,
-				backBufferLength: 15,
-				liveDurationInfinity: true,
-				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
-					const decorated = decorateHlsUrl(url);
-					if (decorated !== url) {
-						xhr.open('GET', decorated, true);
-					}
-				},
-			});
-			hlsRef.current = hls;
-			hls.attachMedia(videoEl);
-			hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-				hls.loadSource(source);
-			});
-			hls.on(Hls.Events.MANIFEST_PARSED, () => {
-				refreshQualityLevels();
-				attemptPlay();
-			});
-			hls.on(Hls.Events.LEVEL_SWITCHED, () => {
-				qualityButtonRef.current?.update();
-			});
-			hls.on(Hls.Events.ERROR, (_evt, data) => {
-				if (!data.fatal) {
-					return;
-				}
-				switch (data.type) {
-					case Hls.ErrorTypes.NETWORK_ERROR:
-						hls.startLoad();
-						break;
-					case Hls.ErrorTypes.MEDIA_ERROR:
-						hls.recoverMediaError();
-						break;
-					default:
-						console.error('hls.js fatal error', data);
-						break;
-				}
-			});
-		} else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-			// Safari plays LL-HLS natively.
-			videoEl.src = decorateHlsUrl(source);
-			videoEl.addEventListener('loadedmetadata', attemptPlay, { once: true });
-		}
-	};
-
-	useEffect(
-		() => () => {
-			hlsRef.current?.destroy();
-			hlsRef.current = null;
-			setVideoPlaying(false);
-		},
-		[],
-	);
+	const qualityLabel =
+		selectedQuality === 'auto' ? t('video.qualitySelector.auto') : `${selectedQuality}p`;
 
 	return (
 		<ErrorBoundary
@@ -449,18 +298,88 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				id="player"
 			>
 				{online && (
-					<>
-						<div className={styles.player}>
-							<VideoJS options={videoJsOptions} onReady={handlePlayerReady} aria-label={title} />
-							<ProtocolBadge protocol={badgeProtocol} />
-						</div>
-					</>
+					<div className={styles.player}>
+						<video
+							ref={videoRef}
+							className={styles.video}
+							controls
+							autoPlay
+							playsInline
+							muted={initiallyMuted}
+							aria-label={title}
+							onPlaying={() => {
+								ping.start();
+								setVideoPlaying(true);
+							}}
+							onPause={() => {
+								ping.stop();
+								setVideoPlaying(false);
+							}}
+							onEnded={() => {
+								ping.stop();
+								setVideoPlaying(false);
+							}}
+							onVolumeChange={() => {
+								const el = videoRef.current;
+								if (el) {
+									setLocalStorage(PLAYER_VOLUME, el.muted ? 0 : el.volume);
+								}
+							}}
+						/>
+						<ProtocolBadge protocol={badgeProtocol} />
+						{videoPlaying && levels.length > 1 && (
+							<div className={styles.qualityMenu} ref={menuRef}>
+								<button
+									type="button"
+									className={styles.qualityButton}
+									aria-haspopup="menu"
+									aria-expanded={menuOpen}
+									aria-label={t('video.qualitySelector.label')}
+									onClick={() => setMenuOpen(open => !open)}
+								>
+									{qualityLabel}
+								</button>
+								{menuOpen && (
+									<ul className={styles.qualityList} role="menu">
+										<li role="none">
+											<button
+												type="button"
+												role="menuitemradio"
+												aria-checked={selectedQuality === 'auto'}
+												className={classNames(styles.qualityItem, {
+													[styles.qualityItemActive]: selectedQuality === 'auto',
+												})}
+												onClick={() => applyQuality('auto')}
+											>
+												{t('video.qualitySelector.auto')}
+											</button>
+										</li>
+										{levels.map(h => (
+											<li role="none" key={h}>
+												<button
+													type="button"
+													role="menuitemradio"
+													aria-checked={selectedQuality === String(h)}
+													className={classNames(styles.qualityItem, {
+														[styles.qualityItemActive]: selectedQuality === String(h),
+													})}
+													onClick={() => applyQuality(String(h))}
+												>
+													{`${h}p`}
+												</button>
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						)}
+					</div>
 				)}
 				{!videoPlaying && (
 					<button
 						type="button"
 						className={styles.poster}
-						onClick={() => attemptPlay()}
+						onClick={attemptPlay}
 						aria-label="Play"
 					>
 						<VideoPoster online={online} initialSrc={posterSrc} src={posterSrc} />
