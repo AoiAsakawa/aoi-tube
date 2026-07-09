@@ -374,6 +374,13 @@ func (r *Recorder) HandleVariantPlaylist(livePlaylistPath string) {
 		if _, seen := v.segmentDuration[e.filename]; seen {
 			continue
 		}
+		// Never archive the offline-clip transcoder's segments (see the matching
+		// guard in HandleSegmentWritten): a broadcaster reconnecting within the
+		// post-boot offline window would otherwise splice the placeholder clip
+		// into the recording.
+		if strings.Contains(e.filename, "-offline-") {
+			continue
+		}
 		if v.skippedFirst == "" && len(v.order) == 0 {
 			// Drop the session's first segment (see skippedFirst above).
 			v.skippedFirst = e.filename

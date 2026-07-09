@@ -158,6 +158,16 @@ func (s *FileWriterReceiverService) uploadHandler(w http.ResponseWriter, r *http
 		writePath += ".tmp"
 	}
 
+	// Ensure the variant directory exists before os.Create. Under classic HLS the
+	// transcoder's disk layout is pre-created, but under LL-HLS gohlslib serves
+	// from RAM and never touches data/hls/<variant>/, so the recording output's
+	// first PUT would otherwise fail with "no such file or directory" and never
+	// archive anything.
+	if err := os.MkdirAll(filepath.Dir(writePath), 0o750); err != nil {
+		returnError(err, w)
+		return
+	}
+
 	// Playlists (small text files) are buffered so the target duration can be
 	// clamped to a spec-valid value before hitting disk; segments stream
 	// straight through.
