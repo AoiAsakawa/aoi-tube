@@ -239,6 +239,24 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 			? (qualities.find(q => q.value === selectedQuality)?.label ?? selectedQuality)
 			: '';
 
+	const hasQuality = !!(qualities && qualities.length > 0);
+	const hasRates = !!(rates && rates.length > 0);
+	// Only show the intermediate "category" menu when there's more than one kind
+	// of setting. With a single kind (live = quality only, VOD = speed only) the
+	// gear opens that list directly, so it's one click instead of two.
+	const multiCategory = hasQuality && hasRates;
+	const openSettings = () => {
+		if (menu) {
+			setMenu(null);
+		} else if (multiCategory) {
+			setMenu('root');
+		} else if (hasQuality) {
+			setMenu('quality');
+		} else if (hasRates) {
+			setMenu('speed');
+		}
+	};
+
 	return (
 		<div
 			ref={rootRef}
@@ -334,7 +352,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 								<button
 									type="button"
 									className={styles.iconBtn}
-									onClick={() => setMenu(m => (m ? null : 'root'))}
+									onClick={openSettings}
 									aria-label="設定"
 									aria-expanded={menu !== null}
 								>
@@ -362,9 +380,11 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 
 										{menu === 'quality' && qualities && (
 											<>
-												<button type="button" className={styles.menuBack} onClick={() => setMenu('root')}>
-													‹ 画質
-												</button>
+												{multiCategory && (
+													<button type="button" className={styles.menuBack} onClick={() => setMenu('root')}>
+														‹ 画質
+													</button>
+												)}
 												{qualities.map(q => (
 													<button
 														type="button"
@@ -385,9 +405,11 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 
 										{menu === 'speed' && rates && (
 											<>
-												<button type="button" className={styles.menuBack} onClick={() => setMenu('root')}>
-													‹ 再生速度
-												</button>
+												{multiCategory && (
+													<button type="button" className={styles.menuBack} onClick={() => setMenu('root')}>
+														‹ 再生速度
+													</button>
+												)}
 												{rates.map(r => (
 													<button
 														type="button"
