@@ -114,6 +114,12 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const hls = hlsRef.current;
 		if (hls) {
 			if (value === 'auto') {
+				// The progressive-part throughput measurement leaves the running
+				// estimate parked near the current rung's bitrate, so re-enabling ABR
+				// alone would never climb back up. Reset the estimator high so ABR
+				// immediately re-picks the top rung; it then holds there (or drops on
+				// real starvation) thanks to the widened factors above.
+				hls.bandwidthEstimate = 10_000_000;
 				// nextLevel (not currentLevel) so the switch happens at the next
 				// segment boundary without flushing the current buffer — a hard
 				// currentLevel switch drops the buffer and rebuffers at the live edge,
@@ -157,12 +163,17 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				lowLatencyMode: true,
 				backBufferLength: 15,
 				liveDurationInfinity: true,
-				// hls.js defaults the initial bandwidth guess to 500kbps, which makes
-				// ABR start (and, with LL-HLS blocking-reload part timing skewing the
-				// estimate low, stay) at the lowest rendition. Seed a generous 5Mbps
-				// so Auto starts at the top rendition and only drops if the connection
-				// genuinely can't sustain it.
-				abrEwmaDefaultEstimate: 5_000_000,
+				// LL-HLS delivers parts progressively, so hls.js measures a throughput
+				// of roughly the CURRENT rendition's bitrate rather than the true link
+				// capacity. With the default up/down factors (0.7/0.95) every rung then
+				// looks unsustainable and ABR cascades down to 360p and can't climb
+				// back. Seed a high initial estimate and widen the factors to 1.4 so a
+				// rung whose bitrate is at or just above the measured throughput still
+				// counts as sustainable — a genuinely starved link is still dropped by
+				// the buffer-starvation path.
+				abrEwmaDefaultEstimate: 10_000_000,
+				abrBandWidthFactor: 1.4,
+				abrBandWidthUpFactor: 1.4,
 				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
 					const decorated = decorateHlsUrl(url);
 					if (decorated !== url) {
