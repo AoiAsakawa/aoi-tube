@@ -250,10 +250,17 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 				}
 			}}
 			onClick={e => {
-				// Clicks on the surface (not the bar/menu) toggle play.
+				// Clicks on the surface (not the bar/menu). When the controls are
+				// hidden the first click only reveals them — it does NOT also toggle
+				// play. Otherwise reaching the settings gear took two clicks (one to
+				// wake the bar, which also paused the video, then one on the gear).
 				if (e.target === rootRef.current || (e.target as HTMLElement).dataset.surface) {
-					togglePlay();
-					showControls();
+					if (!visible) {
+						showControls();
+					} else {
+						togglePlay();
+						showControls();
+					}
 				}
 			}}
 			onDoubleClick={e => {
