@@ -155,9 +155,13 @@ func (p *mediaPipeline) ffmpegArgsWithInput(ffmpegPath string, inputArgs []strin
 		"-preset", "veryfast",
 		"-tune", "zerolatency",
 		"-force_key_frames", "expr:gte(t,n_forced*1)",
-		"-b:v", "2500k",
-		"-maxrate", "2500k",
-		"-bufsize", "3000k",
+		// 6Mbps to match the source: 2500k was far too low for 1080p60 and looked
+		// soft/blocky. Bitrate barely affects encode CPU, and there is idle headroom
+		// on this box, so this is a free quality win. bufsize = bitrate (1s VBV)
+		// keeps the low-latency profile without starving quality.
+		"-b:v", "6000k",
+		"-maxrate", "6000k",
+		"-bufsize", "6000k",
 		"-f", "rtp",
 		"-payload_type", "96",
 		fmt.Sprintf("rtp://127.0.0.1:%d?pkt_size=1200", p.videoPort()),
