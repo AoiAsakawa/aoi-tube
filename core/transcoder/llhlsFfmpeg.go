@@ -65,12 +65,6 @@ func (t *LLHLSTranscoder) renditionMpegtsOutput(v HLSVariant, port int) string {
 		return strings.Join([]string{"-map 0:v:0 -map 0:a:0?", "-c:v copy", "-c:a copy", dest}, " ")
 	}
 
-	framerate := v.framerate
-	if framerate <= 0 {
-		framerate = 30
-	}
-	// One keyframe per second so segments/independent parts align cleanly.
-	gop := framerate
 	preset := t.codec.GetPresetForLevel(v.cpuUsageLevel)
 
 	parts := []string{
@@ -84,10 +78,17 @@ func (t *LLHLSTranscoder) renditionMpegtsOutput(v HLSVariant, port int) string {
 		"-tune zerolatency",
 		"-profile:v high",
 		"-pix_fmt yuv420p",
+		// Put keyframes at the SAME positions as the source stream (which the
+		// copied passthrough rendition keeps) rather than on a fixed 1s grid. A
+		// fixed -g lands on an exact-1.0s grid while the 59.94fps source keys land
+		// at ~0.985s, so the two cadences drift and gohlslib cuts each rendition's
+		// segments at different boundaries — which is what made hls.js rebuffer on
+		// every quality switch. -sc_threshold 0 keeps ffmpeg from inserting extra
+		// scene-cut keys that would break the alignment. No -r, so the transcoded
+		// renditions keep the source frame rate (no 60 vs 59.94 mismatch either).
 		"-sc_threshold 0",
+		"-force_key_frames source",
 		fmt.Sprintf("-b:v %dk -maxrate %dk -bufsize %dk", v.getAllocatedVideoBitrate(), v.getMaxVideoBitrate(), v.getBufferSize()),
-		fmt.Sprintf("-g %d -keyint_min %d", gop, gop),
-		fmt.Sprintf("-r %d", framerate),
 		fmt.Sprintf("-vf scale=%d:%d", v.videoSize.Width, v.videoSize.Height),
 		// Audio is copied (source AAC), not re-encoded.
 		"-c:a copy",
