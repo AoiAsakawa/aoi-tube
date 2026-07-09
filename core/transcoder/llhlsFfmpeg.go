@@ -54,36 +54,33 @@ func (t *LLHLSTranscoder) getLLHLSMpegtsString(ports []int) string {
 		}
 		args = append(args, t.renditionMpegtsOutput(v, ports[i]))
 	}
-	if rec := t.recordingOutput(); rec != "" {
-		args = append(args, rec)
+	if mirror := t.diskMirrorOutput(); mirror != "" {
+		args = append(args, mirror)
 	}
 	return strings.Join(args, " ")
 }
 
-// recordingOutput returns an extra ffmpeg output that records the broadcast to
-// the on-disk VOD archive, or "" when recording is disabled. gohlslib serves the
-// live low-latency stream entirely from RAM and never writes segments to disk,
-// so the recorder — which archives by mirroring on-disk HLS segments — was never
-// fed under LL-HLS and produced NO archive. This adds a single copy-codec HLS
-// output (no re-encode, negligible CPU: the recorded rendition is the source
-// passthrough) that PUTs its segments and playlist to the internal file-writer
-// service exactly like the classic transcoder. That service writes them under
-// data/hls/<keep>/ and fires the recorder's SegmentWritten / VariantPlaylistWritten
-// hooks, which mirror the media into an archive session and — on FinishSession —
-// remux replay.mp4 and offload to S3 when configured, so both local and S3
-// archives are produced and play back exactly as under classic HLS.
-func (t *LLHLSTranscoder) recordingOutput() string {
-	if !data.GetRecordingEnabled() {
-		return ""
-	}
+// diskMirrorOutput returns an extra ffmpeg output that mirrors the top rendition
+// to disk under data/hls/<highest>/, which gohlslib never does (it serves the
+// live low-latency stream entirely from RAM). Two on-disk consumers need it and
+// were both broken under LL-HLS: the recorder (archives by copying on-disk HLS
+// segments — no disk meant NO archive at all) and the thumbnail generator (grabs
+// a frame from the newest on-disk segment — "open data/hls/0: no such file"
+// every ~20s). It runs regardless of the recording toggle so thumbnails work
+// even with recording off; the online-cleanup timer keeps the directory bounded,
+// and it's -c copy (negligible CPU). The recorder mirrors it into an archive
+// session and — on FinishSession — remuxes replay.mp4 and offloads to S3 when
+// configured, so both local and S3 archives are produced and play back exactly
+// as under classic HLS. (See HLSHandler.SegmentWritten: under LL-HLS these
+// segments are NOT pushed to the live storage provider, only to the recorder.)
+func (t *LLHLSTranscoder) diskMirrorOutput() string {
 	port := config.InternalHLSListenerPort
 	if port == "" {
 		return ""
 	}
-	keep := 0
-	if data.GetRecordingHighestOnly() {
-		keep = data.FindHighestVideoQualityIndex(t.currentStreamOutputSettings)
-	}
+	// Write to the highest-quality index so the thumbnail generator (which reads
+	// that same index) finds segments, and so the archive is the best rendition.
+	keep := data.FindHighestVideoQualityIndex(t.currentStreamOutputSettings)
 	if keep < 0 {
 		keep = 0
 	}
