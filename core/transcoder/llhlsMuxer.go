@@ -155,12 +155,20 @@ func (m *LLHLSMuxerManager) serveConnection(r *llhlsRendition, conn net.Conn) {
 		return
 	}
 
+	// MPEG-TS PTS is always in the 90kHz clock, which matches the video track's
+	// ClockRate directly. The audio track's ClockRate is its sample rate, so the
+	// 90kHz PTS must be rescaled to the sample-rate clock — otherwise gohlslib
+	// treats it as a 48kHz timestamp and stretches the audio timeline (~1.875x),
+	// which desyncs A/V and makes the player buffer heavily (low fps / high
+	// latency / slow start).
 	reader.OnDataH264(vSrc, func(pts, _ int64, au [][]byte) error {
 		return muxer.WriteH264(videoTrack, time.Now(), pts, au)
 	})
 	if aSrc != nil {
+		audioClock := int64(audioTrack.ClockRate)
 		reader.OnDataMPEG4Audio(aSrc, func(pts int64, aus [][]byte) error {
-			return muxer.WriteMPEG4Audio(audioTrack, time.Now(), pts, aus)
+			apts := pts * audioClock / 90000
+			return muxer.WriteMPEG4Audio(audioTrack, time.Now(), apts, aus)
 		})
 	}
 
