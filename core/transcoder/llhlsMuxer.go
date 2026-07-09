@@ -49,6 +49,32 @@ type LLHLSMuxerManager struct {
 	mu      sync.RWMutex
 	started bool
 	closed  bool
+
+	// Shared source-PTS→wall-clock reference so every rendition stamps the SAME
+	// EXT-X-PROGRAM-DATE-TIME on the same source frame (see ntpForPTS).
+	ntpMu      sync.Mutex
+	ntpRefWall time.Time
+	ntpRefPTS  int64
+	ntpSet     bool
+}
+
+// ntpForPTS maps a 90kHz source PTS to a wall-clock time through a single
+// reference shared across every rendition muxer, so the same source frame gets
+// an identical EXT-X-PROGRAM-DATE-TIME in all renditions. Previously each muxer
+// stamped time.Now() independently, giving every rendition its own PDT offset;
+// after a quality switch hls.js pairs the new video rendition with the shared
+// audio rendition, and those mismatched PDTs made it resync continuously —
+// playback stayed choppy for as long as the switched rendition was selected.
+func (m *LLHLSMuxerManager) ntpForPTS(pts int64) time.Time {
+	m.ntpMu.Lock()
+	defer m.ntpMu.Unlock()
+	if !m.ntpSet {
+		m.ntpRefWall = time.Now()
+		m.ntpRefPTS = pts
+		m.ntpSet = true
+	}
+	delta := time.Duration(float64(pts-m.ntpRefPTS) / 90000.0 * float64(time.Second))
+	return m.ntpRefWall.Add(delta)
 }
 
 // NewLLHLSMuxerManager binds one loopback TCP listener per rendition (ffmpeg
@@ -161,14 +187,17 @@ func (m *LLHLSMuxerManager) serveConnection(r *llhlsRendition, conn net.Conn) {
 	// treats it as a 48kHz timestamp and stretches the audio timeline (~1.875x),
 	// which desyncs A/V and makes the player buffer heavily (low fps / high
 	// latency / slow start).
+	// ntp comes from the shared source-PTS reference (not time.Now()) so this
+	// rendition's PDT lines up with every other rendition's — required for the
+	// shared audio group to stay in sync after a video quality switch.
 	reader.OnDataH264(vSrc, func(pts, _ int64, au [][]byte) error {
-		return muxer.WriteH264(videoTrack, time.Now(), pts, au)
+		return muxer.WriteH264(videoTrack, m.ntpForPTS(pts), pts, au)
 	})
 	if aSrc != nil {
 		audioClock := int64(audioTrack.ClockRate)
 		reader.OnDataMPEG4Audio(aSrc, func(pts int64, aus [][]byte) error {
 			apts := pts * audioClock / 90000
-			return muxer.WriteMPEG4Audio(audioTrack, time.Now(), apts, aus)
+			return muxer.WriteMPEG4Audio(audioTrack, m.ntpForPTS(pts), apts, aus)
 		})
 	}
 
