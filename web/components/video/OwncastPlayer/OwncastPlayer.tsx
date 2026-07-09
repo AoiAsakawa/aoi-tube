@@ -3,6 +3,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
+import Hls from 'hls.js';
 import { VideoJS } from '../VideoJS/VideoJS';
 import ViewerPing from '../viewer-ping';
 import { VideoPoster } from '../VideoPoster/VideoPoster';
@@ -12,15 +13,13 @@ import {
 	PLAYER_VOLUME,
 	PLAYER_QUALITY,
 } from '../../../utils/localStorage';
-import { useIsVideoPlaying, useSetIsVideoPlaying, useClockSkew } from '../../stores/zustand-store';
-import PlaybackMetrics from '../metrics/playback';
+import { useIsVideoPlaying, useSetIsVideoPlaying } from '../../stores/zustand-store';
 import styles from './OwncastPlayer.module.scss';
 import { ComponentError } from '../../ui/ComponentError/ComponentError';
 import { ProtocolBadge } from '../ProtocolBadge';
 import { ProtocolInfo } from '../../../interfaces/server-status.model';
 
 const ping = new ViewerPing();
-let playbackMetrics = null;
 
 export type OwncastPlayerProps = {
 	source: string;
@@ -30,6 +29,32 @@ export type OwncastPlayerProps = {
 	className?: string;
 	embedded?: boolean;
 	protocol?: ProtocolInfo;
+};
+
+// Append the chat access token (and a cachebuster on playlists) to same-origin
+// HLS requests so moderators can watch during silent (test) mode and viewers
+// can watch auth-required streams. Never sent to external CDN hosts.
+const decorateHlsUrl = (url: string): string => {
+	try {
+		const u = new URL(url, window.location.origin);
+		if (u.origin !== window.location.origin) {
+			return url;
+		}
+		const isHls = u.pathname.startsWith('/hls/') || u.pathname.startsWith('/api/archives/');
+		if (!isHls) {
+			return url;
+		}
+		const token = window.localStorage.getItem('accessToken');
+		if (token) {
+			u.searchParams.set('accessToken', token);
+		}
+		if (u.pathname.endsWith('.m3u8')) {
+			u.searchParams.set('cachebust', Math.random().toString(16).slice(2, 10));
+		}
+		return u.toString();
+	} catch {
+		return url;
+	}
 };
 
 export const OwncastPlayer: FC<OwncastPlayerProps> = ({
@@ -44,81 +69,66 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	const { t } = useTranslation();
 	const playerRef = React.useRef(null);
 	const videoElRef = React.useRef<HTMLVideoElement | null>(null);
+	// hls.js is the playback engine (mature Low-Latency HLS support with real
+	// EXT-X-PART / blocking reload); video.js provides only the control-bar UI.
+	const hlsRef = React.useRef<Hls | null>(null);
 	const videoPlaying = useIsVideoPlaying();
 	const setVideoPlaying = useSetIsVideoPlaying();
-	const clockSkew = useClockSkew();
 
-	// Manual quality (rendition) selection, presented as a "Quality" menu button
-	// in the video.js control bar next to volume/fullscreen (YouTube-style).
-	// Default is Auto (ABR). The source passthrough now carries a CODECS
-	// attribute (injected server-side into the master playlist), so VHS no longer
-	// excludes/re-includes it and the ABR oscillation is gone. Viewers can still
-	// pin a specific rendition from the menu; that choice persists. 'auto'
-	// re-enables every rendition.
+	// Manual quality selection, shown as a "Quality" menu button in the control
+	// bar. Default is Auto (hls.js ABR); a pinned choice persists.
 	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
 	const qualityButtonRef = React.useRef<{ update: () => void } | null>(null);
 
-	// Read the VHS representation list off the active tech, tolerating the
-	// pre-metadata window where it is not yet populated.
-	const getRepresentations = (): {
-		height?: number;
-		enabled: (value?: boolean) => boolean;
-	}[] => {
-		try {
-			const tech = playerRef.current?.tech?.({ IWillNotUseThisInPlugins: true });
-			return tech?.vhs?.representations?.() || [];
-		} catch {
-			return [];
-		}
-	};
-
-	// Distinct rendition heights advertised by the master playlist, high to low.
+	// Distinct rendition heights advertised by the manifest, high to low.
 	const getQualityHeights = (): number[] => {
 		const seen = new Set<number>();
-		return getRepresentations()
-			.map(r => r.height)
+		return (hlsRef.current?.levels || [])
+			.map(l => l.height)
 			.filter((h): h is number => typeof h === 'number' && h > 0)
 			.sort((a, b) => b - a)
 			.filter(h => (seen.has(h) ? false : seen.add(h)));
 	};
 
-	// Enable only the representation(s) matching the chosen height, or all of
-	// them for 'auto'. Persist the choice so a pinned quality survives reloads.
+	// Pin a specific rendition (by height) or return to Auto (-1).
 	const applyQuality = (value: string) => {
-		const reps = getRepresentations();
-		if (value === 'auto') {
-			reps.forEach(r => r.enabled(true));
-		} else {
-			const height = Number(value);
-			reps.forEach(r => r.enabled(r.height === height));
+		const hls = hlsRef.current;
+		if (hls) {
+			if (value === 'auto') {
+				hls.currentLevel = -1;
+			} else {
+				const height = Number(value);
+				// Highest-bitrate level at this height.
+				let best = -1;
+				let bestRate = -1;
+				hls.levels.forEach((l, i) => {
+					if (l.height === height && l.bitrate > bestRate) {
+						best = i;
+						bestRate = l.bitrate;
+					}
+				});
+				if (best >= 0) {
+					hls.currentLevel = best;
+				}
+			}
 		}
 		selectedQualityRef.current = value;
 		setLocalStorage(PLAYER_QUALITY, value);
 		qualityButtonRef.current?.update();
 	};
 
-	// Re-assert the current choice after a manifest reload (the representation
-	// objects are recreated) and rebuild the control-bar menu from the current
-	// levels. 'auto' re-enables every rendition (ABR); a pinned height enables
-	// only that one.
+	// Re-assert a pinned choice (e.g. after the level list is (re)parsed) and
+	// rebuild the control-bar menu.
 	const refreshQualityLevels = () => {
-		const reps = getRepresentations();
 		const sel = selectedQualityRef.current;
-		if (sel === 'auto') {
-			reps.forEach(r => r.enabled(true));
-		} else {
-			const height = Number(sel);
-			if (reps.some(r => r.height === height)) {
-				reps.forEach(r => r.enabled(r.height === height));
-			}
+		if (sel !== 'auto') {
+			applyQuality(sel);
 		}
 		qualityButtonRef.current?.update();
 	};
 
-	// Add a "Quality" menu button to the control bar, just before the fullscreen
-	// toggle, so it sits alongside volume/fullscreen like YouTube. The button
-	// shows the current quality as a visible text label (a bare cog glyph proved
-	// too small to notice) e.g. "Auto" / "720p".
+	// Add the "Quality" menu button to the control bar before the fullscreen
+	// toggle. It shows the current quality as visible text (Auto / 720p).
 	const setupQualityMenu = (player, videojs) => {
 		const MenuButton = videojs.getComponent('MenuButton');
 		const MenuItem = videojs.getComponent('MenuItem');
@@ -175,12 +185,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const index = fsToggle ? controlBar.children().indexOf(fsToggle) : undefined;
 		controlBar.addChild(button, {}, index);
 	};
-	// Pre-play cover: the operator's live poster. /liveposter is pure
-	// branding — ungated and independent of thumbnail generation — so it can
-	// never fall back to the logo the way the auth-gated /thumbnail.jpg did.
+
+	// Pre-play cover: the operator's live poster.
 	const posterSrc = '/liveposter';
-	// Actual received resolution/fps, shown in the protocol badge exactly like
-	// the WebRTC player does.
 	const [videoStats, setVideoStats] = React.useState<{
 		height: number;
 		fps: number;
@@ -189,9 +196,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 
 	const setSavedVolume = () => {
 		try {
-			// Default to a low volume (0.3) rather than full, so autoplay — and the
-			// first unmute after the browser's muted-autoplay fallback — starts
-			// quiet instead of blasting. A stored preference (including 0) wins.
 			const saved = getLocalStorage(PLAYER_VOLUME);
 			playerRef.current.volume(saved !== null && saved !== '' ? Number(saved) : 0.3);
 		} catch (err) {
@@ -204,10 +208,10 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	};
 
 	const togglePlayback = () => {
-		if (playerRef.current.paused()) {
+		if (playerRef.current?.paused()) {
 			playerRef.current.play();
 		} else {
-			playerRef.current.pause();
+			playerRef.current?.pause();
 		}
 	};
 
@@ -252,22 +256,12 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		}
 	};
 
-	// Register keyboard shortcut for the space bar to toggle playback
 	useHotkeys('space', e => {
 		e.preventDefault();
 		togglePlayback();
 	});
-
-	// Register keyboard shortcut for f to toggle full screen
-	useHotkeys('f', toggleFullScreen, {
-		enableOnContentEditable: false,
-	});
-
-	// Register keyboard shortcut for the "m" key to toggle mute
-	useHotkeys('m', toggleMute, {
-		enableOnContentEditable: false,
-	});
-
+	useHotkeys('f', toggleFullScreen, { enableOnContentEditable: false });
+	useHotkeys('m', toggleMute, { enableOnContentEditable: false });
 	useHotkeys('0', () => playerRef.current.volume(playerRef.current.volume() + 0.1), {
 		enableOnContentEditable: false,
 	});
@@ -275,8 +269,8 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		enableOnContentEditable: false,
 	});
 
-	// Measure the actually-decoded resolution and frame rate for the protocol
-	// badge, mirroring what the WebRTC player reports via getStats().
+	// Measure the actually-decoded resolution/fps and the hls.js live latency for
+	// the protocol badge.
 	useEffect(() => {
 		if (!videoPlaying) {
 			return undefined;
@@ -295,9 +289,8 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				}
 			).getVideoPlaybackQuality?.();
 			const frames = quality?.totalVideoFrames ?? 0;
-			// Real measured latency (segment PROGRAM-DATE-TIME vs skew-corrected
-			// clock) sampled by the playback metrics collector every ~5s.
-			const latencyMs = playbackMetrics?.currentLatencyMs || 0;
+			// hls.js reports the real live latency (segment/part edge vs playhead).
+			const latencyMs = hlsRef.current?.latency ? Math.round(hlsRef.current.latency * 1000) : 0;
 			if (lastTime > 0 && frames > lastFrames) {
 				const fps = Math.round(((frames - lastFrames) * 1000) / (now - lastTime));
 				setVideoStats({ height: el.videoHeight, fps, latencyMs });
@@ -310,8 +303,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		return () => clearInterval(timer);
 	}, [videoPlaying]);
 
-	// e.g. "3.2s · 1080p60" once measured; falls back to the protocol's
-	// static estimate until the first latency sample arrives.
 	const measuredLatency =
 		videoStats?.latencyMs && videoStats.latencyMs > 0
 			? `${(videoStats.latencyMs / 1000).toFixed(1)}s`
@@ -328,14 +319,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		: protocol;
 
 	const videoJsOptions = {
-		// Start playback automatically while live: try with sound first and
-		// fall back to muted when the browser's autoplay policy demands it
-		// (the native controls then offer one-tap unmute). If both are
-		// blocked the click-to-play poster remains as the fallback.
-		autoplay: 'any',
-		// Use the video.js control bar (not the browser's native controls) so the
-		// quality selector can sit inline with volume/fullscreen like YouTube;
-		// native controls can't host a custom button.
+		// hls.js drives playback; video.js only renders the control bar, so it
+		// gets no source and doesn't autoplay itself.
+		autoplay: false,
 		controls: true,
 		bigPlayButton: false,
 		responsive: true,
@@ -345,114 +331,104 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		liveui: true,
 		preload: 'auto',
 		muted: initiallyMuted,
-		html5: {
-			vhs: {
-				// Start at a bandwidth-appropriate rendition rather than forcing the
-				// lowest one, so playback doesn't get stuck at 360p.
-				enableLowInitialPlaylist: false,
-				// Buffer-based ABR (rather than per-segment bandwidth ABR): with the
-				// 0.5s segments below, bandwidth ABR reacted to every segment's
-				// download blip and thrashed 360<->720<->1080. Buffer-based ABR only
-				// shifts on sustained buffer trends, so it holds a rendition steadily.
-				// It needs real buffer headroom to still climb (the earlier
-				// stuck-at-360p was buffer-based ABR starved by a ~1s buffer), which
-				// the deeper live window below now provides.
-				experimentalBufferBasedABR: true,
-				// Don't cap the rendition by the player's rendered pixel size, so 720p
-				// and source (1080p) are reachable on a large player.
-				limitRenditionByPlayerDimensions: false,
-				// Measure real segment-download bandwidth instead of trusting the
-				// browser's Network Information estimate, which can report a low
-				// downlink and pin quality low.
-				useNetworkInformationApi: false,
-				maxPlaylistRetries: 30,
-				// Low-latency settings. With 0.5s segments, 4 segments back is a ~2s
-				// live buffer: enough to stop stalls/rewinds and steady the ABR while
-				// keeping latency well under the old 1s-segment config.
-				llhls: true,
-				liveSyncDurationCount: 4, // ~2s behind the live edge (0.5s segments)
-				liveMaxLatencyDurationCount: 8, // Max ~4s behind before catching up
-			},
-		},
-		liveTracker: {
-			trackingThreshold: 0,
-			liveTolerance: 3, // Reduced from 15 to 3 seconds for low latency
-		},
-		sources: [
-			{
-				src: source,
-				type: 'application/x-mpegURL',
-			},
-		],
+	};
+
+	const attemptPlay = () => {
+		const el = videoElRef.current;
+		if (!el) {
+			return;
+		}
+		el.play().catch(() => {
+			// Autoplay with sound was blocked; retry muted so playback still starts.
+			el.muted = true;
+			el.play().catch(() => {});
+		});
 	};
 
 	const handlePlayerReady = (player, videojs) => {
 		playerRef.current = player;
 		setSavedVolume();
 
-		// Keep a handle on the underlying <video> for the resolution/fps probe.
-		const videoEl = player.el()?.querySelector('video');
-		if (videoEl) {
-			videoElRef.current = videoEl as HTMLVideoElement;
+		const videoEl = player.el()?.querySelector('video') as HTMLVideoElement | null;
+		if (!videoEl) {
+			return;
 		}
+		videoElRef.current = videoEl;
 
 		setupAirplay(player, videojs);
 		setupQualityMenu(player, videojs);
 
-		// Populate the quality menu once the master playlist is parsed, and keep
-		// it in sync as VHS swaps the active media playlist.
-		player.on('loadedmetadata', refreshQualityLevels);
-		player.on('loadedplaylist', refreshQualityLevels);
-
-		// You can handle player events here, for example:
-		player.on('waiting', () => {
-			console.debug('player is waiting');
-		});
-
 		player.on('dispose', () => {
-			console.debug('player will dispose');
 			ping.stop();
+			hlsRef.current?.destroy();
+			hlsRef.current = null;
 		});
-
 		player.on('playing', () => {
-			console.debug('player is playing');
 			ping.start();
 			setVideoPlaying(true);
 		});
-
 		player.on('pause', () => {
-			console.debug('player is paused');
 			ping.stop();
 			setVideoPlaying(false);
 		});
-
 		player.on('ended', () => {
-			console.debug('player is ended');
 			ping.stop();
 			setVideoPlaying(false);
 		});
-
+		player.on('volumechange', handleVolume);
 		videojs.hookOnce();
 
-		player.on('volumechange', handleVolume);
-
-		playbackMetrics = new PlaybackMetrics(player, videojs);
-		playbackMetrics.setClockSkew(clockSkew);
-
-	};
-
-	useEffect(() => {
-		if (playbackMetrics) {
-			playbackMetrics.setClockSkew(clockSkew);
+		if (Hls.isSupported()) {
+			const hls = new Hls({
+				lowLatencyMode: true,
+				backBufferLength: 15,
+				liveDurationInfinity: true,
+				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+					const decorated = decorateHlsUrl(url);
+					if (decorated !== url) {
+						xhr.open('GET', decorated, true);
+					}
+				},
+			});
+			hlsRef.current = hls;
+			hls.attachMedia(videoEl);
+			hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+				hls.loadSource(source);
+			});
+			hls.on(Hls.Events.MANIFEST_PARSED, () => {
+				refreshQualityLevels();
+				attemptPlay();
+			});
+			hls.on(Hls.Events.LEVEL_SWITCHED, () => {
+				qualityButtonRef.current?.update();
+			});
+			hls.on(Hls.Events.ERROR, (_evt, data) => {
+				if (!data.fatal) {
+					return;
+				}
+				switch (data.type) {
+					case Hls.ErrorTypes.NETWORK_ERROR:
+						hls.startLoad();
+						break;
+					case Hls.ErrorTypes.MEDIA_ERROR:
+						hls.recoverMediaError();
+						break;
+					default:
+						console.error('hls.js fatal error', data);
+						break;
+				}
+			});
+		} else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+			// Safari plays LL-HLS natively.
+			videoEl.src = decorateHlsUrl(source);
+			videoEl.addEventListener('loadedmetadata', attemptPlay, { once: true });
 		}
-	}, [clockSkew]);
+	};
 
 	useEffect(
 		() => () => {
-			playbackMetrics?.stop();
-			// Unmounting disposes the player without a 'pause' event, so reset
-			// the global playing flag here — otherwise the click-to-play poster
-			// stays hidden when the player mounts again after a mode switch.
+			hlsRef.current?.destroy();
+			hlsRef.current = null;
 			setVideoPlaying(false);
 		},
 		[],
@@ -480,22 +456,14 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 						</div>
 					</>
 				)}
-				{/* The poster overlays the player until playback starts. With native
-				    browser controls (no video.js big-play button on top of it) the
-				    poster itself is the click-to-play trigger. */}
 				{!videoPlaying && (
 					<button
 						type="button"
 						className={styles.poster}
-						onClick={() => playerRef.current?.play()}
+						onClick={() => attemptPlay()}
 						aria-label="Play"
 					>
-						{/* The thumbnail endpoint gates restricted streams (silent mode,
-					    required social auth) on an accessToken query parameter; plain
-					    <img> requests don't go through the VideoJS request hook, so
-					    the token is appended here. Without it the poster falls back
-					    to the logo even for authorized viewers. */}
-					<VideoPoster online={online} initialSrc={posterSrc} src={posterSrc} />
+						<VideoPoster online={online} initialSrc={posterSrc} src={posterSrc} />
 						{online && (
 							<span className={styles.posterPlayGlyph} aria-hidden="true">
 								▶

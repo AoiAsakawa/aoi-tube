@@ -45,6 +45,7 @@
 		"chart.js": "^4.4.8",
 		"classnames": "^2.5.1",
 		"date-fns": "^4.1.0",
+		"hls.js": "^1.6.16",
 		"i18next": "^26.3.4",
 		"i18next-browser-languagedetector": "^8.2.1",
 		"interweave": "^13.1.0",
