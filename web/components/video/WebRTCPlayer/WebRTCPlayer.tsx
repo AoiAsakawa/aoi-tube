@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef, useState, useCallback } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { ProtocolBadge } from '../ProtocolBadge';
+import { PlayerChrome } from '../PlayerChrome/PlayerChrome';
 import ViewerPing from '../viewer-ping';
 import { withAccessToken } from '../../../utils/accessTokenUrl';
 import { getLocalStorage, setLocalStorage, PLAYER_VOLUME } from '../../../utils/localStorage';
@@ -365,7 +366,8 @@ export const WebRTCPlayer: FC<WebRTCPlayerProps> = ({
 
 	return (
 		<div className={classNames(styles.container, className)}>
-			<video ref={videoRef} className={styles.video} autoPlay playsInline muted={false} controls />
+			<video ref={videoRef} className={styles.video} autoPlay playsInline muted={false} />
+			<PlayerChrome videoRef={videoRef} isLive />
 
 			{error && (
 				<div className={styles.errorOverlay}>

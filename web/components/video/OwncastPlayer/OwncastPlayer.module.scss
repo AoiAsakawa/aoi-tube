@@ -1,187 +1,81 @@
 @use '../../../styles/mixins.scss' as mixins;
 
+// A strict 16:9 box, centred, capped so its 16:9 height never exceeds the
+// available player height. The old layout forced a fixed height with a 16:9
+// aspect-ratio at the same time; when the width was narrower than 16:9 of that
+// height the container ended up taller than the video, letterboxing it with
+// black bars top and bottom. Deriving the width cap from the height keeps the
+// video area exactly 16:9 with no bars.
 .container {
-	display: grid;
-	width: 100%;
-	justify-items: center;
-	height: var(--player-container-height);
-	aspect-ratio: 16 / 9;
 	position: relative;
-
-	@media (max-width: 1200px) {
-		height: 100%;
-		max-height: var(--player-container-height);
-	}
-
-	@include mixins.screen(desktop) {
-		// prevent sidebar from overlapping stream
-		// padding-right: 320px;
-	}
-
-	//set height of player for tablet
-	@include mixins.screen(tablet) {
-		height: var(--player-container-height);
-		max-height: var(--player-container-height);
-	}
-
-	.player {
-		width: 100%;
-		grid-column: 1;
-		grid-row: 1;
-		position: relative;
-	}
-
-	.video {
-		display: block;
-		width: 100%;
-		height: 100%;
-		max-width: 100%;
-		object-fit: contain;
-		background: #000;
-	}
-
-	// Quality selector overlaid bottom-right, above the native control bar.
-	.qualityMenu {
-		position: absolute;
-		bottom: 60px;
-		right: 10px;
-		z-index: 100;
-		font-size: 12px;
-	}
-
-	.qualityButton {
-		display: inline-flex;
-		align-items: center;
-		min-width: 44px;
-		height: 28px;
-		padding: 0 10px;
-		border: none;
-		border-radius: 4px;
-		background: rgba(0, 0, 0, 0.6);
-		color: #fff;
-		font-size: 12px;
-		font-weight: 600;
-		line-height: 1;
-		cursor: pointer;
-
-		&:hover,
-		&:focus-visible {
-			background: rgba(0, 0, 0, 0.8);
-		}
-	}
-
-	.qualityList {
-		position: absolute;
-		bottom: calc(100% + 4px);
-		right: 0;
-		margin: 0;
-		padding: 4px;
-		list-style: none;
-		min-width: 96px;
-		border-radius: 4px;
-		background: rgba(0, 0, 0, 0.88);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-	}
-
-	.qualityItem {
-		display: block;
-		width: 100%;
-		padding: 6px 10px;
-		border: none;
-		border-radius: 3px;
-		background: transparent;
-		color: #fff;
-		font-size: 12px;
-		text-align: left;
-		white-space: nowrap;
-		cursor: pointer;
-
-		&:hover,
-		&:focus-visible {
-			background: rgba(255, 255, 255, 0.15);
-		}
-	}
-
-	.qualityItemActive {
-		font-weight: 700;
-		color: #4da3ff;
-	}
-
-	// Quality menu button in the video.js control bar: show a readable text
-	// value (Auto / 720p) instead of a tiny icon, sized to the control bar.
-	:global(.vjs-quality-menu) {
-		width: auto !important;
-		min-width: 3.2em;
-		padding: 0 0.4em;
-		cursor: pointer;
-	}
-
-	:global(.vjs-quality-menu .vjs-icon-placeholder) {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-
-		&::before {
-			content: none;
-		}
-	}
-
-	:global(.vjs-quality-menu-value) {
-		display: inline-block;
-		font-size: 1.2em;
-		font-weight: 600;
-		line-height: 1;
-		// Match the other control-bar controls (dark text on the light bar);
-		// #fff was invisible on the light control bar.
-		color: var(--theme-color-components-text-on-light);
-	}
-
-	.poster {
-		// Absolutely cover the whole player area: sizing via the grid cell
-		// proved fragile (auto heights collapsed the image to zero, intrinsic
-		// widths overflowed to the right). The container is position:relative.
-		position: absolute;
-		inset: 0;
-		// The poster is a <button>: clicking it starts playback (with native
-		// browser controls there is no video.js big-play button on top of it).
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0;
-		border: none;
-		background: #000;
-		cursor: pointer;
-		overflow: hidden;
-		z-index: 2;
-	}
-
-	.posterPlayGlyph {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 84px;
-		height: 84px;
-		border-radius: 9999px;
-		background: rgba(0, 0, 0, 0.55);
-		color: #fff;
-		font-size: 34px;
-		padding-left: 6px; // optical centering of the triangle
-		pointer-events: none;
-		transition: background 0.15s ease;
-	}
-
-	.poster:hover .posterPlayGlyph,
-	.poster:focus-visible .posterPlayGlyph {
-		background: rgba(0, 0, 0, 0.75);
-	}
+	width: 100%;
+	max-width: calc(var(--player-container-height) * 16 / 9);
+	aspect-ratio: 16 / 9;
+	margin: 0 auto;
+	background: #000;
 }
 
+.player {
+	position: absolute;
+	inset: 0;
+}
+
+.video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	object-fit: contain;
+	background: #000;
+}
+
+.poster {
+	// Cover the whole 16:9 area. Shown before the first play and while offline;
+	// once playback starts the YouTube-style PlayerChrome takes over.
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: none;
+	background: #000;
+	cursor: pointer;
+	overflow: hidden;
+	z-index: 3;
+}
+
+.posterPlayGlyph {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 84px;
+	height: 84px;
+	border-radius: 9999px;
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	font-size: 34px;
+	padding-left: 6px; // optical centering of the triangle
+	pointer-events: none;
+	transition: background 0.15s ease;
+}
+
+.poster:hover .posterPlayGlyph,
+.poster:focus-visible .posterPlayGlyph {
+	background: rgba(0, 0, 0, 0.75);
+}
+
+// Full-viewport 16:9 for the iframe embed.
 .embedded {
+	max-width: none;
+	width: 100%;
 	height: 100vh;
-	max-height: unset;
+
+	@include mixins.screen(tablet) {
+		height: 100vh;
+	}
 }

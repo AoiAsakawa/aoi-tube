@@ -16,6 +16,7 @@ import { useIsVideoPlaying, useSetIsVideoPlaying } from '../../stores/zustand-st
 import styles from './OwncastPlayer.module.scss';
 import { ComponentError } from '../../ui/ComponentError/ComponentError';
 import { ProtocolBadge } from '../ProtocolBadge';
+import { PlayerChrome, QualityOption } from '../PlayerChrome/PlayerChrome';
 import { ProtocolInfo } from '../../../interfaces/server-status.model';
 
 const ping = new ViewerPing();
@@ -78,8 +79,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	const [levels, setLevels] = useState<number[]>([]);
 	const selectedQualityRef = useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
 	const [selectedQuality, setSelectedQuality] = useState<string>(selectedQualityRef.current);
-	const [menuOpen, setMenuOpen] = useState(false);
-	const menuRef = useRef<HTMLDivElement | null>(null);
+	// True once playback has begun; gates the pre-roll poster so pausing shows the
+	// YouTube-style paused frame (via PlayerChrome) instead of the poster again.
+	const [started, setStarted] = useState(false);
 	// When Auto steps up to the top rung, this holds that rung's index until the
 	// switch lands, at which point ABR is re-enabled (see LEVEL_SWITCHED).
 	const autoRecoverTopRef = useRef<number | null>(null);
@@ -164,7 +166,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		selectedQualityRef.current = value;
 		setSelectedQuality(value);
 		setLocalStorage(PLAYER_QUALITY, value);
-		setMenuOpen(false);
 	};
 
 	// Set up hls.js (or native HLS) on the plain <video> element.
@@ -243,22 +244,10 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 			hlsRef.current = null;
 			ping.stop();
 			setVideoPlaying(false);
+			// Show the poster again when the stream ends / goes offline.
+			setStarted(false);
 		};
 	}, [online, source]);
-
-	// Close the quality menu on an outside click.
-	useEffect(() => {
-		if (!menuOpen) {
-			return undefined;
-		}
-		const onDown = (e: MouseEvent) => {
-			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-				setMenuOpen(false);
-			}
-		};
-		document.addEventListener('mousedown', onDown);
-		return () => document.removeEventListener('mousedown', onDown);
-	}, [menuOpen]);
 
 	// Resolution/fps + hls.js live latency for the protocol badge.
 	useEffect(() => {
@@ -330,8 +319,14 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 			}
 		: protocol;
 
-	const qualityLabel =
-		selectedQuality === 'auto' ? t('video.qualitySelector.auto') : `${selectedQuality}p`;
+	// ABR options for the PlayerChrome settings menu (only when there's a choice).
+	const qualityOptions: QualityOption[] | undefined =
+		levels.length > 1
+			? [
+					{ label: t('video.qualitySelector.auto'), value: 'auto' },
+					...levels.map(h => ({ label: `${h}p`, value: String(h) })),
+				]
+			: undefined;
 
 	return (
 		<ErrorBoundary
@@ -352,7 +347,6 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 						<video
 							ref={videoRef}
 							className={styles.video}
-							controls
 							autoPlay
 							playsInline
 							muted={initiallyMuted}
@@ -360,6 +354,7 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 							onPlaying={() => {
 								ping.start();
 								setVideoPlaying(true);
+								setStarted(true);
 							}}
 							onPause={() => {
 								ping.stop();
@@ -377,55 +372,16 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 							}}
 						/>
 						<ProtocolBadge protocol={badgeProtocol} />
-						{videoPlaying && levels.length > 1 && (
-							<div className={styles.qualityMenu} ref={menuRef}>
-								<button
-									type="button"
-									className={styles.qualityButton}
-									aria-haspopup="menu"
-									aria-expanded={menuOpen}
-									aria-label={t('video.qualitySelector.label')}
-									onClick={() => setMenuOpen(open => !open)}
-								>
-									{qualityLabel}
-								</button>
-								{menuOpen && (
-									<ul className={styles.qualityList} role="menu">
-										<li role="none">
-											<button
-												type="button"
-												role="menuitemradio"
-												aria-checked={selectedQuality === 'auto'}
-												className={classNames(styles.qualityItem, {
-													[styles.qualityItemActive]: selectedQuality === 'auto',
-												})}
-												onClick={() => applyQuality('auto')}
-											>
-												{t('video.qualitySelector.auto')}
-											</button>
-										</li>
-										{levels.map(h => (
-											<li role="none" key={h}>
-												<button
-													type="button"
-													role="menuitemradio"
-													aria-checked={selectedQuality === String(h)}
-													className={classNames(styles.qualityItem, {
-														[styles.qualityItemActive]: selectedQuality === String(h),
-													})}
-													onClick={() => applyQuality(String(h))}
-												>
-													{`${h}p`}
-												</button>
-											</li>
-										))}
-									</ul>
-								)}
-							</div>
-						)}
+						<PlayerChrome
+							videoRef={videoRef}
+							isLive
+							qualities={qualityOptions}
+							selectedQuality={selectedQuality}
+							onSelectQuality={applyQuality}
+						/>
 					</div>
 				)}
-				{!videoPlaying && (
+				{(!online || !started) && (
 					<button
 						type="button"
 						className={styles.poster}

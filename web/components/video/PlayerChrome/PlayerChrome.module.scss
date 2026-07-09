@@ -1,0 +1,306 @@
+// YouTube-style control chrome. Overlays the parent player's <video>.
+.root {
+	position: absolute;
+	inset: 0;
+	z-index: 5;
+	font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+	cursor: default;
+
+	&.hidden {
+		cursor: none;
+	}
+}
+
+// Transparent click/gesture surface over the video (behind the bar).
+.surface {
+	position: absolute;
+	inset: 0;
+	cursor: pointer;
+}
+
+// Bottom gradient so controls stay legible over bright video.
+.gradient {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 120px;
+	pointer-events: none;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+	opacity: 1;
+	transition: opacity 0.2s ease;
+}
+
+.bigPlay {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 68px;
+	height: 48px;
+	border: none;
+	border-radius: 10px;
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.15s ease;
+
+	&:hover {
+		background: #f00; // YouTube red on hover
+	}
+}
+
+.bigPlayGlyph {
+	width: 34px;
+	height: 34px;
+	display: block;
+}
+
+.spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 48px;
+	height: 48px;
+	margin: -24px 0 0 -24px;
+	border: 4px solid rgba(255, 255, 255, 0.25);
+	border-top-color: #fff;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+// Control bar container.
+.bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 0 12px 6px;
+	color: #fff;
+	opacity: 1;
+	transition: opacity 0.2s ease;
+	z-index: 6;
+}
+
+.barHidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+// Progress / scrub bar (VOD).
+.progress {
+	position: relative;
+	height: 4px;
+	margin-bottom: 4px;
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 2px;
+	cursor: pointer;
+	transition: height 0.1s ease;
+
+	&:hover {
+		height: 6px;
+	}
+}
+
+.progressBuffered {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	background: rgba(255, 255, 255, 0.45);
+	border-radius: 2px;
+}
+
+.progressPlayed {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	background: #f00;
+	border-radius: 2px;
+}
+
+.progressThumb {
+	position: absolute;
+	right: -6px;
+	top: 50%;
+	width: 12px;
+	height: 12px;
+	transform: translateY(-50%) scale(0);
+	background: #f00;
+	border-radius: 50%;
+	transition: transform 0.1s ease;
+
+	.progress:hover & {
+		transform: translateY(-50%) scale(1);
+	}
+}
+
+.controls {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 40px;
+}
+
+.left,
+.right {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.iconBtn {
+	width: 40px;
+	height: 40px;
+	padding: 8px;
+	border: none;
+	background: transparent;
+	color: #fff;
+	cursor: pointer;
+	opacity: 0.92;
+	transition: opacity 0.1s ease;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+// Volume: slider expands from 0 on hover, YouTube-style.
+.volume {
+	display: flex;
+	align-items: center;
+
+	&:hover .volSlider {
+		width: 64px;
+		margin-right: 8px;
+	}
+}
+
+.volSlider {
+	width: 0;
+	height: 3px;
+	margin: 0;
+	appearance: none;
+	-webkit-appearance: none;
+	background: rgba(255, 255, 255, 0.4);
+	border-radius: 2px;
+	cursor: pointer;
+	transition:
+		width 0.15s ease,
+		margin 0.15s ease;
+	outline: none;
+
+	&:focus-visible {
+		width: 64px;
+		margin-right: 8px;
+	}
+
+	&::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #fff;
+	}
+
+	&::-moz-range-thumb {
+		width: 12px;
+		height: 12px;
+		border: none;
+		border-radius: 50%;
+		background: #fff;
+	}
+}
+
+.time {
+	font-size: 13px;
+	padding: 0 6px;
+	white-space: nowrap;
+}
+
+.live {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	font-weight: 600;
+	padding: 0 6px;
+	text-transform: uppercase;
+}
+
+.liveDot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #f00;
+}
+
+// Settings menu.
+.settings {
+	position: relative;
+}
+
+.menu {
+	position: absolute;
+	right: 0;
+	bottom: 48px;
+	min-width: 180px;
+	padding: 6px 0;
+	background: rgba(28, 28, 28, 0.95);
+	border-radius: 8px;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+	font-size: 13px;
+	overflow: hidden;
+}
+
+.menuRow,
+.menuItem,
+.menuBack {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 9px 16px;
+	border: none;
+	background: transparent;
+	color: #fff;
+	text-align: left;
+	cursor: pointer;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.12);
+	}
+}
+
+.menuValue {
+	color: #aaa;
+}
+
+.menuBack {
+	font-weight: 600;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.menuItem {
+	justify-content: flex-start;
+	gap: 10px;
+}
+
+.menuItemActive {
+	font-weight: 700;
+
+	&::before {
+		content: '✓';
+		color: #fff;
+	}
+}

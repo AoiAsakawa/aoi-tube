@@ -1,11 +1,11 @@
-// The lightweight native-controls look is intentional (operator preference
-// over the video.js chrome). max-width keeps the video inside the padded
-// content area so the native control bar never slides under the chat sidebar.
+// A strict 16:9 box (matching the live HLS and VOD players) so all three size
+// identically and the YouTube-style PlayerChrome overlays a fixed area.
 .container {
 	position: relative;
 	width: 100%;
-	max-width: 100%;
-	height: 100%;
+	max-width: calc(var(--player-container-height) * 16 / 9);
+	aspect-ratio: 16 / 9;
+	margin: 0 auto;
 	background: #000;
 	overflow: hidden;
 }

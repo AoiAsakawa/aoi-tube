@@ -1,9 +1,12 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
 import Hls from 'hls.js';
 import { ComponentError } from '../../ui/ComponentError/ComponentError';
+import { PlayerChrome } from '../PlayerChrome/PlayerChrome';
 import styles from './VodPlayer.module.scss';
+
+const VOD_RATES = [0.5, 1, 1.25, 1.5, 2];
 
 export type VodPlayerProps = {
 	source: string;
@@ -55,6 +58,15 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 }) => {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const hlsRef = useRef<Hls | null>(null);
+	const [playbackRate, setPlaybackRate] = useState(1);
+
+	const selectRate = (rate: number) => {
+		const v = videoRef.current;
+		if (v) {
+			v.playbackRate = rate;
+		}
+		setPlaybackRate(rate);
+	};
 	// Keep the latest onPlayerReady reachable without making it an effect
 	// dependency (it must fire exactly once, when the element mounts).
 	const onReadyRef = useRef(onPlayerReady);
@@ -113,12 +125,12 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 			)}
 		>
 			<div className={classNames(styles.container, className)} aria-label={title}>
-				<video
-					ref={videoRef}
-					className={styles.video}
-					controls
-					autoPlay={autoplay}
-					playsInline
+				<video ref={videoRef} className={styles.video} autoPlay={autoplay} playsInline />
+				<PlayerChrome
+					videoRef={videoRef}
+					rates={VOD_RATES}
+					playbackRate={playbackRate}
+					onSelectRate={selectRate}
 				/>
 			</div>
 		</ErrorBoundary>
