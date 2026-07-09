@@ -47,7 +47,10 @@ PPV), [payments.md](payments.md) (payment providers),
   (`react-router-dom`), wrapped by `web/components/compat/` shims left over
   from the Next.js migration so pages don't import the router directly.
 - **react-i18next** with five catalogs: `ja`, `en`, `zh`, `zh-TW`, `ko`.
-- **video.js 8** for HLS/LL-HLS playback.
+- **hls.js** for HLS/LL-HLS playback on a plain `<video>` element (video.js was
+  removed: it could not drive the live players' hls.js / WebRTC `MediaStream`
+  engines). All three players — live LL-HLS, live WebRTC, VOD — share one
+  YouTube-style overlay, `PlayerChrome`.
 - **vitest 4** (+ Testing Library, jsdom) for unit tests.
 - **Storybook 10** using the `@storybook/react-vite` framework.
 
@@ -283,12 +286,14 @@ the parity gate keeps them safe to accept.
 
 Verified-in-code footguns worth knowing before you hit them:
 
-1. **`videojs.Vhs.xhr` is not a plain function** — it carries the
-   `onRequest`/`onResponse` hook sets that other code registers on (the
-   access-token decorator in `VideoJS.tsx` in particular). Replacing it with a
-   bare function detaches those hooks and token-gated streams 404-loop. Wrap
-   it, `Object.assign` the original's own properties onto the wrapper, and
-   keep `original` falsy (see `web/components/video/metrics/playback.js`).
+1. **Access tokens ride HLS requests via hls.js `xhrSetup`.** Token-gated
+   streams (silent mode, auth-required, PPV archives) need `?accessToken=` on
+   every playlist/segment fetch. The players decorate URLs in the `Hls`
+   `xhrSetup` callback for same-origin `/hls/` and `/api/archives/` only (never
+   external CDN hosts) — see `OwncastPlayer.tsx` / `VodPlayer.tsx`. Plain
+   `<img>`/`fetch` bypass `xhrSetup`, so build those URLs with `withAccessToken`.
+   (video.js and its `videojs.Vhs.xhr` hook object were removed with the player
+   rewrite.)
 2. **antd renames Select internals between majors.** v6 renamed
    `.ant-select-selector` → `.ant-select-input` and the selection
    item/placeholder → `.ant-select-content` / `.ant-select-placeholder`;
@@ -305,7 +310,7 @@ Verified-in-code footguns worth knowing before you hit them:
    (`core/transcoder/transcoder.go`, used by both the HLS and LL-HLS command
    builders) so `EXT-X-MEDIA-SEQUENCE` never moves backwards after a server
    restart. A backwards jump larger than the playlist length crashes
-   video.js/VHS on every playlist refresh in viewers' browsers.
+   hls.js on every playlist refresh in viewers' browsers.
 5. **`go:embed` needs the `static/` files to exist at build time**
    (`static/static.go` embeds `all:web`, `img/emoji`, and the offline clips).
    A missing file fails the build with `pattern xxx: no matching files

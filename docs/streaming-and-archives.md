@@ -70,9 +70,19 @@ Behavior:
   chronological) plus a random suffix so hidden recordings cannot be enumerated by URL
   guessing.
 - When the recording finishes, it is losslessly remuxed (`-c copy`) into a single
-  progressive `replay.mp4` used for VOD playback. This exists because playing the fMP4
-  HLS VOD through Video.js introduced a constant ~740 ms A/V offset; native MP4 playback
-  measures within ~100 ms. If the remux fails, playback falls back to the HLS playlist.
+  progressive `replay.mp4` used for VOD playback. This exists because the fMP4 HLS VOD
+  had a constant ~740 ms A/V offset in the old Video.js/VHS engine; the plain `<video>`
+  MP4 playback the players use now measures within ~100 ms. If the remux fails, playback
+  falls back to the HLS playlist.
+- **Under LL-HLS the recording is fed by a disk-mirror ffmpeg output.** gohlslib serves
+  the live low-latency stream from RAM and never writes segments to disk, so the recorder
+  (and the thumbnail generator) had nothing to mirror. A single `-c copy` HLS output of
+  the top rendition (`llhlsFfmpeg.go` `diskMirrorOutput`) runs alongside the LL-HLS
+  muxers — regardless of the recording toggle, so thumbnails also work — PUTting segments
+  to the internal file-writer service, which writes `data/hls/<top>/` and fires the normal
+  `SegmentWritten` hooks. From there recording, retention, `replay.mp4` and S3 offload are
+  identical to classic HLS. These mirror segments are **not** pushed to the live storage
+  provider under LL-HLS (nothing serves them; the stream is served from RAM).
 - A chat/event log (`events.jsonl`) is captured alongside the media so the archive replay
   can re-play chat messages and screen effects in sync with the video (with seeking).
 
