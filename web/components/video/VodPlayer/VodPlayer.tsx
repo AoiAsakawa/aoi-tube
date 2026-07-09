@@ -34,10 +34,10 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 }) => {
 	const videoJsOptions = {
 		autoplay,
-		// Native browser controls (seek, volume, fullscreen and playback speed
-		// via the browser's own menu), matching the live HLS and WebRTC
-		// players' lightweight look. video.js still drives HLS via VHS.
-		controls: false,
+		// video.js control bar (seek, volume, playback-rate menu, fullscreen),
+		// matching the live HLS player so all three players share one look.
+		controls: true,
+		playbackRates: [0.5, 1, 1.25, 1.5, 2],
 		bigPlayButton: false,
 		responsive: true,
 		fluid: false,
@@ -56,14 +56,6 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 
 	const handleReady = (player: VideoJsPlayer) => {
 		playerRef.current = player;
-
-		// Native browser controls on the underlying <video>, matching the live
-		// players.
-		const videoEl = player.el()?.querySelector('video');
-		if (videoEl) {
-			videoEl.setAttribute('controls', '');
-		}
-
 		onPlayerReady?.(player);
 	};
 
