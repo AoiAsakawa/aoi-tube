@@ -341,11 +341,16 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		html5: {
 			vhs: {
 				// Start at a bandwidth-appropriate rendition rather than forcing the
-				// lowest one: with the tiny low-latency buffer below, buffer-based ABR
-				// never gained enough headroom to up-switch, so playback got stuck at
-				// 360p. Bandwidth-based ABR (the VHS default) climbs correctly with a
-				// shallow live buffer.
+				// lowest one, so playback doesn't get stuck at 360p.
 				enableLowInitialPlaylist: false,
+				// Buffer-based ABR (rather than per-segment bandwidth ABR): with the
+				// 0.5s segments below, bandwidth ABR reacted to every segment's
+				// download blip and thrashed 360<->720<->1080. Buffer-based ABR only
+				// shifts on sustained buffer trends, so it holds a rendition steadily.
+				// It needs real buffer headroom to still climb (the earlier
+				// stuck-at-360p was buffer-based ABR starved by a ~1s buffer), which
+				// the deeper live window below now provides.
+				experimentalBufferBasedABR: true,
 				// Don't cap the rendition by the player's rendered pixel size, so 720p
 				// and source (1080p) are reachable on a large player.
 				limitRenditionByPlayerDimensions: false,
@@ -354,10 +359,12 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				// downlink and pin quality low.
 				useNetworkInformationApi: false,
 				maxPlaylistRetries: 30,
-				// Low-latency settings
+				// Low-latency settings. With 0.5s segments, 4 segments back is a ~2s
+				// live buffer: enough to stop stalls/rewinds and steady the ABR while
+				// keeping latency well under the old 1s-segment config.
 				llhls: true,
-				liveSyncDurationCount: 2, // Sync to 2 segments behind live edge
-				liveMaxLatencyDurationCount: 4, // Max 4 segments behind
+				liveSyncDurationCount: 4, // ~2s behind the live edge (0.5s segments)
+				liveMaxLatencyDurationCount: 8, // Max ~4s behind before catching up
 			},
 		},
 		liveTracker: {
