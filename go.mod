@@ -58,7 +58,10 @@ require (
 require github.com/SherClockHolmes/webpush-go v1.4.0
 
 require (
+	github.com/abema/go-mp4 v1.7.1 // indirect
 	github.com/andybalholm/brotli v1.2.2 // indirect
+	github.com/asticode/go-astikit v0.30.0 // indirect
+	github.com/asticode/go-astits v1.15.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.7.14 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.30 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.30 // indirect
@@ -106,6 +109,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.27
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.22.31
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.105.0
+	github.com/bluenviron/gohlslib/v2 v2.4.0
+	github.com/bluenviron/mediacommon/v2 v2.9.1
 	github.com/google/uuid v1.6.0
 	github.com/jellydator/ttlcache/v3 v3.4.1
 	github.com/joho/godotenv v1.5.1

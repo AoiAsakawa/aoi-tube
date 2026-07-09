@@ -12,6 +12,7 @@ import (
 	"github.com/aoiasakawa/aoitube/config"
 	"github.com/aoiasakawa/aoitube/core"
 	"github.com/aoiasakawa/aoitube/core/data"
+	"github.com/aoiasakawa/aoitube/core/transcoder"
 	"github.com/aoiasakawa/aoitube/models"
 	"github.com/aoiasakawa/aoitube/router/middleware"
 	"github.com/aoiasakawa/aoitube/utils"
@@ -45,6 +46,18 @@ func HandleHLSRequest(w http.ResponseWriter, r *http.Request) {
 	if !canViewStream(r) {
 		w.WriteHeader(http.StatusNotFound)
 		return
+	}
+
+	// LL-HLS (gohlslib) serves playlists, init segments, segments and parts from
+	// memory while a broadcast is live. Delegate to the running muxer manager;
+	// fall through to disk serving only when it can't handle the request (e.g.
+	// the offline clip between broadcasts).
+	if core.GetStatus().Online {
+		if mgr := transcoder.GetActiveLLHLSManager(); mgr != nil {
+			if mgr.Serve(w, r, relativePath) {
+				return
+			}
+		}
 	}
 
 	// If using external storage then only allow requests for the

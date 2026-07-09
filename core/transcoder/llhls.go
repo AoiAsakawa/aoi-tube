@@ -15,10 +15,14 @@ import (
 	"github.com/teris-io/shortid"
 )
 
-// LLHLSTranscoder extends Transcoder for Low-Latency HLS support.
+// LLHLSTranscoder extends Transcoder for Low-Latency HLS support. It transcodes
+// to one MPEG-TS elementary stream per rendition and feeds a gohlslib
+// Low-Latency muxer per rendition (real EXT-X-PART + blocking reload), instead
+// of the old ffmpeg fMP4 output (no parts, A/V drift).
 type LLHLSTranscoder struct {
 	*Transcoder
 	llhlsLatencyLevel models.LLHLSLatencyLevel
+	manager           *LLHLSMuxerManager
 }
 
 // NewLLHLSTranscoder creates a new LL-HLS transcoder instance.
@@ -37,10 +41,29 @@ func NewLLHLSTranscoder() *LLHLSTranscoder {
 func (t *LLHLSTranscoder) Start() {
 	_lastTranscoderLogMessage = ""
 
-	command := t.getLLHLSString()
-	log.Infof("LL-HLS Video transcoder started using %s with %d stream variants.", t.codec.DisplayName(), len(t.variants))
-	log.Infof("LL-HLS settings: segment=1s (forced for low latency)")
-	createVariantDirectories()
+	// One gohlslib Low-Latency muxer per rendition, fed MPEG-TS from ffmpeg over
+	// loopback TCP. gohlslib emits real EXT-X-PART parts + blocking reload and
+	// keeps A/V in sync; segment/part durations come from the LL-HLS latency level.
+	segS := t.llhlsLatencyLevel.SegmentDurationS
+	partMS := t.llhlsLatencyLevel.PartDurationMS
+	manager, err := NewLLHLSMuxerManager(t.currentStreamOutputSettings, segS, partMS)
+	if err != nil {
+		log.Errorln("LL-HLS: unable to start muxer manager:", err)
+		if t.TranscoderCompleted != nil {
+			t.TranscoderCompleted(err)
+		}
+		return
+	}
+	t.manager = manager
+	manager.Start()
+	setActiveLLHLSManager(manager)
+	defer func() {
+		setActiveLLHLSManager(nil)
+		manager.Stop()
+	}()
+
+	command := t.getLLHLSMpegtsString(manager.Ports())
+	log.Infof("LL-HLS (gohlslib) started using %s with %d rendition(s), segment=%ds part=%dms.", t.codec.DisplayName(), len(t.variants), segS, partMS)
 
 	if config.EnableDebugFeatures {
 		log.Println(command)
