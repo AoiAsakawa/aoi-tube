@@ -281,7 +281,12 @@ export const Content: FC = () => {
 								/>
 							) : (
 								<OwncastPlayer
-									source="/hls/stream.m3u8"
+									// When delivery is delegated to an external managed service
+									// (AWS IVS / IVS-compatible), play its HLS URL directly;
+									// otherwise the self-hosted playlist. In external mode the
+									// status reports webrtcEnabled=false, so the WebRTC branch and
+									// its toggle are already skipped.
+									source={serverStatus.externalStreamUrl || '/hls/stream.m3u8'}
 									online={online}
 									title={streamTitle || name}
 									className={styles.topSectionElement}

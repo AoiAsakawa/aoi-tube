@@ -48,6 +48,8 @@ interface StreamProtocolConfig {
 	webrtcIceServers: string;
 	webrtcMaxViewers: number;
 	webrtcUdpPort: number;
+	externalStreamEnabled: boolean;
+	externalStreamUrl: string;
 }
 
 interface LLHLSLatencyLevel {
@@ -152,6 +154,8 @@ export function StreamProtocolSection() {
 					webrtcIceServers: config.webrtcIceServers,
 					webrtcMaxViewers: config.webrtcMaxViewers,
 					webrtcUdpPort: config.webrtcUdpPort,
+					externalStreamEnabled: config.externalStreamEnabled,
+					externalStreamUrl: config.externalStreamUrl,
 				}),
 			});
 
@@ -423,6 +427,49 @@ export function StreamProtocolSection() {
 
 							<Text type="secondary" style={{ fontSize: 12 }}>
 								{t('admin.sections.streamProtocol.webrtcDescription')}
+							</Text>
+						</Space>
+					</Card>
+				</Col>
+
+				{/* External stream source (AWS IVS / IVS-compatible / self-hosted node) */}
+				<Col xs={24} lg={8}>
+					<Card
+						title={
+							<Space>
+								<GlobalOutlined />
+								<span>{t('admin.sections.streamProtocol.external.title')}</span>
+							</Space>
+						}
+					>
+						<Space direction="vertical" style={{ width: '100%' }}>
+							<div
+								style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+							>
+								<Text>{t('admin.sections.streamProtocol.external.enable')}</Text>
+								<Switch
+									checked={config.externalStreamEnabled}
+									onChange={checked => updateConfig('externalStreamEnabled', checked)}
+								/>
+							</div>
+
+							{config.externalStreamEnabled && (
+								<>
+									<Divider style={{ margin: '12px 0' }} />
+									<Text>{t('admin.sections.streamProtocol.external.url')}</Text>
+									<Input
+										value={config.externalStreamUrl}
+										onChange={e => updateConfig('externalStreamUrl', e.target.value)}
+										placeholder="https://xxxx.playback.live-video.net/.../playlist.m3u8"
+									/>
+									<Text type="warning" style={{ fontSize: 12 }}>
+										{t('admin.sections.streamProtocol.external.gatingWarning')}
+									</Text>
+								</>
+							)}
+
+							<Text type="secondary" style={{ fontSize: 12 }}>
+								{t('admin.sections.streamProtocol.external.description')}
 							</Text>
 						</Space>
 					</Card>

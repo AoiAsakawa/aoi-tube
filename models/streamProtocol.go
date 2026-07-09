@@ -30,6 +30,18 @@ type StreamProtocolConfig struct {
 	// Changing it takes effect after a server restart (the port binds once at
 	// startup).
 	WebRTCUDPPort int `json:"webrtcUdpPort"`
+
+	// External stream source. When enabled, the broadcaster streams to an
+	// external managed service (AWS IVS or an IVS-compatible / self-hosted node)
+	// instead of AoiTube's own RTMP+transcoder, and viewers play that service's
+	// HLS URL directly. This offloads all transcoding/delivery (so a weak box is
+	// fine) at the cost of AoiTube not being able to gate the video (silent mode,
+	// PPV, member-only apply to AoiTube-served media only). Online status is
+	// derived by polling the URL. Chat and payments are unaffected.
+	ExternalStreamEnabled bool `json:"externalStreamEnabled"`
+	// ExternalStreamURL is the external HLS playback URL (e.g. an IVS playback
+	// URL). Must be reachable from viewers' browsers.
+	ExternalStreamURL string `json:"externalStreamUrl"`
 }
 
 // DefaultStreamProtocolConfig returns default streaming protocol configuration.

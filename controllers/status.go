@@ -56,8 +56,24 @@ func getStatusResponse() webStatusResponse {
 		protocolInfo.ExpectedLatency = "10-30s"
 	}
 
+	online := status.Online
+
+	// External stream source: viewers play the external managed service's HLS URL
+	// directly (AoiTube does no local transcoding), and online status comes from
+	// polling that URL rather than the RTMP connect signal.
+	externalURL := ""
+	if protocolConfig.ExternalStreamEnabled && protocolConfig.ExternalStreamURL != "" {
+		ensureExternalStreamPoller()
+		externalURL = protocolConfig.ExternalStreamURL
+		online = isExternalStreamOnline()
+		protocolInfo.ActiveProtocol = "external"
+		// The external service delivers HLS; WebRTC is an AoiTube-served path, so
+		// don't advertise it (it would offer a low-latency toggle that can't work).
+		protocolInfo.WebRTCEnabled = false
+	}
+
 	response := webStatusResponse{
-		Online:             status.Online,
+		Online:             online,
 		ServerTime:         time.Now(),
 		LastConnectTime:    status.LastConnectTime,
 		LastDisconnectTime: status.LastDisconnectTime,
@@ -65,6 +81,7 @@ func getStatusResponse() webStatusResponse {
 		StreamTitle:        status.StreamTitle,
 		Protocol:           protocolInfo,
 		SilentMode:         data.GetSilentStreamMode(),
+		ExternalStreamURL:  externalURL,
 	}
 	if !data.GetHideViewerCount() {
 		response.ViewerCount = status.ViewerCount
@@ -95,4 +112,7 @@ type webStatusResponse struct {
 	// the viewer UI shows a TEST badge instead of LIVE. Only authorized
 	// viewers can watch such streams anyway.
 	SilentMode bool `json:"silentMode"`
+	// ExternalStreamURL is the external managed-service HLS URL viewers play when
+	// the external stream source is enabled; empty otherwise (self-hosted).
+	ExternalStreamURL string `json:"externalStreamUrl,omitempty"`
 }

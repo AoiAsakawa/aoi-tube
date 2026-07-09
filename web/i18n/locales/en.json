@@ -2115,7 +2115,14 @@
 				"saveButton": "Save Settings",
 				"reload": "Reload",
 				"udpPort": "WebRTC UDP port",
-				"udpPortTip": "The single UDP port all WebRTC media (ICE) is muxed onto. It must be opened inbound in your firewall. Changes take effect after a server restart (the port binds once at startup). The OWNCAST_WEBRTC_UDP_PORT environment variable overrides this value. Default: 52000."
+				"udpPortTip": "The single UDP port all WebRTC media (ICE) is muxed onto. It must be opened inbound in your firewall. Changes take effect after a server restart (the port binds once at startup). The OWNCAST_WEBRTC_UDP_PORT environment variable overrides this value. Default: 52000.",
+				"external": {
+					"title": "External source (IVS / IVS-compatible)",
+					"enable": "Use external source",
+					"url": "Playback HLS URL",
+					"gatingWarning": "Note: external delivery cannot enforce the paywall (PPV / member-only / silent mode). Keep gated streams self-hosted.",
+					"description": "Delegate delivery to a managed service (e.g. AWS IVS), an IVS-compatible service, or another node; viewers play its HLS URL directly. No local transcoding runs, saving CPU. Online status is derived by polling the URL."
+				}
 			}
 		},
 		"fields": {

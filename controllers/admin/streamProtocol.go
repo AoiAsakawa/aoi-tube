@@ -3,6 +3,7 @@ package admin
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/aoiasakawa/aoitube/controllers"
 	"github.com/aoiasakawa/aoitube/core/data"
@@ -19,6 +20,9 @@ type StreamProtocolConfigRequest struct {
 	WebRTCICEServers  string `json:"webrtcIceServers"`
 	WebRTCMaxViewers  int    `json:"webrtcMaxViewers"`
 	WebRTCUDPPort     int    `json:"webrtcUdpPort"`
+
+	ExternalStreamEnabled bool   `json:"externalStreamEnabled"`
+	ExternalStreamURL     string `json:"externalStreamUrl"`
 }
 
 // GetStreamProtocolConfig returns the current stream protocol configuration.
@@ -34,15 +38,17 @@ func GetStreamProtocolConfig(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := map[string]interface{}{
-		"hlsEnabled":        config.HLSEnabled,
-		"llhlsEnabled":      config.LLHLSEnabled,
-		"llhlsPartDuration": config.LLHLSPartDuration,
-		"llhlsPartHoldBack": config.LLHLSPartHoldBack,
-		"llhlsLatencyLevel": llhlsLevel.Level,
-		"webrtcEnabled":     config.WebRTCEnabled,
-		"webrtcIceServers":  config.WebRTCICEServers,
-		"webrtcMaxViewers":  config.WebRTCMaxViewers,
-		"webrtcUdpPort":     udpPort,
+		"hlsEnabled":            config.HLSEnabled,
+		"llhlsEnabled":          config.LLHLSEnabled,
+		"llhlsPartDuration":     config.LLHLSPartDuration,
+		"llhlsPartHoldBack":     config.LLHLSPartHoldBack,
+		"llhlsLatencyLevel":     llhlsLevel.Level,
+		"webrtcEnabled":         config.WebRTCEnabled,
+		"webrtcIceServers":      config.WebRTCICEServers,
+		"webrtcMaxViewers":      config.WebRTCMaxViewers,
+		"webrtcUdpPort":         udpPort,
+		"externalStreamEnabled": config.ExternalStreamEnabled,
+		"externalStreamUrl":     config.ExternalStreamURL,
 	}
 
 	controllers.WriteResponse(w, response)
@@ -93,6 +99,8 @@ func SetStreamProtocolConfig(w http.ResponseWriter, r *http.Request) {
 		}
 		config.WebRTCUDPPort = request.WebRTCUDPPort
 	}
+	config.ExternalStreamEnabled = request.ExternalStreamEnabled
+	config.ExternalStreamURL = strings.TrimSpace(request.ExternalStreamURL)
 
 	if err := data.SetStreamProtocolConfig(config); err != nil {
 		controllers.InternalErrorHandler(w, err)

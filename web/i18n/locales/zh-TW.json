@@ -2115,7 +2115,14 @@
 				"saveButton": "儲存設定",
 				"reload": "重新載入",
 				"udpPort": "WebRTC UDP連接埠",
-				"udpPortTip": "所有WebRTC媒體(ICE)多工的單一UDP連接埠。必須在防火牆中開放該連接埠的入站流量。變更在伺服器重新啟動後生效(連接埠於啟動時綁定一次)。若設定了環境變數 OWNCAST_WEBRTC_UDP_PORT 則以其為準。預設: 52000。"
+				"udpPortTip": "所有WebRTC媒體(ICE)多工的單一UDP連接埠。必須在防火牆中開放該連接埠的入站流量。變更在伺服器重新啟動後生效(連接埠於啟動時綁定一次)。若設定了環境變數 OWNCAST_WEBRTC_UDP_PORT 則以其為準。預設: 52000。",
+				"external": {
+					"title": "外部來源 (IVS / IVS 相容)",
+					"enable": "使用外部來源",
+					"url": "播放 HLS URL",
+					"gatingWarning": "注意：外部傳送無法執行付費牆（PPV / 會員限定 / 靜默模式）。需要付費牆的直播請維持自我託管。",
+					"description": "將傳送委派給託管服務（如 AWS IVS）、IVS 相容服務或其他節點；觀眾直接播放其 HLS URL。不需本地轉碼，節省 CPU。線上狀態透過輪詢該 URL 判斷。"
+				}
 			}
 		},
 		"fields": {

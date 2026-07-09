@@ -18,6 +18,10 @@ export interface ServerStatus {
 	// True while the operator runs a silent (test) broadcast; the header shows
 	// a TEST badge instead of LIVE.
 	silentMode?: boolean;
+	// When set, delivery is delegated to an external managed service (AWS IVS or
+	// an IVS-compatible node): the player uses this HLS URL directly instead of
+	// the self-hosted /hls/stream.m3u8, and no local transcoding runs.
+	externalStreamUrl?: string;
 }
 
 export function makeEmptyServerStatus(): ServerStatus {

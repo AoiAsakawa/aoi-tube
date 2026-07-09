@@ -2115,7 +2115,14 @@
 				"saveButton": "設定を保存",
 				"reload": "再読み込み",
 				"udpPort": "WebRTC UDPポート",
-				"udpPortTip": "全WebRTC通信(ICE)を通す単一UDPポート。ファイアウォールでこのポートのinbound開放が必須です。変更はサーバー再起動後に反映されます(ポートは起動時に一度だけバインド)。環境変数 OWNCAST_WEBRTC_UDP_PORT が設定されている場合はそちらが優先されます。既定: 52000。"
+				"udpPortTip": "全WebRTC通信(ICE)を通す単一UDPポート。ファイアウォールでこのポートのinbound開放が必須です。変更はサーバー再起動後に反映されます(ポートは起動時に一度だけバインド)。環境変数 OWNCAST_WEBRTC_UDP_PORT が設定されている場合はそちらが優先されます。既定: 52000。",
+				"external": {
+					"title": "外部ソース (IVS/IVS互換)",
+					"enable": "外部ソースを使う",
+					"url": "配信元HLS URL",
+					"gatingWarning": "注意: 外部配信は課金ゲート(PPV/会員限定/サイレント)が効きません。ゲートが必要な配信は自己ホストのままにしてください。",
+					"description": "AWS IVS等のマネージド配信/IVS互換/別ノードに配信を委譲し、視聴者はそのHLS URLを直接再生します。自前のトランスコード・配信が不要でCPUを節約できます。オンライン状態はURLのポーリングで判定します。"
+				}
 			}
 		},
 		"fields": {

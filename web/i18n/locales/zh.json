@@ -2115,7 +2115,14 @@
 				"saveButton": "保存设置",
 				"reload": "重新加载",
 				"udpPort": "WebRTC UDP端口",
-				"udpPortTip": "所有WebRTC媒体(ICE)复用的单一UDP端口。必须在防火墙中开放该端口的入站流量。更改在服务器重启后生效(端口在启动时绑定一次)。若设置了环境变量 OWNCAST_WEBRTC_UDP_PORT 则以其为准。默认: 52000。"
+				"udpPortTip": "所有WebRTC媒体(ICE)复用的单一UDP端口。必须在防火墙中开放该端口的入站流量。更改在服务器重启后生效(端口在启动时绑定一次)。若设置了环境变量 OWNCAST_WEBRTC_UDP_PORT 则以其为准。默认: 52000。",
+				"external": {
+					"title": "外部源 (IVS / IVS 兼容)",
+					"enable": "使用外部源",
+					"url": "播放 HLS URL",
+					"gatingWarning": "注意：外部分发无法执行付费门槛（PPV / 会员专享 / 静默模式）。需要门槛的直播请保持自托管。",
+					"description": "将分发委托给托管服务（如 AWS IVS）、IVS 兼容服务或其他节点；观众直接播放其 HLS URL。无需本地转码，节省 CPU。在线状态通过轮询该 URL 判断。"
+				}
 			}
 		},
 		"fields": {
