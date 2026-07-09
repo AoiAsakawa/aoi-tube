@@ -80,6 +80,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	const [selectedQuality, setSelectedQuality] = useState<string>(selectedQualityRef.current);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement | null>(null);
+	// When Auto steps up to the top rung, this holds that rung's index until the
+	// switch lands, at which point ABR is re-enabled (see LEVEL_SWITCHED).
+	const autoRecoverTopRef = useRef<number | null>(null);
 	const [videoStats, setVideoStats] = useState<{
 		height: number;
 		fps: number;
@@ -114,17 +117,30 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const hls = hlsRef.current;
 		if (hls) {
 			if (value === 'auto') {
-				// The progressive-part throughput measurement leaves the running
-				// estimate parked near the current rung's bitrate, so re-enabling ABR
-				// alone would never climb back up. Reset the estimator high so ABR
-				// immediately re-picks the top rung; it then holds there (or drops on
-				// real starvation) thanks to the widened factors above.
+				// Progressive LL-HLS part delivery pins the running estimate near the
+				// current rung's bitrate, so simply re-enabling ABR never climbs back
+				// up (a reset estimate is overwritten by the very next part timing).
+				// Instead explicitly step up to the top rung, then hand control back to
+				// ABR once we're there (handled in LEVEL_SWITCHED) — the widened factors
+				// keep it there unless the buffer genuinely starves.
+				let topIdx = -1;
+				let topH = -1;
+				hls.levels.forEach((l, i) => {
+					if ((l.height ?? 0) > topH) {
+						topH = l.height ?? 0;
+						topIdx = i;
+					}
+				});
 				hls.bandwidthEstimate = 10_000_000;
-				// nextLevel (not currentLevel) so the switch happens at the next
-				// segment boundary without flushing the current buffer — a hard
-				// currentLevel switch drops the buffer and rebuffers at the live edge,
-				// which the operator saw as a latency spike on every quality change.
-				hls.nextLevel = -1;
+				if (topIdx >= 0 && hls.currentLevel !== topIdx) {
+					autoRecoverTopRef.current = topIdx;
+					// nextLevel (not currentLevel) so the step-up lands on the next
+					// segment boundary without flushing the buffer and spiking latency.
+					hls.nextLevel = topIdx;
+				} else {
+					autoRecoverTopRef.current = null;
+					hls.nextLevel = -1;
+				}
 			} else {
 				const height = Number(value);
 				let best = -1;
@@ -191,7 +207,15 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				}
 				attemptPlay();
 			});
-			hls.on(Hls.Events.LEVEL_SWITCHED, updateLevels);
+			hls.on(Hls.Events.LEVEL_SWITCHED, (_evt, data) => {
+				updateLevels();
+				// Once the Auto step-up reaches the top rung, re-enable ABR so it can
+				// still drop on genuine starvation instead of staying hard-pinned.
+				if (autoRecoverTopRef.current !== null && data.level === autoRecoverTopRef.current) {
+					autoRecoverTopRef.current = null;
+					hls.nextLevel = -1;
+				}
+			});
 			hls.on(Hls.Events.ERROR, (_evt, data) => {
 				if (!data.fatal) {
 					return;

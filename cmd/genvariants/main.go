@@ -15,10 +15,13 @@ func main() {
 	// bandwidth, otherwise hls.js parks on the higher-bitrate transcoded rendition
 	// and never climbs to 1080p). The OBS source is 5Mbps, so 720p at 2.5M and
 	// 360p at 0.7M give a correct 0.7 < 2.5 < 5 ladder with good per-rung quality.
+	// CPUUsageLevel 2 == the veryfast x264 preset. The transcoded rungs were on
+	// ultrafast (level 0), which is what made 720p/360p blocky and noisy;
+	// veryfast is the standard live-streaming quality/CPU balance.
 	variants := []models.StreamOutputVariant{
 		{Name: "Source (passthrough)", IsVideoPassthrough: true, IsAudioPassthrough: true, CPUUsageLevel: 2},
-		{Name: "60fps@360p", IsAudioPassthrough: true, VideoBitrate: 700, ScaledWidth: 640, ScaledHeight: 360, Framerate: 60, CPUUsageLevel: 0},
-		{Name: "60fps@720p", IsAudioPassthrough: true, VideoBitrate: 2500, ScaledWidth: 1280, ScaledHeight: 720, Framerate: 60, CPUUsageLevel: 0},
+		{Name: "60fps@360p", IsAudioPassthrough: true, VideoBitrate: 700, ScaledWidth: 640, ScaledHeight: 360, Framerate: 60, CPUUsageLevel: 2},
+		{Name: "60fps@720p", IsAudioPassthrough: true, VideoBitrate: 2500, ScaledWidth: 1280, ScaledHeight: 720, Framerate: 60, CPUUsageLevel: 2},
 	}
 	var buf bytes.Buffer
 	if err := gob.NewEncoder(&buf).Encode(variants); err != nil {
