@@ -94,14 +94,13 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	const posterSrc = '/liveposter';
 
 	const attemptPlay = () => {
-		const el = videoRef.current;
-		if (!el) {
-			return;
-		}
-		el.play().catch(() => {
-			el.muted = true;
-			el.play().catch(() => {});
-		});
+		// Play WITH sound. We deliberately do NOT fall back to a muted play(): the
+		// browser blocks unmuted autoplay before any user gesture, and the old
+		// muted fallback made the stream start silently. Instead, when the gesture-
+		// less autoplay is blocked the video simply stays paused and the poster
+		// stays up; clicking the poster is a user gesture, so that play() is allowed
+		// to start with sound.
+		videoRef.current?.play().catch(() => {});
 	};
 
 	const updateLevels = () => {
@@ -213,6 +212,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				}
 				attemptPlay();
 			});
+			// LEVELS_UPDATED also fires when hls.js finishes (re)building the level
+			// list, so the quality menu is populated even if MANIFEST_PARSED raced it.
+			hls.on(Hls.Events.LEVELS_UPDATED, updateLevels);
 			hls.on(Hls.Events.LEVEL_SWITCHED, (_evt, data) => {
 				updateLevels();
 				// Once the Auto step-up reaches the top rung, re-enable ABR so it can

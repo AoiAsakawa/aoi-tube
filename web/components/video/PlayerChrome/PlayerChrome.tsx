@@ -167,10 +167,8 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 			return;
 		}
 		if (v.paused) {
-			v.play().catch(() => {
-				v.muted = true;
-				v.play().catch(() => {});
-			});
+			// Play with sound; a click is a user gesture so unmuted play is allowed.
+			v.play().catch(() => {});
 		} else {
 			v.pause();
 		}
