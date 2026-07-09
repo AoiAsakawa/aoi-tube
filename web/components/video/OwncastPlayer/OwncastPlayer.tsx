@@ -49,13 +49,16 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	const clockSkew = useClockSkew();
 
 	// Manual quality (rendition) selection, presented as a "Quality" menu button
-	// in the video.js control bar next to volume/fullscreen (YouTube-style). VHS
-	// auto-ABR can pin playback to a low rendition or hop to the heavy
-	// source-passthrough (occasionally desyncing A/V), so viewers get explicit
-	// Auto / 1080p / 720p / 360p choices on top of ABR. The selection lives in a
-	// ref (read from inside the video.js component, avoiding stale closures) and
-	// persists to localStorage; 'auto' re-enables every rendition.
-	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
+	// in the video.js control bar next to volume/fullscreen (YouTube-style).
+	//
+	// Default (no stored choice): pin the highest rendition — the source
+	// passthrough — instead of Auto. VHS's ABR oscillated 360<->720<->1080 (the
+	// source passthrough carries no CODECS attribute, so VHS repeatedly excludes
+	// and re-includes it), causing stutter and rewinds; pinning the top rendition
+	// removes ABR from the picture entirely so full quality stays stable. Viewers
+	// can still choose Auto or a lower quality from the menu, and that explicit
+	// choice is what gets persisted. Empty string = "no stored choice yet".
+	const selectedQualityRef = React.useRef<string>(getLocalStorage(PLAYER_QUALITY) || '');
 	const qualityButtonRef = React.useRef<{ update: () => void } | null>(null);
 
 	// Read the VHS representation list off the active tech, tolerating the
@@ -97,14 +100,22 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		qualityButtonRef.current?.update();
 	};
 
-	// Re-assert a pinned choice after a manifest reload (the representation
+	// Re-assert the current choice after a manifest reload (the representation
 	// objects are recreated) and rebuild the control-bar menu from the current
-	// levels.
+	// levels. With no stored choice, default to the highest rendition.
 	const refreshQualityLevels = () => {
-		const pinned = selectedQualityRef.current;
-		if (pinned !== 'auto') {
-			const height = Number(pinned);
-			const reps = getRepresentations();
+		const reps = getRepresentations();
+		if (selectedQualityRef.current === '') {
+			const heights = getQualityHeights();
+			if (heights.length > 0) {
+				selectedQualityRef.current = String(heights[0]); // highest (sorted desc)
+			}
+		}
+		const sel = selectedQualityRef.current;
+		if (sel === 'auto') {
+			reps.forEach(r => r.enabled(true));
+		} else if (sel !== '') {
+			const height = Number(sel);
 			if (reps.some(r => r.height === height)) {
 				reps.forEach(r => r.enabled(r.height === height));
 			}
@@ -122,8 +133,10 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const autoLabel = t('video.qualitySelector.auto');
 		const menuLabel = t('video.qualitySelector.label');
 
-		const qualityText = () =>
-			selectedQualityRef.current === 'auto' ? autoLabel : `${selectedQualityRef.current}p`;
+		const qualityText = () => {
+			const v = selectedQualityRef.current;
+			return v === 'auto' || v === '' ? autoLabel : `${v}p`;
+		};
 
 		class QualityMenuButton extends MenuButton {
 			labelEl_: HTMLElement | null = null;
