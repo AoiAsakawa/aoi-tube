@@ -102,9 +102,31 @@ func (s *FileWriterReceiverService) uploadHandler(w http.ResponseWriter, r *http
 			returnError(err, w)
 			return
 		}
-		if err := os.WriteFile(writePath, clampTargetDuration(body), 0o600); err != nil { //nolint: gosec
-			returnError(err, w)
-			return
+		body = clampTargetDuration(body)
+
+		if isMasterPlaylist {
+			// writePath already ends in ".tmp"; the callback promotes it after
+			// the storage provider rewrites the variant URIs.
+			if err := os.WriteFile(writePath, body, 0o600); err != nil { //nolint: gosec
+				returnError(err, w)
+				return
+			}
+		} else {
+			// Variant playlists are served in place, so write atomically
+			// (temp + rename). A plain truncate-then-write leaves a window
+			// where a player refreshing the playlist reads an empty/partial
+			// file, and VHS crashes on it ("Cannot read properties of
+			// undefined (reading 'segments')"). The 0.5s segments doubled the
+			// playlist write rate and made this race surface as dropouts.
+			tmp := writePath + ".part"
+			if err := os.WriteFile(tmp, body, 0o600); err != nil { //nolint: gosec
+				returnError(err, w)
+				return
+			}
+			if err := os.Rename(tmp, writePath); err != nil {
+				returnError(err, w)
+				return
+			}
 		}
 	} else {
 		f, err := os.Create(writePath) //nolint: gosec
