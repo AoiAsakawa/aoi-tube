@@ -340,12 +340,18 @@
 	width: 12px;
 	height: 12px;
 	border-radius: 50%;
-	// Fiery head (white core → gold → orange) so a meteor reads as a blazing
-	// fireball, clearly distinct from the small white shooting star.
-	background: radial-gradient(circle, #fff 0%, #ffe08a 42%, #ff9a3d 72%, transparent 100%);
+	// Coloured head (white core → the meteor's hue) so the shower is a
+	// colourful spectacle, clearly distinct from the small white shooting star.
+	background: radial-gradient(
+		circle,
+		#fff 0%,
+		hsl(var(--hue, 35) 100% 72%) 40%,
+		hsl(var(--hue, 35) 100% 55%) 72%,
+		transparent 100%
+	);
 	box-shadow:
-		0 0 16px 4px rgba(255, 170, 70, 0.95),
-		0 0 34px 10px rgba(255, 110, 40, 0.5);
+		0 0 18px 5px hsl(var(--hue, 35) 100% 62% / 0.95),
+		0 0 38px 12px hsl(var(--hue, 35) 100% 55% / 0.5);
 	animation-name: starStreak;
 	animation-timing-function: linear;
 	animation-fill-mode: both;
@@ -356,20 +362,20 @@
 	position: absolute;
 	top: 50%;
 	right: 55%;
-	width: var(--tail, 180px);
-	height: 8px;
+	width: var(--tail, 200px);
+	height: 9px;
 	border-radius: 6px;
 	transform: translateY(-50%);
-	// Thick fiery trail (white → gold → orange → transparent) with a warm glow.
+	// Thick coloured trail (white core → hue → transparent) with a matching glow.
 	background: linear-gradient(
 		to left,
 		#ffffff 0%,
-		#ffd06a 28%,
-		#ff7a2a 58%,
-		rgba(255, 90, 30, 0.35) 82%,
+		hsl(var(--hue, 35) 100% 72%) 26%,
+		hsl(var(--hue, 35) 100% 55%) 58%,
+		hsl(var(--hue, 35) 100% 50% / 0.3) 82%,
 		transparent 100%
 	);
-	box-shadow: 0 0 16px rgba(255, 150, 60, 0.7);
+	box-shadow: 0 0 18px hsl(var(--hue, 35) 100% 60% / 0.7);
 }
 
 /* 💰 Gold rush: shiny CSS coins raining under a pulsing golden flash. */
@@ -379,11 +385,14 @@
 	width: var(--sz, 26px);
 	height: var(--sz, 26px);
 	border-radius: 50%;
-	background: radial-gradient(circle at 35% 30%, #fff6c9, #ffd24a 42%, #e8a417 74%, #b4740c);
-	border: 1px solid rgba(255, 236, 150, 0.7);
+	background:
+		linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.85) 46%, transparent 58%),
+		radial-gradient(circle at 35% 30%, #fff6c9, #ffd24a 42%, #e8a417 74%, #b4740c);
+	border: 1px solid rgba(255, 236, 150, 0.8);
 	box-shadow:
-		0 0 9px rgba(255, 199, 44, 0.85),
-		inset 0 0 4px rgba(255, 255, 255, 0.7),
+		0 0 12px rgba(255, 199, 44, 0.9),
+		0 0 22px rgba(255, 170, 30, 0.45),
+		inset 0 0 4px rgba(255, 255, 255, 0.8),
 		inset 0 -2px 3px rgba(140, 90, 0, 0.5);
 	animation-name: confettiFall;
 	animation-timing-function: linear;
@@ -408,8 +417,22 @@
 	position: absolute;
 	inset: 0;
 	background:
-		radial-gradient(ellipse at 50% 0%, rgba(255, 214, 79, 0.28), transparent 60%),
-		radial-gradient(ellipse at 50% 100%, rgba(255, 180, 40, 0.18), transparent 55%);
+		// Radiating god-rays from the top, plus warm glows top and bottom.
+		conic-gradient(
+			from 0deg at 50% 12%,
+			rgba(255, 220, 120, 0.16) 0deg,
+			transparent 6deg 18deg,
+			rgba(255, 220, 120, 0.16) 24deg,
+			transparent 30deg 42deg,
+			rgba(255, 220, 120, 0.16) 48deg,
+			transparent 54deg 66deg,
+			rgba(255, 220, 120, 0.16) 72deg,
+			transparent 78deg 90deg,
+			rgba(255, 220, 120, 0.16) 96deg,
+			transparent 102deg 360deg
+		),
+		radial-gradient(ellipse at 50% 0%, rgba(255, 214, 79, 0.32), transparent 62%),
+		radial-gradient(ellipse at 50% 100%, rgba(255, 180, 40, 0.2), transparent 55%);
 	animation: goldFlashPulse 5.5s ease both;
 }
 

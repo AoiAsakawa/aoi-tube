@@ -125,8 +125,9 @@ const makeRainbow = (): Particle[] => [
 	})),
 ];
 
-// ☄️ Meteor shower: the lavish streaks — bigger, faster heads with a thick
-// glowing blue tail.
+// ☄️ Meteor shower: the lavish streaks — big, fast glowing heads with a thick
+// tail. Each meteor takes a random hue so the shower is a colourful spectacle
+// (a warm bias keeps most looking like fireballs).
 const makeMeteors = (count: number): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: i,
@@ -138,24 +139,64 @@ const makeMeteors = (count: number): Particle[] =>
 			animationDelay: `${rand(0, 3.8).toFixed(2)}s`,
 			'--angle': `${ri(28, 46)}deg`,
 			'--travel': `${ri(115, 150)}vh`,
-			'--tail': `${ri(120, 210)}px`,
+			'--tail': `${ri(140, 240)}px`,
+			// Mostly warm (fireball) hues with some cool ones mixed in for colour.
+			'--hue': `${i % 3 === 0 ? ri(0, 360) : ri(18, 55)}`,
 		} as CSSProperties,
 	}));
 
-// 💰 Gold rush: a heavy rain of shiny CSS coins under a pulsing golden flash.
-const makeGoldrush = (count: number): Particle[] =>
+// 💰 Gold rush: the top tier — a heavy rain of shiny coins, plus twinkling gold
+// glints and a shower of gold dust, all under a pulsing golden flash.
+const makeGoldCoins = (count: number): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'coin' as const,
 		style: {
 			left: `${rand(0, 98).toFixed(2)}%`,
-			'--sz': `${ri(20, 40)}px`,
+			'--sz': `${ri(22, 44)}px`,
 			animationDuration: `${rand(2.2, 3.6).toFixed(2)}s`,
 			animationDelay: `${rand(0, 1.8).toFixed(2)}s`,
 			'--sway': `${ri(-100, 100)}px`,
 			'--spin': `${ri(-720, 720)}deg`,
 		} as CSSProperties,
 	}));
+
+const makeGoldDust = (count: number, keyOffset: number): Particle[] =>
+	Array.from({ length: count }, (_, i) => ({
+		key: keyOffset + i,
+		kind: 'confetti' as const,
+		style: {
+			left: `${rand(0, 98).toFixed(2)}%`,
+			'--w': `${ri(4, 8)}px`,
+			'--h': `${ri(4, 8)}px`,
+			'--hue': `${ri(40, 52)}`,
+			'--round': '50%',
+			animationDuration: `${rand(2.4, 3.8).toFixed(2)}s`,
+			animationDelay: `${rand(0, 2).toFixed(2)}s`,
+			'--sway': `${ri(-80, 80)}px`,
+			'--spin': `${ri(-360, 360)}deg`,
+		} as CSSProperties,
+	}));
+
+const makeGoldGlints = (count: number, keyOffset: number): Particle[] =>
+	Array.from({ length: count }, (_, i) => ({
+		key: keyOffset + i,
+		kind: 'sparkle' as const,
+		style: {
+			left: `${rand(4, 94).toFixed(2)}%`,
+			top: `${rand(8, 88).toFixed(2)}%`,
+			'--sz': `${ri(12, 26)}px`,
+			'--hue': `${ri(42, 50)}`,
+			animationDuration: `${rand(1, 1.8).toFixed(2)}s`,
+			animationDelay: `${rand(0, 3.4).toFixed(2)}s`,
+		} as CSSProperties,
+	}));
+
+const makeGoldrush = (count: number): Particle[] => [
+	...makeGoldCoins(count),
+	...makeGoldDust(40, count),
+	...makeGoldGlints(22, count + 40),
+];
 
 // Effects are priced in ascending tiers (see models/donation.go effectPrices):
 // confetti < hearts < stars < fireworks < celebration < rainbow < meteor <
