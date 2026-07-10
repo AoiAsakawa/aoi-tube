@@ -162,26 +162,33 @@ export const DonationForm: FC<DonationFormProps> = ({
 	}, [visible, refreshWallet]);
 	// Coins charge only through Stripe / PayPal; snap the method to a valid one
 	// whenever coin mode is active with a different provider selected.
-	// Coin top-ups route only through the unified fiat providers (Stripe / PayPal).
-	const coinChargeProvider = stripeEnabled || paypalEnabled;
+	// Coin top-ups route through the fiat providers whose confirmation credits the
+	// wallet (Stripe / PayPal via the unified endpoint, PayPay via its own).
+	const coinChargeProvider = stripeEnabled || paypalEnabled || paypayEnabled;
 	// Coins can be spent even without a fiat provider; a charge needs Stripe/PayPal.
 	const canUseCoins = coinEnabled && walletLoggedIn;
 	const coinMode = payMode === 'coin' && canUseCoins;
 	// Charging requires a fiat provider; fall back to spend-only when there's none.
 	const coinCharge = coinMode && coinAction === 'charge' && coinChargeProvider;
 	const coinSpend = coinMode && !coinCharge;
-	// A coin charge routes only through Stripe / PayPal; snap the method to a
-	// valid one whenever a charge is active with a different provider selected.
+	// Only the providers whose confirmation credits the wallet can charge coins;
+	// snap the method to a valid one when a charge is active with another selected.
 	useEffect(() => {
-		if (
-			coinCharge &&
-			(stripeEnabled || paypalEnabled) &&
-			paymentMethod !== 'stripe' &&
-			paymentMethod !== 'paypal'
-		) {
-			setPaymentMethod(stripeEnabled ? 'stripe' : 'paypal');
+		if (!coinCharge) {
+			return;
 		}
-	}, [coinCharge, paymentMethod, stripeEnabled, paypalEnabled]);
+		const chargeable = ['stripe', 'paypal', 'paypay'];
+		if (chargeable.includes(paymentMethod)) {
+			return;
+		}
+		if (stripeEnabled) {
+			setPaymentMethod('stripe');
+		} else if (paypalEnabled) {
+			setPaymentMethod('paypal');
+		} else if (paypayEnabled) {
+			setPaymentMethod('paypay');
+		}
+	}, [coinCharge, paymentMethod, stripeEnabled, paypalEnabled, paypayEnabled]);
 
 	// Local, purchase-free preview: enqueue the effect into the shared screen
 	// effect queue so the real animation plays full-screen for this viewer only.
@@ -997,7 +1004,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 							onChange={e => setPaymentMethod(e.target.value)}
 							className={styles.paymentMethodGroup}
 						>
-							{!coinMode && paypayEnabled && (
+							{paypayEnabled && (
 								<Radio.Button value="paypay">
 									<QrcodeOutlined /> PayPay
 								</Radio.Button>
@@ -1919,7 +1926,9 @@ export const DonationForm: FC<DonationFormProps> = ({
 							loading={isSubmitting}
 							icon={<QrcodeOutlined />}
 						>
-							{t('donation.payWith', { provider: 'PayPay' })}
+							{coinCharge
+								? t('donation.coinChargeButton')
+								: t('donation.payWith', { provider: 'PayPay' })}
 						</Button>
 					)}
 					{!coinSpend && paypalEnabled && paymentMethod === 'paypal' && (

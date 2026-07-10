@@ -415,7 +415,9 @@ export const useFiatPayments = ({
 		setIsSubmitting(true);
 
 		try {
-			const response = await fetchData(PAYPAY_CREATE_PAYMENT, {
+			// Carry the logged-in viewer's token so account-scoped purchases (coin
+			// top-up, paid archive) can resolve the buyer server-side.
+			const response = await fetchData(withPaymentAccessToken(PAYPAY_CREATE_PAYMENT), {
 				method: 'POST',
 				data: {
 					amount: chargeAmount,

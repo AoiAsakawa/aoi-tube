@@ -72,15 +72,27 @@ func PayPayCreatePayment(w http.ResponseWriter, r *http.Request) {
 
 	// Paid archive: resolve buyer + server-enforced price (client amount is
 	// ignored) and tie the entitlement to the authenticated buyer.
-	var archiveBuyerID string
+	var buyerUserID string
 	if itemType == models.DonationItemArchive {
 		uid, price, _, aerr := resolveArchivePurchase(r, request.ArchiveID)
 		if aerr != nil {
 			WriteSimpleResponse(w, false, aerr.Error())
 			return
 		}
-		archiveBuyerID = uid
+		buyerUserID = uid
 		request.Amount = price
+	}
+
+	// Coin top-up: resolve the logged-in buyer so the confirmed charge credits
+	// their wallet. The amount stays viewer-chosen (clamped below). PayPay is
+	// JPY-only, which matches the base currency coins are denominated in.
+	if itemType == models.DonationItemCoin {
+		uid, cerr := resolveCoinCharge(r)
+		if cerr != nil {
+			WriteSimpleResponse(w, false, cerr.Error())
+			return
+		}
+		buyerUserID = uid
 	}
 
 	if request.Amount <= 0 {
@@ -126,7 +138,7 @@ func PayPayCreatePayment(w http.ResponseWriter, r *http.Request) {
 		ItemType:        itemType,
 		EffectType:      effectType,
 		ArchiveID:       request.ArchiveID,
-		UserID:          archiveBuyerID,
+		UserID:          buyerUserID,
 		IsTest:          config.IsSandbox,
 		CreatedAt:       time.Now(),
 	}
@@ -308,6 +320,12 @@ func completePayPayDonation(donation *models.Donation, fromWebhook bool) {
 	// broadcast them to chat or fire the donation webhook.
 	if donation.ItemType == models.DonationItemArchive {
 		log.Infof("PayPay archive purchase recorded: user=%s archive=%s", donation.UserID, donation.ArchiveID)
+		return
+	}
+
+	// Coin top-ups credit the buyer's wallet; buying coins isn't a chat event.
+	if donation.ItemType == models.DonationItemCoin {
+		creditCoinCharge(donation, "paypay")
 		return
 	}
 
