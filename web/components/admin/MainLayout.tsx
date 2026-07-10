@@ -184,6 +184,12 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 					),
 					key: '/admin/donations',
 				},
+				{
+					label: (
+						<Link href="/admin/config-coins">{t('admin.layout.mainLayout.menu.coinsSettings')}</Link>
+					),
+					key: '/admin/config-coins',
+				},
 			],
 		},
 		{

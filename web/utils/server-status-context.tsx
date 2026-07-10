@@ -25,6 +25,7 @@ const initialServerConfigState: ConfigDetails = {
 		welcomeMessage: '',
 		offlineMessage: '',
 		streamSchedule: '',
+		coinWallet: { enabled: false, bonusPercent: 0 },
 		appearanceVariables: {},
 	},
 	ffmpegPath: '',

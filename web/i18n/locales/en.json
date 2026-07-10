@@ -746,6 +746,16 @@
 			"backup": {
 				"title": "Backup",
 				"description": "Automatically back up the database (config, users, purchase history and archive viewing entitlements). Because payments are involved, backups are recommended to protect purchase records."
+			},
+			"coins": {
+				"title": "Coin wallet",
+				"intro": "Settings for prepaid coins that viewers charge up and spend.",
+				"aboutTitle": "About coins",
+				"aboutBody": "Coins are a per-viewer prepaid balance (1 coin = 1 minor unit of the base currency). Revenue is booked at charge time; coins pay for Super Chats and gifts. Unused balances are tracked as a prepaid instrument.",
+				"enableLabel": "Enable coin wallet",
+				"enableDescription": "Let viewers charge up and spend coins.",
+				"bonusLabel": "Charge bonus",
+				"bonusDescription": "Bonus coins added on top of a charge (e.g. 10% grants 1100 coins for a 1000 charge)."
 			}
 		},
 		"pages": {
@@ -1624,7 +1634,8 @@
 					"integrations": "Integrations",
 					"help": "Help",
 					"logout": "Log out",
-					"archives": "Archives"
+					"archives": "Archives",
+					"coinsSettings": "Coins"
 				},
 				"menuGroups": {
 					"management": "Management",

@@ -39,6 +39,7 @@ export interface ConfigInstanceDetailsFields {
 	summary: string;
 	offlineMessage: string;
 	streamSchedule: string;
+	coinWallet?: CoinWalletConfig;
 	hasCustomOfflineClip?: boolean;
 	hasCustomLivePoster?: boolean;
 	offlineMediaPath?: string;
@@ -48,6 +49,12 @@ export interface ConfigInstanceDetailsFields {
 	title: string;
 	welcomeMessage: string;
 	appearanceVariables: AppearanceVariables;
+}
+
+// Prepaid coin wallet settings (admin view).
+export interface CoinWalletConfig {
+	enabled: boolean;
+	bonusPercent: number;
 }
 
 export type CpuUsageLevel = 1 | 2 | 3 | 4 | 5;

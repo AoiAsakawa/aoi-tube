@@ -746,6 +746,16 @@
 			"backup": {
 				"title": "备份",
 				"description": "自动备份数据库（配置、用户、购买记录和存档观看权限）。由于涉及支付，建议开启备份以保护购买记录。"
+			},
+			"coins": {
+				"title": "金币钱包",
+				"intro": "观众预先充值并使用的预付金币设置。",
+				"aboutTitle": "关于金币",
+				"aboutBody": "金币是每位观众的预付余额（1 金币 = 基准货币的最小单位）。充值时计入营收，金币可用于支付超级留言和礼物。未使用余额作为预付支付手段管理。",
+				"enableLabel": "启用金币钱包",
+				"enableDescription": "允许观众充值和使用金币。",
+				"bonusLabel": "充值奖励",
+				"bonusDescription": "在充值金额之上额外赠送的奖励金币比例（例如 10% 则充值 1000 赠送 1100 金币）。"
 			}
 		},
 		"pages": {
@@ -1624,7 +1634,8 @@
 					"integrations": "集成",
 					"help": "帮助",
 					"logout": "退出登录",
-					"archives": "存档"
+					"archives": "存档",
+					"coinsSettings": "金币"
 				},
 				"menuGroups": {
 					"management": "管理",

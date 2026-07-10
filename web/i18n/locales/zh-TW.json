@@ -746,6 +746,16 @@
 			"backup": {
 				"title": "備份",
 				"description": "自動備份資料庫（設定、使用者、購買紀錄和存檔觀看權限）。由於涉及付款，建議開啟備份以保護購買紀錄。"
+			},
+			"coins": {
+				"title": "金幣錢包",
+				"intro": "觀眾預先儲值並使用的預付金幣設定。",
+				"aboutTitle": "關於金幣",
+				"aboutBody": "金幣是每位觀眾的預付餘額（1 金幣 = 基準貨幣的最小單位）。儲值時計入營收，金幣可用於支付超級留言和禮物。未使用餘額作為預付支付手段管理。",
+				"enableLabel": "啟用金幣錢包",
+				"enableDescription": "允許觀眾儲值和使用金幣。",
+				"bonusLabel": "儲值獎勵",
+				"bonusDescription": "在儲值金額之上額外贈送的獎勵金幣比例（例如 10% 則儲值 1000 贈送 1100 金幣）。"
 			}
 		},
 		"pages": {
@@ -1624,7 +1634,8 @@
 					"integrations": "整合",
 					"help": "說明",
 					"logout": "登出",
-					"archives": "存檔"
+					"archives": "存檔",
+					"coinsSettings": "金幣"
 				},
 				"menuGroups": {
 					"management": "管理",
