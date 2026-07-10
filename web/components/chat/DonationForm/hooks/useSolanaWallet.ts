@@ -14,7 +14,7 @@ import {
 	SOLANA_TOKEN_PROGRAM_ID,
 } from '../constants';
 import { MetamaskConfig, TokenOption } from '../types';
-import { isTrustWalletConnected } from '../walletUtils';
+import { describeWalletError, isTrustWalletConnected } from '../walletUtils';
 
 interface UseSolanaWalletArgs {
 	metamaskConfig: MetamaskConfig | null;
@@ -82,16 +82,26 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 			}
 		}
 
-		// Get Solana account
-		const accountResponse = (await window.ethereum.request({
-			method: 'wallet_invokeSnap',
-			params: {
-				snapId: SOLANA_SNAP_ID,
-				request: {
-					method: 'getAccount',
+		// Get Solana account. MetaMask rejects with a plain {code, message} object
+		// rather than an Error, so surface its message instead of letting a
+		// non-Error escape and collapse into a generic "an error occurred".
+		let accountResponse: { publicKey: string } | string;
+		try {
+			accountResponse = (await window.ethereum.request({
+				method: 'wallet_invokeSnap',
+				params: {
+					snapId: SOLANA_SNAP_ID,
+					request: {
+						method: 'getAccount',
+					},
 				},
-			},
-		})) as { publicKey: string } | string;
+			})) as { publicKey: string } | string;
+		} catch (error) {
+			throw new Error(
+				t('donation.solanaConnectError', { error: describeWalletError(error) }),
+				{ cause: error },
+			);
+		}
 
 		let address: string;
 		if (typeof accountResponse === 'string') {
@@ -144,7 +154,7 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 				fetchSolanaBalance(address);
 				return address;
 			} catch (error) {
-				const errorMessage = error instanceof Error ? error.message : t('donation.unknownError');
+				const errorMessage = describeWalletError(error);
 				if (errorMessage.includes('reject') || errorMessage.includes('cancel')) {
 					throw new Error(t('donation.connectionCancelled'), { cause: error });
 				}
@@ -165,7 +175,7 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 				fetchSolanaBalance(address);
 				return address;
 			} catch (error) {
-				const errorMessage = error instanceof Error ? error.message : t('donation.unknownError');
+				const errorMessage = describeWalletError(error);
 				if (errorMessage.includes('reject') || errorMessage.includes('cancel')) {
 					throw new Error(t('donation.connectionCancelled'), { cause: error });
 				}

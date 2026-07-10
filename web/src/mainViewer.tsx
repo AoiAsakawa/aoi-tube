@@ -2,6 +2,10 @@
 // for the public-facing UI: global stylesheets, fonts, i18n, antd provider and
 // the react-router route table.
 
+// Node globals (Buffer) that the crypto wallet paths rely on. Must be first:
+// the donation form's bitcoinjs-lib code evaluates as soon as it is imported.
+import './polyfills';
+
 // Fonts — formerly next/font/google (Inter, Poppins). @fontsource provides the
 // @font-face rules; src/fonts.css exposes the --font-inter / --font-poppins
 // variables consumed by styles/variables.css.

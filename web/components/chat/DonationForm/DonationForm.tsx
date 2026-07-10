@@ -64,7 +64,7 @@ import {
 	PurchaseItem,
 	StripeConfig,
 } from './types';
-import { getWalletName, isTrustWalletConnected } from './walletUtils';
+import { describeWalletError, getWalletName, isTrustWalletConnected } from './walletUtils';
 import { useCryptoPrices } from './hooks/useCryptoPrices';
 import { useBitcoinWallet } from './hooks/useBitcoinWallet';
 import { useSolanaWallet } from './hooks/useSolanaWallet';
@@ -1151,9 +1151,8 @@ export const DonationForm: FC<DonationFormProps> = ({
 															: t('donation.solanaWallet');
 													message.success(t('donation.connectedToWallet', { wallet: walletType }));
 												} catch (error) {
-													const msg =
-														error instanceof Error ? error.message : t('donation.errorOccurred');
-													message.error(msg);
+													// Wallet providers reject with {code,message}, not an Error.
+													message.error(describeWalletError(error));
 												} finally {
 													setIsConnecting(false);
 												}
