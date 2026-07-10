@@ -7,6 +7,7 @@ import {
 	Tag,
 	Space,
 	Input,
+	InputNumber,
 	Typography,
 	Popconfirm,
 	message,
@@ -40,6 +41,7 @@ import {
 	USER_MERGE,
 	USER_SET_MODERATOR,
 	ADMIN_WALLET_USER,
+	ADMIN_WALLET_ADJUST,
 	fetchData,
 } from '../../../utils/apis';
 
@@ -110,6 +112,10 @@ export default function UserDataManagement() {
 	const [auditLoading, setAuditLoading] = useState(false);
 	// Coin balance of the user whose detail modal is open (null = not loaded).
 	const [coinBalance, setCoinBalance] = useState<number | null>(null);
+	// Manual coin grant / deduction form (within the user detail modal).
+	const [coinDelta, setCoinDelta] = useState(0);
+	const [coinNote, setCoinNote] = useState('');
+	const [coinAdjusting, setCoinAdjusting] = useState(false);
 	const [mergeSource, setMergeSource] = useState<User | null>(null);
 	const [mergeTargetId, setMergeTargetId] = useState<string>('');
 	const [reactivating, setReactivating] = useState<string | null>(null);
@@ -244,6 +250,8 @@ export default function UserDataManagement() {
 		setAuditUser(user);
 		setAuditEvents([]);
 		setCoinBalance(null);
+		setCoinDelta(0);
+		setCoinNote('');
 		setAuditLoading(true);
 		// Coin balance loads alongside the audit log (best-effort; coins may be off).
 		fetchData(`${ADMIN_WALLET_USER}?userId=${encodeURIComponent(user.id)}`)
@@ -256,6 +264,32 @@ export default function UserDataManagement() {
 			message.error(t('admin.pages.userData.governance.auditLoadFailed'));
 		}
 		setAuditLoading(false);
+	};
+
+	const handleCoinAdjust = async () => {
+		if (!auditUser || !coinDelta) {
+			message.error(t('admin.pages.userData.coin.validation'));
+			return;
+		}
+		setCoinAdjusting(true);
+		try {
+			const res = await fetchData(ADMIN_WALLET_ADJUST, {
+				method: 'POST',
+				auth: true,
+				data: { userId: auditUser.id, delta: coinDelta, note: coinNote.trim() },
+			});
+			if (res?.success) {
+				setCoinBalance(Number(res.balance) || 0);
+				setCoinDelta(0);
+				setCoinNote('');
+				message.success(t('admin.pages.userData.coin.success'));
+			} else {
+				message.error(res?.message || t('admin.pages.userData.coin.error'));
+			}
+		} catch {
+			message.error(t('admin.pages.userData.coin.error'));
+		}
+		setCoinAdjusting(false);
 	};
 
 	const handleReactivate = async (userId: string, type: string, tok?: string) => {
@@ -633,9 +667,39 @@ export default function UserDataManagement() {
 				width={640}
 			>
 				{coinBalance !== null && (
-					<div style={{ marginBottom: 12, fontSize: 14 }}>
-						{t('admin.pages.userData.coinBalance')}:{' '}
-						<strong>🪙 {coinBalance.toLocaleString()}</strong>
+					<div
+						style={{
+							marginBottom: 12,
+							padding: 12,
+							borderRadius: 8,
+							background: 'rgba(102,126,234,0.1)',
+						}}
+					>
+						<div style={{ marginBottom: 8, fontSize: 14 }}>
+							{t('admin.pages.userData.coinBalance')}:{' '}
+							<strong>🪙 {coinBalance.toLocaleString()}</strong>
+						</div>
+						<Space wrap>
+							<InputNumber
+								value={coinDelta}
+								onChange={v => setCoinDelta(Number(v) || 0)}
+								addonBefore="🪙"
+								placeholder="+/-"
+								style={{ width: 140 }}
+							/>
+							<Input
+								value={coinNote}
+								onChange={e => setCoinNote(e.target.value)}
+								placeholder={t('admin.pages.userData.coin.notePlaceholder')}
+								style={{ width: 200 }}
+							/>
+							<Button type="primary" loading={coinAdjusting} onClick={handleCoinAdjust}>
+								{t('admin.pages.userData.coin.apply')}
+							</Button>
+						</Space>
+						<div style={{ marginTop: 4, fontSize: 12, color: '#888' }}>
+							{t('admin.pages.userData.coin.hint')}
+						</div>
 					</div>
 				)}
 				<Table

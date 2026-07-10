@@ -301,7 +301,9 @@
 			"spend": "支払い",
 			"refund": "返金",
 			"admin_adjust": "調整"
-		}
+		},
+		"coinCredited": "獲得コイン",
+		"coinCreditedBreakdown": "内訳: {{base}} + ボーナス {{bonus}}（+{{percent}}%）"
 	},
 	"screenEffects": {
 		"confetti": "紙吹雪",
@@ -778,17 +780,7 @@
 				"liabilityTitle": "未使用残高（負債）",
 				"outstandingLabel": "発行済み未使用コイン合計",
 				"liabilityNote": "全ユーザーの残高合計。前払式支払手段の未使用残高報告の基準になります。",
-				"adjustTitle": "コインの手動付与・調整",
-				"adjustUserIdLabel": "ユーザーID",
-				"adjustUserIdDescription": "対象ユーザーのID（付与/調整先）。",
-				"adjustDeltaLabel": "増減コイン",
-				"adjustDeltaDescription": "正の値で付与、負の値で減算（残高不足の減算は拒否）。",
-				"adjustNoteLabel": "メモ",
-				"adjustNoteDescription": "台帳に記録される理由（任意）。",
-				"adjustButton": "適用",
-				"adjustValidation": "ユーザーIDと0以外の増減値を入力してください。",
-				"adjustSuccess": "適用しました（残高: {{balance}}）",
-				"adjustError": "適用に失敗しました。"
+				"grantMovedNote": "コインの手動付与・調整は「チャット・ユーザー → ユーザーデータ」で対象ユーザーを開いて行えます。"
 			}
 		},
 		"pages": {
@@ -1310,7 +1302,15 @@
 					"moderatorRevoked": "モデレーター権限を解除しました。",
 					"moderatorFailed": "モデレーター状態の変更に失敗しました。"
 				},
-				"coinBalance": "コイン残高"
+				"coinBalance": "コイン残高",
+				"coin": {
+					"notePlaceholder": "メモ（任意）",
+					"apply": "付与/調整",
+					"hint": "正の値で付与、負の値で減算（残高不足は拒否）。",
+					"validation": "0以外の増減値を入力してください。",
+					"success": "コイン残高を更新しました",
+					"error": "更新に失敗しました"
+				}
 			},
 			"viewerInfo": {
 				"title": "視聴者情報",

@@ -441,6 +441,13 @@ export const DonationForm: FC<DonationFormProps> = ({
 		: Math.max(0, Math.round(amount));
 	const coinInsufficient = coinSpend && (walletBalance ?? 0) < coinSpendCost;
 
+	// Coins credited by the current charge: the amount plus the configured bonus.
+	// 1 coin = 1 base-currency minor unit (JPY assumed for the preview; the
+	// server credits the authoritative amount).
+	const chargeBaseCoins = Math.max(0, Math.round(amount));
+	const chargeBonusCoins = Math.floor((chargeBaseCoins * coinBonusPercent) / 100);
+	const chargeTotalCoins = chargeBaseCoins + chargeBonusCoins;
+
 	// Pay for the current purchase from the coin balance (no external provider).
 	const handleCoinSpend = async () => {
 		if (coinInsufficient || coinSpendCost <= 0 || isSubmitting) {
@@ -803,9 +810,23 @@ export const DonationForm: FC<DonationFormProps> = ({
 								style={{ marginTop: 8 }}
 							/>
 						)}
-						{coinCharge && coinBonusPercent > 0 && (
-							<div className={styles.coinBonusNote}>
-								{t('donation.coinBonusNote', { percent: coinBonusPercent })}
+						{coinCharge && (
+							<div className={styles.coinChargePreview}>
+								<div className={styles.coinBalanceRow}>
+									<span>{t('donation.coinCredited')}</span>
+									<span className={styles.coinBalanceValue}>
+										🪙 {chargeTotalCoins.toLocaleString()}
+									</span>
+								</div>
+								{chargeBonusCoins > 0 && (
+									<div className={styles.coinBonusNote}>
+										{t('donation.coinCreditedBreakdown', {
+											base: chargeBaseCoins.toLocaleString(),
+											bonus: chargeBonusCoins.toLocaleString(),
+											percent: coinBonusPercent,
+										})}
+									</div>
+								)}
 							</div>
 						)}
 						{walletLedger.length > 0 && (

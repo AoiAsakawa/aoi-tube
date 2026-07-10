@@ -301,7 +301,9 @@
 			"spend": "支付",
 			"refund": "退款",
 			"admin_adjust": "调整"
-		}
+		},
+		"coinCredited": "获得金币",
+		"coinCreditedBreakdown": "明细：{{base}} + 奖励 {{bonus}}（+{{percent}}%）"
 	},
 	"screenEffects": {
 		"confetti": "彩纸",
@@ -778,17 +780,7 @@
 				"liabilityTitle": "未使用余额（负债）",
 				"outstandingLabel": "已发行未使用金币总额",
 				"liabilityNote": "所有用户余额之和；预付支付手段未使用余额报告的依据。",
-				"adjustTitle": "手动赠送 / 调整金币",
-				"adjustUserIdLabel": "用户 ID",
-				"adjustUserIdDescription": "要赠送/调整的目标用户 ID。",
-				"adjustDeltaLabel": "金币增减",
-				"adjustDeltaDescription": "正数为赠送，负数为扣除（会透支的扣除将被拒绝）。",
-				"adjustNoteLabel": "备注",
-				"adjustNoteDescription": "记录到台账的原因（可选）。",
-				"adjustButton": "应用",
-				"adjustValidation": "请输入用户 ID 和非零的增减值。",
-				"adjustSuccess": "已应用（余额：{{balance}}）",
-				"adjustError": "应用失败。"
+				"grantMovedNote": "在「聊天与用户 → 用户数据」中打开目标用户即可手动赠送或调整金币。"
 			}
 		},
 		"pages": {
@@ -1310,7 +1302,15 @@
 					"moderatorRevoked": "已解除版主权限。",
 					"moderatorFailed": "更改版主状态失败。"
 				},
-				"coinBalance": "金币余额"
+				"coinBalance": "金币余额",
+				"coin": {
+					"notePlaceholder": "备注（可选）",
+					"apply": "赠送/调整",
+					"hint": "正数赠送，负数扣除（会透支则拒绝）。",
+					"validation": "请输入非零的增减值。",
+					"success": "已更新金币余额",
+					"error": "更新失败"
+				}
 			},
 			"viewerInfo": {
 				"title": "观众信息",

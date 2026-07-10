@@ -301,7 +301,9 @@
 			"spend": "결제",
 			"refund": "환불",
 			"admin_adjust": "조정"
-		}
+		},
+		"coinCredited": "획득 코인",
+		"coinCreditedBreakdown": "내역: {{base}} + 보너스 {{bonus}}(+{{percent}}%)"
 	},
 	"screenEffects": {
 		"confetti": "색종이",
@@ -778,17 +780,7 @@
 				"liabilityTitle": "미사용 잔액(부채)",
 				"outstandingLabel": "발행된 미사용 코인 합계",
 				"liabilityNote": "모든 사용자 잔액의 합계이며 선불 지급수단 미사용 잔액 보고의 기준입니다.",
-				"adjustTitle": "코인 수동 지급 / 조정",
-				"adjustUserIdLabel": "사용자 ID",
-				"adjustUserIdDescription": "지급/조정할 대상 사용자 ID.",
-				"adjustDeltaLabel": "코인 증감",
-				"adjustDeltaDescription": "양수는 지급, 음수는 차감(잔액 부족 차감은 거부).",
-				"adjustNoteLabel": "메모",
-				"adjustNoteDescription": "台帳에 기록되는 사유(선택).",
-				"adjustButton": "적용",
-				"adjustValidation": "사용자 ID와 0이 아닌 증감값을 입력하세요.",
-				"adjustSuccess": "적용했습니다(잔액: {{balance}})",
-				"adjustError": "적용에 실패했습니다."
+				"grantMovedNote": "코인 수동 지급·조정은 「채팅·사용자 → 사용자 데이터」에서 대상 사용자를 열어 진행할 수 있습니다."
 			}
 		},
 		"pages": {
@@ -1310,7 +1302,15 @@
 					"moderatorRevoked": "모더레이터 권한을 해제했습니다.",
 					"moderatorFailed": "모더레이터 상태 변경에 실패했습니다."
 				},
-				"coinBalance": "코인 잔액"
+				"coinBalance": "코인 잔액",
+				"coin": {
+					"notePlaceholder": "메모(선택)",
+					"apply": "지급/조정",
+					"hint": "양수는 지급, 음수는 차감(잔액 부족 시 거부).",
+					"validation": "0이 아닌 증감값을 입력하세요.",
+					"success": "코인 잔액을 갱신했습니다",
+					"error": "갱신에 실패했습니다"
+				}
 			},
 			"viewerInfo": {
 				"title": "시청자 정보",

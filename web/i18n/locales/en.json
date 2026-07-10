@@ -301,7 +301,9 @@
 			"spend": "Spend",
 			"refund": "Refund",
 			"admin_adjust": "Adjustment"
-		}
+		},
+		"coinCredited": "Coins credited",
+		"coinCreditedBreakdown": "{{base}} + {{bonus}} bonus (+{{percent}}%)"
 	},
 	"screenEffects": {
 		"confetti": "confetti",
@@ -778,17 +780,7 @@
 				"liabilityTitle": "Outstanding balance (liability)",
 				"outstandingLabel": "Total unused coins issued",
 				"liabilityNote": "Sum of all users' balances; the basis for prepaid-instrument outstanding-balance reporting.",
-				"adjustTitle": "Manual coin grant / adjustment",
-				"adjustUserIdLabel": "User ID",
-				"adjustUserIdDescription": "The target user id to grant/adjust.",
-				"adjustDeltaLabel": "Coin change",
-				"adjustDeltaDescription": "Positive to grant, negative to deduct (a deduction that would overdraw is refused).",
-				"adjustNoteLabel": "Note",
-				"adjustNoteDescription": "Reason recorded in the ledger (optional).",
-				"adjustButton": "Apply",
-				"adjustValidation": "Enter a user id and a non-zero change.",
-				"adjustSuccess": "Applied (balance: {{balance}})",
-				"adjustError": "Failed to apply."
+				"grantMovedNote": "Grant or adjust a user's coins from Chat & Users → User Data by opening the target user."
 			}
 		},
 		"pages": {
@@ -1310,7 +1302,15 @@
 					"moderatorRevoked": "Moderator privileges removed.",
 					"moderatorFailed": "Failed to change moderator status."
 				},
-				"coinBalance": "Coin balance"
+				"coinBalance": "Coin balance",
+				"coin": {
+					"notePlaceholder": "Note (optional)",
+					"apply": "Grant / adjust",
+					"hint": "Positive grants, negative deducts (overdraw refused).",
+					"validation": "Enter a non-zero change.",
+					"success": "Coin balance updated",
+					"error": "Update failed"
+				}
 			},
 			"viewerInfo": {
 				"title": "Viewer Info",

@@ -301,7 +301,9 @@
 			"spend": "支付",
 			"refund": "退款",
 			"admin_adjust": "調整"
-		}
+		},
+		"coinCredited": "獲得金幣",
+		"coinCreditedBreakdown": "明細：{{base}} + 獎勵 {{bonus}}（+{{percent}}%）"
 	},
 	"screenEffects": {
 		"confetti": "彩紙",
@@ -778,17 +780,7 @@
 				"liabilityTitle": "未使用餘額（負債）",
 				"outstandingLabel": "已發行未使用金幣總額",
 				"liabilityNote": "所有使用者餘額之和；預付支付手段未使用餘額報告的依據。",
-				"adjustTitle": "手動贈送 / 調整金幣",
-				"adjustUserIdLabel": "使用者 ID",
-				"adjustUserIdDescription": "要贈送/調整的目標使用者 ID。",
-				"adjustDeltaLabel": "金幣增減",
-				"adjustDeltaDescription": "正數為贈送，負數為扣除（會透支的扣除將被拒絕）。",
-				"adjustNoteLabel": "備註",
-				"adjustNoteDescription": "記錄到台帳的原因（選填）。",
-				"adjustButton": "套用",
-				"adjustValidation": "請輸入使用者 ID 和非零的增減值。",
-				"adjustSuccess": "已套用（餘額：{{balance}}）",
-				"adjustError": "套用失敗。"
+				"grantMovedNote": "在「聊天與使用者 → 使用者資料」中開啟目標使用者即可手動贈送或調整金幣。"
 			}
 		},
 		"pages": {
@@ -1310,7 +1302,15 @@
 					"moderatorRevoked": "已解除版主權限。",
 					"moderatorFailed": "變更版主狀態失敗。"
 				},
-				"coinBalance": "金幣餘額"
+				"coinBalance": "金幣餘額",
+				"coin": {
+					"notePlaceholder": "備註（選填）",
+					"apply": "贈送/調整",
+					"hint": "正數贈送，負數扣除（會透支則拒絕）。",
+					"validation": "請輸入非零的增減值。",
+					"success": "已更新金幣餘額",
+					"error": "更新失敗"
+				}
 			},
 			"viewerInfo": {
 				"title": "觀眾資訊",
