@@ -74,6 +74,7 @@ func SetupPersistence(file string) error {
 	createUsersTable(db)
 	createAccessTokenTable(db)
 	CreateDonationsTable(db)
+	CreateWalletTable(db)
 
 	if _, err := db.Exec(`CREATE TABLE IF NOT EXISTS config (
 		"key" string NOT NULL PRIMARY KEY,
