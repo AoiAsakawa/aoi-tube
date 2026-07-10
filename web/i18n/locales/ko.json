@@ -288,7 +288,6 @@
 		"payModeDirect": "직접 결제",
 		"payModeCoin": "코인",
 		"coinBalance": "코인 잔액",
-		"coinBonusNote": "지금 충전하면 +{{percent}}% 보너스",
 		"coinChargeButton": "충전하기",
 		"coinActionSpend": "사용",
 		"coinActionCharge": "충전",

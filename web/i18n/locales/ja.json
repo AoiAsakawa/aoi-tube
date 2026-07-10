@@ -288,7 +288,6 @@
 		"payModeDirect": "直接課金",
 		"payModeCoin": "コイン",
 		"coinBalance": "コイン残高",
-		"coinBonusNote": "今チャージすると +{{percent}}% ボーナス",
 		"coinChargeButton": "チャージする",
 		"coinActionSpend": "使う",
 		"coinActionCharge": "チャージ",

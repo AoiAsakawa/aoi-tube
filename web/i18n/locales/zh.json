@@ -288,7 +288,6 @@
 		"payModeDirect": "直接付款",
 		"payModeCoin": "金币",
 		"coinBalance": "金币余额",
-		"coinBonusNote": "现在充值可获得 +{{percent}}% 奖励",
 		"coinChargeButton": "充值",
 		"coinActionSpend": "使用",
 		"coinActionCharge": "充值",

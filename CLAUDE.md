@@ -98,18 +98,21 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 ### 購入・決済
 - 統合フロー: `controllers/payments.go`（`normalizePurchaseItem`・演出固定価格 `models/donation.go effectPrices`・確定ブロードキャスト10秒遅延）。pendingDonations は mutex+TTL+`ClaimPendingDonation` で二重確定防止
-- **サーバー側検証**: Stripe=Webhook署名必須+リダイレクトはsession再取得で`paid`確認 / PayPal=API capture再取得+`COMPLETED`+custom_id / PayPay=署名必須+API再確認 / Metamask=オンチェーン検証（`controllers/metamaskVerify.go`、宛先・金額・成功status・ERC20ログ、fail-closed）/ Ko-fi=トークン定数時間比較+tx-ID冪等。金額は常にプロバイダ側の値。上限100万円/回
+- **サーバー側検証**: Stripe=Webhook署名必須+リダイレクトはsession再取得で`paid`確認 / PayPal=API capture再取得+`COMPLETED`+custom_id / PayPay=署名必須+API再確認 / Metamask=オンチェーン検証（EVM/BTC=`controllers/metamaskVerify.go`、Solana=`controllers/solanaVerify.go`。宛先・金額・成功status・ERC20/SPLログ、fail-closed）/ Ko-fi=トークン定数時間比較+tx-ID冪等。金額は常にプロバイダ側の値。上限100万円/回。**tx-hashの形状判定は `isEVMTxHash`/`isBitcoinTxID`/`isSolanaSignature`/`isSupportedTxHash` に一元化**（`MetamaskConfirmDonation`の入口ガードと`verifyMetamaskDonation`のディスパッチが同じ集合を見る＝以前Solana署名が入口で弾かれた地雷の再発防止）
 - **基準通貨(base currency)**: 設定キー `base_currency`（既定JPY、`core/data/baseCurrency.go`）。暗号資産のfiat換算・スパチャのティア判定・売上集計の基準。各プロバイダは自前の通貨設定を保持（PayPayはJPY固定）。**金額は最小単位で保存**（ゼロ小数通貨=JPY/KRWは主単位、他はマイナー単位。`models/currency.go IsZeroDecimalCurrency`）。管理は「購入・収益」ページの通貨セレクタ
 - **アーカイブPPVの通貨**: manifest価格は**自通貨の最小単位で保存済み**。決済時は事前スケール済み金額+通貨オーバーライドで通す（`payments.go` PreScaledAmount/CurrencyOverride）。**主単位前提で `*100` すると100倍過大請求になるので注意**（過去バグ）
 - **PayPay環境分離**: `models/paypay.go` `Sandbox*/Production*`+レガシーfallback付き `GetActive*`。他プロバイダも同パターン（PayPal/Stripe）
 - **アーカイブ購入**: `donations.archive_id`+`HasPurchasedArchive`（is_test除外）。チャット非配信・Webhook非発火・公開recentフィードから除外（購入者名保護）。管理の手動付与=provider"manual"金額0
 - **コインウォレット（プリペイド・台帳ベース）**: `core/data/wallet.go`。**残高は保存せずappend-only `wallet_ledger` の `SUM(delta)` で導出**（監査可能・前払式支払手段の未使用残高報告に対応）。エントリ種別=`charge`/`bonus`/`spend`/`refund`/`admin_adjust`。**1コイン=基準通貨の最小単位**（JPYなら1コイン=¥1）
-  - **チャージ**: `item_type="coin"` の購入をStripe/PayPalで通し（`resolveCoinCharge`でログイン必須）、確定時に `creditCoinCharge`→`CreditWalletCharge`（**(provider,payment_id)ユニークindexで冪等**＝webhook/redirect両経路で二重付与なし）。チャット非配信・公開feed除外。ボーナス%は `coin_charge_bonus_percent`
-  - **消費**: `POST /api/wallet/spend`（`controllers/walletSpend.go`）で残高からスパチャ/ギフト/PPVを支払い。`SpendWallet` は**mutex直列化のread-check-writeで過剰引き出し不可**。DB書込失敗時は `RefundWallet` で自動返金
+  - **チャージ**: `item_type="coin"` の購入を**Stripe/PayPal/PayPay**で通し（`resolveCoinCharge`でログイン必須）、確定時に `creditCoinCharge`→`CreditWalletCharge`（**(provider,payment_id)ユニークindexで冪等**＝webhook/redirect両経路で二重付与なし）。チャット非配信・公開feed除外。ボーナス%は `coin_charge_bonus_percent`。**PayPayは独自エンドポイント**なので `PayPayCreatePayment`/`completePayPayDonation` にも同じ買い手解決・付与を実装済（統合エンドポイントだけ直すと漏れる地雷）
+  - **消費**: `POST /api/wallet/spend`（`controllers/walletSpend.go`）で残高からスパチャ/ギフト/**PPV(アーカイブ)**を支払い。`SpendWallet` は**mutex直列化のread-check-writeで過剰引き出し不可**。DB書込失敗時は `RefundWallet` で自動返金。アーカイブは `ArchivePurchase.tsx` に「コインで購入」導線（基準通貨建てのアーカイブのみ提示。外部決済のリダイレクトなしで即時確定）
+  - **【重要】決済作成POSTのトークン付与**: `withPaymentAccessToken`(Stripe/PayPal)・`withArchiveAccessToken`(PayPay/アーカイブ)で**必ずaccessTokenを付ける**。付け忘れるとサーバーが買い手を解決できず、コインチャージも有料アーカイブ購入も静かに失敗する（実際に踏んだ）
   - **【重要】会計（二重計上防止）**: **売上はチャージ時に計上**。コイン払いのdonation行は `payment_provider="coin"` を持ち、売上集計3関数（`GetDonationTotal`/`GetMonthlyDonationTotal`/`GetDonationStats`）が定数 `notTestNotCoinFunded` で**除外**。一方 `amount_jpy` は入れるので**サポーターランキングには反映**され、チャットにも通常表示される
   - API: `GET /api/wallet`（本人の残高+台帳、`RequireUserAccessToken`）/ `/api/admin/wallet/{stats,user,adjust}`。設定 `coin_wallet_enabled`（既定OFF）。**決済作成POSTには `withPaymentAccessToken` でトークン付与が必須**（コイン・PPVのアカウント紐付けをサーバーが解決するため）
 - **画面演出（8種）**: `web/components/ui/ScreenEffects/`。**全てCSS描画**（グラデ/clip-path/SVG mask/box-shadow）。emojiは背景が焼き込まれていて透過されず安っぽいため視覚には使わない（pillの小アイコンのみ例外）。粒子数は**価格ティア順に単調増加**（confetti→…→goldrush）で豪華さが金額と一致
-- **暗号資産**: マルチチェーン対応。検証は**リクエストの `networkId`（実際に送金したチェーン）**で行う（`metamaskRPCEndpoints`/`evmNativeSymbols`、運営者ウォレットは全EVMチェーン共通）。通貨はチェーンから**サーバー側で導出**（クライアント値は使わない）。伝播/採掘待ちのポーリング（最大~40s）。fiat換算(`amount_jpy`/`fiat_currency`)を記録。VBC(329)はCoinpaprika価格（無料枠60/hのため負のキャッシュ+直近価格フォールバック、`cryptoprice.go`）
+- **暗号資産（EVM）**: マルチチェーン対応。検証は**リクエストの `networkId`（実際に送金したチェーン）**で行う（`metamaskRPCEndpoints`/`evmNativeSymbols`、運営者ウォレットは全EVMチェーン共通）。通貨はチェーンから**サーバー側で導出**（クライアント値は使わない）。伝播/採掘待ちのポーリング（最大~40s）。fiat換算(`amount_jpy`/`fiat_currency`)を記録。VBC(329)はCoinpaprika価格（無料枠60/hのため負のキャッシュ+直近価格フォールバック、`cryptoprice.go`）
+- **Solana（SOL + SPLトークン）**: `controllers/solanaVerify.go`。**MetaMaskネイティブ**（`@metamask/connect-solana` の Wallet Standard、`solanaWalletStandard.ts`）を優先。Solflare Snapはoriginブロック(`Invalid origin -32603`)のため旧MetaMask向けフォールバックに降格。**署名戻り値はUint8Array→`base58.encode`必須**（サーバーはbase58で`getTransaction`）。**mainnet CAIP-2は`solana:5eykt4Us…`**（ドキュメント例のdevnet IDは誤り）。検証: `getTransaction`(**commitment=finalized**=EVMの確定数に相当)→`meta.err==null`→**SPL優先**（owner==運営者のtokenBalance差分、**mint許可リスト`solanaSPLMints`＝USDC/USDTのみ**でシンボル確定、未知mintは非クレジット）→なければネイティブSOL(lamports差分)。運営者アドレスは`MetamaskConfig.SolanaAddress`（base58、EVMの`WalletAddress`とは別枠）。**自己送金(source==dest)は手数料しか動かず非クレジット＝正しく拒否**（`solanaIsSelfTransfer`、無料購入防止。フロントも送金前にガード）
+- **【重要】Solana RPCはサーバー経由プロキシ**: 公開ノード`api.mainnet-beta.solana.com`は**ブラウザ由来リクエストを403**（サーバーからは200）。フロントは同一オリジンの`/api/solana/rpc`(`controllers/solanaRPC.go`)だけを見る。**メソッド許可リスト必須**（オープンリレー化防止。`getBalance`/`getLatestBlockhash`/`sendTransaction`等のみ、バッチも全件検査）。RPC URLは`MetamaskConfig.SolanaRPCURL`（管理画面。Helius等の**APIキー付きURLもサーバー側に留まる**）で差替え可、空なら公開ノード。検証とプロキシは`solanaRPCEndpoint()`で同一エンドポイントを共有
 
 ### 認証・チャット・ガバナンス
 - X OAuth2(PKCE)/Discord/Google/GitHub/IndieAuth/Fediverse: `auth/<provider>/`+`controllers/auth/<provider>/`。GitHubのトークンは数値ID使用（loginはリネーム可能）
@@ -151,11 +154,15 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 4. **自動再生は「音あり」にできない**: ブラウザはユーザー操作前の**unmuted autoplayをブロック**する。音ありで`play()`を試し、拒否されたら**ミュートで自動再生にフォールバック**し「タップして音声をON」を出すのが唯一の解（`OwncastPlayer.attemptPlay`）。ミュートフォールバックを外すと**配信中にトップページを開いても再生が始まらない**（過去バグ）。またポスターの▶とPlayerChromeの中央再生ボタンが同時に出ないよう、**PlayerChromeは`started`後のみマウント**する
 5. **管理画面の新規ページは `web/src/routes/admin.tsx` への登録が必須**（file-based routingではない）。未登録だとナビのリンクが別ページに落ちる
 6. **画面演出にemojiを使わない**: 🎆/🎇/💰 などの絵文字はグリフに**背景（夜空など）が焼き込まれており透過されない**（映像の上で暗い四角に見える）。全パーティクルはCSS描画（グラデ/clip-path/SVG mask/box-shadow）にする
-7. **検証哲学**: HTTP 200チェックはJS実行エラーを検出できない（SPA変更後は実ブラウザ必須）。ビルド/テスト全緑でもレスポンスヘッダ破壊は検出不能（実HTTPで確認）。minifiedで原因不明のReactエラーは**vite devサーバーで実名特定**
-8. **切断/接続のステートパスに同期ネットワークI/Oを置かない**（配信終了処理内の同期S3オフロードが全ストリームをデッドロックさせた前例。必ずバックグラウンド化）
-9. **CSS**: グローバルbox-sizingリセット無し（width:100%+paddingは静かにあふれる）。`.parent > div` 汎用子セレクタがあるコンテナへの名前付き子追加は詳細度確認。ポータル内antdはConfigProviderが効かない→パネルトークンで明示テーマ
-10. **i18n**: 5カタログ完全一致が `npm run check:i18n` で強制（タブインデント、`JSON.stringify(j,null,'\t')+'\n'`）。ユーザー向け文字列は必ず全5カタログ
-11. **ffmpeg 5.1.6は `init-%v.mp4` の%vを未展開のまま出力するバグがある**（5.1.8で修正）→該当環境ではLL-HLSブラウザ再生不可。クラシックHLSに切替えるかffmpegを更新
-12. **ブラウザのWebアプリマニフェスト取得は同一オリジンでもcredentials省略**→Basic認証等の配下では `crossorigin="use-credentials"` 必須
-13. **X APIはFreeプランで `users/me` 不可**（Sign in with Xが403 client-not-enrolled）→Pay Per Useプラン以上が必要
-14. S3系ダッシュボードの使用量表示は削除反映にラグがある場合がある（実態確認は ListObjects ベースの `/api/admin/storage/usage` で）
+7. **暗号資産チェーン追加時の3つの分散地雷**（Solana追加で全部踏んだ）: ①**tx-hash/アドレスの形状判定が複数箇所に分散**していると齟齬る（`MetamaskConfirmDonation`の入口ガードと`verifyMetamaskDonation`のディスパッチ＝別々に持っていてSolana署名が入口で400になった）→判定関数に一元化。②**公開RPCはブラウザを403**（サーバーは200）→同一オリジンのメソッド許可リスト付きプロキシ必須。③**ウォレットが返す署名の型**（Wallet StandardはUint8Array）と**サーバー検証が期待する形式**（base58文字列）の食い違い→正規化必須。加えてEVMとSolana/BTCで**アドレス形式・送金先設定を別枠**に（EVMの`0x`をSolana宛先に流用すると`PublicKey`が例外）
+8. **ViteはNode globalを自動polyfillしない**（Next.js/webpackはしていた）: `global`は`vite.config.ts`の`define`で代替できるが、**`Buffer`は実行時オブジェクトなので`define`不可**→`buffer`パッケージ+`src/polyfills.ts`を視聴者エントリの**最初のimport**で`globalThis.Buffer`に設定（bitcoinjs-lib/@solana/web3.jsが評価時に使う。BTC選択で`Buffer is not defined`を踏んだ）。CSPを壊さないためインラインscriptではなくモジュールimportで
+9. **ウォレットのRPCエラーは`Error`でなく`{code,message}`のプレーンオブジェクト**→`error instanceof Error ? error.message : 汎用文言`だと真の原因を握り潰す（MetaMaskの`Invalid origin -32603`が「エラーが発生しました」に化けた）。`describeWalletError()`で`{code,message}`を拾う
+10. **独自エンドポイントを持つ決済プロバイダは統合フローの改修から漏れる**: コイン対応で統合`CreatePayment`（Stripe/PayPal）だけ直しPayPayを忘れた。**PayPay/Metamask/Ko-fiは各自のcreate/completeを持つ**ので、購入種別を増やすときは全経路に手を入れる
+11. **検証哲学**: HTTP 200チェックはJS実行エラーを検出できない（SPA変更後は実ブラウザ必須）。ビルド/テスト全緑でもレスポンスヘッダ破壊は検出不能（実HTTPで確認）。minifiedで原因不明のReactエラーは**vite devサーバーで実名特定**。**「動かない」報告は決済ログとオンチェーン実データを突き合わせる**（自己送金＝source==destでSOLが実質動いていない、を実tx解析で特定した）
+12. **切断/接続のステートパスに同期ネットワークI/Oを置かない**（配信終了処理内の同期S3オフロードが全ストリームをデッドロックさせた前例。必ずバックグラウンド化）
+13. **CSS**: グローバルbox-sizingリセット無し（width:100%+paddingは静かにあふれる）。`.parent > div` 汎用子セレクタがあるコンテナへの名前付き子追加は詳細度確認。ポータル内antdはConfigProviderが効かない→パネルトークンで明示テーマ
+14. **i18n**: 5カタログ完全一致が `npm run check:i18n` で強制（タブインデント、`JSON.stringify(j,null,'\t')+'\n'`）。ユーザー向け文字列は必ず全5カタログ
+15. **ffmpeg 5.1.6は `init-%v.mp4` の%vを未展開のまま出力するバグがある**（5.1.8で修正）→該当環境ではLL-HLSブラウザ再生不可。クラシックHLSに切替えるかffmpegを更新
+16. **ブラウザのWebアプリマニフェスト取得は同一オリジンでもcredentials省略**→Basic認証等の配下では `crossorigin="use-credentials"` 必須
+17. **X APIはFreeプランで `users/me` 不可**（Sign in with Xが403 client-not-enrolled）→Pay Per Useプラン以上が必要
+18. S3系ダッシュボードの使用量表示は削除反映にラグがある場合がある（実態確認は ListObjects ベースの `/api/admin/storage/usage` で）

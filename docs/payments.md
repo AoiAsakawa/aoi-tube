@@ -56,15 +56,18 @@ as `SUM(delta)`. This keeps the money trail auditable — required for reporting
 outstanding balance of a prepaid instrument — and makes a silently corrupted balance
 impossible. Entry types: `charge`, `bonus`, `spend`, `refund`, `admin_adjust`.
 
-- **Charging** goes through the normal Stripe / PayPal flow as an `item_type="coin"`
-  purchase. It requires a signed-in buyer, and crediting is **idempotent on
-  `(provider, payment_id)`** via a unique index, so the webhook and redirect paths can both
-  confirm without double-crediting. The configured bonus percent is credited as a separate
-  `bonus` entry.
+- **Charging** goes through the normal **Stripe / PayPal / PayPay** flow as an
+  `item_type="coin"` purchase. It requires a signed-in buyer, and crediting is **idempotent
+  on `(provider, payment_id)`** via a unique index, so the webhook and redirect paths can
+  both confirm without double-crediting. The configured bonus percent is credited as a
+  separate `bonus` entry. (PayPay has its own create/confirm endpoints, so the buyer
+  resolution and crediting are wired there too, not only in the unified endpoint.)
 - **Spending** hits `POST /api/wallet/spend`, which debits atomically (a serialized
   read-check-write refuses an overdraw), records the purchase, then broadcasts or entitles
   exactly like a provider-confirmed purchase. If the purchase row fails to write, the debit
-  is refunded automatically.
+  is refunded automatically. Coins pay for **super chats, screen effects and paid archives**
+  (the archive purchase panel shows a "pay with coins" button for archives priced in the
+  base currency).
 
 ### Revenue accounting (no double counting)
 
@@ -178,7 +181,9 @@ Admin > Super Chat > Stripe settings.
 ### Metamask / crypto
 
 Admin > Super Chat > Metamask settings: receiving wallet address, EVM network, chain
-currency, plus an optional Bitcoin Native SegWit address (`bc1...`).
+currency, an optional Bitcoin Native SegWit address (`bc1...`), an optional Solana
+receiving account (base58 — **not** the EVM `0x` address; they are different key systems),
+and an optional Solana RPC URL (see below).
 
 Selectable networks (donation form): Ethereum, Polygon, BNB Smart Chain, Arbitrum,
 Optimism, Base, Avalanche, Linea, Sei, VirBiCoin (+ Bitcoin and Solana), and the Sepolia /
@@ -197,6 +202,31 @@ was actually made on (from the request's `networkId`), not just the one set in a
 - Public RPC nodes lag the wallet that broadcast a tx, so verification polls for the tx to
   appear and be mined (up to ~40s) before accepting — the confirm can take a few seconds
   to that long on slower chains.
+
+**Solana (SOL + SPL tokens).** Handled by `controllers/solanaVerify.go`. MetaMask connects
+through its **native Solana account** (the Wallet Standard, `@metamask/connect-solana`);
+Phantom and Trust Wallet also work. The old Solflare "Solana Snap" is only a fallback for
+older MetaMask, because it keeps a site allowlist and rejects most origins with
+`Invalid origin (-32603)`.
+
+- Verification fetches the transaction at **finalized** commitment (Solana's reorg-safety
+  floor, the counterpart of EVM confirmations), requires it to have succeeded, then credits
+  either an **SPL token** (a positive token-balance delta on an account the operator owns)
+  or **native SOL** (a positive lamport delta on the operator's account).
+- **Only USDC and USDT are accepted as SPL tokens, by mint address.** Anyone can mint a
+  token and call it "USDC", so the symbol comes from the on-chain mint and any other mint is
+  never credited — the same defence as the EVM path.
+- A **self-transfer is refused**: if the buyer pays from the very account configured as the
+  receiving address, the balance only drops by the fee and nothing is credited. The form
+  also blocks this before signing so no fee is wasted. Test with a *different* wallet than
+  the one set in admin.
+
+**Solana RPC URL.** Solana's public node (`api.mainnet-beta.solana.com`) is heavily rate
+limited and **refuses browser-origin requests outright (HTTP 403)**, so the donation form
+never calls it directly — it goes through a same-origin, method-allowlisted proxy
+(`/api/solana/rpc`). For reliable operation set a dedicated RPC (Helius, QuickNode, ...) in
+the Solana RPC URL field. **A URL containing an API key is safe**: it stays server-side and
+the browser only ever sees the proxy. Leave it empty to use the public node.
 - The confirmed amount is also converted to the **base currency** (CoinGecko → CoinMarketCap
   → Coinpaprika fallback, cached) and stored in `amount_jpy` + `fiat_currency` so crypto
   revenue appears in stats and tier colors; if conversion fails the purchase is still

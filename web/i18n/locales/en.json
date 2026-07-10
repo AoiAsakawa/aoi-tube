@@ -288,7 +288,6 @@
 		"payModeDirect": "Direct billing",
 		"payModeCoin": "Coins",
 		"coinBalance": "Coin balance",
-		"coinBonusNote": "Charge now for a +{{percent}}% bonus",
 		"coinChargeButton": "Charge coins",
 		"coinActionSpend": "Spend",
 		"coinActionCharge": "Charge",
