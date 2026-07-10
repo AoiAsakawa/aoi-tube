@@ -284,10 +284,20 @@ in AoiTube's chat, stats or effects.
 - Lists all purchases with a type filter (Super Chat / effect / archive); archive rows
   show the archive title. A stats dashboard (`/api/admin/donations/stats`) breaks down
   revenue by currency, provider, item and day, excluding test payments.
+- **Base-currency roll-up**: the dashboard headlines a single figure in the base currency —
+  a base-currency purchase counts at face value, a crypto purchase at its confirmation-time
+  conversion (`amount_jpy`). The raw per-currency amounts stay below as face-value detail for
+  provider reconciliation. Crypto whose rate could not be captured at confirmation
+  (`amount_jpy = 0`) is surfaced as an "unconverted" count so its absence from the total is
+  not mistaken for zero revenue. The revenue predicate is the shared `revenueRows` fragment
+  (excludes test rows, coin-funded spends, and zero-amount rows).
 - **Manual grant**: give a user permanent access to an archive
   (`POST /api/admin/archives/purchases/grant`) — recorded as a zero-amount purchase with
   provider `manual`, not announced to chat, and rejected if the user already has access.
-  Useful for support cases (lost webhooks, complimentary access).
+  Useful for support cases (lost webhooks, complimentary access). Because it is a free
+  entitlement rather than a sale, its `amount = 0` row is **excluded from every revenue
+  statistic** (count, average, provider breakdown) via `revenueRows`, while still showing in
+  the purchase list so it can be revoked, and still conferring viewing access.
 - **Revoke** (`POST /api/admin/archives/purchases/revoke`): removes an archive
   entitlement; only `archive` rows can be revoked.
 
