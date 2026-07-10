@@ -18,6 +18,7 @@ import ConfigDoneru from '../../pages/admin/config-doneru';
 import ConfigFaq from '../../pages/admin/config-faq';
 import ConfigFederation from '../../pages/admin/config-federation';
 import ConfigGeneral from '../../pages/admin/config/general/index';
+import ConfigCoins from '../../pages/admin/config-coins';
 import ConfigKofi from '../../pages/admin/config-kofi';
 import ConfigMetamask from '../../pages/admin/config-metamask';
 import ConfigNotify from '../../pages/admin/config-notify';
@@ -55,6 +56,7 @@ export const adminRouter = createBrowserRouter([
 					{ path: 'chat/emojis', element: <ChatEmojis /> },
 					{ path: 'chat/user-data', element: <ChatUserData /> },
 					{ path: 'config-chat', element: <ConfigChat /> },
+					{ path: 'config-coins', element: <ConfigCoins /> },
 					{ path: 'config-doneru', element: <ConfigDoneru /> },
 					{ path: 'config-faq', element: <ConfigFaq /> },
 					{ path: 'config-federation', element: <ConfigFederation /> },
