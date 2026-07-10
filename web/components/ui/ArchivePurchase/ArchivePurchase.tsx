@@ -9,6 +9,8 @@ import {
 	PAYMENTS_CREATE,
 	PAYMENTS_STATUS,
 	PAYPAY_CREATE_PAYMENT,
+	WALLET,
+	WALLET_SPEND,
 	withArchiveAccessToken,
 } from '../../../utils/apis';
 import { useAccessToken, useChatAuthenticated, useCurrentUser } from '../../stores/zustand-store';
@@ -60,6 +62,10 @@ export const ArchivePurchase: FC<ArchivePurchaseProps> = ({ archive, open, onClo
 	const [providers, setProviders] = useState<ProvidersState | null>(null);
 	const [submitting, setSubmitting] = useState<ArchiveProvider | null>(null);
 	const [showAuthModal, setShowAuthModal] = useState(false);
+	// Prepaid coin balance. null until loaded, or when coins are off / logged out.
+	const [coinBalance, setCoinBalance] = useState<number | null>(null);
+	const [baseCurrency, setBaseCurrency] = useState('');
+	const [payingWithCoins, setPayingWithCoins] = useState(false);
 
 	// Load which providers are enabled the first time the panel opens.
 	useEffect(() => {
@@ -76,6 +82,17 @@ export const ArchivePurchase: FC<ArchivePurchaseProps> = ({ archive, open, onClo
 						paypal: Boolean(status?.paypal?.enabled),
 						paypay: Boolean(status?.paypay?.enabled),
 					});
+					setBaseCurrency(String(status?.baseCurrency || ''));
+				}
+				// Coins are a per-account balance, so they need both the feature on
+				// and a signed-in viewer. A failure here just hides the coin option.
+				if (!cancelled && status?.coin?.enabled && accessToken) {
+					const wallet = await fetchData(withArchiveAccessToken(WALLET, accessToken), {
+						auth: false,
+					});
+					if (!cancelled) {
+						setCoinBalance(Number(wallet?.balance) || 0);
+					}
 				}
 			} catch (_error) {
 				if (!cancelled) {
@@ -87,7 +104,7 @@ export const ArchivePurchase: FC<ArchivePurchaseProps> = ({ archive, open, onClo
 		return () => {
 			cancelled = true;
 		};
-	}, [open]);
+	}, [open, accessToken]);
 
 	// Reset the transient submit state whenever the panel is closed.
 	useEffect(() => {
@@ -158,6 +175,41 @@ export const ArchivePurchase: FC<ArchivePurchaseProps> = ({ archive, open, onClo
 			message.error(t('archives.paid.paymentFailed'));
 		} finally {
 			setSubmitting(null);
+		}
+	};
+
+	// Pay from the prepaid coin balance. Unlike the providers there is no hosted
+	// page or redirect: the server debits the wallet and records the entitlement
+	// in one request, so the panel can flip to "purchased" immediately.
+	const buyWithCoins = async () => {
+		if (!archive || payingWithCoins) {
+			return;
+		}
+		setPayingWithCoins(true);
+		try {
+			const response = await fetchData(withArchiveAccessToken(WALLET_SPEND, accessToken), {
+				method: 'POST',
+				auth: false,
+				data: {
+					itemType: 'archive',
+					archiveId: archive.id,
+					displayName,
+					isAnonymous: false,
+					message: '',
+				},
+			});
+			if (response?.success) {
+				setCoinBalance(Number(response.balance) || 0);
+				message.success(t('archives.paid.coinPaidSuccess'));
+				// The archives list refreshes on close, flipping `purchased` to true.
+				onWatch(archive.id);
+			} else {
+				message.error(response?.message || t('archives.paid.paymentFailed'));
+			}
+		} catch (_error) {
+			message.error(t('archives.paid.paymentFailed'));
+		} finally {
+			setPayingWithCoins(false);
 		}
 	};
 
@@ -239,7 +291,20 @@ export const ArchivePurchase: FC<ArchivePurchaseProps> = ({ archive, open, onClo
 			</div>
 		);
 	} else {
-		const noProviders = providers !== null && !providers.stripe && !providers.paypal && !providers.paypay;
+		// Coins are denominated in base-currency minor units, so they can only pay
+		// for an archive priced in that same currency — which is exactly what the
+		// server enforces. Offer them only then, rather than letting the request fail.
+		const coinPrice = archive.price ?? 0;
+		const archiveCurrency = archive.currency || baseCurrency;
+		const coinsUsable =
+			coinBalance !== null && baseCurrency !== '' && archiveCurrency === baseCurrency;
+		const coinsInsufficient = coinsUsable && (coinBalance ?? 0) < coinPrice;
+		const noProviders =
+			providers !== null &&
+			!providers.stripe &&
+			!providers.paypal &&
+			!providers.paypay &&
+			!coinsUsable;
 		body = (
 			<div className={styles.panel}>
 				<div className={styles.archiveTitle}>{archive.title || t('archives.untitled')}</div>
@@ -257,6 +322,28 @@ export const ArchivePurchase: FC<ArchivePurchaseProps> = ({ archive, open, onClo
 				{noProviders && <p className={styles.unavailable}>{t('archives.paid.noProviders')}</p>}
 				{providers && !noProviders && (
 					<div className={styles.providers}>
+						{coinsUsable && (
+							<>
+								<Button
+									type="primary"
+									block
+									loading={payingWithCoins}
+									disabled={submitting !== null || coinsInsufficient}
+									onClick={buyWithCoins}
+								>
+									🪙 {t('archives.paid.payWithCoins', { amount: coinPrice.toLocaleString() })}
+								</Button>
+								<p className={styles.coinBalance}>
+									{coinsInsufficient
+										? t('archives.paid.coinInsufficient', {
+												balance: (coinBalance ?? 0).toLocaleString(),
+											})
+										: t('archives.paid.coinBalance', {
+												balance: (coinBalance ?? 0).toLocaleString(),
+											})}
+								</p>
+							</>
+						)}
 						{providers.stripe && (
 							<Button
 								type="primary"

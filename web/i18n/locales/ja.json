@@ -2492,7 +2492,11 @@
 			"returnHint": "決済が完了したら、このページに戻ると視聴できます。",
 			"paymentOpenedTab": "決済ページを新しいタブで開きました。完了後、このページに戻ってください。",
 			"paymentFailed": "決済の開始に失敗しました。",
-			"lockedBadge": "有料"
+			"lockedBadge": "有料",
+			"payWithCoins": "コインで購入（{{amount}}）",
+			"coinBalance": "残高: 🪙 {{balance}}",
+			"coinInsufficient": "コインが不足しています（残高: 🪙 {{balance}}）",
+			"coinPaidSuccess": "コインで購入しました"
 		},
 		"members": {
 			"title": "会員限定アーカイブ",

@@ -2492,7 +2492,11 @@
 			"returnHint": "결제가 완료되면 이 페이지로 돌아와 시청할 수 있습니다.",
 			"paymentOpenedTab": "결제 페이지를 새 탭에서 열었습니다. 완료 후 이 페이지로 돌아오세요.",
 			"paymentFailed": "결제를 시작하지 못했습니다.",
-			"lockedBadge": "유료"
+			"lockedBadge": "유료",
+			"payWithCoins": "코인으로 구매({{amount}})",
+			"coinBalance": "잔액: 🪙 {{balance}}",
+			"coinInsufficient": "코인이 부족합니다(잔액: 🪙 {{balance}})",
+			"coinPaidSuccess": "코인으로 구매했습니다"
 		},
 		"members": {
 			"title": "멤버 전용 아카이브",

@@ -2492,7 +2492,11 @@
 			"returnHint": "After completing payment, return to this page to watch.",
 			"paymentOpenedTab": "The payment page opened in a new tab. Return here once it is complete.",
 			"paymentFailed": "Failed to start the payment.",
-			"lockedBadge": "Paid"
+			"lockedBadge": "Paid",
+			"payWithCoins": "Buy with coins ({{amount}})",
+			"coinBalance": "Balance: 🪙 {{balance}}",
+			"coinInsufficient": "Not enough coins (balance: 🪙 {{balance}})",
+			"coinPaidSuccess": "Purchased with coins"
 		},
 		"members": {
 			"title": "Members-only archive",

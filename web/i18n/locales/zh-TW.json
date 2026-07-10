@@ -2492,7 +2492,11 @@
 			"returnHint": "完成付款後，返回此頁面即可觀看。",
 			"paymentOpenedTab": "付款頁面已在新分頁中開啟。完成後請返回此頁面。",
 			"paymentFailed": "無法開始付款。",
-			"lockedBadge": "付費"
+			"lockedBadge": "付費",
+			"payWithCoins": "用金幣購買（{{amount}}）",
+			"coinBalance": "餘額：🪙 {{balance}}",
+			"coinInsufficient": "金幣不足（餘額：🪙 {{balance}}）",
+			"coinPaidSuccess": "已用金幣購買"
 		},
 		"members": {
 			"title": "會員限定存檔",
