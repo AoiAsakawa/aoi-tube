@@ -55,6 +55,26 @@ var evmNativeSymbols = map[int64]string{
 // erc20TransferSig is keccak256("Transfer(address,address,uint256)").
 const erc20TransferSig = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 
+// Transaction-id shapes, defined once so the confirm endpoint's entry check and
+// verifyMetamaskDonation's dispatch can never accept different sets. They had
+// drifted before: a Solana signature passed the verifier's dispatch but was
+// rejected by the endpoint, so a paid transaction could not be confirmed.
+
+// isEVMTxHash reports whether s is a 0x-prefixed 32-byte hash.
+func isEVMTxHash(s string) bool {
+	return strings.HasPrefix(s, "0x") && len(s) == 66
+}
+
+// isBitcoinTxID reports whether s is a 32-byte txid in hex, without 0x.
+func isBitcoinTxID(s string) bool {
+	return !strings.HasPrefix(s, "0x") && len(s) == 64
+}
+
+// isSupportedTxHash reports whether the id belongs to a chain we can verify.
+func isSupportedTxHash(s string) bool {
+	return isEVMTxHash(s) || isBitcoinTxID(s) || isSolanaSignature(s)
+}
+
 type ethTransaction struct {
 	To    string `json:"to"`
 	From  string `json:"from"`
@@ -228,8 +248,8 @@ func verifyBitcoinTx(txid, address string) (int64, bool) {
 // expensive coin to pass a fixed-price check.
 func verifyMetamaskDonation(config models.MetamaskConfig, request models.MetamaskDonationRequest) (int64, string, error) {
 	txhash := request.TransactionHash
-	isEVM := strings.HasPrefix(txhash, "0x") && len(txhash) == 66
-	isBTC := !strings.HasPrefix(txhash, "0x") && len(txhash) == 64
+	isEVM := isEVMTxHash(txhash)
+	isBTC := isBitcoinTxID(txhash)
 
 	if isBTC {
 		if config.BitcoinAddress == "" {

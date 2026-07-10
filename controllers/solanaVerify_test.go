@@ -210,3 +210,46 @@ func TestSolanaSPLMintsArePriceable(t *testing.T) {
 		t.Error("native SOL must have a price ID")
 	}
 }
+
+// The confirm endpoint's entry check and the verifier's dispatch must accept the
+// same set of transaction ids. They drifted once: a Solana signature reached
+// verifyMetamaskDonation's dispatch but was rejected by the endpoint first, so a
+// viewer's completed payment could never be confirmed.
+func TestIsSupportedTxHashCoversEveryVerifiableChain(t *testing.T) {
+	supported := map[string]string{
+		"EVM hash":         "0x" + strings.Repeat("a", 64),
+		"Bitcoin txid":     strings.Repeat("a", 64),
+		"Solana signature": testSignature,
+	}
+	for name, id := range supported {
+		if !isSupportedTxHash(id) {
+			t.Errorf("%s: %q must be accepted by the confirm endpoint", name, id)
+		}
+	}
+
+	for name, id := range map[string]string{
+		"empty":        "",
+		"short hex":    strings.Repeat("a", 40),
+		"0x too short": "0x" + strings.Repeat("a", 60),
+	} {
+		if isSupportedTxHash(id) {
+			t.Errorf("%s: %q must be rejected", name, id)
+		}
+	}
+}
+
+// Every id the verifier dispatches on must also pass the entry check.
+func TestTxHashShapesAreMutuallyExclusive(t *testing.T) {
+	evm := "0x" + strings.Repeat("a", 64)
+	btc := strings.Repeat("a", 64)
+
+	if !isEVMTxHash(evm) || isBitcoinTxID(evm) || isSolanaSignature(evm) {
+		t.Error("an EVM hash must match only the EVM shape")
+	}
+	if !isBitcoinTxID(btc) || isEVMTxHash(btc) || isSolanaSignature(btc) {
+		t.Error("a Bitcoin txid must match only the Bitcoin shape")
+	}
+	if !isSolanaSignature(testSignature) || isEVMTxHash(testSignature) || isBitcoinTxID(testSignature) {
+		t.Error("a Solana signature must match only the Solana shape")
+	}
+}

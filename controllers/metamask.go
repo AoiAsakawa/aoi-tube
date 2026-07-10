@@ -59,27 +59,19 @@ func MetamaskConfirmDonation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Validate transaction hash (supports both Ethereum 0x... and Bitcoin hex format)
-	if request.TransactionHash == "" {
-		WriteSimpleResponse(w, false, "invalid transaction hash")
-		return
-	}
-	// Bitcoin txid is 64 hex chars without 0x prefix, Ethereum is 66 chars with 0x prefix
-	isValidEthTxHash := strings.HasPrefix(request.TransactionHash, "0x") && len(request.TransactionHash) == 66
-	isValidBtcTxHash := !strings.HasPrefix(request.TransactionHash, "0x") && len(request.TransactionHash) == 64
-	if !isValidEthTxHash && !isValidBtcTxHash {
+	// Shape-check the transaction id. This must accept exactly what
+	// verifyMetamaskDonation can verify — the two used to drift apart, and a
+	// Solana signature was rejected here before ever reaching its verifier.
+	if !isSupportedTxHash(request.TransactionHash) {
 		WriteSimpleResponse(w, false, "invalid transaction hash")
 		return
 	}
 
-	// Validate from address (supports Ethereum 0x..., Bitcoin bc1..., and legacy formats)
-	if request.FromAddress == "" {
-		WriteSimpleResponse(w, false, "invalid from address")
-		return
-	}
-	isValidEthAddress := strings.HasPrefix(request.FromAddress, "0x") && len(request.FromAddress) == 42
-	isValidBtcAddress := strings.HasPrefix(request.FromAddress, "bc1") || strings.HasPrefix(request.FromAddress, "1") || strings.HasPrefix(request.FromAddress, "3")
-	if !isValidEthAddress && !isValidBtcAddress {
+	// The sender address is informational only: it is public on-chain, so a
+	// client-supplied value proves nothing, and verifyMetamaskDonation
+	// deliberately does not enforce it. Bound its length rather than pinning it
+	// to one chain's format — an EVM, Bitcoin or Solana sender all arrive here.
+	if request.FromAddress == "" || len(request.FromAddress) > 128 {
 		WriteSimpleResponse(w, false, "invalid from address")
 		return
 	}
