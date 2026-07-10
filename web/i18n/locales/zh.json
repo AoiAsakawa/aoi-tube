@@ -288,7 +288,13 @@
 		"payModeCoin": "金币",
 		"coinBalance": "金币余额",
 		"coinBonusNote": "现在充值可获得 +{{percent}}% 奖励",
-		"coinChargeButton": "充值"
+		"coinChargeButton": "充值",
+		"coinActionSpend": "使用",
+		"coinActionCharge": "充值",
+		"coinCost": "所需金币",
+		"coinInsufficient": "金币不足，请先充值。",
+		"coinPayButton": "用金币支付",
+		"coinPaidSuccess": "已用金币支付"
 	},
 	"screenEffects": {
 		"confetti": "彩纸",

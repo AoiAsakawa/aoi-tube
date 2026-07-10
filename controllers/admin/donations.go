@@ -348,10 +348,11 @@ func toPublicDonations(donations []*models.Donation) []publicDonation {
 		if d == nil {
 			continue
 		}
-		// Archive purchases are private entitlements: they are deliberately not
-		// broadcast to chat, so the public recent feed (and the mcv overlay
-		// polling it) must not leak the buyer either.
-		if d.ItemType == "archive" {
+		// Archive purchases are private entitlements and coin top-ups are private
+		// wallet charges: neither is broadcast to chat, so the public recent feed
+		// (and the mcv overlay polling it) must not leak the buyer either. A
+		// coin-funded superchat/effect keeps its own item type and still shows.
+		if d.ItemType == "archive" || d.ItemType == models.DonationItemCoin {
 			continue
 		}
 		name := d.DisplayName

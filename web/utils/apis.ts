@@ -85,6 +85,8 @@ export const SUPPORTERS = `${NEXT_PUBLIC_API_HOST}api/supporters`;
 export const DONATIONS_MINE = `${NEXT_PUBLIC_API_HOST}api/donations/mine`;
 // The authenticated viewer's prepaid coin wallet (balance + ledger); requires ?accessToken=.
 export const WALLET = `${NEXT_PUBLIC_API_HOST}api/wallet`;
+// Pay for a purchase from the coin balance (no external provider); requires ?accessToken=.
+export const WALLET_SPEND = `${NEXT_PUBLIC_API_HOST}api/wallet/spend`;
 export const DONATION_EXTERNAL_CREATE = `${NEXT_PUBLIC_API_HOST}api/integrations/donations/create`;
 
 // PayPay integration

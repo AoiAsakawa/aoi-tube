@@ -288,7 +288,13 @@
 		"payModeCoin": "Coins",
 		"coinBalance": "Coin balance",
 		"coinBonusNote": "Charge now for a +{{percent}}% bonus",
-		"coinChargeButton": "Charge coins"
+		"coinChargeButton": "Charge coins",
+		"coinActionSpend": "Spend",
+		"coinActionCharge": "Charge",
+		"coinCost": "Cost",
+		"coinInsufficient": "Not enough coins. Please charge up.",
+		"coinPayButton": "Pay with coins",
+		"coinPaidSuccess": "Paid with coins"
 	},
 	"screenEffects": {
 		"confetti": "confetti",

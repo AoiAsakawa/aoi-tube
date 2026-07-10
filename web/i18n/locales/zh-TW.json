@@ -288,7 +288,13 @@
 		"payModeCoin": "金幣",
 		"coinBalance": "金幣餘額",
 		"coinBonusNote": "現在儲值可獲得 +{{percent}}% 獎勵",
-		"coinChargeButton": "儲值"
+		"coinChargeButton": "儲值",
+		"coinActionSpend": "使用",
+		"coinActionCharge": "儲值",
+		"coinCost": "所需金幣",
+		"coinInsufficient": "金幣不足，請先儲值。",
+		"coinPayButton": "用金幣支付",
+		"coinPaidSuccess": "已用金幣支付"
 	},
 	"screenEffects": {
 		"confetti": "彩紙",

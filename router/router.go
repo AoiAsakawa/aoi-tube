@@ -390,6 +390,8 @@ func Start() error {
 	http.HandleFunc("/api/supporters", controllers.GetTopSupporters)
 	// Logged-in viewer's prepaid coin wallet (balance + ledger).
 	http.HandleFunc("/api/wallet", middleware.RequireUserAccessToken(controllers.GetMyWallet))
+	// Pay for a purchase from the coin balance (no external provider).
+	http.HandleFunc("/api/wallet/spend", middleware.RequireUserAccessToken(controllers.SpendCoins))
 
 	// Base currency (crypto conversion / reporting reference currency)
 	http.HandleFunc("/api/admin/config/basecurrency", middleware.RequireAdminAuth(admin.GetBaseCurrency))

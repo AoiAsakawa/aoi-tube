@@ -288,7 +288,13 @@
 		"payModeCoin": "コイン",
 		"coinBalance": "コイン残高",
 		"coinBonusNote": "今チャージすると +{{percent}}% ボーナス",
-		"coinChargeButton": "チャージする"
+		"coinChargeButton": "チャージする",
+		"coinActionSpend": "使う",
+		"coinActionCharge": "チャージ",
+		"coinCost": "必要コイン",
+		"coinInsufficient": "コインが不足しています。チャージしてください。",
+		"coinPayButton": "コインで支払う",
+		"coinPaidSuccess": "コインで支払いました"
 	},
 	"screenEffects": {
 		"confetti": "紙吹雪",
