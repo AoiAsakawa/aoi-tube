@@ -13,9 +13,13 @@ AoiTubeはセルフホスト型のライブストリーミングサーバーで�
 - 日本語ファーストUI + 5言語i18n（ja/en/zh/zh-TW/ko、視聴者+管理画面）
 - **LL-HLS**（1秒セグメントfMP4、実測2-5秒）・**WebRTC**（実験的、1秒以下、Pion SFU）+ 実測レイテンシ/解像度バッジ
 - ソーシャル認証6種: X OAuth2+PKCE（GIF絵文字）/ Discord / Google / GitHub / IndieAuth / Fediverse。**認証ガバナンス**: ソフト削除（失効=可逆）、監査ログ、運営者による手動復活・アカウント統合・モデレーター管理
-- **購入システム**（投げ銭ではなくサービス購入の体裁）: スーパーチャット（YouTube準拠の金額ティア色）+ 画面演出8種（¥300〜¥10,000固定価格・サーバー強制）+ アーカイブPPV。**基準通貨は設定可能**（既定JPY、国際運用対応）
+- **購入システム**（投げ銭ではなくサービス購入の体裁）: スーパーチャット（YouTube準拠の金額ティア色）+ 画面演出8種（¥300〜¥10,000固定価格・サーバー強制、**全てCSS描画**・価格ティア順に豪華化）+ アーカイブPPV。**基準通貨は設定可能**（既定JPY、国際運用対応）
+- **コインウォレット**（プリペイド・台帳ベース）: チャージ（Stripe/PayPal・ボーナス%）⇄ 直接課金の切替、残高でスパチャ/ギフト/PPVを支払い。**売上はチャージ時計上**（コイン払いは二重計上せずランキングのみ反映）。管理: 未使用残高（負債）表示・ユーザー別の残高/手動付与/台帳履歴
 - 決済6種: PayPay（サンドボックス/本番キー分離）/ PayPal / Stripe / Metamask暗号資産（マルチチェーン・オンチェーン検証）/ Ko-fi / Doneru
 - **録画・アーカイブ**: 3層アクセス（公開/会員限定/有料）、replay.mp4無劣化リマックス、チャット・演出同期リプレイ、容量表示、タイトル編集、保持数制限（売り物保護付き）
+- **追っかけ再生（ライブDVR）**: ライブプレイヤーの統一シークバーで配信開始まで巻き戻し（YouTube風）。ライブ端は低遅延LL-HLS、巻き戻すと録画ソースへ透過切替
+- **外部配信ソース**（AWS IVS / IVS互換）: 配信をマネージドサービスに委譲し、自ホストのトランスコードなしで視聴
+- **サポーターランキング** / **配信スケジュール**（オフライン画面に次回予定）
 - **購入管理**（管理画面: 種類フィルタ・手動付与・取消）+ 購入者向け購入履歴
 - S3/R2メディアオフロード + 自動DBバックアップ + `-restoreFromS3` ワンコマンド移行
 - RTMPS（ネイティブTLS終端）、サイレントテストモード、チャット履歴の配信セッションスコープ
@@ -57,7 +61,9 @@ AoiTubeはセルフホスト型のライブストリーミングサーバーで�
 
 ## 管理画面メニュー構成
 
-ホーム / 視聴者 / チャット・ユーザー（チャット管理・ユーザーデータ・絵文字）/ フォロワー（Fediverse時）/ **購入・収益**（購入管理・PayPay/PayPal/Stripe/Metamask/Ko-fi/Doneru設定・特商法・FAQ）/ 設定（一般・サーバー[RTMPS/ストレージ/バックアップ]・動画[録画]・配信プロトコル・チャット・ソーシャル[認証]・Fediverse・通知[サイレントモード]）/ アーカイブ / ユーティリティ（ハードウェア・配信状態・ログ）/ 連携（Webhook・アクセストークン・外部アクション）
+ホーム / 視聴者 / チャット・ユーザー（チャット管理・**ユーザーデータ**[認証履歴・モデレーター・統合・**コイン管理**]・絵文字）/ フォロワー（Fediverse時）/ **購入・収益**（購入管理・**コイン設定**・PayPay/PayPal/Stripe/Metamask/Ko-fi/Doneru設定・特商法・FAQ）/ 設定（一般[**配信スケジュール**]・サーバー[RTMPS/ストレージ/バックアップ]・動画[録画]・配信プロトコル[**外部配信ソース**]・チャット・ソーシャル[認証]・Fediverse・通知[サイレントモード]）/ アーカイブ / ユーティリティ（ハードウェア・配信状態・ログ）/ 連携（Webhook・アクセストークン・外部アクション）
+
+**【重要】管理画面はfile-based routingではない**: 新規ページは `web/pages/admin/*.tsx` を作るだけでは表示されず、**`web/src/routes/admin.tsx` のルートテーブルにimport+`{ path, element }` の登録が必須**（未登録だとナビのリンクが別ページにフォールバックする。config-coins追加時に踏んだ）。
 
 ## ビルド・実行・ゲート
 
@@ -85,6 +91,8 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 - **録画**: `core/recording/recorder.go`。SegmentWrittenフックでライブプレイリストをVODへ増分ミラー。`recording_enabled` / `recording_highest_only`(既定ON=最高画質のみ) / `recording_retention_count` / `recording_store_on_s3`。セッションID=`YYYYMMDD-HHMMSS-<乱数8>`（列挙不能）。5秒未満は自動破棄。**オフラインクリップのセグメント（`-offline-`）は録画除外**（`HandleSegmentWritten`と`HandleVariantPlaylist`両方でスキップ。再接続時に混入するとreplay.mp4が壊れるため）
 - **【重要】LL-HLS(gohlslib)の録画・サムネはディスクミラーで供給**: gohlslibはライブをRAM配信しディスクに書かないため、録画（ディスク上HLSをミラー）とサムネ生成（最新ディスクセグメントからフレーム取得）が両方切れる。対策=**最高画質を`-c copy`でディスクにも書くffmpeg出力を`llhlsFfmpeg.go diskMirrorOutput`が常時併走**（録画トグルに依存しない＝録画OFFでもサムネ動作、`-c copy`で低CPU、`CleanupOldContent`オンライン掃除で有界）。内部file-writerリスナー(`fileWriterReceiverService.go`、書込前に親dirを`MkdirAll`)経由で従来のSegmentWrittenフローを発火→録画・S3退避・replay.mp4まで従来通り。**LL-HLS時はこのミラーをライブストレージ(S3)へ送らない**（`hlsHandler.go`、RAM配信で不要。オフラインクリップは例外で保存）。ライブ検証済み: finalize→replay.mp4→S3(remoteMedia)まで完全動作
 - **アーカイブ**: 確定時にmanifest先行書き→バックグラウンドで remux（`-c copy`→replay.mp4、プレーン`<video>`ネイティブ再生優先。video.js撤去済み）→サイズ記録→S3オフロード（8並列）。**プルーン可能=非公開かつ無制限かつ未購入のみ**（公開/会員/有料/購入実績ありは保護＆保持枠不算入）。3層アクセスは `canViewArchive` が毎リクエスト判定（S3プロキシ経由でも権威維持、Range/206対応）
+- **追っかけ再生（ライブDVR）**: 録画が `data/archives/<セッションID>/` に書く**成長中・ENDLISTなしのVODプレイリスト**を `/hls/dvr/` で配信（`controllers/hls.go` の `serveDVR`/`rewriteDVRPlaylist`/`buildDVRMaster`）。プレイリストを`VOD`→**`EVENT`型に書き換え**て「成長しつつ先頭へシーク可能」に。マスターは確定時しか生成されないためオンザフライ合成。**ライブと同一のゲート(`canViewStream`)とトークンdecorateをそのまま再利用**。セグメントは`data/archives/`配下で`CleanupOldContent`の対象外＝全セッションがシーク可能。可用性は `recording.Get().DVRSessionDir()`（録画アクティブ＋セグメント有）→ `status.dvrAvailable`。フロントは**OwncastPlayer内でソース透過切替**（ライブ端=LL-HLS低遅延、シークバーを戻すとDVRソースへ、LIVEボタンで復帰）。PlayerChromeにライブDVRモード（統一シークバー＋LIVEボタン）。**DVRは録画ONの自ホスト配信のみ**（外部ソース時は非提供）
+- **外部配信ソース（AWS IVS / IVS互換）**: `models/streamProtocol.go` の `ExternalStreamEnabled`/`ExternalStreamURL`。配信をマネージドサービスへ委譲し、プレイヤーは外部HLS URLを直接再生（自ホストのトランスコードなし）。オンライン判定は `controllers/externalStream.go` のバックグラウンドポーラー（`probeExternalPlaylist`）。この時 `webrtcEnabled=false`・`activeProtocol="external"`・DVR非提供
 - **チャットセッションスコープ**: 視聴者向け履歴は「最終配信終了時刻より後」のみ（`persistence.go`、datetime()両側正規化）。クライアントはオフライン90秒後に再取得。モデレーション履歴は全件。DBは2時間プルーナー
 - **サイレントモード**: 通知全抑止+未認証には offline偽装。**視聴はadmin(Basic)とモデレーターのみ**（ステータス偽装とHLSゲートは同一述語 `canViewSilentStream`）。有効中の `/api/status` は未認証に offline を返すため、外形監視は認証付きで行うこと
 
@@ -95,6 +103,12 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 - **アーカイブPPVの通貨**: manifest価格は**自通貨の最小単位で保存済み**。決済時は事前スケール済み金額+通貨オーバーライドで通す（`payments.go` PreScaledAmount/CurrencyOverride）。**主単位前提で `*100` すると100倍過大請求になるので注意**（過去バグ）
 - **PayPay環境分離**: `models/paypay.go` `Sandbox*/Production*`+レガシーfallback付き `GetActive*`。他プロバイダも同パターン（PayPal/Stripe）
 - **アーカイブ購入**: `donations.archive_id`+`HasPurchasedArchive`（is_test除外）。チャット非配信・Webhook非発火・公開recentフィードから除外（購入者名保護）。管理の手動付与=provider"manual"金額0
+- **コインウォレット（プリペイド・台帳ベース）**: `core/data/wallet.go`。**残高は保存せずappend-only `wallet_ledger` の `SUM(delta)` で導出**（監査可能・前払式支払手段の未使用残高報告に対応）。エントリ種別=`charge`/`bonus`/`spend`/`refund`/`admin_adjust`。**1コイン=基準通貨の最小単位**（JPYなら1コイン=¥1）
+  - **チャージ**: `item_type="coin"` の購入をStripe/PayPalで通し（`resolveCoinCharge`でログイン必須）、確定時に `creditCoinCharge`→`CreditWalletCharge`（**(provider,payment_id)ユニークindexで冪等**＝webhook/redirect両経路で二重付与なし）。チャット非配信・公開feed除外。ボーナス%は `coin_charge_bonus_percent`
+  - **消費**: `POST /api/wallet/spend`（`controllers/walletSpend.go`）で残高からスパチャ/ギフト/PPVを支払い。`SpendWallet` は**mutex直列化のread-check-writeで過剰引き出し不可**。DB書込失敗時は `RefundWallet` で自動返金
+  - **【重要】会計（二重計上防止）**: **売上はチャージ時に計上**。コイン払いのdonation行は `payment_provider="coin"` を持ち、売上集計3関数（`GetDonationTotal`/`GetMonthlyDonationTotal`/`GetDonationStats`）が定数 `notTestNotCoinFunded` で**除外**。一方 `amount_jpy` は入れるので**サポーターランキングには反映**され、チャットにも通常表示される
+  - API: `GET /api/wallet`（本人の残高+台帳、`RequireUserAccessToken`）/ `/api/admin/wallet/{stats,user,adjust}`。設定 `coin_wallet_enabled`（既定OFF）。**決済作成POSTには `withPaymentAccessToken` でトークン付与が必須**（コイン・PPVのアカウント紐付けをサーバーが解決するため）
+- **画面演出（8種）**: `web/components/ui/ScreenEffects/`。**全てCSS描画**（グラデ/clip-path/SVG mask/box-shadow）。emojiは背景が焼き込まれていて透過されず安っぽいため視覚には使わない（pillの小アイコンのみ例外）。粒子数は**価格ティア順に単調増加**（confetti→…→goldrush）で豪華さが金額と一致
 - **暗号資産**: マルチチェーン対応。検証は**リクエストの `networkId`（実際に送金したチェーン）**で行う（`metamaskRPCEndpoints`/`evmNativeSymbols`、運営者ウォレットは全EVMチェーン共通）。通貨はチェーンから**サーバー側で導出**（クライアント値は使わない）。伝播/採掘待ちのポーリング（最大~40s）。fiat換算(`amount_jpy`/`fiat_currency`)を記録。VBC(329)はCoinpaprika価格（無料枠60/hのため負のキャッシュ+直近価格フォールバック、`cryptoprice.go`）
 
 ### 認証・チャット・ガバナンス
@@ -122,8 +136,9 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 ## データベース
 
-- 主要テーブル: `users`（authenticated_at）/ `auth`（type: x, discord, google, github, twitter, fediverse, indieauth）/ `auth_events`（append-only監査ログ）/ `datastore`（key-value設定）/ `messages`（2時間でプルーン）/ `donations`
-- **donations拡張列**: `item_type`("superchat"/"effect"/"archive") / `effect_type` / `is_test` / `amount_jpy`（基準通貨換算値、最小単位）/ `fiat_currency`（換算先通貨、空=JPY）/ `archive_id`（後方互換ALTER、生SQLで読み書き=sqlc再生成回避）。**購入行はアーカイブ削除後も永続**（誰が/いつ/いくら/payment_id）
+- 主要テーブル: `users`（authenticated_at）/ `auth`（type: x, discord, google, github, twitter, fediverse, indieauth）/ `auth_events`（append-only監査ログ）/ `datastore`（key-value設定）/ `messages`（2時間でプルーン）/ `donations` / `wallet_ledger`（append-onlyコイン台帳）
+- **donations拡張列**: `item_type`("superchat"/"effect"/"archive"/**"coin"**=チャージ) / `effect_type` / `is_test` / `amount_jpy`（基準通貨換算値、最小単位）/ `fiat_currency`（換算先通貨、空=JPY）/ `archive_id`（後方互換ALTER、生SQLで読み書き=sqlc再生成回避）。**購入行はアーカイブ削除後も永続**（誰が/いつ/いくら/payment_id）。`payment_provider="coin"` はコイン払い＝**売上集計から除外**（チャージ時に計上済み）
+- **wallet_ledger**（`core/data/wallet.go`、生SQLの新規テーブル）: `user_id` / `delta`（コイン、正=付与・負=消費）/ `entry_type`（charge/bonus/spend/refund/admin_adjust）/ `paid_amount`+`paid_currency`（チャージで実際に受領したfiat＝発行価額。ボーナスで膨らむ額面と区別して未使用残高報告に使う）/ `provider`+`payment_id`（チャージの冪等キー、**部分ユニークindex**）/ `ref` / `created_at`。**残高は必ず `SUM(delta)` で導出**（数値保存しない）
 - **auth拡張列**: `handle`（ソーシャルのハンドル名）/ `revoked_at`（ソフト削除）/ `revoked_reason`（`unlinked`=ユーザー解除は自動復活しない / `overwritten`=システム失効は復活可）。ログイン系ルックアップは全て `revoked_at IS NULL`（後方互換ALTER）
 - **【重要】upstream Owncastのdatastore migration 4（パスワードbcrypt化）は適用禁止**（本フォークは独自適用済み、二重ハッシュでログイン不能になる）
 - スキーマは upstream と同一（schemaVersion=7）。DB操作の実例は `docs/database-operations.md`
@@ -133,11 +148,14 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 1. **依存の壊れ物ピン**: `CAFxX/httpcompression` は **v0.0.8固定**（v0.0.9はContent-Typeを落とし全ページがプレーンテキスト化）。aws-sdk-go-v2 はR2向けにチェックサム `WhenRequired`
 2. **antdはminor更新でもSelect内部DOMを変える**（`.ant-select-input`が外枠→内側inputに変化した前例）。テーマ上書きは新旧クラス併記+**スクリーンショット検証必須**（computed styleが正常でも視覚は壊れうる）
 3. **プレイヤーはvideo.js撤去済み・全てプレーン`<video>`+共通YouTube風UI**: 3プレイヤー（ライブLL-HLS=`OwncastPlayer`、ライブWebRTC=`WebRTCPlayer`、VOD=`VodPlayer`）は**プレーン`<video>`＋共有オーバーレイ`PlayerChrome`**（自作のシークバー/音量/設定メニュー/全画面/自動フェード）で統一。エンジンはライブHLS/VOD-HLS=**hls.js**、VOD-MP4=ネイティブ、WebRTC=`srcObject`。**video.jsは廃止（依存も削除）**：外部MediaSource/MediaStreamを追跡できずスピナー固着したため。教訓: ①hls.jsのトークンは`xhrSetup`でURL decorate（`/hls/`と`/api/archives/`のみ、外部CDNには付けない）②`<img>`/plain fetchはURL構築時に`withAccessToken`③メディアシーケンス後退クラッシュ回避にffmpeg `-start_number <epoch>` 単調増加は継続 ④コンテナは3つとも厳密16:9（`--player-container-height`から幅上限化。固定高さ+aspect-ratio併用は縦長化して黒帯が出る）⑤設定メニューは項目1種なら歯車で直接リスト展開（中間メニュー省略で1クリック）
-4. **検証哲学**: HTTP 200チェックはJS実行エラーを検出できない（SPA変更後は実ブラウザ必須）。ビルド/テスト全緑でもレスポンスヘッダ破壊は検出不能（実HTTPで確認）。minifiedで原因不明のReactエラーは**vite devサーバーで実名特定**
-5. **切断/接続のステートパスに同期ネットワークI/Oを置かない**（配信終了処理内の同期S3オフロードが全ストリームをデッドロックさせた前例。必ずバックグラウンド化）
-6. **CSS**: グローバルbox-sizingリセット無し（width:100%+paddingは静かにあふれる）。`.parent > div` 汎用子セレクタがあるコンテナへの名前付き子追加は詳細度確認。ポータル内antdはConfigProviderが効かない→パネルトークンで明示テーマ
-7. **i18n**: 5カタログ完全一致が `npm run check:i18n` で強制（タブインデント、`JSON.stringify(j,null,'\t')+'\n'`）。ユーザー向け文字列は必ず全5カタログ
-8. **ffmpeg 5.1.6は `init-%v.mp4` の%vを未展開のまま出力するバグがある**（5.1.8で修正）→該当環境ではLL-HLSブラウザ再生不可。クラシックHLSに切替えるかffmpegを更新
-9. **ブラウザのWebアプリマニフェスト取得は同一オリジンでもcredentials省略**→Basic認証等の配下では `crossorigin="use-credentials"` 必須
-10. **X APIはFreeプランで `users/me` 不可**（Sign in with Xが403 client-not-enrolled）→Pay Per Useプラン以上が必要
-11. S3系ダッシュボードの使用量表示は削除反映にラグがある場合がある（実態確認は ListObjects ベースの `/api/admin/storage/usage` で）
+4. **自動再生は「音あり」にできない**: ブラウザはユーザー操作前の**unmuted autoplayをブロック**する。音ありで`play()`を試し、拒否されたら**ミュートで自動再生にフォールバック**し「タップして音声をON」を出すのが唯一の解（`OwncastPlayer.attemptPlay`）。ミュートフォールバックを外すと**配信中にトップページを開いても再生が始まらない**（過去バグ）。またポスターの▶とPlayerChromeの中央再生ボタンが同時に出ないよう、**PlayerChromeは`started`後のみマウント**する
+5. **管理画面の新規ページは `web/src/routes/admin.tsx` への登録が必須**（file-based routingではない）。未登録だとナビのリンクが別ページに落ちる
+6. **画面演出にemojiを使わない**: 🎆/🎇/💰 などの絵文字はグリフに**背景（夜空など）が焼き込まれており透過されない**（映像の上で暗い四角に見える）。全パーティクルはCSS描画（グラデ/clip-path/SVG mask/box-shadow）にする
+7. **検証哲学**: HTTP 200チェックはJS実行エラーを検出できない（SPA変更後は実ブラウザ必須）。ビルド/テスト全緑でもレスポンスヘッダ破壊は検出不能（実HTTPで確認）。minifiedで原因不明のReactエラーは**vite devサーバーで実名特定**
+8. **切断/接続のステートパスに同期ネットワークI/Oを置かない**（配信終了処理内の同期S3オフロードが全ストリームをデッドロックさせた前例。必ずバックグラウンド化）
+9. **CSS**: グローバルbox-sizingリセット無し（width:100%+paddingは静かにあふれる）。`.parent > div` 汎用子セレクタがあるコンテナへの名前付き子追加は詳細度確認。ポータル内antdはConfigProviderが効かない→パネルトークンで明示テーマ
+10. **i18n**: 5カタログ完全一致が `npm run check:i18n` で強制（タブインデント、`JSON.stringify(j,null,'\t')+'\n'`）。ユーザー向け文字列は必ず全5カタログ
+11. **ffmpeg 5.1.6は `init-%v.mp4` の%vを未展開のまま出力するバグがある**（5.1.8で修正）→該当環境ではLL-HLSブラウザ再生不可。クラシックHLSに切替えるかffmpegを更新
+12. **ブラウザのWebアプリマニフェスト取得は同一オリジンでもcredentials省略**→Basic認証等の配下では `crossorigin="use-credentials"` 必須
+13. **X APIはFreeプランで `users/me` 不可**（Sign in with Xが403 client-not-enrolled）→Pay Per Useプラン以上が必要
+14. S3系ダッシュボードの使用量表示は削除反映にラグがある場合がある（実態確認は ListObjects ベースの `/api/admin/storage/usage` で）

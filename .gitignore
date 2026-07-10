@@ -25,6 +25,12 @@ vendor/
 /config*.yaml
 /stats.json
 owncast
+
+# Built server binaries (produced by `go build -o aoitube ...` and the
+# scp deploy staging copy). Never committed; static/web is embedded at build.
+/aoitube
+/aoitube.new
+/aoitube.bak-*
 webroot/thumbnail.jpg
 webroot/preview.gif
 webroot/hls

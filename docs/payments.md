@@ -13,6 +13,7 @@ both editable in the admin panel (Admin > Super Chat > Tokushoho / FAQ settings)
 | `superchat` | Highlighted chat message with YouTube-style amount tier colors | Buyer-chosen (up to 1,000,000 major units per provider) |
 | `effect` | One of 8 on-screen effects, announced in chat | Fixed, server-enforced (below) |
 | `archive` | Pay-per-view access to a recorded stream | Per-archive price set by the operator, server-enforced |
+| `coin` | Prepaid coin top-up credited to the buyer's wallet | Buyer-chosen; never announced in chat (see [Coin wallet](#coin-wallet)) |
 
 ### Screen effect price table
 
@@ -36,7 +37,52 @@ purchase form offers them as a picker.
 
 Webhook-confirmed purchases are announced to chat after a 10-second delay so the buyer has
 time to return from the provider's checkout page; redirect-confirmed ones announce
-immediately. **Archive purchases are never announced** — they are private entitlements.
+immediately. **Archive purchases and coin top-ups are never announced** — they are private.
+
+## Coin wallet
+
+Coins are an opt-in **prepaid, non-expiring balance** (off by default; enable under
+**Admin > Purchases > Coins**). Viewers charge coins once, then spend them on super chats,
+screen effects and paid archives without going through a provider each time.
+
+**One coin equals one minor unit of the base currency** (¥1 per coin for JPY), so a purchase
+priced in minor units costs exactly that many coins. Only the charge bonus makes coins
+diverge from the fiat actually paid.
+
+### Ledger, not a balance column
+
+`core/data/wallet.go` stores an **append-only `wallet_ledger`**; a balance is always derived
+as `SUM(delta)`. This keeps the money trail auditable — required for reporting the
+outstanding balance of a prepaid instrument — and makes a silently corrupted balance
+impossible. Entry types: `charge`, `bonus`, `spend`, `refund`, `admin_adjust`.
+
+- **Charging** goes through the normal Stripe / PayPal flow as an `item_type="coin"`
+  purchase. It requires a signed-in buyer, and crediting is **idempotent on
+  `(provider, payment_id)`** via a unique index, so the webhook and redirect paths can both
+  confirm without double-crediting. The configured bonus percent is credited as a separate
+  `bonus` entry.
+- **Spending** hits `POST /api/wallet/spend`, which debits atomically (a serialized
+  read-check-write refuses an overdraw), records the purchase, then broadcasts or entitles
+  exactly like a provider-confirmed purchase. If the purchase row fails to write, the debit
+  is refunded automatically.
+
+### Revenue accounting (no double counting)
+
+**Revenue is booked when coins are charged**, not when they are spent — the money arrived at
+the top-up. Coin-funded purchases therefore carry `payment_provider = "coin"` and are
+**excluded from every revenue aggregate** (`GetDonationTotal`, `GetMonthlyDonationTotal`,
+`GetDonationStats`). They still carry `amount_jpy`, so they **do count toward the supporter
+ranking** and appear in chat like any other purchase.
+
+### Operating the wallet
+
+- **Admin > Purchases > Coins** — enable the wallet, set the charge bonus percent, and see
+  the **outstanding coin liability** (the sum of all balances). Under Japan's Payment
+  Services Act an unused prepaid balance above the statutory threshold on a reporting date
+  triggers deposit and filing obligations; this figure is the basis for that report.
+- **Admin > Chat & Users > User Data** — open a user's 🪙 coin modal to see their balance
+  and ledger, and to grant or deduct coins manually (recorded as `admin_adjust`; a deduction
+  that would overdraw is refused).
 
 ## Base currency
 

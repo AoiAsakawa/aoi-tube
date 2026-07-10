@@ -46,6 +46,17 @@ client).
   runs for every broadcast even with zero WebRTC viewers. Disable WebRTC if you don't use
   it regularly.
 
+### External stream source (AWS IVS / IVS-compatible)
+
+On the same settings page you can delegate delivery to a managed service: enable
+**External stream source** and paste its HLS URL. AoiTube then does **no local
+transcoding** — the player fetches the external playlist directly, and online status comes
+from polling that URL (`controllers/externalStream.go`) instead of the RTMP connect signal.
+
+While external mode is on, WebRTC is not advertised (it is an AoiTube-served path) and
+**live DVR is unavailable** (nothing is recorded locally). This is the mode to use when the
+host's CPU can't sustain transcoding, or when you want a CDN-backed edge.
+
 ## Recording
 
 Recording is configured in **Admin > Settings > Video > Recording** and is **off by
@@ -85,6 +96,34 @@ Behavior:
   provider under LL-HLS (nothing serves them; the stream is served from RAM).
 - A chat/event log (`events.jsonl`) is captured alongside the media so the archive replay
   can re-play chat messages and screen effects in sync with the video (with seeking).
+
+## Live DVR (catch-up playback)
+
+While a stream is live **and recording is on**, viewers can drag the player's seek bar back
+to the very start of the broadcast — YouTube-style catch-up — and jump back to the edge with
+the **LIVE** button.
+
+There is no second player and no separate mode: the live player keeps a single seek bar
+spanning `[stream start, live edge]`. Riding the edge it plays the low-latency LL-HLS feed;
+scrubbing back transparently switches its hls.js source to `/hls/dvr/`, and returning to the
+edge restores the low-latency feed. **So low latency is preserved for normal viewing.**
+
+How it works:
+
+- The recorder is already mirroring the session to `data/archives/<sessionID>/` as a
+  **growing, ENDLIST-less playlist**. `/hls/dvr/` serves that, rewriting `PLAYLIST-TYPE:VOD`
+  to **`EVENT`** so players keep appending new segments while still allowing a seek to `t=0`.
+  The master playlist is only written when a session finalizes, so it is synthesized on the
+  fly.
+- Those segments live under `data/archives/`, which the online cleanup timer never prunes
+  (unlike `data/hls/`), so the **whole session stays seekable**.
+- The DVR path reuses the **same access gate as live HLS** (`canViewStream` — silent mode
+  and required social auth) and the same access-token URL decoration, so gated streams stay
+  gated.
+- `/api/status` reports `dvrAvailable` only when a recording session is active with at least
+  one archived segment. It is never offered in external-stream mode.
+
+Turn recording off and catch-up simply disappears from the player.
 
 ## Archives and access tiers
 
