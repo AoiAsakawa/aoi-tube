@@ -1,8 +1,9 @@
 // Full-screen celebration overlay played when a viewer purchases a screen
 // effect. Effect purchases arrive over the websocket as DONATION events with
-// itemType === "effect", get queued in the zustand store, and play here one
-// at a time for every viewer. Everything is rendered with CSS keyframes on
-// emoji particles — no animation library required.
+// itemType === "effect", get queued in the zustand store, and play here one at
+// a time for every viewer. Every particle is drawn entirely in CSS (gradients,
+// clip-path, masks, box-shadow) — no emoji glyphs, whose baked-in backgrounds
+// looked opaque and cheap over the video — and animated with CSS keyframes.
 import { CSSProperties, FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,23 +14,10 @@ import {
 import { getScreenEffectEmoji } from '../../../interfaces/donation.model';
 import styles from './ScreenEffects.module.scss';
 
-// How long one effect stays on screen. Particle delays and durations are
-// tuned to finish inside this window; keep it in sync with the animation
-// timings in ScreenEffects.module.scss (pill animation is 5.5s).
+// How long one effect stays on screen. Particle delays and durations are tuned
+// to finish inside this window; keep it in sync with the animation timings in
+// ScreenEffects.module.scss (the pill animation is 5.5s).
 const EFFECT_DURATION_MS = 5500;
-
-const CONFETTI_EMOJIS = ['🎉', '🎊', '✨'];
-const FIREWORK_BURST_EMOJIS = ['🎆', '🎇'];
-const HEART_EMOJIS = ['💖', '💕', '💗'];
-const STAR_EMOJIS = ['⭐', '✨', '🌟'];
-// Celebration mixes dense falling party emojis with firework bursts.
-const CELEBRATION_FALL_EMOJIS = ['🎊', '🎉', '✨'];
-// Rainbow surrounds the central arc with twinkling sparkles.
-const RAINBOW_SPARKLE_EMOJIS = ['✨', '🌟', '💫'];
-// Meteor shower: a denser, faster, brighter take on the star streaks.
-const METEOR_EMOJIS = ['☄️', '💫', '⭐'];
-// Gold rush: a heavy rain of money emojis under a golden glow.
-const GOLDRUSH_EMOJIS = ['💰', '🪙', '✨'];
 
 // How a particle animates; celebration mixes several kinds in one effect.
 type ParticleKind =
@@ -45,175 +33,158 @@ type ParticleKind =
 interface Particle {
 	key: number;
 	kind: ParticleKind;
-	emoji: string;
 	style: CSSProperties;
 }
 
-const randomBetween = (min: number, max: number): number => min + Math.random() * (max - min);
+const rand = (min: number, max: number): number => min + Math.random() * (max - min);
+const ri = (min: number, max: number): number => Math.round(rand(min, max));
 
-const pick = (list: string[]): string => list[Math.floor(Math.random() * list.length)];
-
-// 🎉 Confetti raining down from the top with random positions, delays,
-// horizontal sway and spin. keyOffset keeps keys unique in mixed effects.
-const makeConfettiParticles = (emojis: string[], count: number, keyOffset = 0): Particle[] =>
+// 🎉 Confetti: colored strips (some circles) raining down with sway and spin.
+const makeConfetti = (count: number, keyOffset = 0): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: keyOffset + i,
 		kind: 'confetti' as const,
-		emoji: pick(emojis),
 		style: {
-			left: `${randomBetween(0, 98).toFixed(2)}%`,
-			fontSize: `${Math.round(randomBetween(16, 34))}px`,
-			animationDuration: `${randomBetween(2.8, 4).toFixed(2)}s`,
-			animationDelay: `${randomBetween(0, 1.4).toFixed(2)}s`,
-			'--sway': `${Math.round(randomBetween(-120, 120))}px`,
-			'--spin': `${Math.round(randomBetween(-720, 720))}deg`,
+			left: `${rand(0, 98).toFixed(2)}%`,
+			'--w': `${ri(7, 13)}px`,
+			'--h': `${ri(5, 10)}px`,
+			'--hue': `${ri(0, 360)}`,
+			'--round': Math.random() < 0.28 ? '50%' : '2px',
+			animationDuration: `${rand(2.8, 4).toFixed(2)}s`,
+			animationDelay: `${rand(0, 1.4).toFixed(2)}s`,
+			'--sway': `${ri(-120, 120)}px`,
+			'--spin': `${ri(-720, 720)}deg`,
 		} as CSSProperties,
 	}));
 
-// 🎆 Rockets launching from the bottom; each one bursts (scales up and fades)
-// once it reaches its randomized apex.
-const makeFireworkParticles = (count: number, keyOffset = 0): Particle[] =>
+// 🎆 Rockets launching from the bottom; each bursts (a radial flash + a spark
+// starburst, both CSS) at its randomized apex.
+const makeFireworks = (count: number, keyOffset = 0): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: keyOffset + i,
 		kind: 'firework' as const,
-		emoji: pick(FIREWORK_BURST_EMOJIS),
 		style: {
-			left: `${randomBetween(5, 90).toFixed(2)}%`,
-			fontSize: `${Math.round(randomBetween(26, 44))}px`,
-			'--delay': `${randomBetween(0, 2.4).toFixed(2)}s`,
-			'--rise': `${Math.round(randomBetween(-70, -40))}vh`,
-			'--rise-duration': `${randomBetween(0.8, 1.3).toFixed(2)}s`,
+			left: `${rand(5, 90).toFixed(2)}%`,
+			'--delay': `${rand(0, 2.4).toFixed(2)}s`,
+			'--rise': `${ri(-70, -40)}vh`,
+			'--rise-duration': `${rand(0.8, 1.3).toFixed(2)}s`,
+			'--hue': `${ri(0, 360)}`,
+			'--burst-size': `${ri(90, 150)}px`,
 		} as CSSProperties,
 	}));
 
-// 💖 Hearts floating up from the bottom, swaying and fading out.
-const makeHeartParticles = (count: number): Particle[] =>
+// 💖 Hearts: pink/red CSS hearts (an SVG mask over a shiny fill) floating up.
+const makeHearts = (count: number): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'heart' as const,
-		emoji: pick(HEART_EMOJIS),
 		style: {
-			left: `${randomBetween(2, 96).toFixed(2)}%`,
-			fontSize: `${Math.round(randomBetween(18, 38))}px`,
-			animationDuration: `${randomBetween(3, 4.2).toFixed(2)}s`,
-			animationDelay: `${randomBetween(0, 1.2).toFixed(2)}s`,
-			'--sway': `${Math.round(randomBetween(-90, 90))}px`,
+			left: `${rand(2, 96).toFixed(2)}%`,
+			'--sz': `${ri(20, 40)}px`,
+			'--hue': `${ri(330, 366) % 360}`,
+			animationDuration: `${rand(3, 4.2).toFixed(2)}s`,
+			animationDelay: `${rand(0, 1.2).toFixed(2)}s`,
+			'--sway': `${ri(-90, 90)}px`,
 		} as CSSProperties,
 	}));
 
-// ⭐ Shooting stars streaking diagonally across the screen with a light
-// tail. The whole span is rotated by --angle and travels along its local
-// x-axis, so the tail (a ::before gradient) always trails the motion.
-const makeStarParticles = (count: number): Particle[] =>
+// ⭐ Shooting stars: a glowing head with a fading tail streaking diagonally.
+const makeStars = (count: number): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'star' as const,
-		emoji: pick(STAR_EMOJIS),
 		style: {
-			left: `${randomBetween(-10, 70).toFixed(2)}%`,
-			top: `${randomBetween(-8, 30).toFixed(2)}vh`,
-			fontSize: `${Math.round(randomBetween(16, 32))}px`,
-			animationDuration: `${randomBetween(1, 1.6).toFixed(2)}s`,
-			animationDelay: `${randomBetween(0, 3.4).toFixed(2)}s`,
-			'--angle': `${Math.round(randomBetween(24, 40))}deg`,
-			'--travel': `${Math.round(randomBetween(105, 140))}vh`,
-			'--tail': `${Math.round(randomBetween(50, 110))}px`,
+			left: `${rand(-10, 70).toFixed(2)}%`,
+			top: `${rand(-8, 30).toFixed(2)}vh`,
+			animationDuration: `${rand(1, 1.6).toFixed(2)}s`,
+			animationDelay: `${rand(0, 3.4).toFixed(2)}s`,
+			'--angle': `${ri(24, 40)}deg`,
+			'--travel': `${ri(105, 140)}vh`,
+			'--tail': `${ri(60, 120)}px`,
 		} as CSSProperties,
 	}));
 
-// 🎊 Celebration: the most lavish effect — a dense storm of falling party
-// emojis combined with a full round of firework bursts.
-const makeCelebrationParticles = (): Particle[] => [
-	...makeConfettiParticles(CELEBRATION_FALL_EMOJIS, 60),
-	...makeFireworkParticles(16, 60),
-];
+// 🎊 Celebration: a dense confetti storm plus a full round of firework bursts.
+const makeCelebration = (): Particle[] => [...makeConfetti(60), ...makeFireworks(16, 60)];
 
-// 🌈 Rainbow: one large arc scaling in at the center of the screen (position
-// and animation are fully defined in CSS), surrounded by twinkling sparkles.
-// A soft rainbow-gradient glow overlay is rendered separately in the JSX.
-const makeRainbowParticles = (): Particle[] => [
-	{ key: 0, kind: 'rainbow' as const, emoji: '🌈', style: {} as CSSProperties },
+// 🌈 Rainbow: a CSS arc (masked conic gradient) scaling in at center, ringed by
+// twinkling CSS sparkles; a soft rainbow wash is drawn separately in the JSX.
+const makeRainbow = (): Particle[] => [
+	{ key: 0, kind: 'rainbow' as const, style: {} as CSSProperties },
 	...Array.from({ length: 30 }, (_, i) => ({
 		key: i + 1,
 		kind: 'sparkle' as const,
-		emoji: pick(RAINBOW_SPARKLE_EMOJIS),
 		style: {
-			left: `${randomBetween(18, 80).toFixed(2)}%`,
-			top: `${randomBetween(16, 72).toFixed(2)}%`,
-			fontSize: `${Math.round(randomBetween(14, 32))}px`,
-			animationDuration: `${randomBetween(1.2, 2).toFixed(2)}s`,
-			animationDelay: `${randomBetween(0, 3.2).toFixed(2)}s`,
+			left: `${rand(14, 82).toFixed(2)}%`,
+			top: `${rand(14, 74).toFixed(2)}%`,
+			'--sz': `${ri(12, 26)}px`,
+			'--hue': `${ri(0, 360)}`,
+			animationDuration: `${rand(1.2, 2).toFixed(2)}s`,
+			animationDelay: `${rand(0, 3.2).toFixed(2)}s`,
 		} as CSSProperties,
 	})),
 ];
 
-// ☄️ Meteor shower: the lavish version of the star streaks — many more,
-// bigger and faster particles with a thick glowing tail. Reuses the star
-// streak geometry (--angle / --travel / --tail) with its own styling.
-const makeMeteorParticles = (count: number): Particle[] =>
+// ☄️ Meteor shower: the lavish streaks — bigger, faster heads with a thick
+// glowing blue tail.
+const makeMeteors = (count: number): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'meteor' as const,
-		emoji: pick(METEOR_EMOJIS),
 		style: {
-			left: `${randomBetween(-15, 75).toFixed(2)}%`,
-			top: `${randomBetween(-12, 28).toFixed(2)}vh`,
-			fontSize: `${Math.round(randomBetween(22, 44))}px`,
-			animationDuration: `${randomBetween(0.7, 1.1).toFixed(2)}s`,
-			animationDelay: `${randomBetween(0, 3.8).toFixed(2)}s`,
-			'--angle': `${Math.round(randomBetween(28, 46))}deg`,
-			'--travel': `${Math.round(randomBetween(115, 150))}vh`,
-			'--tail': `${Math.round(randomBetween(110, 200))}px`,
+			left: `${rand(-15, 75).toFixed(2)}%`,
+			top: `${rand(-12, 28).toFixed(2)}vh`,
+			animationDuration: `${rand(0.7, 1.1).toFixed(2)}s`,
+			animationDelay: `${rand(0, 3.8).toFixed(2)}s`,
+			'--angle': `${ri(28, 46)}deg`,
+			'--travel': `${ri(115, 150)}vh`,
+			'--tail': `${ri(120, 210)}px`,
 		} as CSSProperties,
 	}));
 
-// 💰 Gold rush: the top-tier effect — a dense rain of glowing coins (reusing
-// the confetti fall path) plus a full-screen golden flash rendered in JSX.
-const makeGoldrushParticles = (count: number): Particle[] =>
+// 💰 Gold rush: a heavy rain of shiny CSS coins under a pulsing golden flash.
+const makeGoldrush = (count: number): Particle[] =>
 	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'coin' as const,
-		emoji: pick(GOLDRUSH_EMOJIS),
 		style: {
-			left: `${randomBetween(0, 98).toFixed(2)}%`,
-			fontSize: `${Math.round(randomBetween(20, 42))}px`,
-			animationDuration: `${randomBetween(2.2, 3.6).toFixed(2)}s`,
-			animationDelay: `${randomBetween(0, 1.8).toFixed(2)}s`,
-			'--sway': `${Math.round(randomBetween(-100, 100))}px`,
-			'--spin': `${Math.round(randomBetween(-540, 540))}deg`,
+			left: `${rand(0, 98).toFixed(2)}%`,
+			'--sz': `${ri(20, 40)}px`,
+			animationDuration: `${rand(2.2, 3.6).toFixed(2)}s`,
+			animationDelay: `${rand(0, 1.8).toFixed(2)}s`,
+			'--sway': `${ri(-100, 100)}px`,
+			'--spin': `${ri(-720, 720)}deg`,
 		} as CSSProperties,
 	}));
 
 // Effects are priced in ascending tiers (see models/donation.go effectPrices):
 // confetti < hearts < stars < fireworks < celebration < rainbow < meteor <
-// goldrush. The particle budgets below rise monotonically with that tier so the
-// spectacle clearly escalates with the amount paid, rather than being uneven
-// (previously a ¥300 confetti burst was denser than a ¥1000 fireworks). Streak
-// and burst particles carry more visual weight each, so their counts stay lower
-// than the light falling-confetti/coin effects at the same perceived intensity.
+// goldrush. Particle budgets rise monotonically with that tier so the spectacle
+// escalates with the amount paid. Streak/burst particles carry more visual
+// weight each, so their counts stay lower than the light falling effects.
 const makeParticles = (effectType: string): Particle[] => {
 	switch (effectType) {
 		case 'hearts': // tier 1
-			return makeHeartParticles(30);
+			return makeHearts(30);
 		case 'stars': // tier 2
-			return makeStarParticles(20);
+			return makeStars(20);
 		case 'fireworks': // tier 3
-			return makeFireworkParticles(22);
+			return makeFireworks(22);
 		case 'celebration': // tier 4
-			return makeCelebrationParticles();
+			return makeCelebration();
 		case 'rainbow': // tier 5
-			return makeRainbowParticles();
+			return makeRainbow();
 		case 'meteor': // tier 6
-			return makeMeteorParticles(46);
+			return makeMeteors(46);
 		case 'goldrush': // tier 7
-			return makeGoldrushParticles(84);
+			return makeGoldrush(84);
 		case 'confetti': // tier 0
 		default:
-			return makeConfettiParticles(CONFETTI_EMOJIS, 24);
+			return makeConfetti(24);
 	}
 };
 
-// CSS class for single-span particle kinds (fireworks render nested spans).
+// CSS class for single-element particle kinds (fireworks render nested spans).
 const PARTICLE_CLASS: Record<Exclude<ParticleKind, 'firework'>, string> = {
 	confetti: styles.confetti,
 	heart: styles.heart,
@@ -268,13 +239,11 @@ export const ScreenEffects: FC = () => {
 			{particles.map(particle =>
 				particle.kind === 'firework' ? (
 					<span key={particle.key} className={styles.firework} style={particle.style}>
-						<span className={styles.fireworkRocket}>🎇</span>
-						<span className={styles.fireworkBurst}>{particle.emoji}</span>
+						<span className={styles.fireworkRocket} />
+						<span className={styles.fireworkBurst} />
 					</span>
 				) : (
-					<span key={particle.key} className={PARTICLE_CLASS[particle.kind]} style={particle.style}>
-						{particle.emoji}
-					</span>
+					<span key={particle.key} className={PARTICLE_CLASS[particle.kind]} style={particle.style} />
 				),
 			)}
 			<div className={styles.pill}>

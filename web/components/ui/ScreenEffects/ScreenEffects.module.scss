@@ -1,6 +1,7 @@
-// Full-screen overlay for purchased screen effects. The overlay never
-// captures pointer events and sits above the video player but below antd
-// modals (which use z-index 1000).
+// Full-screen overlay for purchased screen effects. The overlay never captures
+// pointer events and sits above the video player but below antd modals (z 1000).
+// Every particle is a CSS-drawn shape (no emoji glyphs) so nothing carries an
+// opaque background over the video.
 .overlay {
 	position: fixed;
 	inset: 0;
@@ -9,11 +10,17 @@
 	pointer-events: none;
 }
 
-/* 🎉 Confetti: rains from the top with sway and spin */
+/* 🎉 Confetti: small colored strips (some round) raining with sway and spin. */
 .confetti {
 	position: absolute;
 	top: -8vh;
-	line-height: 1;
+	width: var(--w, 10px);
+	height: var(--h, 6px);
+	border-radius: var(--round, 2px);
+	background:
+		linear-gradient(120deg, rgba(255, 255, 255, 0.65), transparent 55%),
+		hsl(var(--hue, 45) 90% 60%);
+	box-shadow: 0 0 4px hsl(var(--hue, 45) 90% 60% / 0.45);
 	animation-name: confettiFall;
 	animation-timing-function: linear;
 	animation-fill-mode: both;
@@ -28,35 +35,79 @@
 		opacity: 1;
 	}
 	100% {
-		transform: translate(var(--sway, 0px), 115vh) rotate(var(--spin, 360deg));
+		transform: translate(var(--sway, 0px), 118vh) rotate(var(--spin, 360deg));
 		opacity: 0;
 	}
 }
 
-/* 🎆 Fireworks: a small rocket rises from the bottom, then a burst emoji
-   scales up and fades at the apex */
+/* 🎆 Fireworks: a glowing rocket rises, then a radial flash + spark starburst
+   blooms at the apex — all CSS, fully transparent over the video. */
 .firework {
 	position: absolute;
 	bottom: -4vh;
 	display: block;
-	line-height: 1;
 }
 
 .fireworkRocket {
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	font-size: 0.6em;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: radial-gradient(circle, #fff, hsl(var(--hue, 45) 100% 70% / 0.9));
+	box-shadow: 0 0 8px 1px hsl(var(--hue, 45) 100% 70% / 0.9);
 	opacity: 0;
 	animation: fireworkRise var(--rise-duration, 1s) ease-out var(--delay, 0s) both;
 }
 
+// The burst: a bright radial flash (own background) plus a ring of sparks drawn
+// with box-shadow on the ::before, all scaling outward from the apex.
 .fireworkBurst {
 	position: absolute;
 	left: 0;
 	bottom: 0;
+	width: var(--burst-size, 100px);
+	height: var(--burst-size, 100px);
+	margin-left: calc(var(--burst-size, 100px) / -2);
+	margin-bottom: calc(var(--burst-size, 100px) / -2);
+	border-radius: 50%;
+	background: radial-gradient(
+		circle,
+		rgba(255, 255, 255, 0.95) 0%,
+		hsl(var(--hue, 45) 100% 68% / 0.85) 20%,
+		hsl(var(--hue, 45) 100% 58% / 0.32) 44%,
+		transparent 68%
+	);
 	opacity: 0;
 	animation: fireworkBurst 1.6s ease-out calc(var(--delay, 0s) + var(--rise-duration, 1s)) both;
+}
+
+// 12 radiating sparks (box-shadow dots at 30° steps) that scale out with the
+// burst for a proper starburst rather than a plain glowing ball.
+.fireworkBurst::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 4px;
+	height: 4px;
+	margin: -2px 0 0 -2px;
+	border-radius: 50%;
+	background: hsl(var(--hue, 45) 100% 78%);
+	box-shadow:
+		0 -26px 3px hsl(var(--hue, 45) 100% 78%),
+		0 26px 3px hsl(var(--hue, 45) 100% 78%),
+		26px 0 3px hsl(var(--hue, 45) 100% 78%),
+		-26px 0 3px hsl(var(--hue, 45) 100% 78%),
+		18px -18px 3px hsl(var(--hue, 45) 100% 78%),
+		-18px 18px 3px hsl(var(--hue, 45) 100% 78%),
+		18px 18px 3px hsl(var(--hue, 45) 100% 78%),
+		-18px -18px 3px hsl(var(--hue, 45) 100% 78%),
+		0 -13px 2px #fff,
+		0 13px 2px #fff,
+		13px 0 2px #fff,
+		-13px 0 2px #fff;
 }
 
 @keyframes fireworkRise {
@@ -75,24 +126,29 @@
 
 @keyframes fireworkBurst {
 	0% {
-		transform: translateY(var(--rise, -55vh)) scale(0.3);
+		transform: translateY(var(--rise, -55vh)) scale(0.2);
 		opacity: 0;
 	}
-	12% {
+	14% {
 		opacity: 1;
-		transform: translateY(var(--rise, -55vh)) scale(1.4);
+		transform: translateY(var(--rise, -55vh)) scale(0.85);
 	}
 	100% {
-		transform: translateY(var(--rise, -55vh)) scale(3);
+		transform: translateY(var(--rise, -55vh)) scale(1.7);
 		opacity: 0;
 	}
 }
 
-/* ⭐ Shooting stars: the span is rotated by --angle and streaks along its
-   local x-axis, so the ::before tail always trails behind the motion */
+/* ⭐ Shooting stars: a glowing head with a fading tail. The span is rotated by
+   --angle and streaks along its local x-axis, so the ::before tail always
+   trails the motion. */
 .star {
 	position: absolute;
-	line-height: 1;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, 0.35) 70%, transparent);
+	box-shadow: 0 0 7px 1px rgba(255, 255, 255, 0.9);
 	animation-name: starStreak;
 	animation-timing-function: linear;
 	animation-fill-mode: both;
@@ -102,12 +158,12 @@
 	content: '';
 	position: absolute;
 	top: 50%;
-	right: 85%;
+	right: 60%;
 	width: var(--tail, 80px);
 	height: 2px;
 	border-radius: 2px;
 	transform: translateY(-50%);
-	background: linear-gradient(to left, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0));
+	background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
 }
 
 @keyframes starStreak {
@@ -127,11 +183,20 @@
 	}
 }
 
-/* 💖 Hearts: float up from the bottom, swaying and fading out */
+/* 💖 Hearts: a shiny fill masked to a heart, floating up and swaying. */
 .heart {
 	position: absolute;
 	bottom: -8vh;
-	line-height: 1;
+	width: var(--sz, 26px);
+	height: var(--sz, 26px);
+	background:
+		radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.85), transparent 42%),
+		hsl(var(--hue, 345) 85% 62%);
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 29S2 20 2 10.5C2 5 6 2 9.5 3.6 12 4.7 14 7 16 10c2-3.3 4-5.3 6.5-6.4C26 2 30 5 30 10.5 30 20 16 29 16 29z' fill='%23000'/%3E%3C/svg%3E")
+		center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 29S2 20 2 10.5C2 5 6 2 9.5 3.6 12 4.7 14 7 16 10c2-3.3 4-5.3 6.5-6.4C26 2 30 5 30 10.5 30 20 16 29 16 29z' fill='%23000'/%3E%3C/svg%3E")
+		center / contain no-repeat;
+	filter: drop-shadow(0 0 6px hsl(var(--hue, 345) 90% 60% / 0.6));
 	animation-name: heartFloat;
 	animation-timing-function: ease-out;
 	animation-fill-mode: both;
@@ -149,22 +214,33 @@
 		opacity: 0.9;
 	}
 	100% {
-		transform: translate(var(--sway, 0px), -115vh) scale(1.15);
+		transform: translate(var(--sway, 0px), -118vh) scale(1.15);
 		opacity: 0;
 	}
 }
 
-/* 🌈 Rainbow: one large arc scales in at the center with a soft white halo,
-   holds, then fades. Sparkles twinkle around it and .rainbowGlow washes the
-   whole screen in a gentle rainbow gradient. */
+/* 🌈 Rainbow: a masked conic-gradient arc scaling in at center, with a soft
+   full-screen rainbow wash (.rainbowGlow) and twinkling sparkles around it. */
 .rainbowArc {
 	position: absolute;
-	top: 42%;
+	top: 46%;
 	left: 50%;
-	font-size: clamp(110px, 26vw, 260px);
-	line-height: 1;
+	width: clamp(280px, 54vw, 560px);
+	aspect-ratio: 2 / 1;
+	background: conic-gradient(
+		from 270deg at 50% 100%,
+		#ff4d4d,
+		#ff9a3d,
+		#ffe24d,
+		#4dd964,
+		#4da6ff,
+		#9a6bff,
+		#ff4da6
+	);
+	-webkit-mask: radial-gradient(circle at 50% 100%, transparent 0 62%, #000 62% 100%);
+	mask: radial-gradient(circle at 50% 100%, transparent 0 62%, #000 62% 100%);
+	filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.4));
 	animation: rainbowIn 5.5s ease both;
-	filter: drop-shadow(0 0 34px rgba(255, 255, 255, 0.45));
 }
 
 @keyframes rainbowIn {
@@ -189,10 +265,14 @@
 	}
 }
 
-/* Twinkling sparkles scattered around the rainbow arc */
+/* 4-point CSS sparkles scattered around the rainbow arc. */
 .sparkle {
 	position: absolute;
-	line-height: 1;
+	width: var(--sz, 16px);
+	height: var(--sz, 16px);
+	background: hsl(var(--hue, 50) 100% 72%);
+	clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+	filter: drop-shadow(0 0 4px #fff);
 	opacity: 0;
 	animation-name: sparkleTwinkle;
 	animation-timing-function: ease-in-out;
@@ -205,16 +285,16 @@
 		opacity: 0;
 	}
 	50% {
-		transform: scale(1.15) rotate(20deg);
+		transform: scale(1.15) rotate(35deg);
 		opacity: 1;
 	}
 	100% {
-		transform: scale(0.2) rotate(45deg);
+		transform: scale(0.2) rotate(70deg);
 		opacity: 0;
 	}
 }
 
-/* Soft rainbow-gradient light washing the whole screen behind the arc */
+/* Soft rainbow-gradient light washing the whole screen behind the arc. */
 .rainbowGlow {
 	position: absolute;
 	inset: 0;
@@ -247,22 +327,25 @@
 	}
 }
 
-/* ☄️ Meteor shower: reuses the star streak motion (rotated span traveling
-   along its local x-axis) but bigger, faster and with a thick glowing tail */
+/* ☄️ Meteor shower: the lavish streaks — bigger, faster glowing heads with a
+   thick blue tail. Reuses the star streak motion. */
 .meteor {
 	position: absolute;
-	line-height: 1;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: radial-gradient(circle, #fff 0%, rgba(180, 210, 255, 0.6) 65%, transparent);
+	box-shadow: 0 0 12px 2px rgba(150, 200, 255, 0.9);
 	animation-name: starStreak;
 	animation-timing-function: linear;
 	animation-fill-mode: both;
-	filter: drop-shadow(0 0 10px rgba(150, 200, 255, 0.75));
 }
 
 .meteor::before {
 	content: '';
 	position: absolute;
 	top: 50%;
-	right: 85%;
+	right: 55%;
 	width: var(--tail, 140px);
 	height: 5px;
 	border-radius: 4px;
@@ -276,19 +359,38 @@
 	box-shadow: 0 0 12px rgba(160, 200, 255, 0.6);
 }
 
-/* 💰 Gold rush: heavy rain of glowing coins (reuses the confetti fall path
-   with sway and spin) under a pulsing golden flash */
+/* 💰 Gold rush: shiny CSS coins raining under a pulsing golden flash. */
 .coin {
 	position: absolute;
 	top: -8vh;
-	line-height: 1;
+	width: var(--sz, 26px);
+	height: var(--sz, 26px);
+	border-radius: 50%;
+	background: radial-gradient(circle at 35% 30%, #fff6c9, #ffd24a 42%, #e8a417 74%, #b4740c);
+	border: 1px solid rgba(255, 236, 150, 0.7);
+	box-shadow:
+		0 0 9px rgba(255, 199, 44, 0.85),
+		inset 0 0 4px rgba(255, 255, 255, 0.7),
+		inset 0 -2px 3px rgba(140, 90, 0, 0.5);
 	animation-name: confettiFall;
 	animation-timing-function: linear;
 	animation-fill-mode: both;
-	filter: drop-shadow(0 0 9px rgba(255, 199, 44, 0.85));
 }
 
-/* Full-screen golden flash/glow pulsing while the coins fall */
+/* A ¥ mark stamped on the coin face. */
+.coin::before {
+	content: '¥';
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(var(--sz, 26px) * 0.5);
+	font-weight: 700;
+	color: rgba(150, 95, 0, 0.75);
+}
+
+/* Full-screen golden flash/glow pulsing while the coins fall. */
 .goldFlash {
 	position: absolute;
 	inset: 0;
@@ -322,8 +424,8 @@
 	}
 }
 
-/* "○○ sent fireworks" pill shown while the effect plays.
-   Its 5.5s animation matches EFFECT_DURATION_MS in ScreenEffects.tsx. */
+/* "○○ sent fireworks" pill shown while the effect plays. Its 5.5s animation
+   matches EFFECT_DURATION_MS in ScreenEffects.tsx. */
 .pill {
 	position: absolute;
 	bottom: 14%;
