@@ -272,6 +272,15 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 				setSolanaAddress(senderAddress);
 			}
 
+			// Paying yourself moves no value: the operator's balance only drops by
+			// the fee, so the server (which credits a payment from that balance
+			// increase) correctly refuses to confirm it. Stop here rather than let
+			// the viewer burn a transaction fee on a purchase that cannot complete.
+			if (senderAddress === recipientAddress) {
+				message.error(t('donation.solanaSelfTransfer'));
+				return '';
+			}
+
 			// Build a real Transaction with @solana/web3.js (loaded lazily to keep
 			// the initial bundle small)
 			const web3 = await import('@solana/web3.js');

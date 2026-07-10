@@ -207,6 +207,16 @@ func solanaNativeCredit(res *solanaTxResult, owner string) (int64, bool) {
 	return delta, true
 }
 
+// solanaIsSelfTransfer reports whether the operator's own account paid for this
+// transaction. Account index 0 is the fee payer, i.e. the signer that sent it.
+// Such a transfer nets to minus the fee, so it credits nothing — worth naming
+// explicitly because it is what happens when an operator tests against their
+// own receiving address.
+func solanaIsSelfTransfer(res *solanaTxResult, operatorAddress string) bool {
+	keys := res.Transaction.Message.AccountKeys
+	return len(keys) > 0 && keys[0].Pubkey == operatorAddress
+}
+
 // verifySolanaTx confirms that a Solana transaction paid the operator's account
 // and returns the verified amount (1e8 fixed point, like the other chains) with
 // the AUTHORITATIVE currency symbol taken from the chain — the SPL mint or SOL —
@@ -256,6 +266,14 @@ func verifySolanaTx(signature, operatorAddress string) (int64, string, error) {
 
 	lamports, ok := solanaNativeCredit(res, operatorAddress)
 	if !ok {
+		// A self-transfer is the common way to hit this while testing: the
+		// operator's balance only drops by the fee, so there is nothing to credit.
+		// Say so, since "no payment" alone sends people looking for a bug.
+		if solanaIsSelfTransfer(res, operatorAddress) {
+			return 0, "", fmt.Errorf(
+				"the payer and the configured Solana address are the same account, so no value moved",
+			)
+		}
 		return 0, "", fmt.Errorf("no payment to the configured Solana address")
 	}
 	amount, err := smallestUnitToDisplay(big.NewInt(lamports), solanaLamportDecimals)

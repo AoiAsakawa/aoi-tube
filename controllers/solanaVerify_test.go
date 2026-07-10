@@ -253,3 +253,37 @@ func TestTxHashShapesAreMutuallyExclusive(t *testing.T) {
 		t.Error("a Solana signature must match only the Solana shape")
 	}
 }
+
+// Paying yourself must never credit: otherwise anyone could buy a fixed-price
+// effect for free by sending SOL from the operator's own address back to it.
+// The real transaction that exposed this had one account key (fee payer ==
+// destination) and a delta of just the fee.
+func TestSolanaSelfTransferIsNotAPayment(t *testing.T) {
+	res := txWithAccounts(
+		[]string{testOperator},
+		[]int64{1_000_000_000},
+		[]int64{999_994_995}, // only the 5005 lamport fee left the account
+	)
+
+	if _, ok := solanaNativeCredit(res, testOperator); ok {
+		t.Fatal("a self-transfer must not credit the operator")
+	}
+	if !solanaIsSelfTransfer(res, testOperator) {
+		t.Error("the operator paying the fee must be recognised as a self-transfer")
+	}
+}
+
+func TestSolanaIsSelfTransferOnlyWhenOperatorPays(t *testing.T) {
+	// A genuine payment: someone else is the fee payer at index 0.
+	res := txWithAccounts(
+		[]string{testPayer, testOperator},
+		[]int64{5_000_000_000, 0},
+		[]int64{4_000_000_000, 1_000_000_000},
+	)
+	if solanaIsSelfTransfer(res, testOperator) {
+		t.Error("a payment from another account is not a self-transfer")
+	}
+	if _, ok := solanaNativeCredit(res, testOperator); !ok {
+		t.Error("a genuine payment must credit")
+	}
+}

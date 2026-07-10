@@ -304,7 +304,8 @@
 			"admin_adjust": "Adjustment"
 		},
 		"coinCredited": "Coins credited",
-		"coinCreditedBreakdown": "{{base}} + {{bonus}} bonus (+{{percent}}%)"
+		"coinCreditedBreakdown": "{{base}} + {{bonus}} bonus (+{{percent}}%)",
+		"solanaSelfTransfer": "The sender and the recipient are the same address. Pay from a different account — a transfer to yourself moves no value, so the purchase cannot be confirmed."
 	},
 	"screenEffects": {
 		"confetti": "confetti",

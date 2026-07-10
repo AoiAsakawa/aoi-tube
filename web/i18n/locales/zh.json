@@ -304,7 +304,8 @@
 			"admin_adjust": "调整"
 		},
 		"coinCredited": "获得金币",
-		"coinCreditedBreakdown": "明细：{{base}} + 奖励 {{bonus}}（+{{percent}}%）"
+		"coinCreditedBreakdown": "明细：{{base}} + 奖励 {{bonus}}（+{{percent}}%）",
+		"solanaSelfTransfer": "转出与收款为同一地址。请使用其他账户付款——自己转给自己不会产生入账，因此无法确认购买。"
 	},
 	"screenEffects": {
 		"confetti": "彩纸",

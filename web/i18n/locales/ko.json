@@ -304,7 +304,8 @@
 			"admin_adjust": "조정"
 		},
 		"coinCredited": "획득 코인",
-		"coinCreditedBreakdown": "내역: {{base}} + 보너스 {{bonus}}(+{{percent}}%)"
+		"coinCreditedBreakdown": "내역: {{base}} + 보너스 {{bonus}}(+{{percent}}%)",
+		"solanaSelfTransfer": "보내는 주소와 받는 주소가 같습니다. 다른 계정에서 결제하세요 — 자기 자신에게 보내면 입금이 발생하지 않아 구매를 확정할 수 없습니다."
 	},
 	"screenEffects": {
 		"confetti": "색종이",

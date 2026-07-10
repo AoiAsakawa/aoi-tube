@@ -304,7 +304,8 @@
 			"admin_adjust": "調整"
 		},
 		"coinCredited": "獲得コイン",
-		"coinCreditedBreakdown": "内訳: {{base}} + ボーナス {{bonus}}（+{{percent}}%）"
+		"coinCreditedBreakdown": "内訳: {{base}} + ボーナス {{bonus}}（+{{percent}}%）",
+		"solanaSelfTransfer": "送金元と受取先が同じアドレスです。別のアカウントから送金してください（自分自身への送金は入金にならないため購入を確定できません）。"
 	},
 	"screenEffects": {
 		"confetti": "紙吹雪",
