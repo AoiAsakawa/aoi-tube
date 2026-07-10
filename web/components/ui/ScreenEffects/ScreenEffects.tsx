@@ -273,7 +273,9 @@ export const ScreenEffects: FC = () => {
 			<div className={styles.pill}>
 				<span className={styles.pillEmoji}>{getScreenEffectEmoji(current.effectType)}</span>
 				<span className={styles.pillText}>
-					{t('screenEffects.sentEffect', { name: senderName, effect: effectName })}
+					{current.isPreview
+						? t('screenEffects.previewPill', { effect: effectName })
+						: t('screenEffects.sentEffect', { name: senderName, effect: effectName })}
 				</span>
 			</div>
 		</div>

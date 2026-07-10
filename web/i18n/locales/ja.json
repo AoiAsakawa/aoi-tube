@@ -280,7 +280,9 @@
 		"sendErrorTitle": "送金エラー",
 		"sendAmountLabel": "送金額:",
 		"feeLabel": "手数料:",
-		"fromLabel": "送金元:"
+		"fromLabel": "送金元:",
+		"previewEffect": "演出をプレビュー",
+		"previewLabel": "プレビュー"
 	},
 	"screenEffects": {
 		"confetti": "紙吹雪",
@@ -291,7 +293,8 @@
 		"rainbow": "虹",
 		"meteor": "流星群",
 		"goldrush": "ゴールドラッシュ",
-		"sentEffect": "{{name}}さんが{{effect}}を贈りました"
+		"sentEffect": "{{name}}さんが{{effect}}を贈りました",
+		"previewPill": "{{effect}}のプレビュー"
 	},
 	"modals": {
 		"common": {

@@ -280,7 +280,9 @@
 		"sendErrorTitle": "송금 오류",
 		"sendAmountLabel": "송금액:",
 		"feeLabel": "수수료:",
-		"fromLabel": "보내는 주소:"
+		"fromLabel": "보내는 주소:",
+		"previewEffect": "효과 미리보기",
+		"previewLabel": "미리보기"
 	},
 	"screenEffects": {
 		"confetti": "색종이",
@@ -291,7 +293,8 @@
 		"rainbow": "무지개",
 		"meteor": "유성 소나기",
 		"goldrush": "골드 러시",
-		"sentEffect": "{{name}}님이 {{effect}}를 선물했어요"
+		"sentEffect": "{{name}}님이 {{effect}}를 선물했어요",
+		"previewPill": "{{effect}} 미리보기"
 	},
 	"modals": {
 		"common": {

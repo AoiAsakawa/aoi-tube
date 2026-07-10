@@ -280,7 +280,9 @@
 		"sendErrorTitle": "轉帳錯誤",
 		"sendAmountLabel": "轉帳金額：",
 		"feeLabel": "手續費：",
-		"fromLabel": "傳送地址："
+		"fromLabel": "傳送地址：",
+		"previewEffect": "預覽特效",
+		"previewLabel": "預覽"
 	},
 	"screenEffects": {
 		"confetti": "彩紙",
@@ -291,7 +293,8 @@
 		"rainbow": "彩虹",
 		"meteor": "流星雨",
 		"goldrush": "黃金雨",
-		"sentEffect": "{{name}}送出了{{effect}}"
+		"sentEffect": "{{name}}送出了{{effect}}",
+		"previewPill": "{{effect}} 預覽"
 	},
 	"modals": {
 		"common": {

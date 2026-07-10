@@ -33,6 +33,9 @@ export interface ScreenEffectQueueItem {
 	effectType: string;
 	displayName: string;
 	isAnonymous: boolean;
+	// Local, purchase-free preview played from the gift picker; changes the pill
+	// text so it doesn't read like a real gift from a viewer named "Preview".
+	isPreview?: boolean;
 }
 
 interface AppStore {

@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import {
 	GiftOutlined,
+	PlayCircleOutlined,
 	QrcodeOutlined,
 	WalletOutlined,
 	SwapOutlined,
@@ -35,6 +36,7 @@ import {
 	SCREEN_EFFECT_TYPES,
 	ScreenEffectType,
 } from '../../../interfaces/donation.model';
+import { useEnqueueScreenEffect } from '../../stores/zustand-store';
 import { cryptoAmountForFiat, decimalToBigInt } from './cryptoAmount';
 import {
 	AVAILABLE_NETWORKS,
@@ -113,6 +115,27 @@ export const DonationForm: FC<DonationFormProps> = ({
 	// What the viewer purchases: a superchat message or a screen effect.
 	const [itemType, setItemType] = useState<DonationItemType>('superchat');
 	const [effectType, setEffectType] = useState<ScreenEffectType>('confetti');
+
+	// Local, purchase-free preview: enqueue the effect into the shared screen
+	// effect queue so the real animation plays full-screen for this viewer only.
+	// The donation modal (z-index 1000) sits above the effect overlay (950), so
+	// we briefly hide the modal while the preview plays, then restore it with
+	// the viewer's selections intact (the component stays mounted).
+	const enqueueScreenEffect = useEnqueueScreenEffect();
+	const [previewHidden, setPreviewHidden] = useState(false);
+	// Keep in sync with EFFECT_DURATION_MS in ScreenEffects.tsx (5500ms).
+	const EFFECT_PREVIEW_MS = 5500;
+	const handlePreviewEffect = (effect: ScreenEffectType) => {
+		setPreviewHidden(true);
+		enqueueScreenEffect({
+			id: `preview-${effect}-${Date.now()}`,
+			effectType: effect,
+			displayName: t('donation.previewLabel'),
+			isAnonymous: false,
+			isPreview: true,
+		});
+		window.setTimeout(() => setPreviewHidden(false), EFFECT_PREVIEW_MS);
+	};
 
 	// Doneru / Ko-fi are external services: purchases through them are always
 	// plain superchats and the item type selector does not apply to them.
@@ -615,7 +638,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 					<GiftOutlined /> {t('donation.sendDonation')}
 				</span>
 			}
-			open={visible}
+			open={visible && !previewHidden}
 			onCancel={onClose}
 			footer={null}
 			className={styles.donationModal}
@@ -651,26 +674,36 @@ export const DonationForm: FC<DonationFormProps> = ({
 						<label className={styles.label}>{t('donation.effectTypeLabel')}</label>
 						<div className={styles.effectPicker}>
 							{SCREEN_EFFECT_TYPES.map(effect => (
-								<button
-									key={effect}
-									type="button"
-									aria-pressed={effectType === effect}
-									disabled={!effectPriceReady}
-									onClick={() => setEffectType(effect)}
-									className={cn(styles.effectCard, {
-										[styles.effectCardSelected]: effectType === effect,
-										[styles.effectCardDisabled]: !effectPriceReady,
-									})}
-								>
-									<span className={styles.effectEmoji}>{SCREEN_EFFECT_EMOJIS[effect]}</span>
-									<span className={styles.effectName}>{t(`screenEffects.${effect}`)}</span>
-									<span className={styles.effectPrice}>{formatEffectPrice(effect)}</span>
-									{isEffectCrypto && effectTokenSupported && cryptoPrice > 0 && (
-										<span className={styles.effectCryptoAmount}>
-											≈ {effectCryptoAmountFor(effect)} {getCurrencySymbol()}
-										</span>
-									)}
-								</button>
+								<div key={effect} className={styles.effectCardWrap}>
+									<button
+										type="button"
+										aria-pressed={effectType === effect}
+										disabled={!effectPriceReady}
+										onClick={() => setEffectType(effect)}
+										className={cn(styles.effectCard, {
+											[styles.effectCardSelected]: effectType === effect,
+											[styles.effectCardDisabled]: !effectPriceReady,
+										})}
+									>
+										<span className={styles.effectEmoji}>{SCREEN_EFFECT_EMOJIS[effect]}</span>
+										<span className={styles.effectName}>{t(`screenEffects.${effect}`)}</span>
+										<span className={styles.effectPrice}>{formatEffectPrice(effect)}</span>
+										{isEffectCrypto && effectTokenSupported && cryptoPrice > 0 && (
+											<span className={styles.effectCryptoAmount}>
+												≈ {effectCryptoAmountFor(effect)} {getCurrencySymbol()}
+											</span>
+										)}
+									</button>
+									<button
+										type="button"
+										className={styles.effectPreviewBtn}
+										onClick={() => handlePreviewEffect(effect)}
+										title={t('donation.previewEffect')}
+										aria-label={t('donation.previewEffect')}
+									>
+										<PlayCircleOutlined />
+									</button>
+								</div>
 							))}
 						</div>
 						{isEffectCrypto && !effectPriceReady && (

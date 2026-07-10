@@ -280,7 +280,9 @@
 		"sendErrorTitle": "Transfer error",
 		"sendAmountLabel": "Send amount:",
 		"feeLabel": "Fee:",
-		"fromLabel": "From:"
+		"fromLabel": "From:",
+		"previewEffect": "Preview effect",
+		"previewLabel": "Preview"
 	},
 	"screenEffects": {
 		"confetti": "confetti",
@@ -291,7 +293,8 @@
 		"rainbow": "rainbow",
 		"meteor": "meteor shower",
 		"goldrush": "gold rush",
-		"sentEffect": "{{name}} sent {{effect}}"
+		"sentEffect": "{{name}} sent {{effect}}",
+		"previewPill": "Preview: {{effect}}"
 	},
 	"modals": {
 		"common": {
