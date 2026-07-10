@@ -294,7 +294,14 @@
 		"coinCost": "必要コイン",
 		"coinInsufficient": "コインが不足しています。チャージしてください。",
 		"coinPayButton": "コインで支払う",
-		"coinPaidSuccess": "コインで支払いました"
+		"coinPaidSuccess": "コインで支払いました",
+		"coinLedger": {
+			"charge": "チャージ",
+			"bonus": "ボーナス",
+			"spend": "支払い",
+			"refund": "返金",
+			"admin_adjust": "調整"
+		}
 	},
 	"screenEffects": {
 		"confetti": "紙吹雪",
@@ -767,7 +774,21 @@
 				"enableLabel": "コインウォレットを有効化",
 				"enableDescription": "視聴者がコインをチャージ・利用できるようにします。",
 				"bonusLabel": "チャージボーナス",
-				"bonusDescription": "チャージ額に上乗せするボーナスコインの割合（例: 10%なら1000チャージで1100コイン付与）。"
+				"bonusDescription": "チャージ額に上乗せするボーナスコインの割合（例: 10%なら1000チャージで1100コイン付与）。",
+				"liabilityTitle": "未使用残高（負債）",
+				"outstandingLabel": "発行済み未使用コイン合計",
+				"liabilityNote": "全ユーザーの残高合計。前払式支払手段の未使用残高報告の基準になります。",
+				"adjustTitle": "コインの手動付与・調整",
+				"adjustUserIdLabel": "ユーザーID",
+				"adjustUserIdDescription": "対象ユーザーのID（付与/調整先）。",
+				"adjustDeltaLabel": "増減コイン",
+				"adjustDeltaDescription": "正の値で付与、負の値で減算（残高不足の減算は拒否）。",
+				"adjustNoteLabel": "メモ",
+				"adjustNoteDescription": "台帳に記録される理由（任意）。",
+				"adjustButton": "適用",
+				"adjustValidation": "ユーザーIDと0以外の増減値を入力してください。",
+				"adjustSuccess": "適用しました（残高: {{balance}}）",
+				"adjustError": "適用に失敗しました。"
 			}
 		},
 		"pages": {

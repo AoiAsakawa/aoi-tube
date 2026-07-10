@@ -242,6 +242,11 @@ export const ADMIN_ARCHIVES_PRICING = `${API_LOCATION}archives/pricing`;
 export const ADMIN_ARCHIVES_PURCHASES_GRANT = `${API_LOCATION}archives/purchases/grant`;
 export const ADMIN_ARCHIVES_PURCHASES_REVOKE = `${API_LOCATION}archives/purchases/revoke`;
 
+// Coin wallet administration.
+export const ADMIN_WALLET_STATS = `${API_LOCATION}wallet/stats`;
+export const ADMIN_WALLET_USER = `${API_LOCATION}wallet/user`;
+export const ADMIN_WALLET_ADJUST = `${API_LOCATION}wallet/adjust`;
+
 
 interface FetchOptions {
 	data?: any;

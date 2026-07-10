@@ -230,6 +230,11 @@ func Start() error {
 	http.HandleFunc("/api/admin/config/coinwallet/enabled", middleware.RequireAdminAuth(admin.SetCoinWalletEnabled))
 	http.HandleFunc("/api/admin/config/coinwallet/bonuspercent", middleware.RequireAdminAuth(admin.SetCoinChargeBonusPercent))
 
+	// Coin wallet administration: outstanding liability, per-user lookup, manual adjust.
+	http.HandleFunc("/api/admin/wallet/stats", middleware.RequireAdminAuth(admin.GetCoinWalletStats))
+	http.HandleFunc("/api/admin/wallet/user", middleware.RequireAdminAuth(admin.GetUserCoinWallet))
+	http.HandleFunc("/api/admin/wallet/adjust", middleware.RequireAdminAuth(admin.AdjustUserCoins))
+
 	// Offline message
 	http.HandleFunc("/api/admin/config/offlinemessage", middleware.RequireAdminAuth(admin.SetCustomOfflineMessage))
 

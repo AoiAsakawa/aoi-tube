@@ -370,6 +370,28 @@
 	color: #52c41a;
 }
 
+.coinLedger {
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid rgba(255, 255, 255, 0.12);
+	font-size: 0.8rem;
+}
+
+.coinLedgerRow {
+	display: flex;
+	justify-content: space-between;
+	padding: 2px 0;
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.coinLedgerCredit {
+	color: #52c41a;
+}
+
+.coinLedgerSpend {
+	color: #ff7875;
+}
+
 /* Wrapper holds the selectable card plus its corner preview button so the
    preview control can be absolutely positioned without nesting buttons. */
 .effectCardWrap {

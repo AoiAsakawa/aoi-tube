@@ -294,7 +294,14 @@
 		"coinCost": "所需金币",
 		"coinInsufficient": "金币不足，请先充值。",
 		"coinPayButton": "用金币支付",
-		"coinPaidSuccess": "已用金币支付"
+		"coinPaidSuccess": "已用金币支付",
+		"coinLedger": {
+			"charge": "充值",
+			"bonus": "奖励",
+			"spend": "支付",
+			"refund": "退款",
+			"admin_adjust": "调整"
+		}
 	},
 	"screenEffects": {
 		"confetti": "彩纸",
@@ -767,7 +774,21 @@
 				"enableLabel": "启用金币钱包",
 				"enableDescription": "允许观众充值和使用金币。",
 				"bonusLabel": "充值奖励",
-				"bonusDescription": "在充值金额之上额外赠送的奖励金币比例（例如 10% 则充值 1000 赠送 1100 金币）。"
+				"bonusDescription": "在充值金额之上额外赠送的奖励金币比例（例如 10% 则充值 1000 赠送 1100 金币）。",
+				"liabilityTitle": "未使用余额（负债）",
+				"outstandingLabel": "已发行未使用金币总额",
+				"liabilityNote": "所有用户余额之和；预付支付手段未使用余额报告的依据。",
+				"adjustTitle": "手动赠送 / 调整金币",
+				"adjustUserIdLabel": "用户 ID",
+				"adjustUserIdDescription": "要赠送/调整的目标用户 ID。",
+				"adjustDeltaLabel": "金币增减",
+				"adjustDeltaDescription": "正数为赠送，负数为扣除（会透支的扣除将被拒绝）。",
+				"adjustNoteLabel": "备注",
+				"adjustNoteDescription": "记录到台账的原因（可选）。",
+				"adjustButton": "应用",
+				"adjustValidation": "请输入用户 ID 和非零的增减值。",
+				"adjustSuccess": "已应用（余额：{{balance}}）",
+				"adjustError": "应用失败。"
 			}
 		},
 		"pages": {

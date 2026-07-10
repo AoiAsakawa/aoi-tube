@@ -294,7 +294,14 @@
 		"coinCost": "Cost",
 		"coinInsufficient": "Not enough coins. Please charge up.",
 		"coinPayButton": "Pay with coins",
-		"coinPaidSuccess": "Paid with coins"
+		"coinPaidSuccess": "Paid with coins",
+		"coinLedger": {
+			"charge": "Charge",
+			"bonus": "Bonus",
+			"spend": "Spend",
+			"refund": "Refund",
+			"admin_adjust": "Adjustment"
+		}
 	},
 	"screenEffects": {
 		"confetti": "confetti",
@@ -767,7 +774,21 @@
 				"enableLabel": "Enable coin wallet",
 				"enableDescription": "Let viewers charge up and spend coins.",
 				"bonusLabel": "Charge bonus",
-				"bonusDescription": "Bonus coins added on top of a charge (e.g. 10% grants 1100 coins for a 1000 charge)."
+				"bonusDescription": "Bonus coins added on top of a charge (e.g. 10% grants 1100 coins for a 1000 charge).",
+				"liabilityTitle": "Outstanding balance (liability)",
+				"outstandingLabel": "Total unused coins issued",
+				"liabilityNote": "Sum of all users' balances; the basis for prepaid-instrument outstanding-balance reporting.",
+				"adjustTitle": "Manual coin grant / adjustment",
+				"adjustUserIdLabel": "User ID",
+				"adjustUserIdDescription": "The target user id to grant/adjust.",
+				"adjustDeltaLabel": "Coin change",
+				"adjustDeltaDescription": "Positive to grant, negative to deduct (a deduction that would overdraw is refused).",
+				"adjustNoteLabel": "Note",
+				"adjustNoteDescription": "Reason recorded in the ledger (optional).",
+				"adjustButton": "Apply",
+				"adjustValidation": "Enter a user id and a non-zero change.",
+				"adjustSuccess": "Applied (balance: {{balance}})",
+				"adjustError": "Failed to apply."
 			}
 		},
 		"pages": {

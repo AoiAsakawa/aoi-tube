@@ -133,6 +133,9 @@ export const DonationForm: FC<DonationFormProps> = ({
 	// Within coin mode: spend the balance on this purchase, or top the balance up.
 	const [coinAction, setCoinAction] = useState<'spend' | 'charge'>('spend');
 	const [walletBalance, setWalletBalance] = useState<number | null>(null);
+	const [walletLedger, setWalletLedger] = useState<
+		{ id: string; delta: number; entryType: string; createdAt: string }[]
+	>([]);
 	const [walletLoggedIn, setWalletLoggedIn] = useState(false);
 	const refreshWallet = React.useCallback(() => {
 		if (!coinEnabled) {
@@ -147,6 +150,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 		fetchData(withArchiveAccessToken(WALLET, token), { auth: false })
 			.then(res => {
 				setWalletBalance(Number(res?.balance) || 0);
+				setWalletLedger(Array.isArray(res?.ledger) ? res.ledger : []);
 				setWalletLoggedIn(true);
 			})
 			.catch(() => setWalletLoggedIn(false));
@@ -802,6 +806,19 @@ export const DonationForm: FC<DonationFormProps> = ({
 						{coinCharge && coinBonusPercent > 0 && (
 							<div className={styles.coinBonusNote}>
 								{t('donation.coinBonusNote', { percent: coinBonusPercent })}
+							</div>
+						)}
+						{walletLedger.length > 0 && (
+							<div className={styles.coinLedger}>
+								{walletLedger.slice(0, 5).map(e => (
+									<div key={e.id} className={styles.coinLedgerRow}>
+										<span>{t(`donation.coinLedger.${e.entryType}`, e.entryType)}</span>
+										<span className={e.delta < 0 ? styles.coinLedgerSpend : styles.coinLedgerCredit}>
+											{e.delta > 0 ? '+' : ''}
+											{e.delta.toLocaleString()}
+										</span>
+									</div>
+								))}
 							</div>
 						)}
 					</div>

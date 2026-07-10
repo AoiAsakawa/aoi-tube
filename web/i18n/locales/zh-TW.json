@@ -294,7 +294,14 @@
 		"coinCost": "所需金幣",
 		"coinInsufficient": "金幣不足，請先儲值。",
 		"coinPayButton": "用金幣支付",
-		"coinPaidSuccess": "已用金幣支付"
+		"coinPaidSuccess": "已用金幣支付",
+		"coinLedger": {
+			"charge": "儲值",
+			"bonus": "獎勵",
+			"spend": "支付",
+			"refund": "退款",
+			"admin_adjust": "調整"
+		}
 	},
 	"screenEffects": {
 		"confetti": "彩紙",
@@ -767,7 +774,21 @@
 				"enableLabel": "啟用金幣錢包",
 				"enableDescription": "允許觀眾儲值和使用金幣。",
 				"bonusLabel": "儲值獎勵",
-				"bonusDescription": "在儲值金額之上額外贈送的獎勵金幣比例（例如 10% 則儲值 1000 贈送 1100 金幣）。"
+				"bonusDescription": "在儲值金額之上額外贈送的獎勵金幣比例（例如 10% 則儲值 1000 贈送 1100 金幣）。",
+				"liabilityTitle": "未使用餘額（負債）",
+				"outstandingLabel": "已發行未使用金幣總額",
+				"liabilityNote": "所有使用者餘額之和；預付支付手段未使用餘額報告的依據。",
+				"adjustTitle": "手動贈送 / 調整金幣",
+				"adjustUserIdLabel": "使用者 ID",
+				"adjustUserIdDescription": "要贈送/調整的目標使用者 ID。",
+				"adjustDeltaLabel": "金幣增減",
+				"adjustDeltaDescription": "正數為贈送，負數為扣除（會透支的扣除將被拒絕）。",
+				"adjustNoteLabel": "備註",
+				"adjustNoteDescription": "記錄到台帳的原因（選填）。",
+				"adjustButton": "套用",
+				"adjustValidation": "請輸入使用者 ID 和非零的增減值。",
+				"adjustSuccess": "已套用（餘額：{{balance}}）",
+				"adjustError": "套用失敗。"
 			}
 		},
 		"pages": {
