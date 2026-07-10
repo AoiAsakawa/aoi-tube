@@ -57,22 +57,17 @@
 }
 
 /*
-Inner container for chat
+Direct children of the column.
+
+The chat lives in .panelBody (below); it, the ranking and the header each
+declare their own flex sizing. There is deliberately NO generic `.root > div`
+rule: it used to force flex-grow:1/height:100% onto EVERY direct child, so the
+supporter ranking (a div) stretched to the full column height and pushed the
+chat out of view.
 */
-.root > div {
-	display: flex;
-	flex-flow: column nowrap;
-	flex-grow: 1;
-	height: 100%;
-	width: 100%;
-}
 
 // Column label above the chat: matches the header chrome so the panel reads
 // as a deliberate surface even when there are no messages yet.
-// `.root > .panelHeader` specificity deliberately beats the legacy
-// `.root > div` rule above, which forces flex-grow:1/height:100% onto every
-// direct child (it once stretched this 1-line header to the full column and
-// pushed the chat input below the viewport).
 .root > .panelHeader {
 	flex: 0 0 auto;
 	height: auto;
@@ -89,6 +84,7 @@ Inner container for chat
 // message list shrink instead of overflowing the fixed-height column.
 .root > .panelBody {
 	flex: 1 1 0;
+	width: 100%;
 	height: auto;
 	min-height: 0;
 	display: flex;
