@@ -553,7 +553,10 @@
 				"validateTokenRequired": "请输入代币合约地址",
 				"validateWalletFormat": "请输入有效的Ethereum地址（以0x开头的42位）",
 				"validateWalletRequired": "请输入钱包地址",
-				"walletCardTitle": "钱包设置"
+				"walletCardTitle": "钱包设置",
+				"solAddressLabel": "Solana 收款钱包地址（可选）",
+				"solAddressDescription": "若要以 SOL 或 SPL 代币（USDC / USDT）接收超级留言，请输入 Solana 账户（base58）。不能使用 EVM 的 0x 地址。MetaMask 通过 Solana Snap 转账。",
+				"solAddressInvalid": "不是有效的 Solana 地址（base58，32〜44 个字符）"
 			},
 			"notify": {
 				"createButton": "创建",

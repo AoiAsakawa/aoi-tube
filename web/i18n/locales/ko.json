@@ -553,7 +553,10 @@
 				"validateTokenRequired": "토큰 컨트랙트 주소를 입력해 주세요",
 				"validateWalletFormat": "유효한 Ethereum 주소를 입력해 주세요(0x로 시작하는 42자)",
 				"validateWalletRequired": "지갑 주소를 입력해 주세요",
-				"walletCardTitle": "지갑 설정"
+				"walletCardTitle": "지갑 설정",
+				"solAddressLabel": "Solana 수령 지갑 주소(선택)",
+				"solAddressDescription": "SOL 또는 SPL 토큰(USDC / USDT)으로 슈퍼챗을 받으려면 Solana 계정(base58)을 입력하세요. EVM의 0x 주소는 사용할 수 없습니다. MetaMask는 Solana Snap으로 송금합니다.",
+				"solAddressInvalid": "유효한 Solana 주소 형식이 아닙니다(base58, 32~44자)"
 			},
 			"notify": {
 				"createButton": "만들기",

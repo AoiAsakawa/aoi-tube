@@ -531,8 +531,14 @@ export const DonationForm: FC<DonationFormProps> = ({
 			return;
 		}
 
+		// Solana pays to its own base58 account, not the EVM wallet address.
+		if (isSol && !metamaskConfig.solanaAddress) {
+			message.error(t('donation.solanaAddressNotConfiguredAdmin'));
+			return;
+		}
+
 		// Check for wallet address if EVM is selected
-		if (!isBtc && !metamaskConfig.walletAddress) {
+		if (!isBtc && !isSol && !metamaskConfig.walletAddress) {
 			message.error(t('donation.recipientAddressNotConfigured'));
 			return;
 		}

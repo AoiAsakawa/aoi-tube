@@ -218,7 +218,9 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 	const sendSolanaTransaction = async (selectedToken: TokenOption | null): Promise<string> => {
 		if (!metamaskConfig || !selectedToken) return '';
 
-		const recipientAddress = metamaskConfig.walletAddress;
+		// Solana pays to the operator's base58 account, never to walletAddress —
+		// that is an EVM 0x address and `new PublicKey()` would throw on it.
+		const recipientAddress = metamaskConfig.solanaAddress;
 		if (!recipientAddress) {
 			message.error(t('donation.solanaAddressNotConfiguredAdmin'));
 			return '';

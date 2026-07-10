@@ -21,6 +21,7 @@ func GetMetamaskStatus(w http.ResponseWriter, r *http.Request) {
 		"enabled":        config.Enabled,
 		"walletAddress":  config.WalletAddress,
 		"bitcoinAddress": config.BitcoinAddress,
+		"solanaAddress":  config.SolanaAddress,
 		"networkId":      config.NetworkID,
 		"networkName":    config.NetworkName,
 		"chainCurrency":  config.ChainCurrency,

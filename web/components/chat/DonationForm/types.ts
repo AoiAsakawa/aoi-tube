@@ -16,6 +16,7 @@ export interface MetamaskConfig {
 	enabled: boolean;
 	walletAddress: string;
 	bitcoinAddress?: string; // Destination address for Bitcoin donations
+	solanaAddress?: string; // Destination account for SOL / SPL-token donations
 	networkId: number;
 	networkName: string;
 	chainCurrency: string;

@@ -5,9 +5,13 @@ type MetamaskConfig struct {
 	Enabled        bool   `json:"enabled"`
 	WalletAddress  string `json:"walletAddress"`
 	BitcoinAddress string `json:"bitcoinAddress,omitempty"` // Bitcoin Native SegWit address (bc1...)
-	NetworkID      int64  `json:"networkId"`                // 1 = Mainnet, 11155111 = Sepolia, 137 = Polygon
-	NetworkName    string `json:"networkName"`              // Display name
-	ChainCurrency  string `json:"chainCurrency"`            // ETH, MATIC, BNB, etc.
+	// SolanaAddress is the operator's Solana account (base58 pubkey) that SOL and
+	// SPL-token donations are paid to. It cannot share WalletAddress: that is an
+	// EVM 0x address, which is not a valid Solana pubkey.
+	SolanaAddress string `json:"solanaAddress,omitempty"`
+	NetworkID     int64  `json:"networkId"`     // 1 = Mainnet, 11155111 = Sepolia, 137 = Polygon
+	NetworkName   string `json:"networkName"`   // Display name
+	ChainCurrency string `json:"chainCurrency"` // ETH, MATIC, BNB, etc.
 	// Custom token support
 	UseCustomToken bool   `json:"useCustomToken"` // Use ERC-20 token instead of native currency
 	TokenAddress   string `json:"tokenAddress"`   // ERC-20 token contract address

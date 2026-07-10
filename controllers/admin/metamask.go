@@ -42,6 +42,14 @@ func SetMetamaskConfig(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Solana pays to its own base58 account, never the EVM 0x address. Reject a
+	// malformed one here so donations aren't sent to an unverifiable destination.
+	config.SolanaAddress = strings.TrimSpace(config.SolanaAddress)
+	if config.SolanaAddress != "" && !controllers.IsSolanaAddress(config.SolanaAddress) {
+		controllers.WriteSimpleResponse(w, false, "無効なSolanaアドレスです")
+		return
+	}
+
 	if err := data.SetMetamaskConfig(config); err != nil {
 		controllers.WriteSimpleResponse(w, false, "failed to save metamask config: "+err.Error())
 		return

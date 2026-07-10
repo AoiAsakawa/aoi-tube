@@ -553,7 +553,10 @@
 				"validateTokenRequired": "Enter the token contract address",
 				"validateWalletFormat": "Enter a valid Ethereum address (42 characters starting with 0x)",
 				"validateWalletRequired": "Enter a wallet address",
-				"walletCardTitle": "Wallet settings"
+				"walletCardTitle": "Wallet settings",
+				"solAddressLabel": "Solana receiving address (optional)",
+				"solAddressDescription": "To receive super chats in SOL or SPL tokens (USDC / USDT), enter a Solana account (base58). An EVM 0x address cannot be used. MetaMask sends via the Solana Snap.",
+				"solAddressInvalid": "Not a valid Solana address (base58, 32-44 characters)"
 			},
 			"notify": {
 				"createButton": "Create",

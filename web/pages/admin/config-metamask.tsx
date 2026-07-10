@@ -24,6 +24,7 @@ interface MetamaskConfig {
 	enabled: boolean;
 	walletAddress: string;
 	bitcoinAddress?: string;
+	solanaAddress?: string;
 	networkId: number;
 	networkName: string;
 	chainCurrency: string;
@@ -108,6 +109,7 @@ const DEFAULT_METAMASK_CONFIG: MetamaskConfig = {
 	enabled: false,
 	walletAddress: '',
 	bitcoinAddress: '',
+	solanaAddress: '',
 	networkId: 1,
 	networkName: 'Ethereum Mainnet',
 	chainCurrency: 'ETH',
@@ -126,6 +128,10 @@ const isValidEvmAddress = (address: string): boolean =>
 	Boolean(address.match(/^0x[a-fA-F0-9]{40}$/));
 const isValidBitcoinAddress = (address: string): boolean =>
 	Boolean(address.match(/^bc1[a-zA-HJ-NP-Z0-9]{25,87}$/));
+// A Solana account is 32 raw bytes in base58 (32-44 chars). Mirrors the
+// server-side IsSolanaAddress check, which is the authoritative one.
+const isValidSolanaAddress = (address: string): boolean =>
+	Boolean(address.match(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/));
 
 const MetamaskConfigPage = () => {
 	const { t } = useTranslation();
@@ -389,6 +395,23 @@ const MetamaskConfigPage = () => {
 						value={config.bitcoinAddress || ''}
 						onChange={e => update({ bitcoinAddress: e.target.value })}
 						placeholder="bc1q..."
+						style={{ marginTop: 8, fontFamily: 'monospace' }}
+					/>
+				</FormField>
+
+				<FormField
+					label={t('admin.config.metamask.solAddressLabel')}
+					description={t('admin.config.metamask.solAddressDescription')}
+					error={
+						config.solanaAddress && !isValidSolanaAddress(config.solanaAddress)
+							? t('admin.config.metamask.solAddressInvalid')
+							: undefined
+					}
+				>
+					<Input
+						value={config.solanaAddress || ''}
+						onChange={e => update({ solanaAddress: e.target.value })}
+						placeholder="9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
 						style={{ marginTop: 8, fontFamily: 'monospace' }}
 					/>
 				</FormField>

@@ -553,7 +553,10 @@
 				"validateTokenRequired": "トークンコントラクトアドレスを入力してください",
 				"validateWalletFormat": "有効なEthereumアドレスを入力してください（0xで始まる42文字）",
 				"validateWalletRequired": "ウォレットアドレスを入力してください",
-				"walletCardTitle": "ウォレット設定"
+				"walletCardTitle": "ウォレット設定",
+				"solAddressLabel": "Solana受取ウォレットアドレス（任意）",
+				"solAddressDescription": "SOLおよびSPLトークン（USDC / USDT）でスーパーチャットを受け取る場合は、Solanaアカウント（base58）を入力してください。EVMの0xアドレスは使えません。MetaMaskはSolana Snapで送金に対応します。",
+				"solAddressInvalid": "有効なSolanaアドレス形式ではありません（base58の32〜44文字）"
 			},
 			"notify": {
 				"createButton": "作成",

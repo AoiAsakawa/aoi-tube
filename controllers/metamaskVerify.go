@@ -243,6 +243,13 @@ func verifyMetamaskDonation(config models.MetamaskConfig, request models.Metamas
 		return amount, "BTC", err
 	}
 
+	// Solana signatures are base58 (86-88 chars), so they can't collide with the
+	// 0x-prefixed EVM hashes or the 64-hex Bitcoin txids handled above. The
+	// currency (SOL or an allowlisted SPL mint's symbol) comes from the chain.
+	if isSolanaSignature(txhash) {
+		return verifySolanaTx(txhash, config.SolanaAddress)
+	}
+
 	if !isEVM {
 		return 0, "", fmt.Errorf("unsupported transaction hash format")
 	}
