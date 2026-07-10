@@ -38,6 +38,7 @@ export interface ConfigInstanceDetailsFields {
 	streamTitle: string;
 	summary: string;
 	offlineMessage: string;
+	streamSchedule: string;
 	hasCustomOfflineClip?: boolean;
 	hasCustomLivePoster?: boolean;
 	offlineMediaPath?: string;

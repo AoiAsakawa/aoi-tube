@@ -28,6 +28,7 @@ type webConfigResponse struct {
 	SocketHostOverride   string                       `json:"socketHostOverride,omitempty"`
 	ExtraPageContent     string                       `json:"extraPageContent"`
 	StreamTitle          string                       `json:"streamTitle,omitempty"` // What's going on with the current stream
+	StreamSchedule       string                       `json:"streamSchedule,omitempty"` // Operator's next-stream schedule note, shown while offline
 	SocialHandles        []models.SocialHandle        `json:"socialHandles"`
 	ChatDisabled         bool                         `json:"chatDisabled"`
 	ExternalActions      []models.ExternalAction      `json:"externalActions"`
@@ -174,6 +175,7 @@ func getConfigResponse() webConfigResponse {
 		SocketHostOverride:   data.GetWebsocketOverrideHost(),
 		ExtraPageContent:     pageContent,
 		StreamTitle:          data.GetStreamTitle(),
+		StreamSchedule:       data.GetStreamSchedule(),
 		SocialHandles:        socialHandles,
 		ChatDisabled:         data.GetChatDisabled(),
 		ExternalActions:      data.GetExternalActions(),

@@ -43,6 +43,7 @@ func GetServerConfig(w http.ResponseWriter, r *http.Request) {
 			StreamTitle:               data.GetStreamTitle(),
 			WelcomeMessage:            data.GetServerWelcomeMessage(),
 			OfflineMessage:            data.GetCustomOfflineMessage(),
+			StreamSchedule:            data.GetStreamSchedule(),
 			OfflineMediaPath:          data.GetOfflineMediaPath(),
 			OfflineMediaType:          data.GetOfflineMediaType(),
 			HasCustomOfflineClip:      utils.DoesFileExists(filepath.Join(config.DataDirectory, "offline.tsclip")),
@@ -210,6 +211,7 @@ type webConfigResponse struct {
 	Summary                   string                `json:"summary"`
 	WelcomeMessage            string                `json:"welcomeMessage"`
 	OfflineMessage            string                `json:"offlineMessage"`
+	StreamSchedule            string                `json:"streamSchedule"`
 	OfflineMediaPath          string                `json:"offlineMediaPath"`
 	OfflineMediaType          string                `json:"offlineMediaType"`
 	HasCustomOfflineClip      bool                  `json:"hasCustomOfflineClip"`

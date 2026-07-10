@@ -2399,6 +2399,11 @@
 			"backupStoreS3": {
 				"label": "Store backups on S3",
 				"tip": "Also upload each backup to S3 object storage (same bucket as live distribution, under backups/). Survives disk loss and eases node migration. Configure S3 credentials first."
+			},
+			"streamSchedule": {
+				"label": "Stream schedule",
+				"placeholder": "e.g. Every Sat 9:00 PM",
+				"tip": "Next-stream note shown on the offline screen (free text)."
 			}
 		}
 	},
@@ -2460,5 +2465,8 @@
 	},
 	"supporters": {
 		"title": "Top Supporters"
+	},
+	"schedule": {
+		"next": "Next stream:"
 	}
 }

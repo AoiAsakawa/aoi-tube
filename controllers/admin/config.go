@@ -155,6 +155,26 @@ func SetServerSummary(w http.ResponseWriter, r *http.Request) {
 	controllers.WriteSimpleResponse(w, true, "changed")
 }
 
+// SetStreamSchedule sets the operator's free-text next-stream schedule note,
+// shown to viewers on the offline screen.
+func SetStreamSchedule(w http.ResponseWriter, r *http.Request) {
+	if !requirePOST(w, r) {
+		return
+	}
+
+	configValue, success := getValueFromRequest(w, r)
+	if !success {
+		return
+	}
+
+	if err := data.SetStreamSchedule(configValue.Value.(string)); err != nil {
+		controllers.WriteSimpleResponse(w, false, err.Error())
+		return
+	}
+
+	controllers.WriteSimpleResponse(w, true, "changed")
+}
+
 // SetCustomOfflineMessage will set a message to display when the server is offline.
 func SetCustomOfflineMessage(w http.ResponseWriter, r *http.Request) {
 	if !requirePOST(w, r) {

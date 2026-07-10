@@ -5,6 +5,8 @@ export interface ClientConfig {
 	offlineMessage?: string;
 	offlineMediaUrl?: string;
 	offlineMediaType?: string;
+	// Operator's free-text next-stream schedule note, shown on the offline screen.
+	streamSchedule?: string;
 	logo: string;
 	tags: string[];
 	version: string;

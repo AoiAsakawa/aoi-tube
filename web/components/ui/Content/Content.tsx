@@ -137,6 +137,7 @@ export const Content: FC = () => {
 		offlineMessage,
 		offlineMediaUrl,
 		offlineMediaType,
+		streamSchedule,
 		chatDisabled,
 		federation,
 		notifications,
@@ -326,6 +327,12 @@ export const Content: FC = () => {
 								onFollowClick={() => setShowFollowModal(true)}
 								className={classnames([styles.topSectionElement, styles.offlineBanner])}
 							/>
+							{streamSchedule && (
+								<div className={styles.schedule}>
+									<span className={styles.scheduleLabel}>{t('schedule.next')}</span>
+									<span className={styles.scheduleText}>{streamSchedule}</span>
+								</div>
+							)}
 						</section>
 					)}
 					{isStreamLive && (

@@ -18,6 +18,7 @@ import {
 	TEXTFIELD_PROPS_SERVER_NAME,
 	TEXTFIELD_PROPS_SERVER_SUMMARY,
 	TEXTFIELD_PROPS_SERVER_OFFLINE_MESSAGE,
+	TEXTFIELD_PROPS_STREAM_SCHEDULE,
 	API_YP_SWITCH,
 	FIELD_PROPS_YP,
 	FIELD_PROPS_NSFW,
@@ -126,6 +127,14 @@ export default function EditInstanceDetails() {
 				type={TEXTFIELD_TYPE_TEXTAREA}
 				value={formDataValues.summary}
 				initialValue={instanceDetails.summary}
+				onChange={handleFieldChange}
+			/>
+
+			<TextFieldWithSubmit
+				fieldName="streamSchedule"
+				{...TEXTFIELD_PROPS_STREAM_SCHEDULE}
+				value={formDataValues.streamSchedule}
+				initialValue={instanceDetails.streamSchedule}
 				onChange={handleFieldChange}
 			/>
 

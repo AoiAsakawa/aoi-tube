@@ -225,6 +225,7 @@ func Start() error {
 
 	// Server summary
 	http.HandleFunc("/api/admin/config/serversummary", middleware.RequireAdminAuth(admin.SetServerSummary))
+	http.HandleFunc("/api/admin/config/streamschedule", middleware.RequireAdminAuth(admin.SetStreamSchedule))
 
 	// Offline message
 	http.HandleFunc("/api/admin/config/offlinemessage", middleware.RequireAdminAuth(admin.SetCustomOfflineMessage))

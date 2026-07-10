@@ -86,6 +86,32 @@
 	color: var(--theme-color-background-main);
 }
 
+// Next-stream schedule note under the offline banner.
+.schedule {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin: 12px auto 0;
+	padding: 8px 14px;
+	max-width: 640px;
+	border-radius: var(--radius-md, 8px);
+	background: rgba(101, 68, 233, 0.12);
+	border: 1px solid rgba(101, 68, 233, 0.35);
+	font-size: 14px;
+}
+
+.scheduleLabel {
+	font-weight: 700;
+	color: #8b6cf0;
+	white-space: nowrap;
+}
+
+.scheduleText {
+	color: var(--theme-color-background-main);
+	white-space: pre-wrap;
+}
+
 .playerContainer {
 	position: relative;
 }

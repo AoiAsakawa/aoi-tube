@@ -292,6 +292,24 @@ func SetServerSummary(summary string) error {
 	return _datastore.SetString(serverSummaryKey, summary)
 }
 
+const streamScheduleKey = "stream_schedule"
+
+// GetStreamSchedule returns the operator's free-text next-stream schedule note
+// (e.g. "次回配信: 7/15 21:00〜"), shown to viewers on the offline screen.
+func GetStreamSchedule() string {
+	schedule, err := _datastore.GetString(streamScheduleKey)
+	if err != nil {
+		log.Traceln(streamScheduleKey, err)
+		return ""
+	}
+	return schedule
+}
+
+// SetStreamSchedule sets the next-stream schedule note.
+func SetStreamSchedule(schedule string) error {
+	return _datastore.SetString(streamScheduleKey, schedule)
+}
+
 // GetServerWelcomeMessage will return the server welcome message text.
 func GetServerWelcomeMessage() string {
 	welcomeMessage, err := _datastore.GetString(serverWelcomeMessageKey)

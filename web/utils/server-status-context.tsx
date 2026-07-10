@@ -24,6 +24,7 @@ const initialServerConfigState: ConfigDetails = {
 		title: '',
 		welcomeMessage: '',
 		offlineMessage: '',
+		streamSchedule: '',
 		appearanceVariables: {},
 	},
 	ffmpegPath: '',

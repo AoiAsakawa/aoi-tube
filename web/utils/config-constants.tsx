@@ -19,6 +19,7 @@ export const API_CUSTOM_CSS_STYLES = '/customstyles';
 export const API_CUSTOM_JAVASCRIPT = '/customjavascript';
 export const API_S3_INFO = '/s3';
 export const API_SERVER_OFFLINE_MESSAGE = '/offlinemessage';
+export const API_STREAM_SCHEDULE = '/streamschedule';
 export const API_OFFLINE_CLIP = '/offlineclip';
 export const API_OFFLINE_CLIP_RESET = '/offlineclip/reset';
 export const API_OFFLINE_MEDIA = '/offlinemedia';
@@ -115,6 +116,14 @@ export const TEXTFIELD_PROPS_SERVER_OFFLINE_MESSAGE = {
 	placeholder: 'admin.fields.offlineMessage.placeholder',
 	label: 'admin.fields.offlineMessage.label',
 	tip: 'admin.fields.offlineMessage.tip',
+};
+export const TEXTFIELD_PROPS_STREAM_SCHEDULE = {
+	apiPath: API_STREAM_SCHEDULE,
+	configPath: 'instanceDetails',
+	maxLength: 255,
+	placeholder: 'admin.fields.streamSchedule.placeholder',
+	label: 'admin.fields.streamSchedule.label',
+	tip: 'admin.fields.streamSchedule.tip',
 };
 export const TEXTFIELD_PROPS_SERVER_WELCOME_MESSAGE = {
 	apiPath: API_SERVER_WELCOME_MESSAGE,
