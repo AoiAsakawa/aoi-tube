@@ -482,18 +482,23 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 							}}
 						/>
 						<ProtocolBadge protocol={badgeProtocol} />
-						<PlayerChrome
-							videoRef={videoRef}
-							isLive
-							qualities={qualityOptions}
-							selectedQuality={selectedQuality}
-							onSelectQuality={applyQuality}
-							dvrEnabled={dvrAvailable}
-							dvrDuration={dvrDuration}
-							atLiveEdge={!dvrMode}
-							onSeekDvr={handleSeekDvr}
-							onGoLive={handleGoLive}
-						/>
+						{/* Only mount the control chrome once playback has begun. Before
+						    that the poster below owns the single play affordance;
+						    rendering both showed two overlapping play buttons. */}
+						{started && (
+							<PlayerChrome
+								videoRef={videoRef}
+								isLive
+								qualities={qualityOptions}
+								selectedQuality={selectedQuality}
+								onSelectQuality={applyQuality}
+								dvrEnabled={dvrAvailable}
+								dvrDuration={dvrDuration}
+								atLiveEdge={!dvrMode}
+								onSeekDvr={handleSeekDvr}
+								onGoLive={handleGoLive}
+							/>
+						)}
 					</div>
 				)}
 				{(!online || !started) && (
