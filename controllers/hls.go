@@ -1,17 +1,20 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/aoiasakawa/aoitube/config"
 	"github.com/aoiasakawa/aoitube/core"
 	"github.com/aoiasakawa/aoitube/core/data"
+	"github.com/aoiasakawa/aoitube/core/recording"
 	"github.com/aoiasakawa/aoitube/core/transcoder"
 	"github.com/aoiasakawa/aoitube/models"
 	"github.com/aoiasakawa/aoitube/router/middleware"
@@ -45,6 +48,15 @@ func HandleHLSRequest(w http.ResponseWriter, r *http.Request) {
 	// and required social auth limits to authenticated users.
 	if !canViewStream(r) {
 		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Live DVR ("catch-up from the start"): /hls/dvr/... is served from the
+	// active recording session directory as a growing EVENT playlist so viewers
+	// can seek back to the stream's beginning. It reuses the same access gate
+	// (canViewStream, above) and access-token URL decoration as live HLS.
+	if relativePath == "dvr" || strings.HasPrefix(relativePath, "dvr/") {
+		serveDVR(w, r, strings.TrimPrefix(strings.TrimPrefix(relativePath, "dvr"), "/"), ext)
 		return
 	}
 
@@ -107,6 +119,121 @@ func HandleHLSRequest(w http.ResponseWriter, r *http.Request) {
 
 	middleware.EnableCors(w)
 	http.ServeFile(w, r, fullPath)
+}
+
+// serveDVR serves the active recording session as a live DVR ("catch-up from
+// the start") stream. rest is the path under the session directory:
+// "stream.m3u8" (master), "<N>/stream.m3u8" (variant) or "<N>/stream-...ts"
+// (segment). The master isn't written to disk until the session finalizes, so
+// it is synthesized on the fly; variant playlists are rewritten from VOD to
+// EVENT so the player keeps reloading and appending new segments while still
+// allowing a seek back to the beginning. Segments live under
+// data/archives/<sessionID>/ which the online cleanup timer never prunes, so
+// the entire session stays seekable.
+func serveDVR(w http.ResponseWriter, r *http.Request, rest, ext string) {
+	sessionDir, available := recording.Get().DVRSessionDir()
+	if !available || sessionDir == "" {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Traversal guard: the resolved path must stay inside the session dir.
+	if strings.Contains(rest, "..") {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	fullPath := filepath.Join(sessionDir, rest)
+	if fullPath != sessionDir &&
+		!strings.HasPrefix(filepath.Clean(fullPath), filepath.Clean(sessionDir)+string(os.PathSeparator)) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	middleware.EnableCors(w)
+
+	// Master playlist request: synthesize one pointing at the recorded
+	// variant(s), since writeMasterPlaylist only runs when the session ends.
+	if rest == "" || rest == "stream.m3u8" {
+		body, ok := buildDVRMaster(sessionDir)
+		if !ok {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		middleware.DisableCache(w)
+		w.Header().Set("Content-Type", "application/x-mpegURL")
+		_, _ = w.Write(body)
+		return
+	}
+
+	if ext == ".m3u8" {
+		body, err := os.ReadFile(fullPath)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		middleware.DisableCache(w)
+		w.Header().Set("Content-Type", "application/x-mpegURL")
+		_, _ = w.Write(rewriteDVRPlaylist(body))
+		return
+	}
+
+	cacheTime := utils.GetCacheDurationSecondsForPath(rest)
+	w.Header().Set("Cache-Control", "public, max-age="+strconv.Itoa(cacheTime))
+	if ext == ".mp4" || ext == ".m4s" {
+		w.Header().Set("Content-Type", "video/mp4")
+	}
+	http.ServeFile(w, r, fullPath)
+}
+
+// rewriteDVRPlaylist turns a recorder VOD variant playlist into an EVENT
+// playlist so the player treats it as a growing, seekable live DVR: the
+// PLAYLIST-TYPE flips VOD->EVENT and any ENDLIST is stripped (the live session
+// hasn't ended yet).
+func rewriteDVRPlaylist(body []byte) []byte {
+	s := string(body)
+	s = strings.Replace(s, "#EXT-X-PLAYLIST-TYPE:VOD", "#EXT-X-PLAYLIST-TYPE:EVENT", 1)
+	s = strings.ReplaceAll(s, "#EXT-X-ENDLIST\n", "")
+	s = strings.ReplaceAll(s, "#EXT-X-ENDLIST", "")
+	return []byte(s)
+}
+
+// buildDVRMaster synthesizes a minimal master playlist for the DVR stream by
+// scanning the session directory for numeric variant subdirectories that hold a
+// stream.m3u8. Bandwidth values are nominal (DVR needs no ABR — recording is
+// typically highest-quality-only) and rise with the variant index, which in
+// this codebase orders renditions low-to-high.
+func buildDVRMaster(sessionDir string) ([]byte, bool) {
+	entries, err := os.ReadDir(sessionDir)
+	if err != nil {
+		return nil, false
+	}
+	var indexes []int
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		n, err := strconv.Atoi(e.Name())
+		if err != nil {
+			continue
+		}
+		if _, err := os.Stat(filepath.Join(sessionDir, e.Name(), "stream.m3u8")); err != nil {
+			continue
+		}
+		indexes = append(indexes, n)
+	}
+	if len(indexes) == 0 {
+		return nil, false
+	}
+	sort.Ints(indexes)
+
+	var b strings.Builder
+	b.WriteString("#EXTM3U\n")
+	b.WriteString("#EXT-X-VERSION:3\n")
+	for _, n := range indexes {
+		fmt.Fprintf(&b, "#EXT-X-STREAM-INF:BANDWIDTH=%d\n", (n+1)*2_000_000)
+		fmt.Fprintf(&b, "%d/stream.m3u8\n", n)
+	}
+	return []byte(b.String()), true
 }
 
 // masterVariantURIPattern extracts the variant index from a master playlist

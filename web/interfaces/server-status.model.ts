@@ -22,6 +22,9 @@ export interface ServerStatus {
 	// an IVS-compatible node): the player uses this HLS URL directly instead of
 	// the self-hosted /hls/stream.m3u8, and no local transcoding runs.
 	externalStreamUrl?: string;
+	// True while the live stream can be watched from the start (catch-up / DVR)
+	// via /hls/dvr/stream.m3u8. Requires recording to be active with segments.
+	dvrAvailable?: boolean;
 }
 
 export function makeEmptyServerStatus(): ServerStatus {

@@ -114,6 +114,10 @@
 		"qualitySelector": {
 			"label": "화질",
 			"auto": "자동"
+		},
+		"dvr": {
+			"watchFromStart": "처음부터 보기",
+			"goLive": "● 라이브로"
 		}
 	},
 	"chat": {

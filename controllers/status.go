@@ -7,6 +7,7 @@ import (
 
 	"github.com/aoiasakawa/aoitube/core"
 	"github.com/aoiasakawa/aoitube/core/data"
+	"github.com/aoiasakawa/aoitube/core/recording"
 	"github.com/aoiasakawa/aoitube/router/middleware"
 	"github.com/aoiasakawa/aoitube/utils"
 )
@@ -72,6 +73,16 @@ func getStatusResponse() webStatusResponse {
 		protocolInfo.WebRTCEnabled = false
 	}
 
+	// Live DVR ("catch-up from the start") is available for self-hosted live
+	// streams once recording has an active session with archived segments. It is
+	// never offered for the external stream source (no local recording).
+	dvrAvailable := false
+	if externalURL == "" && status.Online {
+		if _, ok := recording.Get().DVRSessionDir(); ok {
+			dvrAvailable = true
+		}
+	}
+
 	response := webStatusResponse{
 		Online:             online,
 		ServerTime:         time.Now(),
@@ -82,6 +93,7 @@ func getStatusResponse() webStatusResponse {
 		Protocol:           protocolInfo,
 		SilentMode:         data.GetSilentStreamMode(),
 		ExternalStreamURL:  externalURL,
+		DVRAvailable:       dvrAvailable,
 	}
 	if !data.GetHideViewerCount() {
 		response.ViewerCount = status.ViewerCount
@@ -115,4 +127,7 @@ type webStatusResponse struct {
 	// ExternalStreamURL is the external managed-service HLS URL viewers play when
 	// the external stream source is enabled; empty otherwise (self-hosted).
 	ExternalStreamURL string `json:"externalStreamUrl,omitempty"`
+	// DVRAvailable is true while a live self-hosted stream can be watched from
+	// the start via /hls/dvr/stream.m3u8 (recording active with segments).
+	DVRAvailable bool `json:"dvrAvailable"`
 }

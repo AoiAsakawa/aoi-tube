@@ -311,6 +311,28 @@ func (r *Recorder) IsActive() bool {
 	return r.active
 }
 
+// DVRSessionDir returns the active recording session's directory and whether
+// live DVR ("catch-up from the start") can be served from it. DVR is available
+// once recording is active with at least one archived segment. The directory
+// holds a growing, ENDLIST-less VOD playlist (written by writeVariantVOD with
+// final=false); the HLS handler serves it as an EVENT playlist so players can
+// seek from the stream's start while it keeps growing. Segments live under
+// data/archives/<sessionID>/ which the online cleanup timer never touches
+// (unlike data/hls/), so the whole session stays seekable.
+func (r *Recorder) DVRSessionDir() (dir string, available bool) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if !r.active {
+		return "", false
+	}
+	for _, v := range r.variants {
+		if len(v.order) > 0 {
+			return r.sessionDir, true
+		}
+	}
+	return r.sessionDir, false
+}
+
 // HandleVariantPlaylist mirrors newly-written live playlist segments into the
 // session's VOD playlist. livePlaylistPath is a variant's stream.m3u8 on disk
 // (e.g. data/hls/0/stream.m3u8).

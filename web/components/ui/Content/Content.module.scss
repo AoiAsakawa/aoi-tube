@@ -123,6 +123,10 @@
 	top: 12px;
 	right: 12px;
 	z-index: 20;
+	// Holds the DVR ("watch from start" / LIVE) and low-latency toggles side by
+	// side when both are present.
+	display: flex;
+	gap: 8px;
 
 	@include mixins.screen(tablet) {
 		right: 12px;

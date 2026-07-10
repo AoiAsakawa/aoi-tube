@@ -114,6 +114,10 @@
 		"qualitySelector": {
 			"label": "画質",
 			"auto": "自動"
+		},
+		"dvr": {
+			"watchFromStart": "最初から視聴",
+			"goLive": "● ライブに戻る"
 		}
 	},
 	"chat": {
