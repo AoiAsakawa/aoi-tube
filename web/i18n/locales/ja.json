@@ -114,7 +114,8 @@
 		"qualitySelector": {
 			"label": "画質",
 			"auto": "自動"
-		}
+		},
+		"tapForSound": "タップして音声をON"
 	},
 	"chat": {
 		"anonymous": "匿名",
@@ -1309,7 +1310,13 @@
 					"hint": "正の値で付与、負の値で減算（残高不足は拒否）。",
 					"validation": "0以外の増減値を入力してください。",
 					"success": "コイン残高を更新しました",
-					"error": "更新に失敗しました"
+					"error": "更新に失敗しました",
+					"title": "{{name}} のコイン",
+					"manage": "コイン管理",
+					"ledgerEmpty": "取引履歴なし",
+					"ledgerWhen": "日時",
+					"ledgerType": "種別",
+					"ledgerDelta": "増減"
 				}
 			},
 			"viewerInfo": {

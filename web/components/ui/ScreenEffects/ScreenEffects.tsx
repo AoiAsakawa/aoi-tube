@@ -87,8 +87,8 @@ const makeFireworkParticles = (count: number, keyOffset = 0): Particle[] =>
 	}));
 
 // 💖 Hearts floating up from the bottom, swaying and fading out.
-const makeHeartParticles = (): Particle[] =>
-	Array.from({ length: 24 }, (_, i) => ({
+const makeHeartParticles = (count: number): Particle[] =>
+	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'heart' as const,
 		emoji: pick(HEART_EMOJIS),
@@ -104,8 +104,8 @@ const makeHeartParticles = (): Particle[] =>
 // ⭐ Shooting stars streaking diagonally across the screen with a light
 // tail. The whole span is rotated by --angle and travels along its local
 // x-axis, so the tail (a ::before gradient) always trails the motion.
-const makeStarParticles = (): Particle[] =>
-	Array.from({ length: 16 }, (_, i) => ({
+const makeStarParticles = (count: number): Particle[] =>
+	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'star' as const,
 		emoji: pick(STAR_EMOJIS),
@@ -124,8 +124,8 @@ const makeStarParticles = (): Particle[] =>
 // 🎊 Celebration: the most lavish effect — a dense storm of falling party
 // emojis combined with a full round of firework bursts.
 const makeCelebrationParticles = (): Particle[] => [
-	...makeConfettiParticles(CELEBRATION_FALL_EMOJIS, 56),
-	...makeFireworkParticles(12, 56),
+	...makeConfettiParticles(CELEBRATION_FALL_EMOJIS, 60),
+	...makeFireworkParticles(16, 60),
 ];
 
 // 🌈 Rainbow: one large arc scaling in at the center of the screen (position
@@ -133,7 +133,7 @@ const makeCelebrationParticles = (): Particle[] => [
 // A soft rainbow-gradient glow overlay is rendered separately in the JSX.
 const makeRainbowParticles = (): Particle[] => [
 	{ key: 0, kind: 'rainbow' as const, emoji: '🌈', style: {} as CSSProperties },
-	...Array.from({ length: 20 }, (_, i) => ({
+	...Array.from({ length: 30 }, (_, i) => ({
 		key: i + 1,
 		kind: 'sparkle' as const,
 		emoji: pick(RAINBOW_SPARKLE_EMOJIS),
@@ -150,8 +150,8 @@ const makeRainbowParticles = (): Particle[] => [
 // ☄️ Meteor shower: the lavish version of the star streaks — many more,
 // bigger and faster particles with a thick glowing tail. Reuses the star
 // streak geometry (--angle / --travel / --tail) with its own styling.
-const makeMeteorParticles = (): Particle[] =>
-	Array.from({ length: 34 }, (_, i) => ({
+const makeMeteorParticles = (count: number): Particle[] =>
+	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'meteor' as const,
 		emoji: pick(METEOR_EMOJIS),
@@ -169,8 +169,8 @@ const makeMeteorParticles = (): Particle[] =>
 
 // 💰 Gold rush: the top-tier effect — a dense rain of glowing coins (reusing
 // the confetti fall path) plus a full-screen golden flash rendered in JSX.
-const makeGoldrushParticles = (): Particle[] =>
-	Array.from({ length: 64 }, (_, i) => ({
+const makeGoldrushParticles = (count: number): Particle[] =>
+	Array.from({ length: count }, (_, i) => ({
 		key: i,
 		kind: 'coin' as const,
 		emoji: pick(GOLDRUSH_EMOJIS),
@@ -184,25 +184,32 @@ const makeGoldrushParticles = (): Particle[] =>
 		} as CSSProperties,
 	}));
 
+// Effects are priced in ascending tiers (see models/donation.go effectPrices):
+// confetti < hearts < stars < fireworks < celebration < rainbow < meteor <
+// goldrush. The particle budgets below rise monotonically with that tier so the
+// spectacle clearly escalates with the amount paid, rather than being uneven
+// (previously a ¥300 confetti burst was denser than a ¥1000 fireworks). Streak
+// and burst particles carry more visual weight each, so their counts stay lower
+// than the light falling-confetti/coin effects at the same perceived intensity.
 const makeParticles = (effectType: string): Particle[] => {
 	switch (effectType) {
-		case 'fireworks':
-			return makeFireworkParticles(12);
-		case 'hearts':
-			return makeHeartParticles();
-		case 'stars':
-			return makeStarParticles();
-		case 'celebration':
+		case 'hearts': // tier 1
+			return makeHeartParticles(30);
+		case 'stars': // tier 2
+			return makeStarParticles(20);
+		case 'fireworks': // tier 3
+			return makeFireworkParticles(22);
+		case 'celebration': // tier 4
 			return makeCelebrationParticles();
-		case 'rainbow':
+		case 'rainbow': // tier 5
 			return makeRainbowParticles();
-		case 'meteor':
-			return makeMeteorParticles();
-		case 'goldrush':
-			return makeGoldrushParticles();
-		case 'confetti':
+		case 'meteor': // tier 6
+			return makeMeteorParticles(46);
+		case 'goldrush': // tier 7
+			return makeGoldrushParticles(84);
+		case 'confetti': // tier 0
 		default:
-			return makeConfettiParticles(CONFETTI_EMOJIS, 40);
+			return makeConfettiParticles(CONFETTI_EMOJIS, 24);
 	}
 };
 

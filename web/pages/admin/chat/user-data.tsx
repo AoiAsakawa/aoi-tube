@@ -110,9 +110,14 @@ export default function UserDataManagement() {
 	const [auditUser, setAuditUser] = useState<User | null>(null);
 	const [auditEvents, setAuditEvents] = useState<AuthEvent[]>([]);
 	const [auditLoading, setAuditLoading] = useState(false);
-	// Coin balance of the user whose detail modal is open (null = not loaded).
+	// Dedicated coin modal: the user whose wallet is open, their balance/ledger,
+	// and the manual grant/deduction form.
+	const [coinUser, setCoinUser] = useState<User | null>(null);
 	const [coinBalance, setCoinBalance] = useState<number | null>(null);
-	// Manual coin grant / deduction form (within the user detail modal).
+	const [coinLedger, setCoinLedger] = useState<
+		{ id: string; delta: number; entryType: string; createdAt: string }[]
+	>([]);
+	const [coinLoading, setCoinLoading] = useState(false);
 	const [coinDelta, setCoinDelta] = useState(0);
 	const [coinNote, setCoinNote] = useState('');
 	const [coinAdjusting, setCoinAdjusting] = useState(false);
@@ -249,14 +254,7 @@ export default function UserDataManagement() {
 	const openAuditLog = async (user: User) => {
 		setAuditUser(user);
 		setAuditEvents([]);
-		setCoinBalance(null);
-		setCoinDelta(0);
-		setCoinNote('');
 		setAuditLoading(true);
-		// Coin balance loads alongside the audit log (best-effort; coins may be off).
-		fetchData(`${ADMIN_WALLET_USER}?userId=${encodeURIComponent(user.id)}`)
-			.then(res => setCoinBalance(Number(res?.balance) || 0))
-			.catch(() => setCoinBalance(null));
 		try {
 			const result = await fetchData(`${USER_AUTH_EVENTS}?userId=${encodeURIComponent(user.id)}`);
 			setAuditEvents(result?.events || []);
@@ -266,8 +264,25 @@ export default function UserDataManagement() {
 		setAuditLoading(false);
 	};
 
+	const openCoinModal = async (user: User) => {
+		setCoinUser(user);
+		setCoinBalance(null);
+		setCoinLedger([]);
+		setCoinDelta(0);
+		setCoinNote('');
+		setCoinLoading(true);
+		try {
+			const res = await fetchData(`${ADMIN_WALLET_USER}?userId=${encodeURIComponent(user.id)}`);
+			setCoinBalance(Number(res?.balance) || 0);
+			setCoinLedger(Array.isArray(res?.ledger) ? res.ledger : []);
+		} catch {
+			setCoinBalance(null);
+		}
+		setCoinLoading(false);
+	};
+
 	const handleCoinAdjust = async () => {
-		if (!auditUser || !coinDelta) {
+		if (!coinUser || !coinDelta) {
 			message.error(t('admin.pages.userData.coin.validation'));
 			return;
 		}
@@ -276,13 +291,17 @@ export default function UserDataManagement() {
 			const res = await fetchData(ADMIN_WALLET_ADJUST, {
 				method: 'POST',
 				auth: true,
-				data: { userId: auditUser.id, delta: coinDelta, note: coinNote.trim() },
+				data: { userId: coinUser.id, delta: coinDelta, note: coinNote.trim() },
 			});
 			if (res?.success) {
 				setCoinBalance(Number(res.balance) || 0);
 				setCoinDelta(0);
 				setCoinNote('');
 				message.success(t('admin.pages.userData.coin.success'));
+				// Refresh the ledger so the new adjustment appears.
+				fetchData(`${ADMIN_WALLET_USER}?userId=${encodeURIComponent(coinUser.id)}`)
+					.then(r => setCoinLedger(Array.isArray(r?.ledger) ? r.ledger : []))
+					.catch(() => {});
 			} else {
 				message.error(res?.message || t('admin.pages.userData.coin.error'));
 			}
@@ -524,6 +543,11 @@ export default function UserDataManagement() {
 								onClick={() => openAuditLog(record)}
 							/>
 						</Tooltip>
+						<Tooltip title={t('admin.pages.userData.coin.manage')}>
+							<Button size="small" onClick={() => openCoinModal(record)}>
+								🪙
+							</Button>
+						</Tooltip>
 						<Tooltip title={t('admin.pages.userData.governance.merge')}>
 							<Button
 								size="small"
@@ -666,42 +690,6 @@ export default function UserDataManagement() {
 				footer={null}
 				width={640}
 			>
-				{coinBalance !== null && (
-					<div
-						style={{
-							marginBottom: 12,
-							padding: 12,
-							borderRadius: 8,
-							background: 'rgba(102,126,234,0.1)',
-						}}
-					>
-						<div style={{ marginBottom: 8, fontSize: 14 }}>
-							{t('admin.pages.userData.coinBalance')}:{' '}
-							<strong>🪙 {coinBalance.toLocaleString()}</strong>
-						</div>
-						<Space wrap>
-							<InputNumber
-								value={coinDelta}
-								onChange={v => setCoinDelta(Number(v) || 0)}
-								addonBefore="🪙"
-								placeholder="+/-"
-								style={{ width: 140 }}
-							/>
-							<Input
-								value={coinNote}
-								onChange={e => setCoinNote(e.target.value)}
-								placeholder={t('admin.pages.userData.coin.notePlaceholder')}
-								style={{ width: 200 }}
-							/>
-							<Button type="primary" loading={coinAdjusting} onClick={handleCoinAdjust}>
-								{t('admin.pages.userData.coin.apply')}
-							</Button>
-						</Space>
-						<div style={{ marginTop: 4, fontSize: 12, color: '#888' }}>
-							{t('admin.pages.userData.coin.hint')}
-						</div>
-					</div>
-				)}
 				<Table
 					dataSource={auditEvents}
 					rowKey="id"
@@ -742,6 +730,76 @@ export default function UserDataManagement() {
 								<Tag color={actor === 'admin' ? 'blue' : 'default'}>
 									{t(`admin.pages.userData.governance.actors.${actor}`, actor)}
 								</Tag>
+							),
+						},
+					]}
+				/>
+			</Modal>
+
+			{/* Coin wallet: balance, manual grant/adjust, and recent ledger. */}
+			<Modal
+				title={t('admin.pages.userData.coin.title', { name: coinUser?.displayName ?? '' })}
+				open={coinUser !== null}
+				onCancel={() => setCoinUser(null)}
+				footer={null}
+				width={560}
+			>
+				<div style={{ marginBottom: 12, fontSize: 16 }}>
+					{t('admin.pages.userData.coinBalance')}:{' '}
+					<strong>🪙 {coinLoading ? '…' : (coinBalance ?? 0).toLocaleString()}</strong>
+				</div>
+				<Space wrap style={{ marginBottom: 8 }}>
+					<InputNumber
+						value={coinDelta}
+						onChange={v => setCoinDelta(Number(v) || 0)}
+						addonBefore="🪙"
+						placeholder="+/-"
+						style={{ width: 150 }}
+					/>
+					<Input
+						value={coinNote}
+						onChange={e => setCoinNote(e.target.value)}
+						placeholder={t('admin.pages.userData.coin.notePlaceholder')}
+						style={{ width: 220 }}
+					/>
+					<Button type="primary" loading={coinAdjusting} onClick={handleCoinAdjust}>
+						{t('admin.pages.userData.coin.apply')}
+					</Button>
+				</Space>
+				<div style={{ marginBottom: 12, fontSize: 12, color: '#888' }}>
+					{t('admin.pages.userData.coin.hint')}
+				</div>
+				<Table
+					dataSource={coinLedger}
+					rowKey="id"
+					loading={coinLoading}
+					size="small"
+					pagination={false}
+					scroll={{ y: 280 }}
+					locale={{ emptyText: t('admin.pages.userData.coin.ledgerEmpty') }}
+					columns={[
+						{
+							title: t('admin.pages.userData.coin.ledgerWhen'),
+							dataIndex: 'createdAt',
+							key: 'createdAt',
+							render: (d: string) => new Date(d).toLocaleString('ja-JP'),
+						},
+						{
+							title: t('admin.pages.userData.coin.ledgerType'),
+							dataIndex: 'entryType',
+							key: 'entryType',
+							render: (v: string) => t(`donation.coinLedger.${v}`, v),
+						},
+						{
+							title: t('admin.pages.userData.coin.ledgerDelta'),
+							dataIndex: 'delta',
+							key: 'delta',
+							align: 'right' as const,
+							render: (d: number) => (
+								<span style={{ color: d < 0 ? '#ff4d4f' : '#52c41a' }}>
+									{d > 0 ? '+' : ''}
+									{d.toLocaleString()}
+								</span>
 							),
 						},
 					]}

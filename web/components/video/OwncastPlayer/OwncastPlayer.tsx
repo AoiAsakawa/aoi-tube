@@ -113,14 +113,35 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 
 	const posterSrc = '/liveposter';
 
+	// True while the stream auto-started muted because unmuted autoplay was
+	// blocked; drives the "tap for sound" hint. One click (a user gesture) unmutes.
+	const [needsUnmute, setNeedsUnmute] = useState(false);
+
 	const attemptPlay = () => {
-		// Play WITH sound. We deliberately do NOT fall back to a muted play(): the
-		// browser blocks unmuted autoplay before any user gesture, and the old
-		// muted fallback made the stream start silently. Instead, when the gesture-
-		// less autoplay is blocked the video simply stays paused and the poster
-		// stays up; clicking the poster is a user gesture, so that play() is allowed
-		// to start with sound.
-		videoRef.current?.play().catch(() => {});
+		const v = videoRef.current;
+		if (!v) {
+			return;
+		}
+		// Try to start WITH sound first (allowed after any user gesture, e.g. a
+		// poster click, or when the browser's media engagement permits it). If the
+		// browser blocks unmuted autoplay on a fresh page load, fall back to a
+		// MUTED autoplay so the live stream still starts automatically, and surface
+		// an unmute hint — a single click then restores sound.
+		v.play().catch(() => {
+			v.muted = true;
+			setNeedsUnmute(true);
+			v.play().catch(() => {});
+		});
+	};
+
+	const enableSound = () => {
+		const v = videoRef.current;
+		if (!v) {
+			return;
+		}
+		v.muted = false;
+		setNeedsUnmute(false);
+		v.play().catch(() => {});
 	};
 
 	const updateLevels = () => {
@@ -478,6 +499,9 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 								const el = videoRef.current;
 								if (el) {
 									setLocalStorage(PLAYER_VOLUME, el.muted ? 0 : el.volume);
+									if (!el.muted) {
+										setNeedsUnmute(false);
+									}
 								}
 							}}
 						/>
@@ -498,6 +522,13 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 								onSeekDvr={handleSeekDvr}
 								onGoLive={handleGoLive}
 							/>
+						)}
+						{/* Shown when the stream auto-started muted (browsers block
+						    unmuted autoplay): one tap restores sound. */}
+						{needsUnmute && started && (
+							<button type="button" className={styles.unmuteHint} onClick={enableSound}>
+								🔇 {t('video.tapForSound')}
+							</button>
 						)}
 					</div>
 				)}

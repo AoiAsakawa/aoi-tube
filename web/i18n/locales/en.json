@@ -114,7 +114,8 @@
 		"qualitySelector": {
 			"label": "Quality",
 			"auto": "Auto"
-		}
+		},
+		"tapForSound": "Tap for sound"
 	},
 	"chat": {
 		"anonymous": "Anonymous",
@@ -1309,7 +1310,13 @@
 					"hint": "Positive grants, negative deducts (overdraw refused).",
 					"validation": "Enter a non-zero change.",
 					"success": "Coin balance updated",
-					"error": "Update failed"
+					"error": "Update failed",
+					"title": "{{name}}'s coins",
+					"manage": "Manage coins",
+					"ledgerEmpty": "No transactions",
+					"ledgerWhen": "When",
+					"ledgerType": "Type",
+					"ledgerDelta": "Change"
 				}
 			},
 			"viewerInfo": {

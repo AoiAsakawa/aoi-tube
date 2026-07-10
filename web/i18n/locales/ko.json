@@ -114,7 +114,8 @@
 		"qualitySelector": {
 			"label": "화질",
 			"auto": "자동"
-		}
+		},
+		"tapForSound": "탭하여 소리 켜기"
 	},
 	"chat": {
 		"anonymous": "익명",
@@ -1309,7 +1310,13 @@
 					"hint": "양수는 지급, 음수는 차감(잔액 부족 시 거부).",
 					"validation": "0이 아닌 증감값을 입력하세요.",
 					"success": "코인 잔액을 갱신했습니다",
-					"error": "갱신에 실패했습니다"
+					"error": "갱신에 실패했습니다",
+					"title": "{{name}} 님의 코인",
+					"manage": "코인 관리",
+					"ledgerEmpty": "거래 내역 없음",
+					"ledgerWhen": "일시",
+					"ledgerType": "유형",
+					"ledgerDelta": "증감"
 				}
 			},
 			"viewerInfo": {

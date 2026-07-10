@@ -114,7 +114,8 @@
 		"qualitySelector": {
 			"label": "畫質",
 			"auto": "自動"
-		}
+		},
+		"tapForSound": "點擊開啟聲音"
 	},
 	"chat": {
 		"anonymous": "匿名",
@@ -1309,7 +1310,13 @@
 					"hint": "正數贈送，負數扣除（會透支則拒絕）。",
 					"validation": "請輸入非零的增減值。",
 					"success": "已更新金幣餘額",
-					"error": "更新失敗"
+					"error": "更新失敗",
+					"title": "{{name}} 的金幣",
+					"manage": "管理金幣",
+					"ledgerEmpty": "無交易記錄",
+					"ledgerWhen": "時間",
+					"ledgerType": "類型",
+					"ledgerDelta": "增減"
 				}
 			},
 			"viewerInfo": {
