@@ -341,6 +341,35 @@
 	}
 }
 
+/* Coin top-up banner: current balance + bonus note while charging coins. */
+.coinBanner {
+	margin-bottom: 1rem;
+	padding: 0.75rem 1rem;
+	border-radius: 8px;
+	background: rgba(102, 126, 234, 0.12);
+	border: 1px solid rgba(102, 126, 234, 0.35);
+}
+
+.coinBalanceRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	font-size: 0.9rem;
+}
+
+.coinBalanceValue {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #a0b4ff;
+}
+
+.coinBonusNote {
+	margin-top: 4px;
+	font-size: 0.8rem;
+	color: #52c41a;
+}
+
 /* Wrapper holds the selectable card plus its corner preview button so the
    preview control can be absolutely positioned without nesting buttons. */
 .effectCardWrap {

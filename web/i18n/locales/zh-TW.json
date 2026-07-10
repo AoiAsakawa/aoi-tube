@@ -282,7 +282,13 @@
 		"feeLabel": "手續費：",
 		"fromLabel": "傳送地址：",
 		"previewEffect": "預覽特效",
-		"previewLabel": "預覽"
+		"previewLabel": "預覽",
+		"payModeLabel": "付款方式",
+		"payModeDirect": "直接付款",
+		"payModeCoin": "金幣",
+		"coinBalance": "金幣餘額",
+		"coinBonusNote": "現在儲值可獲得 +{{percent}}% 獎勵",
+		"coinChargeButton": "儲值"
 	},
 	"screenEffects": {
 		"confetti": "彩紙",

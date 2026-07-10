@@ -282,7 +282,13 @@
 		"feeLabel": "Fee:",
 		"fromLabel": "From:",
 		"previewEffect": "Preview effect",
-		"previewLabel": "Preview"
+		"previewLabel": "Preview",
+		"payModeLabel": "Payment mode",
+		"payModeDirect": "Direct billing",
+		"payModeCoin": "Coins",
+		"coinBalance": "Coin balance",
+		"coinBonusNote": "Charge now for a +{{percent}}% bonus",
+		"coinChargeButton": "Charge coins"
 	},
 	"screenEffects": {
 		"confetti": "confetti",

@@ -169,6 +169,8 @@ export const ChatTextField: FC<ChatTextFieldProps> = ({
 	const [paypalConfig, setPaypalConfig] = useState<PayPalConfig | null>(null);
 	const [stripeEnabled, setStripeEnabled] = useState<boolean>(false);
 	const [stripeConfig, setStripeConfig] = useState<StripeConfig | null>(null);
+	const [coinEnabled, setCoinEnabled] = useState<boolean>(false);
+	const [coinBonusPercent, setCoinBonusPercent] = useState<number>(0);
 	const websocketService = useWebsocketService();
 	const editor = useMemo(() => withReact(withImages(createEditor())), []);
 
@@ -206,6 +208,8 @@ export const ChatTextField: FC<ChatTextFieldProps> = ({
 					setPaypalConfig(normalizePayPalConfig(paymentsStatus?.paypal));
 					setStripeEnabled(Boolean(paymentsStatus?.stripe?.enabled));
 					setStripeConfig(normalizeStripeConfig(paymentsStatus?.stripe));
+					setCoinEnabled(Boolean(paymentsStatus?.coin?.enabled));
+					setCoinBonusPercent(Number(paymentsStatus?.coin?.bonusPercent) || 0);
 					return;
 				} catch (_error) {
 					// Fall back to per-provider status endpoints
@@ -440,6 +444,8 @@ export const ChatTextField: FC<ChatTextFieldProps> = ({
 				paypalConfig={paypalConfig}
 				stripeEnabled={stripeEnabled}
 				stripeConfig={stripeConfig}
+				coinEnabled={coinEnabled}
+				coinBonusPercent={coinBonusPercent}
 			/>
 		</div>
 	);

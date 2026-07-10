@@ -282,7 +282,13 @@
 		"feeLabel": "手数料:",
 		"fromLabel": "送金元:",
 		"previewEffect": "演出をプレビュー",
-		"previewLabel": "プレビュー"
+		"previewLabel": "プレビュー",
+		"payModeLabel": "支払い方法",
+		"payModeDirect": "直接課金",
+		"payModeCoin": "コイン",
+		"coinBalance": "コイン残高",
+		"coinBonusNote": "今チャージすると +{{percent}}% ボーナス",
+		"coinChargeButton": "チャージする"
 	},
 	"screenEffects": {
 		"confetti": "紙吹雪",

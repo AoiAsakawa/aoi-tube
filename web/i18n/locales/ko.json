@@ -282,7 +282,13 @@
 		"feeLabel": "수수료:",
 		"fromLabel": "보내는 주소:",
 		"previewEffect": "효과 미리보기",
-		"previewLabel": "미리보기"
+		"previewLabel": "미리보기",
+		"payModeLabel": "결제 방식",
+		"payModeDirect": "직접 결제",
+		"payModeCoin": "코인",
+		"coinBalance": "코인 잔액",
+		"coinBonusNote": "지금 충전하면 +{{percent}}% 보너스",
+		"coinChargeButton": "충전하기"
 	},
 	"screenEffects": {
 		"confetti": "색종이",

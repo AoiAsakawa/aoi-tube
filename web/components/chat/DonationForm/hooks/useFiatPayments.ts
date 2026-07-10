@@ -18,8 +18,17 @@ import {
 	STRIPE_STATUS,
 	STRIPE_CREATE_PAYMENT,
 	PAYMENTS_CREATE,
+	withArchiveAccessToken,
 } from '../../../../utils/apis';
 import { getEffectPrice } from '../../../../interfaces/donation.model';
+
+// Append the logged-in viewer's access token to a payment-create URL so the
+// server can resolve the buyer for account-scoped purchases (paid archive
+// entitlements, coin top-ups). Harmless for anonymous superchats/effects.
+const withPaymentAccessToken = (url: string): string => {
+	const token = typeof window !== 'undefined' ? window.localStorage.getItem('accessToken') : null;
+	return withArchiveAccessToken(url, token);
+};
 import { AVAILABLE_NETWORKS, AVAILABLE_TOKENS } from '../constants';
 import {
 	DoneruConfig,
@@ -248,7 +257,9 @@ export const useFiatPayments = ({
 
 			let response;
 			try {
-				response = await fetchData(PAYMENTS_CREATE, {
+				// Carry the logged-in viewer's token so purchases that require an
+				// account (paid archive, coin top-up) resolve the buyer server-side.
+				response = await fetchData(withPaymentAccessToken(PAYMENTS_CREATE), {
 					method: 'POST',
 					data: {
 						provider: 'paypal',
@@ -331,7 +342,7 @@ export const useFiatPayments = ({
 
 			let response;
 			try {
-				response = await fetchData(PAYMENTS_CREATE, {
+				response = await fetchData(withPaymentAccessToken(PAYMENTS_CREATE), {
 					method: 'POST',
 					data: {
 						provider: 'stripe',

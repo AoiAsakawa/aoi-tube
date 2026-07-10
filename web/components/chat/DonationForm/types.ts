@@ -1,14 +1,16 @@
 // Shared types for the donation form (crypto wallets and payment providers).
 import { ScreenEffectType } from '../../../interfaces/donation.model';
 
-// What the viewer is purchasing: a superchat message or a screen effect.
-export type DonationItemType = 'superchat' | 'effect';
+// What the viewer is purchasing: a superchat message, a screen effect, or a
+// coin top-up (charging the prepaid wallet).
+export type DonationItemType = 'superchat' | 'effect' | 'coin';
 
 // The itemType/effectType fields sent with every payment creation request.
-// Superchats never include an effectType.
+// Superchats and coin top-ups never include an effectType.
 export type PurchaseItem =
 	| { itemType: 'superchat' }
-	| { itemType: 'effect'; effectType: ScreenEffectType };
+	| { itemType: 'effect'; effectType: ScreenEffectType }
+	| { itemType: 'coin' };
 
 export interface MetamaskConfig {
 	enabled: boolean;

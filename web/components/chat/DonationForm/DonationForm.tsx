@@ -29,7 +29,7 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
-import { fetchData, METAMASK_CONFIRM } from '../../../utils/apis';
+import { fetchData, METAMASK_CONFIRM, WALLET, withArchiveAccessToken } from '../../../utils/apis';
 import {
 	getEffectPrice,
 	SCREEN_EFFECT_EMOJIS,
@@ -81,6 +81,8 @@ export interface DonationFormProps {
 	paypalConfig?: PayPalConfig | null;
 	stripeEnabled?: boolean;
 	stripeConfig?: StripeConfig | null;
+	coinEnabled?: boolean;
+	coinBonusPercent?: number;
 }
 
 export const DonationForm: FC<DonationFormProps> = ({
@@ -96,6 +98,8 @@ export const DonationForm: FC<DonationFormProps> = ({
 	paypalConfig: paypalConfigProp = null,
 	stripeEnabled = false,
 	stripeConfig: stripeConfigProp = null,
+	coinEnabled = false,
+	coinBonusPercent = 0,
 }) => {
 	const { t } = useTranslation();
 	const [paymentMethod, setPaymentMethod] = useState<
@@ -115,6 +119,51 @@ export const DonationForm: FC<DonationFormProps> = ({
 	// What the viewer purchases: a superchat message or a screen effect.
 	const [itemType, setItemType] = useState<DonationItemType>('superchat');
 	const [effectType, setEffectType] = useState<ScreenEffectType>('confetti');
+
+	// Payment mode: "direct" pays a provider per purchase (the classic flow);
+	// "coin" tops up the prepaid wallet. Coins need a logged-in account, so the
+	// mode is only offered once the wallet fetch confirms the viewer is signed in.
+	const [payMode, setPayMode] = useState<'direct' | 'coin'>('direct');
+	const [walletBalance, setWalletBalance] = useState<number | null>(null);
+	const [walletLoggedIn, setWalletLoggedIn] = useState(false);
+	const refreshWallet = React.useCallback(() => {
+		if (!coinEnabled) {
+			return;
+		}
+		const token =
+			typeof window !== 'undefined' ? window.localStorage.getItem('accessToken') : null;
+		if (!token) {
+			setWalletLoggedIn(false);
+			return;
+		}
+		fetchData(withArchiveAccessToken(WALLET, token), { auth: false })
+			.then(res => {
+				setWalletBalance(Number(res?.balance) || 0);
+				setWalletLoggedIn(true);
+			})
+			.catch(() => setWalletLoggedIn(false));
+	}, [coinEnabled]);
+	useEffect(() => {
+		if (visible) {
+			refreshWallet();
+		}
+	}, [visible, refreshWallet]);
+	// Coins charge only through Stripe / PayPal; snap the method to a valid one
+	// whenever coin mode is active with a different provider selected.
+	useEffect(() => {
+		if (
+			payMode === 'coin' &&
+			(stripeEnabled || paypalEnabled) &&
+			paymentMethod !== 'stripe' &&
+			paymentMethod !== 'paypal'
+		) {
+			setPaymentMethod(stripeEnabled ? 'stripe' : 'paypal');
+		}
+	}, [payMode, paymentMethod, stripeEnabled, paypalEnabled]);
+	// Coin top-ups route only through the unified fiat providers (Stripe / PayPal).
+	const coinChargeProvider = stripeEnabled || paypalEnabled;
+	const canUseCoins = coinEnabled && walletLoggedIn && coinChargeProvider;
+	const coinMode = payMode === 'coin' && canUseCoins;
 
 	// Local, purchase-free preview: enqueue the effect into the shared screen
 	// effect queue so the real animation plays full-screen for this viewer only.
@@ -141,18 +190,22 @@ export const DonationForm: FC<DonationFormProps> = ({
 	// plain superchats and the item type selector does not apply to them.
 	// (Ko-fi effects instead use message commands, hinted at in its panel.)
 	const isExternalProvider = paymentMethod === 'doneru' || paymentMethod === 'kofi';
-	const isEffectPurchase = itemType === 'effect' && !isExternalProvider;
+	// Coin top-ups are a plain amount charge (no effect); they route only through
+	// the fiat providers wired to the unified create endpoint (Stripe / PayPal).
+	const isEffectPurchase = !coinMode && itemType === 'effect' && !isExternalProvider;
 
 	// Screen effects can be bought through the fiat providers (fixed price) or
 	// with crypto (the server verifies the on-chain amount against the JPY
 	// price), so the item type selector needs at least one such provider.
 	const hasEffectProvider = paypayEnabled || paypalEnabled || stripeEnabled || metamaskEnabled;
 
-	// Purchase descriptor sent with payment creation requests.
-	// Superchats never send an effectType.
-	const purchaseItem: PurchaseItem = isEffectPurchase
-		? { itemType: 'effect', effectType }
-		: { itemType: 'superchat' };
+	// Purchase descriptor sent with payment creation requests. Superchats and
+	// coin top-ups never send an effectType.
+	const purchaseItem: PurchaseItem = coinMode
+		? { itemType: 'coin' }
+		: isEffectPurchase
+			? { itemType: 'effect', effectType }
+			: { itemType: 'superchat' };
 
 	// Metamask specific state
 	const [metamaskConfig, setMetamaskConfig] = useState<MetamaskConfig | null>(null);
@@ -645,10 +698,46 @@ export const DonationForm: FC<DonationFormProps> = ({
 			destroyOnClose
 		>
 			<form onSubmit={handleSubmit} className={styles.form}>
+				{/* Payment mode: direct per-purchase billing vs. topping up the
+				    prepaid coin wallet. Only shown once the wallet confirms the
+				    viewer is signed in and a fiat charge provider is available. */}
+				{canUseCoins && (
+					<div className={styles.section}>
+						<label className={styles.label}>{t('donation.payModeLabel')}</label>
+						<Segmented
+							value={payMode}
+							onChange={val => setPayMode(val as 'direct' | 'coin')}
+							options={[
+								{ label: t('donation.payModeDirect'), value: 'direct' },
+								{ label: t('donation.payModeCoin'), value: 'coin' },
+							]}
+							block
+						/>
+					</div>
+				)}
+
+				{/* Coin balance + bonus banner while topping up. */}
+				{coinMode && (
+					<div className={styles.coinBanner}>
+						<div className={styles.coinBalanceRow}>
+							<span>{t('donation.coinBalance')}</span>
+							<span className={styles.coinBalanceValue}>
+								🪙 {(walletBalance ?? 0).toLocaleString()}
+							</span>
+						</div>
+						{coinBonusPercent > 0 && (
+							<div className={styles.coinBonusNote}>
+								{t('donation.coinBonusNote', { percent: coinBonusPercent })}
+							</div>
+						)}
+					</div>
+				)}
+
 				{/* Item type selection: superchat or screen effect. External
 				    services (Doneru / Ko-fi) only support plain superchats;
-				    effects can be bought through fiat providers or with crypto. */}
-				{!isExternalProvider && hasEffectProvider && (
+				    effects can be bought through fiat providers or with crypto.
+				    Hidden while topping up coins (a coin charge is a plain amount). */}
+				{!coinMode && !isExternalProvider && hasEffectProvider && (
 					<div className={styles.section}>
 						<label className={styles.label}>{t('donation.itemTypeLabel')}</label>
 						<div className={styles.itemTypeToggle}>
@@ -744,7 +833,7 @@ export const DonationForm: FC<DonationFormProps> = ({
 							onChange={e => setPaymentMethod(e.target.value)}
 							className={styles.paymentMethodGroup}
 						>
-							{paypayEnabled && (
+							{!coinMode && paypayEnabled && (
 								<Radio.Button value="paypay">
 									<QrcodeOutlined /> PayPay
 								</Radio.Button>
@@ -759,17 +848,17 @@ export const DonationForm: FC<DonationFormProps> = ({
 									<DollarCircleOutlined /> Stripe
 								</Radio.Button>
 							)}
-							{metamaskEnabled && (
+							{!coinMode && metamaskEnabled && (
 								<Radio.Button value="metamask">
 									<GoldOutlined /> {t('donation.crypto')}
 								</Radio.Button>
 							)}
-							{kofiEnabled && kofiConfig && (
+							{!coinMode && kofiEnabled && kofiConfig && (
 								<Radio.Button value="kofi">
 									<GiftOutlined /> {kofiConfig.displayName || 'Ko-fi'}
 								</Radio.Button>
 							)}
-							{doneruEnabled && doneruConfig && (
+							{!coinMode && doneruEnabled && doneruConfig && (
 								<Radio.Button value="doneru">
 									<LinkOutlined /> {doneruConfig.displayName || 'Doneru'}
 								</Radio.Button>
@@ -1668,7 +1757,9 @@ export const DonationForm: FC<DonationFormProps> = ({
 							icon={<WalletOutlined />}
 							style={{ backgroundColor: '#0070ba', borderColor: '#0070ba' }}
 						>
-							{t('donation.payWith', { provider: 'PayPal' })}
+							{coinMode
+								? t('donation.coinChargeButton')
+								: t('donation.payWith', { provider: 'PayPal' })}
 						</Button>
 					)}
 					{stripeEnabled && paymentMethod === 'stripe' && (
@@ -1679,7 +1770,9 @@ export const DonationForm: FC<DonationFormProps> = ({
 							icon={<WalletOutlined />}
 							style={{ backgroundColor: '#635BFF', borderColor: '#635BFF' }}
 						>
-							{t('donation.payWith', { provider: 'Stripe' })}
+							{coinMode
+								? t('donation.coinChargeButton')
+								: t('donation.payWith', { provider: 'Stripe' })}
 						</Button>
 					)}
 					{metamaskEnabled && paymentMethod === 'metamask' && (

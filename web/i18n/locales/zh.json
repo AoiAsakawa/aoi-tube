@@ -282,7 +282,13 @@
 		"feeLabel": "手续费：",
 		"fromLabel": "发送地址：",
 		"previewEffect": "预览特效",
-		"previewLabel": "预览"
+		"previewLabel": "预览",
+		"payModeLabel": "支付方式",
+		"payModeDirect": "直接付款",
+		"payModeCoin": "金币",
+		"coinBalance": "金币余额",
+		"coinBonusNote": "现在充值可获得 +{{percent}}% 奖励",
+		"coinChargeButton": "充值"
 	},
 	"screenEffects": {
 		"confetti": "彩纸",

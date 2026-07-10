@@ -83,6 +83,8 @@ export const DONATIONS_RECENT = `${NEXT_PUBLIC_API_HOST}api/donations/recent`;
 export const SUPPORTERS = `${NEXT_PUBLIC_API_HOST}api/supporters`;
 // The authenticated viewer's own purchase history; requires ?accessToken=.
 export const DONATIONS_MINE = `${NEXT_PUBLIC_API_HOST}api/donations/mine`;
+// The authenticated viewer's prepaid coin wallet (balance + ledger); requires ?accessToken=.
+export const WALLET = `${NEXT_PUBLIC_API_HOST}api/wallet`;
 export const DONATION_EXTERNAL_CREATE = `${NEXT_PUBLIC_API_HOST}api/integrations/donations/create`;
 
 // PayPay integration
