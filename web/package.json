@@ -32,6 +32,7 @@
 		"@codemirror/language-data": "^6.5.1",
 		"@fontsource-variable/inter": "^5.2.8",
 		"@fontsource/poppins": "^5.2.7",
+		"@metamask/connect-solana": "^2.1.1",
 		"@noble/hashes": "^2.0.1",
 		"@scure/base": "^2.0.0",
 		"@scure/bip32": "^2.0.1",

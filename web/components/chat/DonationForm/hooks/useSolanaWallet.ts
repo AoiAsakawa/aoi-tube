@@ -1,7 +1,8 @@
 // Solana wallet state and actions for the donation form: connection via
-// Phantom / Trust Wallet / MetaMask Snap, balance lookup and SOL / SPL token
-// transfers built with @solana/web3.js.
-import { useState } from 'react';
+// Phantom / Trust Wallet / MetaMask (native, Wallet Standard) with the legacy
+// Solflare Snap as a last resort, balance lookup, and SOL / SPL token transfers
+// built with @solana/web3.js.
+import { useRef, useState } from 'react';
 import { message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { base58 } from '@scure/base';
@@ -14,6 +15,12 @@ import {
 	SOLANA_TOKEN_PROGRAM_ID,
 } from '../constants';
 import { MetamaskConfig, TokenOption } from '../types';
+import {
+	connectMetaMaskSolana,
+	signAndSendWithMetaMask,
+	supportsLegacyTransactions,
+	type MetaMaskSolanaSession,
+} from '../solanaWalletStandard';
 import { describeWalletError, isTrustWalletConnected } from '../walletUtils';
 
 interface UseSolanaWalletArgs {
@@ -25,9 +32,12 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 	const { t } = useTranslation();
 
 	// Solana specific state
-	const [solanaAddress, setSolanaAddress] = useState<string>(''); // User's Solana address from Snap
+	const [solanaAddress, setSolanaAddress] = useState<string>(''); // Connected Solana address
 	const [solanaBalance, setSolanaBalance] = useState<number | null>(null); // Solana balance in lamports
 	const [isLoadingSolBalance, setIsLoadingSolBalance] = useState<boolean>(false);
+	// Set when the viewer connected through MetaMask's native (Wallet Standard)
+	// Solana account, so the send path signs with the same wallet it connected to.
+	const metaMaskSession = useRef<MetaMaskSolanaSession | null>(null);
 
 	// Connect to Solana Snap and get user's address
 	// Note: Solflare Snap has origin restrictions and may not work on all domains
@@ -183,7 +193,25 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 			}
 		}
 
-		// Priority 4: MetaMask Snap (may have origin restrictions)
+		// Priority 4: MetaMask's native Solana account (Wallet Standard). This is
+		// the supported path for MetaMask; the Solflare snap below only works on
+		// origins that snap has allowlisted.
+		if (window.ethereum) {
+			try {
+				const session = await connectMetaMaskSolana();
+				if (supportsLegacyTransactions(session.wallet)) {
+					metaMaskSession.current = session;
+					const address = session.account.address;
+					fetchSolanaBalance(address);
+					return address;
+				}
+			} catch (error) {
+				// Older MetaMask without native Solana: fall through to the snap.
+				console.warn('MetaMask native Solana unavailable:', describeWalletError(error));
+			}
+		}
+
+		// Priority 5: Solflare Solana Snap (origin-restricted; legacy fallback).
 		return connectSolanaSnap();
 	};
 
@@ -317,13 +345,28 @@ export const useSolanaWallet = ({ metamaskConfig, cryptoAmount }: UseSolanaWalle
 			transaction.recentBlockhash = blockhash;
 			transaction.feePayer = fromPubkey;
 
+			let signature: string;
+
 			// Sign and send with the same provider priority as connectSolana()
 			const provider = window.solana?.isPhantom
 				? window.solana
 				: window.trustwallet?.solana || window.solana;
 
-			let signature: string;
-			if (provider?.signAndSendTransaction) {
+			if (metaMaskSession.current) {
+				// MetaMask (native, Wallet Standard): it signs the serialized
+				// transaction, which carries no signatures yet, so serializing must
+				// not require them. The wallet returns raw signature bytes, which
+				// signAndSendWithMetaMask encodes to the base58 string the server
+				// verifies on-chain.
+				const serialized = transaction.serialize({
+					requireAllSignatures: false,
+					verifySignatures: false,
+				});
+				signature = await signAndSendWithMetaMask(
+					metaMaskSession.current,
+					new Uint8Array(serialized),
+				);
+			} else if (provider?.signAndSendTransaction) {
 				const result = (await provider.signAndSendTransaction(transaction)) as {
 					signature: string;
 				};
