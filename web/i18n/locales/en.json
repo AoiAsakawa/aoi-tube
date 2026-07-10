@@ -1309,7 +1309,8 @@
 					"moderatorGranted": "Moderator privileges granted.",
 					"moderatorRevoked": "Moderator privileges removed.",
 					"moderatorFailed": "Failed to change moderator status."
-				}
+				},
+				"coinBalance": "Coin balance"
 			},
 			"viewerInfo": {
 				"title": "Viewer Info",

@@ -1309,7 +1309,8 @@
 					"moderatorGranted": "已授予版主權限。",
 					"moderatorRevoked": "已解除版主權限。",
 					"moderatorFailed": "變更版主狀態失敗。"
-				}
+				},
+				"coinBalance": "金幣餘額"
 			},
 			"viewerInfo": {
 				"title": "觀眾資訊",

@@ -1309,7 +1309,8 @@
 					"moderatorGranted": "모더레이터 권한을 부여했습니다.",
 					"moderatorRevoked": "모더레이터 권한을 해제했습니다.",
 					"moderatorFailed": "모더레이터 상태 변경에 실패했습니다."
-				}
+				},
+				"coinBalance": "코인 잔액"
 			},
 			"viewerInfo": {
 				"title": "시청자 정보",

@@ -1309,7 +1309,8 @@
 					"moderatorGranted": "モデレーター権限を付与しました。",
 					"moderatorRevoked": "モデレーター権限を解除しました。",
 					"moderatorFailed": "モデレーター状態の変更に失敗しました。"
-				}
+				},
+				"coinBalance": "コイン残高"
 			},
 			"viewerInfo": {
 				"title": "視聴者情報",

@@ -39,6 +39,7 @@ import {
 	USER_AUTH_REACTIVATE,
 	USER_MERGE,
 	USER_SET_MODERATOR,
+	ADMIN_WALLET_USER,
 	fetchData,
 } from '../../../utils/apis';
 
@@ -107,6 +108,8 @@ export default function UserDataManagement() {
 	const [auditUser, setAuditUser] = useState<User | null>(null);
 	const [auditEvents, setAuditEvents] = useState<AuthEvent[]>([]);
 	const [auditLoading, setAuditLoading] = useState(false);
+	// Coin balance of the user whose detail modal is open (null = not loaded).
+	const [coinBalance, setCoinBalance] = useState<number | null>(null);
 	const [mergeSource, setMergeSource] = useState<User | null>(null);
 	const [mergeTargetId, setMergeTargetId] = useState<string>('');
 	const [reactivating, setReactivating] = useState<string | null>(null);
@@ -240,7 +243,12 @@ export default function UserDataManagement() {
 	const openAuditLog = async (user: User) => {
 		setAuditUser(user);
 		setAuditEvents([]);
+		setCoinBalance(null);
 		setAuditLoading(true);
+		// Coin balance loads alongside the audit log (best-effort; coins may be off).
+		fetchData(`${ADMIN_WALLET_USER}?userId=${encodeURIComponent(user.id)}`)
+			.then(res => setCoinBalance(Number(res?.balance) || 0))
+			.catch(() => setCoinBalance(null));
 		try {
 			const result = await fetchData(`${USER_AUTH_EVENTS}?userId=${encodeURIComponent(user.id)}`);
 			setAuditEvents(result?.events || []);
@@ -624,6 +632,12 @@ export default function UserDataManagement() {
 				footer={null}
 				width={640}
 			>
+				{coinBalance !== null && (
+					<div style={{ marginBottom: 12, fontSize: 14 }}>
+						{t('admin.pages.userData.coinBalance')}:{' '}
+						<strong>🪙 {coinBalance.toLocaleString()}</strong>
+					</div>
+				)}
 				<Table
 					dataSource={auditEvents}
 					rowKey="id"
