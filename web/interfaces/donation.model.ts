@@ -190,6 +190,16 @@ export interface DonationStats {
 	// stored conversion are not included. Optional so responses from older
 	// servers still parse.
 	cryptoFiatTotal?: number;
+	// Every purchase rolled up into the base currency: base-currency purchases
+	// at face value, crypto at its confirmation-time conversion. This is what the
+	// dashboard headlines so revenue reads as one figure. Optional so responses
+	// from older servers still parse.
+	baseTotal?: number;
+	baseThisMonth?: number;
+	baseLastMonth?: number;
+	// Number of non-base purchases whose rate could not be captured at
+	// confirmation time, so they are absent from the base-currency totals.
+	unconvertedCryptoCount?: number;
 }
 
 /**

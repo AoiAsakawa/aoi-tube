@@ -953,6 +953,8 @@
 					"purchaseCount": "Total Purchases",
 					"countSuffix": "",
 					"average": "Average Purchase",
+					"faceValue": "Face value by currency",
+					"unconvertedNote": "{{count}} crypto purchase(s) had no rate at confirmation and are excluded from the converted totals",
 					"uniquePurchasers": "Unique Purchasers",
 					"peopleSuffix": "",
 					"excludingAnonymous": "Excluding anonymous purchases"

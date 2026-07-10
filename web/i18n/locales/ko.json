@@ -953,6 +953,8 @@
 					"purchaseCount": "총 구매 수",
 					"countSuffix": "건",
 					"average": "평균 구매액",
+					"faceValue": "통화별 액면가",
+					"unconvertedNote": "{{count}}건의 암호화폐는 확정 시점 환율을 가져오지 못해 환산 합계에서 제외되었습니다",
 					"uniquePurchasers": "고유 구매자",
 					"peopleSuffix": "명",
 					"excludingAnonymous": "익명 구매 제외"

@@ -953,6 +953,8 @@
 					"purchaseCount": "購入総数",
 					"countSuffix": "件",
 					"average": "平均購入額",
+					"faceValue": "額面（通貨別）",
+					"unconvertedNote": "{{count}}件の暗号資産は確定時のレートを取得できず、換算合計に含まれていません",
 					"uniquePurchasers": "ユニーク購入者",
 					"peopleSuffix": "人",
 					"excludingAnonymous": "匿名購入を除く"

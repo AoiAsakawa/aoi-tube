@@ -393,7 +393,10 @@ const GrantAccessModal = ({
 	);
 };
 
-// Secondary currencies shown as small lines under a Statistic value.
+// Per-currency face-value breakdown shown as small lines under a Statistic
+// value. The Statistic itself shows the base-currency roll-up; these lines
+// spell out the untouched amount actually taken in each currency, so an
+// operator can still reconcile against a provider dashboard.
 const CurrencySubLines = ({
 	stats,
 	field,
@@ -401,13 +404,15 @@ const CurrencySubLines = ({
 	stats: DonationStats | null;
 	field: 'total' | 'thisMonth' | 'average';
 }) => {
-	const others = stats?.currencies.slice(1) ?? [];
-	if (others.length === 0) {
+	const { t } = useTranslation();
+	const rows = (stats?.currencies ?? []).filter(c => c[field] > 0);
+	if (rows.length === 0) {
 		return null;
 	}
 	return (
 		<div style={{ marginTop: 8, fontSize: 12, color: 'var(--color-panel-text-muted)' }}>
-			{others.map(c => (
+			<div style={{ opacity: 0.7 }}>{t('admin.pages.donations.stats.faceValue')}</div>
+			{rows.map(c => (
 				<div key={c.currency}>
 					{c.currency}: {formatDonationAmount(c[field], c.currency)}
 				</div>
@@ -612,15 +617,18 @@ export default function DonationsPage() {
 		});
 	};
 
-	// Headline aggregates come from the main currency (currencies[0], the one
-	// with the most purchases — normally JPY). Other currencies are shown as
-	// small secondary lines on each card.
-	const mainCurrency = stats?.currencies[0] ?? null;
+	// Headline figures are the base-currency roll-up (native purchases at face
+	// value + crypto at its confirmation-time conversion), so revenue reads as one
+	// number instead of a per-currency pile. The raw per-currency breakdown is
+	// shown separately below as face-value detail.
+	const headlineCurrency = stats?.baseCurrency ?? 'JPY';
 	const purchaseCount = stats?.currencies.reduce((sum, c) => sum + c.count, 0) ?? 0;
+	const baseThisMonth = stats?.baseThisMonth ?? 0;
+	const baseLastMonth = stats?.baseLastMonth ?? 0;
+	const baseTotal = stats?.baseTotal ?? 0;
+	const baseAverage = purchaseCount > 0 ? Math.round(baseTotal / purchaseCount) : 0;
 	const momPercent =
-		mainCurrency && mainCurrency.lastMonth > 0
-			? ((mainCurrency.thisMonth - mainCurrency.lastMonth) / mainCurrency.lastMonth) * 100
-			: null;
+		baseLastMonth > 0 ? ((baseThisMonth - baseLastMonth) / baseLastMonth) * 100 : null;
 
 	// Daily revenue chart: the last 30 days zero-filled per currency, with the
 	// raw stored totals kept aside so tooltips can reuse formatDonationAmount.
@@ -957,10 +965,7 @@ export default function DonationsPage() {
 					>
 						<Statistic
 							title={t('admin.pages.donations.stats.thisMonth')}
-							value={formatDonationAmount(
-								mainCurrency?.thisMonth ?? 0,
-								mainCurrency?.currency ?? 'JPY',
-							)}
+							value={formatDonationAmount(baseThisMonth, headlineCurrency)}
 							prefix={<CalendarOutlined />}
 							valueStyle={{ fontWeight: 600 }}
 						/>
@@ -988,12 +993,16 @@ export default function DonationsPage() {
 					<Card loading={statsLoading}>
 						<Statistic
 							title={t('admin.pages.donations.stats.total')}
-							value={formatDonationAmount(
-								mainCurrency?.total ?? 0,
-								mainCurrency?.currency ?? 'JPY',
-							)}
+							value={formatDonationAmount(baseTotal, headlineCurrency)}
 							prefix={<DollarCircleOutlined style={{ color: '#faad14' }} />}
 						/>
+						{(stats?.unconvertedCryptoCount ?? 0) > 0 && (
+							<div style={{ marginTop: 8, fontSize: 12, color: '#faad14' }}>
+								{t('admin.pages.donations.stats.unconvertedNote', {
+									count: stats?.unconvertedCryptoCount ?? 0,
+								})}
+							</div>
+						)}
 						<CurrencySubLines stats={stats} field="total" />
 					</Card>
 				</Col>
@@ -1031,10 +1040,7 @@ export default function DonationsPage() {
 					<Card loading={statsLoading}>
 						<Statistic
 							title={t('admin.pages.donations.stats.average')}
-							value={formatDonationAmount(
-								mainCurrency?.average ?? 0,
-								mainCurrency?.currency ?? 'JPY',
-							)}
+							value={formatDonationAmount(baseAverage, headlineCurrency)}
 							prefix={<BarChartOutlined style={{ color: '#2dd4bf' }} />}
 						/>
 						<CurrencySubLines stats={stats} field="average" />

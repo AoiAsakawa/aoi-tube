@@ -953,6 +953,8 @@
 					"purchaseCount": "购买总数",
 					"countSuffix": "条",
 					"average": "平均购买额",
+					"faceValue": "各币种面值",
+					"unconvertedNote": "有 {{count}} 笔加密货币在确认时无法获取汇率，未计入换算合计",
 					"uniquePurchasers": "独立购买者",
 					"peopleSuffix": "人",
 					"excludingAnonymous": "不含匿名购买"

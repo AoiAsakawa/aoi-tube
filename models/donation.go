@@ -186,6 +186,19 @@ type DonationStats struct {
 	// at their confirmation time (purchases recorded under a different base
 	// currency or without a conversion are not included).
 	CryptoFiatTotal int64 `json:"cryptoFiatTotal"`
+	// BaseTotal / BaseThisMonth / BaseLastMonth are every purchase rolled up into
+	// the base currency: a purchase made in the base currency contributes its face
+	// amount, a crypto purchase contributes its confirmation-time conversion
+	// (amount_jpy). This is the single figure the dashboard headlines, so revenue
+	// reads as one number instead of a pile of per-currency totals.
+	BaseTotal     int64 `json:"baseTotal"`
+	BaseThisMonth int64 `json:"baseThisMonth"`
+	BaseLastMonth int64 `json:"baseLastMonth"`
+	// UnconvertedCryptoCount is the number of non-base purchases whose rate could
+	// not be captured at confirmation time (amount_jpy = 0), so they are absent
+	// from the base-currency totals. Surfaced so the operator isn't misled into
+	// thinking that revenue is zero.
+	UnconvertedCryptoCount int64 `json:"unconvertedCryptoCount"`
 }
 
 // FormatAmount returns the formatted amount string based on currency.

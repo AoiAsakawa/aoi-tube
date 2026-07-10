@@ -650,6 +650,38 @@ func GetDonationStats() (*models.DonationStats, error) {
 		return nil, err
 	}
 
+	// Everything rolled up into the base currency: a base-currency purchase counts
+	// its face amount, a crypto purchase its confirmation-time conversion. Excludes
+	// coin-funded spends (already booked as revenue at charge time).
+	base := stats.BaseCurrency
+	baseValue := `CASE
+		WHEN currency = ? THEN amount
+		WHEN amount_jpy > 0 AND (fiat_currency = ? OR ((fiat_currency IS NULL OR fiat_currency = '') AND ? = 'JPY'))
+			THEN amount_jpy
+		ELSE 0 END`
+	if err := database.QueryRow(`
+		SELECT
+			COALESCE(SUM(`+baseValue+`), 0),
+			COALESCE(SUM(CASE WHEN created_at >= ? THEN `+baseValue+` ELSE 0 END), 0),
+			COALESCE(SUM(CASE WHEN created_at >= ? AND created_at < ? THEN `+baseValue+` ELSE 0 END), 0)
+		FROM donations WHERE `+notTestNotCoinFunded,
+		base, base, base, // total
+		startOfMonth, base, base, base, // this month
+		startOfLastMonth, startOfMonth, base, base, base, // last month
+	).Scan(&stats.BaseTotal, &stats.BaseThisMonth, &stats.BaseLastMonth); err != nil {
+		return nil, err
+	}
+
+	// Non-base purchases whose rate couldn't be captured at confirmation time, so
+	// they contribute nothing to the totals above.
+	if err := database.QueryRow(
+		`SELECT COUNT(*) FROM donations
+		 WHERE `+notTestNotCoinFunded+` AND currency != ? AND (amount_jpy IS NULL OR amount_jpy = 0)`,
+		base,
+	).Scan(&stats.UnconvertedCryptoCount); err != nil {
+		return nil, err
+	}
+
 	return stats, nil
 }
 
