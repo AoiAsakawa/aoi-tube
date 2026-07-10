@@ -15,8 +15,15 @@ export const SOLANA_ATA_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8k
 // Mempool.space API endpoint
 export const MEMPOOL_API = 'https://mempool.space/api';
 
-// Solana RPC endpoint
-export const SOLANA_RPC = 'https://api.mainnet-beta.solana.com';
+// Solana RPC endpoint — always the same-origin proxy, never the chain directly.
+// Solana's public node answers browser-origin requests with HTTP 403 ("Access
+// forbidden"), and a private node's URL carries an API key that must stay
+// server-side. The server forwards only the JSON-RPC methods this form needs
+// (see controllers/solanaRPC.go). @solana/web3.js requires an absolute URL.
+export const SOLANA_RPC =
+	typeof window === 'undefined'
+		? 'http://localhost/api/solana/rpc'
+		: `${window.location.origin}/api/solana/rpc`;
 
 // Safety margin added on top of a screen effect's JPY price when it is paid
 // in crypto. The server verifies the on-chain amount converts to at least 95%

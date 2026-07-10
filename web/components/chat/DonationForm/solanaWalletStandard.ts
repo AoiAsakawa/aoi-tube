@@ -48,7 +48,8 @@ export const connectMetaMaskSolana = async (): Promise<MetaMaskSolanaSession> =>
 	const { createSolanaClient } = await import('@metamask/connect-solana');
 	const client = await createSolanaClient({
 		dapp: { name: 'AoiTube', url: window.location.origin },
-		api: { supportedNetworks: { mainnet: 'https://api.mainnet-beta.solana.com' } },
+		// Point at the same-origin proxy: the public node 403s browser requests.
+		api: { supportedNetworks: { mainnet: `${window.location.origin}/api/solana/rpc` } },
 	});
 
 	const wallet = client.getWallet();

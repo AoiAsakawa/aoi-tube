@@ -556,7 +556,9 @@
 				"walletCardTitle": "Wallet settings",
 				"solAddressLabel": "Solana receiving address (optional)",
 				"solAddressDescription": "To receive super chats in SOL or SPL tokens (USDC / USDT), enter a Solana account (base58). An EVM 0x address cannot be used. MetaMask sends via the Solana Snap.",
-				"solAddressInvalid": "Not a valid Solana address (base58, 32-44 characters)"
+				"solAddressInvalid": "Not a valid Solana address (base58, 32-44 characters)",
+				"solRpcLabel": "Solana RPC URL (optional)",
+				"solRpcDescription": "Solana's public node (api.mainnet-beta.solana.com) is heavily rate limited and refuses browser requests outright. For reliable operation set a dedicated RPC (Helius, QuickNode, ...). A URL with an API key is safe: it never reaches the browser — requests are proxied through the server. Leave empty to use the public node."
 			},
 			"notify": {
 				"createButton": "Create",

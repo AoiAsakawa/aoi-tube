@@ -429,6 +429,9 @@ func Start() error {
 	// Metamask public endpoints
 	http.HandleFunc("/api/metamask/status", controllers.GetMetamaskStatus)
 	http.HandleFunc("/api/metamask/confirm", controllers.MetamaskConfirmDonation)
+	// Same-origin Solana JSON-RPC proxy: the public node rejects browser-origin
+	// requests, and a private node's URL carries an API key. Method-allowlisted.
+	http.HandleFunc("/api/solana/rpc", controllers.SolanaRPCProxy)
 
 	// Doneru integration
 	http.HandleFunc("/api/admin/config/doneru", middleware.RequireAdminAuth(admin.GetDoneruConfig))

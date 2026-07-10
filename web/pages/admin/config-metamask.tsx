@@ -25,6 +25,7 @@ interface MetamaskConfig {
 	walletAddress: string;
 	bitcoinAddress?: string;
 	solanaAddress?: string;
+	solanaRpcUrl?: string;
 	networkId: number;
 	networkName: string;
 	chainCurrency: string;
@@ -110,6 +111,7 @@ const DEFAULT_METAMASK_CONFIG: MetamaskConfig = {
 	walletAddress: '',
 	bitcoinAddress: '',
 	solanaAddress: '',
+	solanaRpcUrl: '',
 	networkId: 1,
 	networkName: 'Ethereum Mainnet',
 	chainCurrency: 'ETH',
@@ -412,6 +414,18 @@ const MetamaskConfigPage = () => {
 						value={config.solanaAddress || ''}
 						onChange={e => update({ solanaAddress: e.target.value })}
 						placeholder="9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
+						style={{ marginTop: 8, fontFamily: 'monospace' }}
+					/>
+				</FormField>
+
+				<FormField
+					label={t('admin.config.metamask.solRpcLabel')}
+					description={t('admin.config.metamask.solRpcDescription')}
+				>
+					<Input
+						value={config.solanaRpcUrl || ''}
+						onChange={e => update({ solanaRpcUrl: e.target.value })}
+						placeholder="https://mainnet.helius-rpc.com/?api-key=..."
 						style={{ marginTop: 8, fontFamily: 'monospace' }}
 					/>
 				</FormField>

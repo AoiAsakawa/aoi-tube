@@ -9,6 +9,7 @@ const (
 	metamaskWalletAddressKey  = "metamask_wallet_address"
 	metamaskBitcoinAddressKey = "metamask_bitcoin_address"
 	metamaskSolanaAddressKey  = "metamask_solana_address"
+	metamaskSolanaRPCURLKey   = "metamask_solana_rpc_url"
 	metamaskNetworkIDKey      = "metamask_network_id"
 	metamaskNetworkNameKey    = "metamask_network_name"
 	metamaskChainCurrencyKey  = "metamask_chain_currency"
@@ -26,6 +27,7 @@ func GetMetamaskConfig() models.MetamaskConfig {
 	walletAddress, _ := _datastore.GetString(metamaskWalletAddressKey)
 	bitcoinAddress, _ := _datastore.GetString(metamaskBitcoinAddressKey)
 	solanaAddress, _ := _datastore.GetString(metamaskSolanaAddressKey)
+	solanaRPCURL, _ := _datastore.GetString(metamaskSolanaRPCURLKey)
 	networkID, _ := _datastore.GetNumber(metamaskNetworkIDKey)
 	networkName, _ := _datastore.GetString(metamaskNetworkNameKey)
 	chainCurrency, _ := _datastore.GetString(metamaskChainCurrencyKey)
@@ -57,6 +59,7 @@ func GetMetamaskConfig() models.MetamaskConfig {
 		WalletAddress:  walletAddress,
 		BitcoinAddress: bitcoinAddress,
 		SolanaAddress:  solanaAddress,
+		SolanaRPCURL:   solanaRPCURL,
 		NetworkID:      int64(networkID),
 		NetworkName:    networkName,
 		ChainCurrency:  chainCurrency,
@@ -81,6 +84,9 @@ func SetMetamaskConfig(config models.MetamaskConfig) error {
 		return err
 	}
 	if err := _datastore.SetString(metamaskSolanaAddressKey, config.SolanaAddress); err != nil {
+		return err
+	}
+	if err := _datastore.SetString(metamaskSolanaRPCURLKey, config.SolanaRPCURL); err != nil {
 		return err
 	}
 	if err := _datastore.SetNumber(metamaskNetworkIDKey, float64(config.NetworkID)); err != nil {

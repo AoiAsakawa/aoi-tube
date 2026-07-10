@@ -6,13 +6,25 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aoiasakawa/aoitube/core/data"
 	log "github.com/sirupsen/logrus"
 )
 
-// solanaRPCEndpoint is a keyless public mainnet node used to verify Solana
-// donations on-chain, mirroring the public EVM nodes in metamaskVerify.go.
-// Operators needing higher reliability can front it with their own proxy.
-const solanaRPCEndpoint = "https://api.mainnet-beta.solana.com"
+// defaultSolanaRPCEndpoint is the keyless public mainnet node used when the
+// operator hasn't configured their own. It is heavily rate limited (and refuses
+// browser-origin requests outright, which is why /api/solana/rpc proxies for the
+// donation form), so a busy deployment should set MetamaskConfig.SolanaRPCURL.
+const defaultSolanaRPCEndpoint = "https://api.mainnet-beta.solana.com"
+
+// solanaRPCEndpoint resolves the Solana JSON-RPC node: the operator's configured
+// one, else the public fallback. Shared by on-chain verification and the proxy so
+// both observe the same chain view.
+func solanaRPCEndpoint() string {
+	if url := strings.TrimSpace(data.GetMetamaskConfig().SolanaRPCURL); url != "" {
+		return url
+	}
+	return defaultSolanaRPCEndpoint
+}
 
 // solanaSPLMints allowlists the SPL token mints the server can price, keyed by
 // mint address with the AUTHORITATIVE symbol as the value.
@@ -122,7 +134,7 @@ func solanaGetTransaction(signature string) (*solanaTxResult, error) {
 	// ethRPCCall is a plain JSON-RPC 2.0 POST helper (nothing EVM-specific) and
 	// already treats a null result as "not found", which is what an unfinalized
 	// signature returns.
-	if err := ethRPCCall(solanaRPCEndpoint, "getTransaction", params, &out); err != nil {
+	if err := ethRPCCall(solanaRPCEndpoint(), "getTransaction", params, &out); err != nil {
 		return nil, err
 	}
 	if out.Meta == nil {

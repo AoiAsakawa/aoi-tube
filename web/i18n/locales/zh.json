@@ -556,7 +556,9 @@
 				"walletCardTitle": "钱包设置",
 				"solAddressLabel": "Solana 收款钱包地址（可选）",
 				"solAddressDescription": "若要以 SOL 或 SPL 代币（USDC / USDT）接收超级留言，请输入 Solana 账户（base58）。不能使用 EVM 的 0x 地址。MetaMask 通过 Solana Snap 转账。",
-				"solAddressInvalid": "不是有效的 Solana 地址（base58，32〜44 个字符）"
+				"solAddressInvalid": "不是有效的 Solana 地址（base58，32〜44 个字符）",
+				"solRpcLabel": "Solana RPC URL（可选）",
+				"solRpcDescription": "Solana 公共节点（api.mainnet-beta.solana.com）限流严格，且直接拒绝浏览器请求。为稳定运行请设置专用 RPC（Helius、QuickNode 等）。带 API 密钥的 URL 也安全：它不会传给浏览器，请求经服务器中转。留空则使用公共节点。"
 			},
 			"notify": {
 				"createButton": "创建",

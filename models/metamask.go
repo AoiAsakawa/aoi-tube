@@ -9,6 +9,13 @@ type MetamaskConfig struct {
 	// SPL-token donations are paid to. It cannot share WalletAddress: that is an
 	// EVM 0x address, which is not a valid Solana pubkey.
 	SolanaAddress string `json:"solanaAddress,omitempty"`
+	// SolanaRPCURL overrides the Solana JSON-RPC node. The public
+	// api.mainnet-beta.solana.com is heavily rate limited and refuses browser
+	// requests outright, so a production deployment should point this at its own
+	// provider (Helius, QuickNode, Alchemy, ...). Empty falls back to the public
+	// node. The browser never talks to it directly — requests are proxied through
+	// /api/solana/rpc, so a URL containing an API key stays server-side.
+	SolanaRPCURL string `json:"solanaRpcUrl,omitempty"`
 	NetworkID     int64  `json:"networkId"`     // 1 = Mainnet, 11155111 = Sepolia, 137 = Polygon
 	NetworkName   string `json:"networkName"`   // Display name
 	ChainCurrency string `json:"chainCurrency"` // ETH, MATIC, BNB, etc.

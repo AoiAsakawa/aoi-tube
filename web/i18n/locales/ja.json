@@ -556,7 +556,9 @@
 				"walletCardTitle": "ウォレット設定",
 				"solAddressLabel": "Solana受取ウォレットアドレス（任意）",
 				"solAddressDescription": "SOLおよびSPLトークン（USDC / USDT）でスーパーチャットを受け取る場合は、Solanaアカウント（base58）を入力してください。EVMの0xアドレスは使えません。MetaMaskはSolana Snapで送金に対応します。",
-				"solAddressInvalid": "有効なSolanaアドレス形式ではありません（base58の32〜44文字）"
+				"solAddressInvalid": "有効なSolanaアドレス形式ではありません（base58の32〜44文字）",
+				"solRpcLabel": "Solana RPC URL（任意）",
+				"solRpcDescription": "Solanaの公開ノード（api.mainnet-beta.solana.com）はレート制限が厳しく、ブラウザからの直接アクセスも拒否します。安定運用にはHelius・QuickNode等の専用RPCを設定してください。APIキー付きURLでも安全です（ブラウザには渡さず、サーバー経由で中継します）。空欄なら公開ノードを使います。"
 			},
 			"notify": {
 				"createButton": "作成",

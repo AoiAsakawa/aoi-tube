@@ -556,7 +556,9 @@
 				"walletCardTitle": "지갑 설정",
 				"solAddressLabel": "Solana 수령 지갑 주소(선택)",
 				"solAddressDescription": "SOL 또는 SPL 토큰(USDC / USDT)으로 슈퍼챗을 받으려면 Solana 계정(base58)을 입력하세요. EVM의 0x 주소는 사용할 수 없습니다. MetaMask는 Solana Snap으로 송금합니다.",
-				"solAddressInvalid": "유효한 Solana 주소 형식이 아닙니다(base58, 32~44자)"
+				"solAddressInvalid": "유효한 Solana 주소 형식이 아닙니다(base58, 32~44자)",
+				"solRpcLabel": "Solana RPC URL(선택)",
+				"solRpcDescription": "Solana 공개 노드(api.mainnet-beta.solana.com)는 요청 제한이 심하고 브라우저 요청을 아예 거부합니다. 안정적인 운영을 위해 전용 RPC(Helius, QuickNode 등)를 설정하세요. API 키가 포함된 URL도 안전합니다: 브라우저에 전달되지 않고 서버가 중계합니다. 비워 두면 공개 노드를 사용합니다."
 			},
 			"notify": {
 				"createButton": "만들기",
