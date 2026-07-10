@@ -59,13 +59,19 @@ func CreateDonationsTable(database *sql.DB) {
 	MustExec(`CREATE INDEX IF NOT EXISTS idx_donations_archive_entitlement ON donations (user_id, archive_id);`, database)
 }
 
-// notTestNotCoinFunded is the WHERE fragment for revenue aggregation: excludes
-// test-mode rows and coin-funded spends (payment_provider "coin"). Coin spends
-// draw down a balance whose top-up was already counted as revenue, so counting
-// the spend too would double-count. Coin CHARGES keep their real provider and
-// stay included.
-const notTestNotCoinFunded = `(is_test IS NULL OR is_test = FALSE)
-	AND (payment_provider IS NULL OR payment_provider != 'coin')`
+// revenueRows is the WHERE fragment for revenue aggregation. It excludes:
+//   - test-mode rows;
+//   - coin-funded spends (payment_provider "coin"): they draw down a balance
+//     whose top-up was already counted as revenue at charge time, so counting
+//     the spend too would double-count (coin CHARGES keep their real provider
+//     and stay included);
+//   - zero-amount rows: a free entitlement grant (e.g. an operator granting
+//     archive access) is recorded as a ¥0 purchase, but it is not a sale, so it
+//     must not inflate the purchase count, drag the average down, or appear as a
+//     ¥0 provider line. Manual revenue entries always require amount > 0.
+const revenueRows = `(is_test IS NULL OR is_test = FALSE)
+	AND (payment_provider IS NULL OR payment_provider != 'coin')
+	AND amount > 0`
 
 // AddDonation will add a new donation to the database. Uses raw SQL (rather
 // than the sqlc-generated query) so the columns that postdate the generated
@@ -448,7 +454,7 @@ func GetDonationTotal(currency string) (int64, error) {
 	var total sql.NullInt64
 	err := _datastore.DB.QueryRow(
 		`SELECT COALESCE(SUM(amount), 0) FROM donations
-		 WHERE currency = ? AND `+notTestNotCoinFunded,
+		 WHERE currency = ? AND `+revenueRows,
 		currency,
 	).Scan(&total)
 	return total.Int64, err
@@ -495,7 +501,7 @@ func GetMonthlyDonationTotal(currency string) (int64, error) {
 	var total int64
 	err := _datastore.DB.QueryRow(
 		`SELECT COALESCE(SUM(amount), 0) FROM donations
-		 WHERE currency = ? AND `+notTestNotCoinFunded+`
+		 WHERE currency = ? AND `+revenueRows+`
 		   AND created_at >= ? AND created_at < ?`,
 		currency, startOfMonth, endOfMonth,
 	).Scan(&total)
@@ -542,7 +548,7 @@ func GetDonationStats() (*models.DonationStats, error) {
 			COALESCE(SUM(CASE WHEN created_at >= ? THEN amount ELSE 0 END), 0),
 			COALESCE(SUM(CASE WHEN created_at >= ? AND created_at < ? THEN amount ELSE 0 END), 0),
 			COUNT(*)
-		FROM donations WHERE `+notTestNotCoinFunded+`
+		FROM donations WHERE `+revenueRows+`
 		GROUP BY currency ORDER BY COUNT(*) DESC`,
 		startOfMonth, startOfLastMonth, startOfMonth)
 	if err != nil {
@@ -566,7 +572,7 @@ func GetDonationStats() (*models.DonationStats, error) {
 	providerRows, err := database.Query(`
 		SELECT COALESCE(NULLIF(payment_provider, ''), 'manual'), currency,
 			COALESCE(SUM(amount), 0), COUNT(*)
-		FROM donations WHERE ` + notTestNotCoinFunded + `
+		FROM donations WHERE ` + revenueRows + `
 		GROUP BY 1, 2 ORDER BY COUNT(*) DESC`)
 	if err != nil {
 		return nil, err
@@ -585,7 +591,7 @@ func GetDonationStats() (*models.DonationStats, error) {
 
 	itemRows, err := database.Query(`
 		SELECT COALESCE(NULLIF(item_type, ''), 'superchat'), COALESCE(effect_type, ''), COUNT(*)
-		FROM donations WHERE ` + notTest + `
+		FROM donations WHERE ` + notTest + ` AND amount > 0
 		GROUP BY 1, 2 ORDER BY COUNT(*) DESC`)
 	if err != nil {
 		return nil, err
@@ -605,7 +611,7 @@ func GetDonationStats() (*models.DonationStats, error) {
 	dailyRows, err := database.Query(`
 		SELECT DATE(created_at), currency, COALESCE(SUM(amount), 0), COUNT(*)
 		FROM donations
-		WHERE created_at >= ? AND `+notTest+`
+		WHERE created_at >= ? AND `+notTest+` AND amount > 0
 		GROUP BY 1, 2 ORDER BY 1 ASC`,
 		now.AddDate(0, 0, -30))
 	if err != nil {
@@ -624,10 +630,10 @@ func GetDonationStats() (*models.DonationStats, error) {
 	}
 
 	// Unique purchaser names, excluding anonymous purchases which all share
-	// a placeholder display name.
+	// a placeholder display name, and free grants (¥0) which are not sales.
 	if err := database.QueryRow(`
 		SELECT COUNT(DISTINCT display_name) FROM donations
-		WHERE is_anonymous = FALSE AND ` + notTest).Scan(&stats.UniquePurchasers); err != nil {
+		WHERE is_anonymous = FALSE AND amount > 0 AND ` + notTest).Scan(&stats.UniquePurchasers); err != nil {
 		return nil, err
 	}
 
@@ -664,7 +670,7 @@ func GetDonationStats() (*models.DonationStats, error) {
 			COALESCE(SUM(`+baseValue+`), 0),
 			COALESCE(SUM(CASE WHEN created_at >= ? THEN `+baseValue+` ELSE 0 END), 0),
 			COALESCE(SUM(CASE WHEN created_at >= ? AND created_at < ? THEN `+baseValue+` ELSE 0 END), 0)
-		FROM donations WHERE `+notTestNotCoinFunded,
+		FROM donations WHERE `+revenueRows,
 		base, base, base, // total
 		startOfMonth, base, base, base, // this month
 		startOfLastMonth, startOfMonth, base, base, base, // last month
@@ -676,7 +682,7 @@ func GetDonationStats() (*models.DonationStats, error) {
 	// they contribute nothing to the totals above.
 	if err := database.QueryRow(
 		`SELECT COUNT(*) FROM donations
-		 WHERE `+notTestNotCoinFunded+` AND currency != ? AND (amount_jpy IS NULL OR amount_jpy = 0)`,
+		 WHERE `+revenueRows+` AND currency != ? AND (amount_jpy IS NULL OR amount_jpy = 0)`,
 		base,
 	).Scan(&stats.UnconvertedCryptoCount); err != nil {
 		return nil, err
