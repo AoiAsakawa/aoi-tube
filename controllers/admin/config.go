@@ -175,6 +175,54 @@ func SetStreamSchedule(w http.ResponseWriter, r *http.Request) {
 	controllers.WriteSimpleResponse(w, true, "changed")
 }
 
+// SetCoinWalletEnabled toggles the prepaid coin wallet feature.
+func SetCoinWalletEnabled(w http.ResponseWriter, r *http.Request) {
+	if !requirePOST(w, r) {
+		return
+	}
+
+	configValue, success := getValueFromRequest(w, r)
+	if !success {
+		return
+	}
+
+	enabled, ok := configValue.Value.(bool)
+	if !ok {
+		controllers.WriteSimpleResponse(w, false, "enabled must be a boolean")
+		return
+	}
+	if err := data.SetCoinWalletEnabled(enabled); err != nil {
+		controllers.WriteSimpleResponse(w, false, err.Error())
+		return
+	}
+
+	controllers.WriteSimpleResponse(w, true, "changed")
+}
+
+// SetCoinChargeBonusPercent sets the bonus percentage granted on a coin charge.
+func SetCoinChargeBonusPercent(w http.ResponseWriter, r *http.Request) {
+	if !requirePOST(w, r) {
+		return
+	}
+
+	configValue, success := getValueFromRequest(w, r)
+	if !success {
+		return
+	}
+
+	percent, ok := configValue.Value.(float64)
+	if !ok {
+		controllers.WriteSimpleResponse(w, false, "percent must be a number")
+		return
+	}
+	if err := data.SetCoinChargeBonusPercent(int(percent)); err != nil {
+		controllers.WriteSimpleResponse(w, false, err.Error())
+		return
+	}
+
+	controllers.WriteSimpleResponse(w, true, "changed")
+}
+
 // SetCustomOfflineMessage will set a message to display when the server is offline.
 func SetCustomOfflineMessage(w http.ResponseWriter, r *http.Request) {
 	if !requirePOST(w, r) {

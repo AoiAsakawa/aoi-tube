@@ -16,6 +16,16 @@ const (
 	// DonationItemArchive is a paid archive (pay-per-view VOD) purchase. The
 	// confirmed row entitles ArchiveID's owner (UserID) to view that archive.
 	DonationItemArchive = "archive"
+	// DonationItemCoin is a prepaid coin top-up: the confirmed row credits the
+	// buyer's (UserID) coin wallet. It is real revenue (money in), so unlike a
+	// coin-funded spend it keeps its real payment provider; the spend that later
+	// draws down the balance carries payment_provider "coin" and is excluded from
+	// revenue to avoid double counting.
+	DonationItemCoin = "coin"
+	// PaymentProviderCoin marks a purchase paid from the coin wallet rather than
+	// an external provider, so revenue aggregation can exclude it (the coins were
+	// already booked as revenue when they were charged).
+	PaymentProviderCoin = "coin"
 )
 
 // ValidEffectTypes are the screen effects that can be purchased, ordered by

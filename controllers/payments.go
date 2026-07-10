@@ -38,6 +38,10 @@ func GetPaymentsStatus(w http.ResponseWriter, r *http.Request) {
 
 	WriteResponse(w, map[string]interface{}{
 		"baseCurrency": data.GetBaseCurrency(),
+		"coin": map[string]interface{}{
+			"enabled":      data.GetCoinWalletEnabled(),
+			"bonusPercent": data.GetCoinChargeBonusPercent(),
+		},
 		"paypay": map[string]interface{}{
 			"enabled": paypayConfig.Enabled,
 		},
@@ -93,6 +97,34 @@ func purchaseDescription(itemType string) string {
 	default:
 		return "Super Chat"
 	}
+}
+
+// creditCoinCharge credits a confirmed coin top-up to the buyer's wallet and is
+// the terminal step for a coin purchase (no chat broadcast or webhook — buying
+// coins is not a viewer-facing event; spending them later is). Coins equal the
+// charge amount in its currency's minor units (1 coin = 1 minor unit), so this
+// is exact when the provider currency matches the base currency (the intended
+// setup); the configured bonus is added on top. Idempotent via the ledger's
+// (provider, payment_id) uniqueness, so it is safe from both the webhook and
+// redirect confirmation paths.
+func creditCoinCharge(donation *models.Donation, provider string) {
+	if donation.UserID == "" {
+		log.Errorf("coin charge %q has no buyer; cannot credit wallet", donation.PaymentID)
+		return
+	}
+	coins := donation.Amount
+	if coins <= 0 {
+		log.Errorf("coin charge %q resolved to %d coins; skipping", donation.PaymentID, coins)
+		return
+	}
+	bonus := data.CoinBonusFor(coins)
+	if err := data.CreditWalletCharge(
+		donation.UserID, coins, bonus, donation.Amount, donation.Currency, provider, donation.PaymentID,
+	); err != nil {
+		log.Errorf("failed to credit coin charge %q: %v", donation.PaymentID, err)
+		return
+	}
+	log.Infof("Coin top-up credited: user=%s coins=%d bonus=%d provider=%s", donation.UserID, coins, bonus, provider)
 }
 
 // broadcastPurchaseDelay postpones the chat/effect broadcast when a purchase
@@ -168,9 +200,29 @@ func normalizePurchaseItem(itemType, effectType string) (string, string, error) 
 		// Archive purchases carry no effect; the archive itself is validated
 		// separately by resolveArchivePurchase (needs the request + archiveID).
 		return models.DonationItemArchive, "", nil
+	case models.DonationItemCoin:
+		// Coin top-ups carry no effect; the buyer is validated separately by
+		// resolveCoinCharge (needs the request for the logged-in user).
+		return models.DonationItemCoin, "", nil
 	default:
 		return "", "", errors.New("invalid item type")
 	}
+}
+
+// resolveCoinCharge validates a coin top-up and returns the authenticated
+// buyer's user ID. Coins are a per-user prepaid balance, so an anonymous or
+// logged-out purchase is refused. The charge amount stays viewer-chosen (unlike
+// the server-priced archive); the provider create paths already clamp it to the
+// per-purchase maximum.
+func resolveCoinCharge(r *http.Request) (userID string, err error) {
+	if !data.GetCoinWalletEnabled() {
+		return "", errors.New("coin top-ups are not available")
+	}
+	user := requestChatUser(r)
+	if user == nil || !user.IsEnabled() {
+		return "", errors.New("you must be logged in to buy coins")
+	}
+	return user.ID, nil
 }
 
 // resolveArchivePurchase validates a paid-archive purchase and returns the
@@ -255,6 +307,17 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 		archivePrice = price
 		archiveCurrency = currency
 		req.Amount = 0
+	}
+
+	// Coin top-up: resolve the logged-in buyer so the confirmed charge credits
+	// their wallet. The amount stays viewer-chosen (clamped by the provider).
+	if itemType == models.DonationItemCoin {
+		uid, cerr := resolveCoinCharge(r)
+		if cerr != nil {
+			WriteSimpleResponse(w, false, cerr.Error())
+			return
+		}
+		buyerUserID = uid
 	}
 
 	switch req.Provider {

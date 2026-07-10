@@ -227,6 +227,9 @@ func Start() error {
 	http.HandleFunc("/api/admin/config/serversummary", middleware.RequireAdminAuth(admin.SetServerSummary))
 	http.HandleFunc("/api/admin/config/streamschedule", middleware.RequireAdminAuth(admin.SetStreamSchedule))
 
+	http.HandleFunc("/api/admin/config/coinwallet/enabled", middleware.RequireAdminAuth(admin.SetCoinWalletEnabled))
+	http.HandleFunc("/api/admin/config/coinwallet/bonuspercent", middleware.RequireAdminAuth(admin.SetCoinChargeBonusPercent))
+
 	// Offline message
 	http.HandleFunc("/api/admin/config/offlinemessage", middleware.RequireAdminAuth(admin.SetCustomOfflineMessage))
 
@@ -385,6 +388,8 @@ func Start() error {
 	http.HandleFunc("/api/donations/mine", controllers.GetMyPurchases)
 	// Public supporter ranking (top spenders by Super Chat + effect total).
 	http.HandleFunc("/api/supporters", controllers.GetTopSupporters)
+	// Logged-in viewer's prepaid coin wallet (balance + ledger).
+	http.HandleFunc("/api/wallet", middleware.RequireUserAccessToken(controllers.GetMyWallet))
 
 	// Base currency (crypto conversion / reporting reference currency)
 	http.HandleFunc("/api/admin/config/basecurrency", middleware.RequireAdminAuth(admin.GetBaseCurrency))

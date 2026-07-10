@@ -36,14 +36,18 @@ func GetServerConfig(w http.ResponseWriter, r *http.Request) {
 	}
 	response := serverConfigAdminResponse{
 		InstanceDetails: webConfigResponse{
-			Name:                      data.GetServerName(),
-			Summary:                   data.GetServerSummary(),
-			Tags:                      data.GetServerMetadataTags(),
-			ExtraPageContent:          data.GetExtraPageBodyContent(),
-			StreamTitle:               data.GetStreamTitle(),
-			WelcomeMessage:            data.GetServerWelcomeMessage(),
-			OfflineMessage:            data.GetCustomOfflineMessage(),
-			StreamSchedule:            data.GetStreamSchedule(),
+			Name:             data.GetServerName(),
+			Summary:          data.GetServerSummary(),
+			Tags:             data.GetServerMetadataTags(),
+			ExtraPageContent: data.GetExtraPageBodyContent(),
+			StreamTitle:      data.GetStreamTitle(),
+			WelcomeMessage:   data.GetServerWelcomeMessage(),
+			OfflineMessage:   data.GetCustomOfflineMessage(),
+			StreamSchedule:   data.GetStreamSchedule(),
+			CoinWallet: coinWalletConfigResponse{
+				Enabled:      data.GetCoinWalletEnabled(),
+				BonusPercent: data.GetCoinChargeBonusPercent(),
+			},
 			OfflineMediaPath:          data.GetOfflineMediaPath(),
 			OfflineMediaType:          data.GetOfflineMediaType(),
 			HasCustomOfflineClip:      utils.DoesFileExists(filepath.Join(config.DataDirectory, "offline.tsclip")),
@@ -206,27 +210,34 @@ type videoSettings struct {
 	LatencyLevel         int                          `json:"latencyLevel"`
 }
 
+// coinWalletConfigResponse is the admin view of the prepaid coin wallet config.
+type coinWalletConfigResponse struct {
+	Enabled      bool `json:"enabled"`
+	BonusPercent int  `json:"bonusPercent"`
+}
+
 type webConfigResponse struct {
-	Name                      string                `json:"name"`
-	Summary                   string                `json:"summary"`
-	WelcomeMessage            string                `json:"welcomeMessage"`
-	OfflineMessage            string                `json:"offlineMessage"`
-	StreamSchedule            string                `json:"streamSchedule"`
-	OfflineMediaPath          string                `json:"offlineMediaPath"`
-	OfflineMediaType          string                `json:"offlineMediaType"`
-	HasCustomOfflineClip      bool                  `json:"hasCustomOfflineClip"`
-	HasCustomLivePoster       bool                  `json:"hasCustomLivePoster"`
-	NotificationThumbnailPath string                `json:"notificationThumbnailPath"`
-	Logo                      string                `json:"logo"`
-	Tags                      []string              `json:"tags"`
-	Version                   string                `json:"version"`
-	NSFW                      bool                  `json:"nsfw"`
-	ExtraPageContent          string                `json:"extraPageContent"`
-	StreamTitle               string                `json:"streamTitle"` // What's going on with the current stream
-	SocialHandles             []models.SocialHandle `json:"socialHandles"`
-	CustomStyles              string                `json:"customStyles"`
-	CustomJavascript          string                `json:"customJavascript"`
-	AppearanceVariables       map[string]string     `json:"appearanceVariables"`
+	Name                      string                   `json:"name"`
+	Summary                   string                   `json:"summary"`
+	WelcomeMessage            string                   `json:"welcomeMessage"`
+	OfflineMessage            string                   `json:"offlineMessage"`
+	StreamSchedule            string                   `json:"streamSchedule"`
+	CoinWallet                coinWalletConfigResponse `json:"coinWallet"`
+	OfflineMediaPath          string                   `json:"offlineMediaPath"`
+	OfflineMediaType          string                   `json:"offlineMediaType"`
+	HasCustomOfflineClip      bool                     `json:"hasCustomOfflineClip"`
+	HasCustomLivePoster       bool                     `json:"hasCustomLivePoster"`
+	NotificationThumbnailPath string                   `json:"notificationThumbnailPath"`
+	Logo                      string                   `json:"logo"`
+	Tags                      []string                 `json:"tags"`
+	Version                   string                   `json:"version"`
+	NSFW                      bool                     `json:"nsfw"`
+	ExtraPageContent          string                   `json:"extraPageContent"`
+	StreamTitle               string                   `json:"streamTitle"` // What's going on with the current stream
+	SocialHandles             []models.SocialHandle    `json:"socialHandles"`
+	CustomStyles              string                   `json:"customStyles"`
+	CustomJavascript          string                   `json:"customJavascript"`
+	AppearanceVariables       map[string]string        `json:"appearanceVariables"`
 }
 
 type yp struct {

@@ -443,6 +443,12 @@ func completeStripeDonation(donation *models.Donation, fromWebhook bool) {
 		return
 	}
 
+	// Coin top-ups credit the buyer's wallet; buying coins isn't a chat event.
+	if donation.ItemType == models.DonationItemCoin {
+		creditCoinCharge(donation, "stripe")
+		return
+	}
+
 	// Send to chat
 	displayName := donation.DisplayName
 	if donation.IsAnonymous {
