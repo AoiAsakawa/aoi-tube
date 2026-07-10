@@ -20,6 +20,17 @@ export interface PlayerChromeProps {
 	rates?: number[];
 	playbackRate?: number;
 	onSelectRate?: (rate: number) => void;
+	// Live DVR ("catch-up"): a live stream that can be rewound to its start
+	// (YouTube-style). The bar spans [stream start, live edge]; dragging it back
+	// tells the parent to switch to the DVR source (onSeekDvr), and the LIVE
+	// button (onGoLive) returns to the low-latency edge. The parent owns the
+	// timeline because it straddles two sources (LL-HLS edge + DVR recording),
+	// so it supplies the total duration and whether playback is at the edge.
+	dvrEnabled?: boolean;
+	dvrDuration?: number;
+	atLiveEdge?: boolean;
+	onSeekDvr?: (seconds: number) => void;
+	onGoLive?: () => void;
 }
 
 const formatTime = (seconds: number): string => {
@@ -67,6 +78,11 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 	rates,
 	playbackRate = 1,
 	onSelectRate,
+	dvrEnabled = false,
+	dvrDuration = 0,
+	atLiveEdge = true,
+	onSeekDvr,
+	onGoLive,
 }) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -192,18 +208,30 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 	const seekFromClient = (clientX: number) => {
 		const v = videoRef.current;
 		const bar = rootRef.current?.querySelector(`.${styles.progress}`) as HTMLElement | null;
-		if (!v || !bar || !duration) {
+		if (!bar) {
 			return;
 		}
 		const rect = bar.getBoundingClientRect();
 		const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+		// Live DVR: the timeline spans [stream start, live edge]; hand the target
+		// offset to the parent, which switches to the DVR source or returns to the
+		// live edge. The knob follows via the parent-driven position, not currentTime.
+		if (dvrEnabled) {
+			const t = ratio * dvrDuration;
+			setCurrent(t);
+			onSeekDvr?.(t);
+			return;
+		}
+		if (!v || !duration) {
+			return;
+		}
 		const t = ratio * duration;
 		setCurrent(t);
 		v.currentTime = t;
 	};
 
 	const onScrubStart = (e: React.PointerEvent) => {
-		if (isLive) {
+		if (isLive && !dvrEnabled) {
 			return;
 		}
 		scrubbing.current = true;
@@ -230,8 +258,23 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 		}
 	};
 
-	const playedPct = duration ? (current / duration) * 100 : 0;
-	const bufferedPct = duration ? (buffered / duration) * 100 : 0;
+	// Timeline geometry. For live DVR the parent owns the total (stream start to
+	// live edge); the played position is the DVR currentTime when rewound, or the
+	// far right when riding the low-latency edge (where currentTime belongs to the
+	// LL-HLS source and is unrelated to the DVR timeline).
+	const timelineTotal = dvrEnabled ? dvrDuration : duration;
+	const timelinePos = dvrEnabled ? (atLiveEdge ? timelineTotal : current) : current;
+	const playedPct = timelineTotal
+		? Math.min(100, Math.max(0, (timelinePos / timelineTotal) * 100))
+		: 0;
+	const bufferedPct = dvrEnabled
+		? atLiveEdge
+			? 100
+			: Math.min(100, timelineTotal ? (buffered / timelineTotal) * 100 : 0)
+		: duration
+			? (buffered / duration) * 100
+			: 0;
+	const behindLiveSeconds = Math.max(0, timelineTotal - timelinePos);
 	const volPct = muted ? 0 : volume;
 
 	const qualityLabel =
@@ -303,7 +346,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 			<div className={styles.gradient} />
 
 			<div className={classNames(styles.bar, { [styles.barHidden]: !visible && playing })}>
-				{!isLive && (
+				{(!isLive || dvrEnabled) && (
 					<div className={styles.progress} onPointerDown={onScrubStart}>
 						<div className={styles.progressBuffered} style={{ width: `${bufferedPct}%` }} />
 						<div className={styles.progressPlayed} style={{ width: `${playedPct}%` }}>
@@ -334,7 +377,21 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 							/>
 						</div>
 
-						{isLive ? (
+						{isLive && dvrEnabled ? (
+							// YouTube-style live control: a red dot at the edge, grey while
+							// rewound (showing how far behind), and clicking jumps back to live.
+							<button
+								type="button"
+								className={classNames(styles.live, styles.liveButton, {
+									[styles.liveBehind]: !atLiveEdge,
+								})}
+								onClick={() => onGoLive?.()}
+								aria-label="ライブに戻る"
+							>
+								<span className={styles.liveDot} />
+								{atLiveEdge ? 'ライブ' : `-${formatTime(behindLiveSeconds)}`}
+							</button>
+						) : isLive ? (
 							<span className={styles.live}>
 								<span className={styles.liveDot} />
 								ライブ

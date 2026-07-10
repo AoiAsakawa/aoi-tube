@@ -74,16 +74,6 @@ const WebRTCPlayer = dynamic(
 	},
 );
 
-// Loaded only when a viewer enters live DVR ("catch-up from the start") mode,
-// which reuses the on-demand player against the growing /hls/dvr/ EVENT playlist.
-const VodPlayer = dynamic(
-	() => import('../../video/VodPlayer/VodPlayer').then(mod => mod.VodPlayer),
-	{
-		ssr: false,
-		loading: () => <div className={styles.playerPlaceholder} />,
-	},
-);
-
 // Strip of recent stream recordings. It renders nothing until the archive
 // list loads non-empty, so no loading skeleton is needed.
 const ArchivesRow = dynamic(
@@ -129,19 +119,12 @@ export const Content: FC = () => {
 	// HLS experience is unchanged.
 	const [lowLatencyMode, setLowLatencyMode] = useState(false);
 	const webRTCAvailable = !!serverStatus.protocol?.webrtcEnabled;
-	// Live DVR ("catch-up from the start"): when the operator's stream is being
-	// recorded, viewers can rewind to the beginning via the growing /hls/dvr/
-	// EVENT playlist. dvrMode swaps the low-latency live player for the seekable
-	// on-demand player pointed at that URL; a LIVE button returns to the edge.
+	// Live DVR ("catch-up"): when the operator's stream is being recorded,
+	// viewers can rewind to the start via the growing /hls/dvr/ EVENT playlist.
+	// The live player owns the seek — dragging its bar back switches its source
+	// to DVR and returning to the edge restores the low-latency LL-HLS feed
+	// (YouTube-style), so this only needs to tell the player it's available.
 	const dvrAvailable = !!serverStatus.dvrAvailable;
-	const [dvrMode, setDvrMode] = useState(false);
-	// Leave DVR mode automatically when it stops being available (stream ended,
-	// recording turned off) so viewers aren't stranded on a dead player.
-	useEffect(() => {
-		if (dvrMode && !dvrAvailable) {
-			setDvrMode(false);
-		}
-	}, [dvrMode, dvrAvailable]);
 	// The store keeps chat messages as ChatMessage | SocketEvent; the previous
 	// Recoil compatibility layer performed the same cast internally.
 	const messages = useChatMessages() as ChatMessage[];
@@ -290,86 +273,52 @@ export const Content: FC = () => {
 					)}
 					{online && !playbackBlocked && (
 						<section className={styles.playerContainer}>
-							{dvrMode ? (
-								// Catch-up ("watch from the start"): the seekable on-demand
-								// player against the growing /hls/dvr/ EVENT playlist, started
-								// at position 0. A LIVE button returns to the low-latency edge.
-								<>
-									<VodPlayer
-										source="/hls/dvr/stream.m3u8"
-										sourceType="application/x-mpegURL"
-										startPosition={0}
-										className={styles.topSectionElement}
-									/>
-									<div className={styles.lowLatencyToggle}>
-										<Button
-											size="small"
-											type="primary"
-											danger
-											onClick={() => setDvrMode(false)}
-										>
-											{t('video.dvr.goLive')}
-										</Button>
-									</div>
-								</>
+							{lowLatencyMode && webRTCAvailable ? (
+								<WebRTCPlayer
+									serverUrl=""
+									online={online}
+									className={styles.topSectionElement}
+									onConnectionStateChange={state => {
+										// Fall back to HLS if WebRTC cannot connect on this
+										// network (e.g. no working ICE path).
+										if (state === 'failed') {
+											setLowLatencyMode(false);
+										}
+									}}
+								/>
 							) : (
-								<>
-									{lowLatencyMode && webRTCAvailable ? (
-										<WebRTCPlayer
-											serverUrl=""
-											online={online}
-											className={styles.topSectionElement}
-											onConnectionStateChange={state => {
-												// Fall back to HLS if WebRTC cannot connect on this
-												// network (e.g. no working ICE path).
-												if (state === 'failed') {
-													setLowLatencyMode(false);
-												}
-											}}
-										/>
-									) : (
-										<OwncastPlayer
-											// When delivery is delegated to an external managed service
-											// (AWS IVS / IVS-compatible), play its HLS URL directly;
-											// otherwise the self-hosted playlist. In external mode the
-											// status reports webrtcEnabled=false, so the WebRTC branch and
-											// its toggle are already skipped.
-											source={serverStatus.externalStreamUrl || '/hls/stream.m3u8'}
-											online={online}
-											title={streamTitle || name}
-											className={styles.topSectionElement}
-											protocol={serverStatus.protocol}
-										/>
-									)}
-									{/* Overlaid on the top-right of the video so the mode
-									    switches are always visible with the player. */}
-									<div className={styles.lowLatencyToggle}>
-										{dvrAvailable && (
-											<Button
-												size="small"
-												onClick={() => {
-													// DVR is HLS-based; leave the WebRTC low-latency
-													// path so the switch back to live is unambiguous.
-													setLowLatencyMode(false);
-													setDvrMode(true);
-												}}
-											>
-												{t('video.dvr.watchFromStart')}
-											</Button>
-										)}
-										{webRTCAvailable && (
-											<Button
-												size="small"
-												type={lowLatencyMode ? 'primary' : 'default'}
-												onClick={() => setLowLatencyMode(v => !v)}
-											>
-												{lowLatencyMode
-													? t('video.lowLatencyToggle.disable')
-													: t('video.lowLatencyToggle.enable')}
-											</Button>
-										)}
-									</div>
-								</>
+								<OwncastPlayer
+									// When delivery is delegated to an external managed service
+									// (AWS IVS / IVS-compatible), play its HLS URL directly;
+									// otherwise the self-hosted playlist. In external mode the
+									// status reports webrtcEnabled=false, so the WebRTC branch and
+									// its toggle are already skipped.
+									source={serverStatus.externalStreamUrl || '/hls/stream.m3u8'}
+									online={online}
+									title={streamTitle || name}
+									className={styles.topSectionElement}
+									protocol={serverStatus.protocol}
+									// Live DVR ("catch-up"): when available the player's seek bar
+									// rewinds to the stream start via /hls/dvr/ and returns to the
+									// low-latency edge. Not offered in external-source mode.
+									dvrAvailable={dvrAvailable && !serverStatus.externalStreamUrl}
+									streamStartTime={lastConnectTime}
+								/>
+							)}
+							{/* Overlaid on the top-right of the video so the mode switch is
+							    always visible with the player, not buried below it. */}
+							{webRTCAvailable && (
+								<div className={styles.lowLatencyToggle}>
+									<Button
+										size="small"
+										type={lowLatencyMode ? 'primary' : 'default'}
+										onClick={() => setLowLatencyMode(v => !v)}
+									>
+										{lowLatencyMode
+											? t('video.lowLatencyToggle.disable')
+											: t('video.lowLatencyToggle.enable')}
+									</Button>
+								</div>
 							)}
 						</section>
 					)}

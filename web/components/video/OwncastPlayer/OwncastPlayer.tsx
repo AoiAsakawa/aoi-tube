@@ -29,6 +29,14 @@ export type OwncastPlayerProps = {
 	className?: string;
 	embedded?: boolean;
 	protocol?: ProtocolInfo;
+	// Live DVR ("catch-up"): when true the player's seek bar can rewind to the
+	// stream start. Dragging back switches the source to the growing /hls/dvr/
+	// EVENT playlist; returning to the edge restores the low-latency LL-HLS feed.
+	dvrAvailable?: boolean;
+	dvrSource?: string;
+	// Stream start (RTMP connect) time, used as the DVR timeline's origin so the
+	// bar spans [start, now] even while riding the low-latency live edge.
+	streamStartTime?: Date;
 };
 
 // Append the chat access token (and a cachebuster on playlists) to same-origin
@@ -69,12 +77,24 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 	className,
 	embedded = false,
 	protocol,
+	dvrAvailable = false,
+	dvrSource = '/hls/dvr/stream.m3u8',
+	streamStartTime,
 }) => {
 	const { t } = useTranslation();
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const hlsRef = useRef<Hls | null>(null);
 	const videoPlaying = useIsVideoPlaying();
 	const setVideoPlaying = useSetIsVideoPlaying();
+
+	// Live DVR: false = riding the low-latency LL-HLS edge; true = playing the
+	// /hls/dvr/ recording after a rewind. dvrStartPosRef carries the seek target
+	// into the (re)created hls.js instance when entering DVR mode.
+	const [dvrMode, setDvrMode] = useState(false);
+	const dvrStartPosRef = useRef(0);
+	// DVR timeline length in seconds (stream start → now), ticked while online so
+	// the seek bar's right edge tracks live even when riding the LL-HLS edge.
+	const [dvrDuration, setDvrDuration] = useState(0);
 
 	const [levels, setLevels] = useState<number[]>([]);
 	const selectedQualityRef = useRef<string>(getLocalStorage(PLAYER_QUALITY) || 'auto');
@@ -179,32 +199,61 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		const savedVol = getLocalStorage(PLAYER_VOLUME);
 		video.volume = savedVol !== null && savedVol !== '' ? Number(savedVol) : 0.3;
 
+		// Live DVR rewind plays the recording (/hls/dvr/ EVENT playlist) as a
+		// seekable VOD-like source from the chosen offset; the live edge keeps the
+		// low-latency LL-HLS config. Switching modes recreates hls.js (rare, always
+		// user-initiated), which is simpler and more robust than reloading a source
+		// with an incompatible latency profile on the fly.
+		const activeSource = dvrMode ? dvrSource : source;
+
 		if (Hls.isSupported()) {
-			const hls = new Hls({
-				lowLatencyMode: true,
-				backBufferLength: 15,
-				liveDurationInfinity: true,
-				// LL-HLS delivers parts progressively, so hls.js measures a throughput
-				// of roughly the CURRENT rendition's bitrate rather than the true link
-				// capacity. With the default up/down factors (0.7/0.95) every rung then
-				// looks unsustainable and ABR cascades down to 360p and can't climb
-				// back. Seed a high initial estimate and widen the factors to 1.4 so a
-				// rung whose bitrate is at or just above the measured throughput still
-				// counts as sustainable — a genuinely starved link is still dropped by
-				// the buffer-starvation path.
-				abrEwmaDefaultEstimate: 10_000_000,
-				abrBandWidthFactor: 1.4,
-				abrBandWidthUpFactor: 1.4,
-				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
-					const decorated = decorateHlsUrl(url);
-					if (decorated !== url) {
-						xhr.open('GET', decorated, true);
-					}
-				},
-			});
+			const hls = new Hls(
+				dvrMode
+					? {
+							// Catch-up: a plain seekable source starting at the rewind
+							// target. No low-latency parts (the recording is segment-only),
+							// and a generous back buffer so scrubbing within the window
+							// doesn't force constant refetches.
+							startPosition: dvrStartPosRef.current,
+							backBufferLength: 60,
+							liveDurationInfinity: false,
+							abrEwmaDefaultEstimate: 10_000_000,
+							abrBandWidthFactor: 1.4,
+							abrBandWidthUpFactor: 1.4,
+							xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+								const decorated = decorateHlsUrl(url);
+								if (decorated !== url) {
+									xhr.open('GET', decorated, true);
+								}
+							},
+						}
+					: {
+							lowLatencyMode: true,
+							backBufferLength: 15,
+							liveDurationInfinity: true,
+							// LL-HLS delivers parts progressively, so hls.js measures a
+							// throughput of roughly the CURRENT rendition's bitrate rather
+							// than the true link capacity. With the default up/down factors
+							// (0.7/0.95) every rung then looks unsustainable and ABR cascades
+							// down to 360p and can't climb back. Seed a high initial estimate
+							// and widen the factors to 1.4 so a rung whose bitrate is at or
+							// just above the measured throughput still counts as sustainable —
+							// a genuinely starved link is still dropped by the
+							// buffer-starvation path.
+							abrEwmaDefaultEstimate: 10_000_000,
+							abrBandWidthFactor: 1.4,
+							abrBandWidthUpFactor: 1.4,
+							xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+								const decorated = decorateHlsUrl(url);
+								if (decorated !== url) {
+									xhr.open('GET', decorated, true);
+								}
+							},
+						},
+			);
 			hlsRef.current = hls;
 			hls.attachMedia(video);
-			hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(source));
+			hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(activeSource));
 			hls.on(Hls.Events.MANIFEST_PARSED, () => {
 				updateLevels();
 				if (selectedQualityRef.current !== 'auto') {
@@ -237,7 +286,7 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 				}
 			});
 		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-			video.src = decorateHlsUrl(source);
+			video.src = decorateHlsUrl(activeSource);
 			video.addEventListener('loadedmetadata', attemptPlay, { once: true });
 		}
 
@@ -246,10 +295,69 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 			hlsRef.current = null;
 			ping.stop();
 			setVideoPlaying(false);
-			// Show the poster again when the stream ends / goes offline.
-			setStarted(false);
 		};
-	}, [online, source]);
+	}, [online, source, dvrMode]);
+
+	// Show the poster again only when the stream ends / goes offline — not on a
+	// DVR source switch, which would flash the poster mid-scrub.
+	useEffect(() => {
+		if (!online) {
+			setStarted(false);
+		}
+	}, [online]);
+
+	// Tick the DVR timeline length (stream start → now) while online so the seek
+	// bar's right edge tracks live even while riding the low-latency edge.
+	useEffect(() => {
+		if (!online || !dvrAvailable || !streamStartTime) {
+			setDvrDuration(0);
+			return undefined;
+		}
+		const startMs = new Date(streamStartTime).getTime();
+		const update = () => setDvrDuration(Math.max(0, (Date.now() - startMs) / 1000));
+		update();
+		const timer = setInterval(update, 1000);
+		return () => clearInterval(timer);
+	}, [online, dvrAvailable, streamStartTime]);
+
+	// Leave DVR mode if catch-up stops being available (stream ended / recording
+	// turned off) so the player falls back to the plain live edge.
+	useEffect(() => {
+		if (dvrMode && !dvrAvailable) {
+			setDvrMode(false);
+		}
+	}, [dvrMode, dvrAvailable]);
+
+	// How close to the live edge (seconds) counts as "return to live" when the
+	// viewer drags the bar to the far right.
+	const dvrEdgeThresholdSeconds = 8;
+
+	const handleSeekDvr = (targetSeconds: number) => {
+		if (dvrDuration > 0 && targetSeconds >= dvrDuration - dvrEdgeThresholdSeconds) {
+			// Dragged to (near) the edge → return to the low-latency live feed.
+			if (dvrMode) {
+				setDvrMode(false);
+			}
+			return;
+		}
+		dvrStartPosRef.current = Math.max(0, targetSeconds);
+		if (dvrMode) {
+			// Already on the DVR source: seek within it without recreating hls.js.
+			if (videoRef.current) {
+				videoRef.current.currentTime = dvrStartPosRef.current;
+			}
+		} else {
+			// Entering catch-up: the effect recreates hls.js on the DVR source at
+			// dvrStartPosRef.
+			setDvrMode(true);
+		}
+	};
+
+	const handleGoLive = () => {
+		if (dvrMode) {
+			setDvrMode(false);
+		}
+	};
 
 	// Resolution/fps + hls.js live latency for the protocol badge.
 	useEffect(() => {
@@ -380,6 +488,11 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 							qualities={qualityOptions}
 							selectedQuality={selectedQuality}
 							onSelectQuality={applyQuality}
+							dvrEnabled={dvrAvailable}
+							dvrDuration={dvrDuration}
+							atLiveEdge={!dvrMode}
+							onSeekDvr={handleSeekDvr}
+							onGoLive={handleGoLive}
 						/>
 					</div>
 				)}

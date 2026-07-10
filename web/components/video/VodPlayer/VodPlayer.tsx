@@ -15,27 +15,20 @@ export type VodPlayerProps = {
 	title?: string;
 	autoplay?: boolean;
 	className?: string;
-	// hls.js start position in seconds. Defaults to -1 (auto: VOD from 0, live
-	// from the edge). Live DVR passes 0 so catch-up begins at the stream's start
-	// even though the EVENT playlist has no ENDLIST (which hls.js reads as live).
-	startPosition?: number;
 	// Called with the underlying <video> element once mounted. The archive replay
 	// view attaches native timeupdate/seeking/seeked listeners to it to drive the
 	// synchronized chat and screen effects.
 	onPlayerReady?: (video: HTMLVideoElement) => void;
 };
 
-// Append the access token to same-origin gated HLS requests so member/PPV
-// archives (/api/archives/) and the live DVR stream (/hls/dvr/, gated exactly
-// like live HLS) play. The MP4 source already carries its token in its URL;
-// this only matters for HLS, whose playlist and segments are fetched by hls.js
-// and would otherwise miss the token.
+// Append the archive access token to same-origin /api/archives/ HLS requests so
+// gated (member/PPV) archives play. The MP4 source already carries its token in
+// its URL; this only matters for the legacy HLS fallback, whose playlist and
+// segments are fetched by hls.js and would otherwise miss the token.
 const decorateArchiveUrl = (url: string): string => {
 	try {
 		const u = new URL(url, window.location.origin);
-		const gated =
-			u.pathname.startsWith('/api/archives/') || u.pathname.startsWith('/hls/');
-		if (u.origin !== window.location.origin || !gated) {
+		if (u.origin !== window.location.origin || !u.pathname.startsWith('/api/archives/')) {
 			return url;
 		}
 		const token = window.localStorage.getItem('accessToken');
@@ -61,7 +54,6 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 	title,
 	autoplay = true,
 	className,
-	startPosition,
 	onPlayerReady,
 }) => {
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -94,9 +86,6 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 
 		if (isHls && Hls.isSupported()) {
 			const hls = new Hls({
-				// -1 lets hls.js choose (VOD from 0, live from the edge); DVR passes
-				// 0 to begin catch-up at the stream's start.
-				startPosition: startPosition ?? -1,
 				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
 					const decorated = decorateArchiveUrl(url);
 					if (decorated !== url) {
@@ -116,7 +105,7 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 			hlsRef.current?.destroy();
 			hlsRef.current = null;
 		};
-	}, [source, sourceType, startPosition]);
+	}, [source, sourceType]);
 
 	// Hand the element to the replay hook once, after mount.
 	useEffect(() => {

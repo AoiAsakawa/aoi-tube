@@ -245,6 +245,25 @@
 	background: #f00;
 }
 
+// Live DVR: the LIVE label doubles as a "return to live edge" button. Red while
+// riding the edge, muted grey (with a grey dot) while rewound.
+.liveButton {
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	font-weight: 600;
+}
+
+.liveBehind {
+	color: rgba(255, 255, 255, 0.6);
+
+	.liveDot {
+		background: rgba(255, 255, 255, 0.5);
+	}
+}
+
 // Settings menu.
 .settings {
 	position: relative;

@@ -114,10 +114,6 @@
 		"qualitySelector": {
 			"label": "Quality",
 			"auto": "Auto"
-		},
-		"dvr": {
-			"watchFromStart": "Watch from start",
-			"goLive": "● Go live"
 		}
 	},
 	"chat": {

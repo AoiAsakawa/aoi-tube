@@ -114,10 +114,6 @@
 		"qualitySelector": {
 			"label": "畫質",
 			"auto": "自動"
-		},
-		"dvr": {
-			"watchFromStart": "從頭觀看",
-			"goLive": "● 返回直播"
 		}
 	},
 	"chat": {
