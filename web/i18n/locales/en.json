@@ -2457,5 +2457,8 @@
 		"itemArchive": "Archive",
 		"archiveDeleted": "(Deleted archive)",
 		"testTag": "Test"
+	},
+	"supporters": {
+		"title": "Top Supporters"
 	}
 }

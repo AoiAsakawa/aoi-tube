@@ -2457,5 +2457,8 @@
 		"itemArchive": "아카이브",
 		"archiveDeleted": "(삭제된 아카이브)",
 		"testTag": "테스트"
+	},
+	"supporters": {
+		"title": "서포터 랭킹"
 	}
 }

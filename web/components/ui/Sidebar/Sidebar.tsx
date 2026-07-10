@@ -5,6 +5,7 @@ import dynamic from '@components/compat/dynamic';
 import { useAppStore } from '../../stores/zustand-store';
 
 import { ChatMessage } from '../../../interfaces/chat-message.model';
+import { SupporterRanking } from '../SupporterRanking/SupporterRanking';
 import styles from './Sidebar.module.scss';
 
 // Lazy loaded components
@@ -53,6 +54,9 @@ export const Sidebar: FC = () => {
 	const { id, isModerator, displayName } = currentUser;
 	return (
 		<aside className={styles.root}>
+			{/* Public supporter ranking above the chat (renders nothing until there
+			    is data). */}
+			<SupporterRanking />
 			{/* Slim column header so the docked chat reads as a labeled panel
 			    instead of an unexplained empty strip. */}
 			<div className={styles.panelHeader}>{t('chat.title')}</div>

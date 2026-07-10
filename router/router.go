@@ -382,6 +382,8 @@ func Start() error {
 	http.HandleFunc("/api/donations/recent", admin.GetRecentDonations)
 	// A viewer's own purchase history, resolved from their access token.
 	http.HandleFunc("/api/donations/mine", controllers.GetMyPurchases)
+	// Public supporter ranking (top spenders by Super Chat + effect total).
+	http.HandleFunc("/api/supporters", controllers.GetTopSupporters)
 
 	// Base currency (crypto conversion / reporting reference currency)
 	http.HandleFunc("/api/admin/config/basecurrency", middleware.RequireAdminAuth(admin.GetBaseCurrency))

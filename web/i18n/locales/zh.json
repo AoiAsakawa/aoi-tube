@@ -2457,5 +2457,8 @@
 		"itemArchive": "存档",
 		"archiveDeleted": "（已删除的存档）",
 		"testTag": "测试"
+	},
+	"supporters": {
+		"title": "支持者排行榜"
 	}
 }

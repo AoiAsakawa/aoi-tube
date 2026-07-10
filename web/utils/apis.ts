@@ -79,6 +79,8 @@ export const DONATIONS_CREATE = `${API_LOCATION}donations/create`;
 export const DONATIONS_VISIBILITY = `${API_LOCATION}donations/visibility`;
 export const DONATIONS_DELETE = `${API_LOCATION}donations/delete`;
 export const DONATIONS_RECENT = `${NEXT_PUBLIC_API_HOST}api/donations/recent`;
+// Public supporter ranking (top spenders by Super Chat + effect total).
+export const SUPPORTERS = `${NEXT_PUBLIC_API_HOST}api/supporters`;
 // The authenticated viewer's own purchase history; requires ?accessToken=.
 export const DONATIONS_MINE = `${NEXT_PUBLIC_API_HOST}api/donations/mine`;
 export const DONATION_EXTERNAL_CREATE = `${NEXT_PUBLIC_API_HOST}api/integrations/donations/create`;

@@ -2457,5 +2457,8 @@
 		"itemArchive": "アーカイブ",
 		"archiveDeleted": "（削除済みアーカイブ）",
 		"testTag": "テスト"
+	},
+	"supporters": {
+		"title": "サポーターランキング"
 	}
 }

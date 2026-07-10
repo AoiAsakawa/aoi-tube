@@ -2457,5 +2457,8 @@
 		"itemArchive": "封存",
 		"archiveDeleted": "（已刪除的封存）",
 		"testTag": "測試"
+	},
+	"supporters": {
+		"title": "支持者排行榜"
 	}
 }

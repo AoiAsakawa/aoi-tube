@@ -216,6 +216,47 @@ func scanPurchaseRows(rows *sql.Rows) ([]*models.Donation, error) {
 	return donations, rows.Err()
 }
 
+// TopSupporter is one entry of the public supporter ranking.
+type TopSupporter struct {
+	Name  string `json:"name"`
+	Total int64  `json:"total"` // base-currency smallest unit (amount_jpy)
+}
+
+// GetTopSupporters returns the highest-spending named supporters by total
+// Super Chat + effect amount in the base currency. Archive purchases (buyer
+// privacy — they're kept out of every public feed), anonymous donations, test
+// donations, and blank display names are all excluded.
+func GetTopSupporters(limit int) ([]TopSupporter, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+	rows, err := _datastore.DB.Query(
+		`SELECT display_name, SUM(amount_jpy) AS total
+		 FROM donations
+		 WHERE is_test = 0 AND is_anonymous = 0
+		   AND item_type IN ('superchat', 'effect')
+		   AND display_name IS NOT NULL AND display_name != ''
+		   AND amount_jpy > 0
+		 GROUP BY display_name
+		 ORDER BY total DESC
+		 LIMIT ?`, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	supporters := make([]TopSupporter, 0, limit)
+	for rows.Next() {
+		var name sql.NullString
+		var total sql.NullInt64
+		if err := rows.Scan(&name, &total); err != nil {
+			return nil, err
+		}
+		supporters = append(supporters, TopSupporter{Name: name.String, Total: total.Int64})
+	}
+	return supporters, rows.Err()
+}
+
 // GetAllPurchases returns a paginated list of all purchase rows (Super
 // Chats, effects and archive purchases, hidden included), newest first, with
 // the archive_id column the sqlc bindings predate.
