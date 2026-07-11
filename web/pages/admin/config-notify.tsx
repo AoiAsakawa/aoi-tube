@@ -6,7 +6,6 @@ import Link from '@components/compat/Link';
 import { DiscordNotify as Discord } from '../../components/admin/notification/discord';
 import { BrowserNotify as Browser } from '../../components/admin/notification/browser';
 import { TwitterNotify as Twitter } from '../../components/admin/notification/twitter';
-import { FederationConfigSection } from '../../components/admin/config/FederationConfigSection';
 import { EditNotificationThumbnail } from '../../components/admin/EditNotificationThumbnail';
 import {
 	TextFieldWithSubmit,
@@ -127,12 +126,6 @@ export default function ConfigNotify() {
 				<Col xs={24} lg={12}>
 					<SettingsCard title={t('admin.sections.twitterNotify.title')}>
 						<Twitter />
-					</SettingsCard>
-				</Col>
-
-				<Col xs={24} lg={12}>
-					<SettingsCard title={t('admin.sections.federation.title')}>
-						<FederationConfigSection />
 					</SettingsCard>
 				</Col>
 

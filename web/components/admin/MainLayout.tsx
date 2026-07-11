@@ -67,7 +67,15 @@ const MessageOutlined = dynamic(() => import('@ant-design/icons/MessageOutlined'
 	ssr: false,
 });
 
-const ExperimentOutlined = dynamic(() => import('@ant-design/icons/ExperimentOutlined'), {
+const VideoCameraOutlined = dynamic(() => import('@ant-design/icons/VideoCameraOutlined'), {
+	ssr: false,
+});
+
+const ApiOutlined = dynamic(() => import('@ant-design/icons/ApiOutlined'), {
+	ssr: false,
+});
+
+const EyeOutlined = dynamic(() => import('@ant-design/icons/EyeOutlined'), {
 	ssr: false,
 });
 
@@ -266,32 +274,9 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 		},
 	];
 
-	const chatMenu = [
-		{
-			label: <Link href="/admin/viewer-info">{t('admin.layout.mainLayout.menu.viewers')}</Link>,
-			key: '/admin/viewer-info',
-		},
-		{
-			label: <Link href="/admin/chat">{t('admin.layout.mainLayout.menu.chatManagement')}</Link>,
-			key: '/admin/chat',
-		},
-		{
-			label: (
-				<Link href="/admin/chat/user-data">{t('admin.layout.mainLayout.menu.userData')}</Link>
-			),
-			key: '/admin/chat/user-data',
-		},
-		{
-			label: <Link href="/admin/chat/emojis">{t('admin.layout.mainLayout.menu.emojis')}</Link>,
-			key: '/admin/chat/emojis',
-		},
-	];
-
-	const utilitiesMenu = [
-		{
-			label: <Link href="/admin/hardware-info">{t('admin.layout.mainLayout.menu.hardware')}</Link>,
-			key: '/admin/hardware-info',
-		},
+	// Broadcast operations: live status, recorded content and the video /
+	// stream-protocol / recording settings that drive them.
+	const broadcastMenu = [
 		{
 			label: (
 				<Link href="/admin/stream-health">{t('admin.layout.mainLayout.menu.streamHealth')}</Link>
@@ -303,8 +288,52 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			key: '/admin/archives',
 		},
 		{
-			label: <Link href="/admin/logs">{t('admin.layout.mainLayout.menu.logs')}</Link>,
-			key: '/admin/logs',
+			label: (
+				<Link href="/admin/config-video">{t('admin.layout.mainLayout.menu.videoSettings')}</Link>
+			),
+			key: '/admin/config-video',
+		},
+	];
+
+	// Audience: stats, chat moderation, account governance and chat settings.
+	// When chat is disabled only the stats page and the chat settings (the
+	// place to turn chat back on) remain.
+	const chatMenu = [
+		{
+			label: <Link href="/admin/viewer-info">{t('admin.layout.mainLayout.menu.viewers')}</Link>,
+			key: '/admin/viewer-info',
+		},
+		!chatDisabled && {
+			label: <Link href="/admin/chat">{t('admin.layout.mainLayout.menu.chatManagement')}</Link>,
+			key: '/admin/chat',
+		},
+		!chatDisabled && {
+			label: (
+				<Link href="/admin/chat/user-data">{t('admin.layout.mainLayout.menu.userData')}</Link>
+			),
+			key: '/admin/chat/user-data',
+		},
+		!chatDisabled && {
+			label: <Link href="/admin/chat/emojis">{t('admin.layout.mainLayout.menu.emojis')}</Link>,
+			key: '/admin/chat/emojis',
+		},
+		{
+			label: <Link href="/admin/config-chat">{t('admin.layout.mainLayout.menu.chatSettings')}</Link>,
+			key: '/admin/config-chat',
+		},
+	].filter(Boolean);
+
+	// Fediverse: follower/action pages appear once federation is enabled; the
+	// settings page is always reachable so the feature can be turned on at all
+	// (it previously had no menu entry anywhere).
+	const fediverseMenu = [
+		federationEnabled && {
+			label: (
+				<Link href="/admin/federation/followers">
+					{t('admin.layout.mainLayout.menu.followers')}
+				</Link>
+			),
+			key: '/admin/federation/followers',
 		},
 		federationEnabled && {
 			label: (
@@ -314,16 +343,29 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			),
 			key: '/admin/federation/actions',
 		},
+		{
+			label: (
+				<Link href="/admin/config-federation">
+					{t('admin.layout.mainLayout.menu.federationSettings')}
+				</Link>
+			),
+			key: '/admin/config-federation',
+		},
+	].filter(Boolean);
+
+	// Diagnostics only — content management lives under Broadcast.
+	const utilitiesMenu = [
+		{
+			label: <Link href="/admin/hardware-info">{t('admin.layout.mainLayout.menu.hardware')}</Link>,
+			key: '/admin/hardware-info',
+		},
+		{
+			label: <Link href="/admin/logs">{t('admin.layout.mainLayout.menu.logs')}</Link>,
+			key: '/admin/logs',
+		},
 	];
 
 	const configurationMenu = [
-		{
-			// Authelia settings embedded in the admin UI (password/passkeys/keys/TOTP)
-			label: (
-				<Link href="/admin/login-settings">{t('admin.layout.mainLayout.menu.loginSettings')}</Link>
-			),
-			key: '/admin/login-settings',
-		},
 		{
 			label: (
 				<Link href="/admin/config/general">
@@ -337,14 +379,6 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 				<Link href="/admin/config/server">{t('admin.layout.mainLayout.menu.serverSettings')}</Link>
 			),
 			key: '/admin/config/server',
-		},
-		{
-			label: <Link href="/admin/config-video">{t('admin.layout.mainLayout.menu.videoSettings')}</Link>,
-			key: '/admin/config-video',
-		},
-		{
-			label: <Link href="/admin/config-chat">{t('admin.layout.mainLayout.menu.chatSettings')}</Link>,
-			key: '/admin/config-chat',
 		},
 		{
 			label: (
@@ -362,8 +396,17 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			),
 			key: '/admin/config-notify',
 		},
+		{
+			// Authelia settings embedded in the admin UI (password/passkeys/keys/TOTP)
+			label: (
+				<Link href="/admin/login-settings">{t('admin.layout.mainLayout.menu.loginSettings')}</Link>
+			),
+			key: '/admin/login-settings',
+		},
 	];
 
+	// Ordered by operator workflow: dashboard → daily broadcast work →
+	// audience → revenue → federation → settings → developer/diagnostics.
 	const menuItems = [
 		{
 			label: <Link href="/admin">{t('admin.layout.mainLayout.menu.home')}</Link>,
@@ -371,30 +414,16 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			key: '/admin',
 		},
 		{
+			key: 'broadcast',
+			label: t('admin.layout.mainLayout.menu.broadcast'),
+			icon: <VideoCameraOutlined />,
+			children: broadcastMenu,
+		},
+		{
 			label: <span>{t('admin.layout.mainLayout.menu.chatAndUsers')}</span>,
 			icon: <MessageOutlined />,
-			// The viewers stats page stays available even when chat is disabled.
-			children: chatDisabled ? chatMenu.slice(0, 1) : chatMenu,
+			children: chatMenu,
 			key: 'chat-and-users',
-		},
-		federationEnabled && {
-			key: '/admin/federation/followers',
-			label: (
-				<Link href="/admin/federation/followers">
-					{t('admin.layout.mainLayout.menu.followers')}
-				</Link>
-			),
-			icon: (
-				<span
-					role="img"
-					aria-label="message"
-					className="anticon anticon-message ant-menu-item-icon"
-				>
-					{/* Wrapping the icon in span for consistency with other icons used
-            directly from antd */}
-					<FediverseOutlined />
-				</span>
-			),
 		},
 		{
 			key: 'donations',
@@ -403,22 +432,38 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			children: donationsMenu,
 		},
 		{
+			key: 'fediverse',
+			label: t('admin.layout.mainLayout.menu.fediverse'),
+			icon: (
+				<span
+					role="img"
+					aria-label="fediverse"
+					className="anticon anticon-message ant-menu-item-icon"
+				>
+					{/* Wrapping the icon in span for consistency with other icons used
+            directly from antd */}
+					<FediverseOutlined />
+				</span>
+			),
+			children: fediverseMenu,
+		},
+		{
 			key: 'configuration',
 			label: t('admin.layout.mainLayout.menu.configuration'),
 			icon: <SettingOutlined />,
 			children: configurationMenu,
 		},
 		{
+			key: 'integrations',
+			label: t('admin.layout.mainLayout.menu.integrations'),
+			icon: <ApiOutlined />,
+			children: integrationsMenu,
+		},
+		{
 			key: 'utilities',
 			label: t('admin.layout.mainLayout.menu.utilities'),
 			icon: <ToolOutlined />,
 			children: utilitiesMenu,
-		},
-		{
-			key: 'integrations',
-			label: t('admin.layout.mainLayout.menu.integrations'),
-			icon: <ExperimentOutlined />,
-			children: integrationsMenu,
 		},
 		{
 			key: '/admin/help',
@@ -511,17 +556,29 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			<Layout className="layout-main">
 				<Header className="layout-header">
 					<Space direction="horizontal">
-						<Tooltip title={t('admin.layout.mainLayout.composePostTooltip')}>
-							<Button
-								type="link"
-								icon={<EditOutlined />}
-								size="small"
-								onClick={handleCreatePostButtonPressed}
-								style={{ display: federationEnabled ? 'block' : 'none', margin: '10px' }}
-							>
-								{t('admin.layout.mainLayout.composePost')}
-							</Button>
-						</Tooltip>
+						{/* Quick jump to the viewer-facing site in a new tab. */}
+						<Button
+							type="text"
+							size="small"
+							icon={<EyeOutlined />}
+							href="/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{t('admin.layout.mainLayout.viewSite')}
+						</Button>
+						{federationEnabled && (
+							<Tooltip title={t('admin.layout.mainLayout.composePostTooltip')}>
+								<Button
+									type="link"
+									icon={<EditOutlined />}
+									size="small"
+									onClick={handleCreatePostButtonPressed}
+								>
+									{t('admin.layout.mainLayout.composePost')}
+								</Button>
+							</Tooltip>
+						)}
 					</Space>
 					<div className="global-stream-title-container">
 						<TextFieldWithSubmit

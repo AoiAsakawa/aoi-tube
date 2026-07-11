@@ -161,11 +161,19 @@
 .app-container .layout-header {
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-end;
-	padding-right: 1rem;
-	padding-left: 1rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.5rem 1rem;
+	/* Stays visible while scrolling long settings pages so the stream title,
+	   theme toggle and online status remain reachable. Below the zero-width
+	   sider trigger (1100) but above page content. */
+	position: sticky;
+	top: 0;
+	z-index: 100;
 	/* Theme-flipping surface token (dark by default, flips with data-theme). */
 	background-color: var(--color-panel-bg);
+	border-bottom: 1px solid var(--color-panel-border-soft);
 }
 
 .app-container .main-content-container {
@@ -173,6 +181,13 @@
 	background-color: var(--color-panel-bg-alt);
 	padding: 2em 3em 3em;
 	min-width: 50vw;
+}
+
+/* Phones: the desktop gutters eat most of the narrow viewport. */
+@media (max-width: 767.98px) {
+	.app-container .main-content-container {
+		padding: 1.25em 1em 2.5em;
+	}
 }
 
 /* Constrain page content and give sections a consistent vertical rhythm.
@@ -238,11 +253,10 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
-	padding-top: 1em;
-	box-shadow:
-		0 1px 3px 0 rgb(0 0 0 / 0.1),
-		0 1px 2px -1px rgb(0 0 0 / 0.1);
+	/* Fills the space between the header's left and right control groups. */
+	flex: 1 1 auto;
+	min-width: 0;
+	padding-top: 0.35em;
 }
 
 .global-stream-title-container ::placeholder {

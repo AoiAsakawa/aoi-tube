@@ -1,17 +1,27 @@
-import { useEffect, ReactElement } from 'react';
-import { useRouter } from '@components/compat/router';
+import { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { FederationConfigSection } from '../../components/admin/config/FederationConfigSection';
 import { AdminLayout } from '../../components/layouts/AdminLayout';
+import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
+import { SettingsCard } from '../../components/admin/SettingsCard';
 
-// The federation settings now live inside the notifications page.
-export default function ConfigFederationRedirect() {
-	const router = useRouter();
-	useEffect(() => {
-		router.replace('/admin/config-notify');
-	}, [router]);
-	return null;
+// Dedicated Fediverse settings page. The section used to live as one card
+// inside the notifications page (this route was a redirect there), which left
+// the feature without a menu entry of its own.
+export default function ConfigFederation() {
+	const { t } = useTranslation();
+
+	return (
+		<>
+			<AdminPageHeader title={t('admin.layout.mainLayout.menu.federationSettings')} />
+			<SettingsCard title={t('admin.sections.federation.title')}>
+				<FederationConfigSection />
+			</SettingsCard>
+		</>
+	);
 }
 
-ConfigFederationRedirect.getLayout = function getLayout(page: ReactElement) {
+ConfigFederation.getLayout = function getLayout(page: ReactElement) {
 	return <AdminLayout page={page} />;
 };
