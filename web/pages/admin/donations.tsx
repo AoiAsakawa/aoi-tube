@@ -593,10 +593,17 @@ export default function DonationsPage() {
 		}
 	};
 
-	const handleDelete = async (id: string) => {
+	// The row can be a super chat, a screen effect, a coin charge or an archive
+	// entitlement — the dialog wording must not claim "super chat" for all of
+	// them. Archive rows get an extra warning: the purchase row carries the
+	// viewing access, so deleting it also revokes the entitlement.
+	const handleDelete = async (record: Donation) => {
 		Modal.confirm({
 			title: t('admin.pages.donations.deleteConfirm.title'),
-			content: t('admin.pages.donations.deleteConfirm.content'),
+			content:
+				record.itemType === 'archive'
+					? t('admin.pages.donations.deleteConfirm.contentArchive')
+					: t('admin.pages.donations.deleteConfirm.content'),
 			okText: t('admin.pages.common.delete'),
 			okType: 'danger',
 			cancelText: t('admin.pages.common.cancel'),
@@ -605,7 +612,7 @@ export default function DonationsPage() {
 					await fetchData(DONATIONS_DELETE, {
 						auth: true,
 						method: 'POST',
-						data: { id },
+						data: { id: record.id },
 					});
 					message.success(t('admin.pages.donations.messages.deleted'));
 					fetchDonations();
@@ -924,7 +931,7 @@ export default function DonationsPage() {
 						type="text"
 						danger
 						icon={<DeleteOutlined />}
-						onClick={() => handleDelete(record.id)}
+						onClick={() => handleDelete(record)}
 						title={t('admin.pages.common.delete')}
 					/>
 				</Space>

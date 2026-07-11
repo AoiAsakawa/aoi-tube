@@ -971,8 +971,9 @@
 					"emptyItems": "暂无购买数据"
 				},
 				"deleteConfirm": {
-					"title": "删除超级留言",
-					"content": "确定要彻底删除此超级留言吗？此操作无法撤销。"
+					"title": "删除购买记录",
+					"content": "要永久删除此购买记录吗？此操作无法撤销。",
+					"contentArchive": "要永久删除此购买记录吗？该用户的存档观看权限也将被取消。此操作无法撤销。"
 				},
 				"messages": {
 					"created": "已登记超级留言",

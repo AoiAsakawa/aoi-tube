@@ -971,8 +971,9 @@
 					"emptyItems": "暫無購買資料"
 				},
 				"deleteConfirm": {
-					"title": "刪除超級留言",
-					"content": "確定要永久刪除此超級留言嗎？此操作無法復原。"
+					"title": "刪除購買記錄",
+					"content": "要永久刪除此購買記錄嗎？此操作無法復原。",
+					"contentArchive": "要永久刪除此購買記錄嗎？該使用者的存檔觀看權限也將被取消。此操作無法復原。"
 				},
 				"messages": {
 					"created": "已登錄超級留言",

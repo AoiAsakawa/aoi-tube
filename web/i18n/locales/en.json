@@ -971,8 +971,9 @@
 					"emptyItems": "No purchase data yet"
 				},
 				"deleteConfirm": {
-					"title": "Delete Super Chat",
-					"content": "Permanently delete this Super Chat? This action cannot be undone."
+					"title": "Delete Purchase Record",
+					"content": "Permanently delete this purchase record? This cannot be undone.",
+					"contentArchive": "Permanently delete this purchase record? The user's archive viewing access will also be revoked. This cannot be undone."
 				},
 				"messages": {
 					"created": "Super Chat registered",
