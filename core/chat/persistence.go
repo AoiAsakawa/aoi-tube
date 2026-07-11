@@ -314,6 +314,12 @@ func GetChatModerationHistory() []interface{} {
 
 // GetChatHistory will return all the chat messages suitable for returning as user-facing chat history.
 func GetChatHistory() []interface{} {
+	// Fetch the session cutoff BEFORE opening the transaction: the datastore
+	// pool is capped at a single connection, so a cache-miss lookup issued
+	// while this function's transaction holds that connection deadlocks the
+	// whole server (fresh instances have no lastDisconnectTime to pre-cache).
+	lastDisconnectTime, disconnectErr := data.GetLastDisconnectTime()
+
 	tx, err := _datastore.DB.Begin()
 	if err != nil {
 		log.Errorln("error fetching chat history", err)
@@ -330,11 +336,11 @@ func GetChatHistory() []interface{} {
 	// visible. The admin moderation view still returns everything.
 	query := "SELECT messages.id, messages.user_id, messages.body, messages.title, messages.subtitle, messages.image, messages.link, messages.eventType, messages.hidden_at, messages.timestamp, users.display_name, users.display_color, users.created_at, users.disabled_at, users.previous_names, users.namechanged_at, users.authenticated_at, users.scopes, users.type FROM users JOIN messages ON users.id = messages.user_id WHERE hidden_at IS NULL AND disabled_at IS NULL"
 	args := []interface{}{}
-	if disconnectTime, err := data.GetLastDisconnectTime(); err == nil && disconnectTime != nil && disconnectTime.Valid {
+	if disconnectErr == nil && lastDisconnectTime != nil && lastDisconnectTime.Valid {
 		// datetime() normalizes both sides to UTC; the stored text carries a
 		// timezone offset while a bound time.Time may serialize differently.
 		query += " AND datetime(messages.timestamp) > datetime(?)"
-		args = append(args, disconnectTime.Time)
+		args = append(args, lastDisconnectTime.Time)
 	}
 	query += " ORDER BY timestamp DESC LIMIT ?"
 	args = append(args, maxBacklogNumber)

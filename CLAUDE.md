@@ -166,3 +166,4 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 16. **ブラウザのWebアプリマニフェスト取得は同一オリジンでもcredentials省略**→Basic認証等の配下では `crossorigin="use-credentials"` 必須
 17. **X APIはFreeプランで `users/me` 不可**（Sign in with Xが403 client-not-enrolled）→Pay Per Useプラン以上が必要
 18. S3系ダッシュボードの使用量表示は削除反映にラグがある場合がある（実態確認は ListObjects ベースの `/api/admin/storage/usage` で）
+19. **DBトランザクション保持中に `data.Get*`/`data.Set*` を呼ばない**: SQLiteは `SetMaxOpenConns(1)`。txが唯一のコネクションを握った状態でdatastoreの**キャッシュミス**読みが走ると自分自身を待って**サーバー全体が永久デッドロック**（`GetChatHistory`内の`GetLastDisconnectTime`で実際に発生）。本番はキーが起動時プリキャッシュされ隠れていたが、**一度も配信終了していない新規インスタンスでは視聴者のページ表示だけで全API停止**。datastore読みはtxを開く**前**に済ませる
