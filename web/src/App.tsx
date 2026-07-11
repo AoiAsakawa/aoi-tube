@@ -27,9 +27,9 @@ const antdLightTheme = {
 		colorPrimary: '#6544e9',
 		colorLink: '#6544e9',
 		colorLinkHover: '#7a5cf3',
-		borderRadius: 4,
+		borderRadius: 10,
 		colorBgContainer: '#ffffff',
-		colorBgLayout: '#e2e8f0',
+		colorBgLayout: '#eef1f6',
 		colorText: '#2d3748',
 		colorTextSecondary: '#4a5568',
 		colorTextTertiary: '#718096',
@@ -37,19 +37,21 @@ const antdLightTheme = {
 	},
 	components: {
 		Layout: {
-			headerBg: '#e2e8f0',
+			headerBg: '#eef1f6',
 			// The admin sidebar is INTENTIONALLY dark in light mode too (classic
-			// dashboard shell). public/styles/admin/main-layout.css pins the same
-			// #2d3748 with !important — change both together if this ever flips.
-			siderBg: '#2d3748',
-			bodyBg: '#e2e8f0',
+			// dashboard shell). styles/admin.scss pins the same
+			// #1c222e with !important — change both together if this ever flips.
+			siderBg: '#1c222e',
+			bodyBg: '#eef1f6',
 		},
 		Menu: {
-			darkItemBg: '#2d3748',
-			darkSubMenuItemBg: '#1a202c',
+			darkItemBg: '#1c222e',
+			darkSubMenuItemBg: '#141924',
 			darkItemSelectedBg: '#6544e9',
 			darkItemColor: '#e2e8f0',
-			darkItemHoverBg: '#4a5568',
+			darkItemHoverBg: '#2a3140',
+			itemBorderRadius: 8,
+			itemMarginInline: 8,
 		},
 		Button: {
 			primaryColor: '#ffffff',
@@ -63,10 +65,10 @@ const antdDarkTheme = {
 		colorPrimary: '#6544e9',
 		colorLink: '#667eea',
 		colorLinkHover: '#7a5cf3',
-		borderRadius: 4,
+		borderRadius: 10,
 		colorBgContainer: '#2a2d38',
 		colorBgElevated: '#2a2d38',
-		colorBgLayout: '#0d0d14',
+		colorBgLayout: '#0f1118',
 		colorText: '#e2e8f0',
 		colorTextSecondary: '#a0aec0',
 		colorTextTertiary: '#718096',
@@ -77,8 +79,8 @@ const antdDarkTheme = {
 	components: {
 		Layout: {
 			headerBg: '#1a1d24',
-			siderBg: '#1a202c',
-			bodyBg: '#0d0d14',
+			siderBg: '#1c222e',
+			bodyBg: '#0f1118',
 		},
 		Modal: {
 			contentBg: '#1a1d24',
@@ -86,11 +88,13 @@ const antdDarkTheme = {
 			footerBg: '#1a1d24',
 		},
 		Menu: {
-			darkItemBg: '#2d3748',
-			darkSubMenuItemBg: '#1a202c',
+			darkItemBg: '#1c222e',
+			darkSubMenuItemBg: '#141924',
 			darkItemSelectedBg: '#6544e9',
 			darkItemColor: '#e2e8f0',
-			darkItemHoverBg: '#4a5568',
+			darkItemHoverBg: '#2a3140',
+			itemBorderRadius: 8,
+			itemMarginInline: 8,
 		},
 		Button: {
 			primaryColor: '#ffffff',

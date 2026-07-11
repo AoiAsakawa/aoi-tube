@@ -54,12 +54,13 @@
 	--radius-pill: 999px; // pill buttons, status pills
 
 	// Rich design colors
-	--gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	--gradient-dark: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-	--gradient-live: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
-	--shadow-card: 0 4px 20px rgba(0, 0, 0, 0.15);
-	--shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.2);
-	--shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.6); // modals / floating chrome
+	--gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+	--gradient-dark: linear-gradient(180deg, #0f1118 0%, #141824 100%);
+	--gradient-live: linear-gradient(90deg, #f43f5e 0%, #e11d48 100%);
+	// Layered, soft elevation ladder (small ambient + wide diffuse).
+	--shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.18);
+	--shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.22), 0 14px 36px rgba(0, 0, 0, 0.28);
+	--shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.28), 0 16px 48px rgba(0, 0, 0, 0.42); // modals / floating chrome
 	--transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 	// Translucent "glass" surface for hero cards (player header, offline
@@ -123,7 +124,9 @@ html {
 
 body {
 	font-family: var(--theme-text-body-font-family);
-	font-weight: 300;
+	// 400: light-weight body text renders thin and low-contrast, especially
+	// for CJK glyphs, so regular is the modern readable default.
+	font-weight: 400;
 	margin: 0;
 	background: var(--gradient-dark);
 	background-attachment: fixed;
@@ -139,8 +142,8 @@ body {
 		right: 0;
 		bottom: 0;
 		background:
-			radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-			radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%);
+			radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.07) 0%, transparent 50%),
+			radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.07) 0%, transparent 50%);
 		pointer-events: none;
 		z-index: -1;
 	}
@@ -229,23 +232,25 @@ body {
 	margin-right: 5px;
 }
 
+// Slim neutral scrollbar; the loud gradient thumb read as 2018 chrome.
 body::-webkit-scrollbar {
-	width: 10px;
-	background: rgba(0, 0, 0, 0.3);
+	width: 8px;
+	background: transparent;
 }
 
 body::-webkit-scrollbar-thumb {
-	background: linear-gradient(180deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%);
-	border-radius: 5px;
-	border: 2px solid rgba(0, 0, 0, 0.3);
+	background: var(--color-scrollbar-thumb);
+	border-radius: var(--radius-pill);
+	background-clip: padding-box;
+	border: 2px solid transparent;
 
 	&:hover {
-		background: linear-gradient(180deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%);
+		background-color: var(--color-overlay-strong);
 	}
 }
 
 body::-webkit-scrollbar-track {
-	background: rgba(0, 0, 0, 0.2);
+	background: transparent;
 }
 
 /* ================================================
@@ -305,15 +310,15 @@ body::-webkit-scrollbar-track {
 	.ant-modal-content {
 		background-color: var(--color-panel-bg) !important;
 		border: 1px solid var(--color-panel-border);
-		border-radius: 8px;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-panel);
 	}
 
 	.ant-modal-header {
 		background-color: var(--color-panel-bg) !important;
 		border-bottom: 1px solid var(--color-panel-border);
 		padding: 16px 24px;
-		border-radius: 8px 8px 0 0;
+		border-radius: var(--radius-md) var(--radius-md) 0 0;
 	}
 
 	.ant-modal-title {
@@ -339,7 +344,7 @@ body::-webkit-scrollbar-track {
 		background-color: var(--color-panel-bg) !important;
 		border-top: 1px solid var(--color-panel-border) !important;
 		padding: 12px 24px;
-		border-radius: 0 0 8px 8px;
+		border-radius: 0 0 var(--radius-md) var(--radius-md);
 	}
 
 	// Tabs inside modals
@@ -493,8 +498,8 @@ div.ant-modal-root div.ant-modal-wrap div.ant-modal div.ant-modal-content div.an
 		.ant-modal-content {
 			background-color: var(--color-panel-bg) !important;
 			border: 1px solid var(--color-panel-border);
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-			border-radius: 8px;
+			box-shadow: var(--shadow-panel);
+			border-radius: var(--radius-md);
 			overflow: visible;
 			padding: 0 !important;
 		}
@@ -519,7 +524,7 @@ div.ant-modal-root div.ant-modal-wrap div.ant-modal div.ant-modal-content div.an
 			border-bottom: 1px solid var(--color-panel-border) !important;
 			padding: 16px 24px !important;
 			margin: 0 !important;
-			border-radius: 8px 8px 0 0;
+			border-radius: var(--radius-md) var(--radius-md) 0 0;
 		}
 
 		.ant-modal-body {
@@ -532,7 +537,7 @@ div.ant-modal-root div.ant-modal-wrap div.ant-modal div.ant-modal-content div.an
 			border-top: 1px solid var(--color-panel-border) !important;
 			padding: 12px 24px !important;
 			margin: 0 !important;
-			border-radius: 0 0 8px 8px;
+			border-radius: 0 0 var(--radius-md) var(--radius-md);
 		}
 	}
 }
@@ -542,8 +547,8 @@ div.ant-modal-root div.ant-modal-wrap div.ant-modal div.ant-modal-content div.an
 	.ant-modal-content {
 		background-color: var(--color-panel-bg) !important;
 		border: 1px solid var(--color-panel-border) !important;
-		border-radius: 8px !important;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+		border-radius: var(--radius-md) !important;
+		box-shadow: var(--shadow-panel) !important;
 		overflow: visible !important;
 		padding: 0 !important;
 	}
@@ -765,16 +770,8 @@ div.ant-modal-root div.ant-modal-wrap div.ant-modal div.ant-modal-content div.an
 
 :root[data-theme='light'] body::before {
 	background:
-		radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.06) 0%, transparent 50%),
-		radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.06) 0%, transparent 50%);
-}
-
-:root[data-theme='light'] body::-webkit-scrollbar {
-	background: rgba(0, 0, 0, 0.06);
-}
-
-:root[data-theme='light'] body::-webkit-scrollbar-track {
-	background: rgba(0, 0, 0, 0.04);
+		radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
 }
 
 // Brand-colored auth provider buttons (X black, Discord blurple, Google blue,

@@ -11,35 +11,31 @@
 	z-index: 9999;
 
 	button {
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		background: var(--gradient-primary);
 		color: white;
 		border: none;
 		z-index: 9999;
-		box-shadow:
-			0 4px 15px rgba(102, 126, 234, 0.4),
-			0 0 30px rgba(102, 126, 234, 0.2);
+		box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
 		opacity: 0;
 		animation: show 250ms forwards ease-in-out 500ms;
 		font-size: 12px;
-		font-weight: 700;
+		font-weight: 600;
 		padding: 0.7rem 1.4rem;
-		border-radius: 24px;
+		border-radius: var(--radius-pill);
 		cursor: pointer;
 		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 		backdrop-filter: blur(10px);
 
 		&:hover {
-			transform: translateY(-3px) scale(1.05);
-			box-shadow:
-				0 8px 25px rgba(102, 126, 234, 0.5),
-				0 0 40px rgba(102, 126, 234, 0.3);
+			transform: translateY(-2px);
+			box-shadow: 0 8px 22px rgba(99, 102, 241, 0.5);
 		}
 
 		&:active {
-			transform: translateY(0) scale(0.98);
+			transform: translateY(0);
 		}
 	}
 }
@@ -68,16 +64,16 @@
 
 .virtuoso::-webkit-scrollbar {
 	width: 6px;
-	background: rgba(255, 255, 255, 0.03);
+	background: transparent;
 	border-radius: 3px;
 }
 
 .virtuoso::-webkit-scrollbar-thumb {
-	background: linear-gradient(180deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+	background: var(--color-scrollbar-thumb);
 	border-radius: 3px;
 
 	&:hover {
-		background: linear-gradient(180deg, rgba(102, 126, 234, 0.5) 0%, rgba(118, 75, 162, 0.5) 100%);
+		background: var(--color-overlay-strong);
 	}
 }
 

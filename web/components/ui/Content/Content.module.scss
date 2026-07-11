@@ -254,17 +254,17 @@
 	font-weight: 700;
 	font-size: 1em;
 	z-index: 99;
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background: var(--gradient-primary);
 	border-width: 0;
 	border-radius: var(--radius-pill);
 	// Brand glow shadows stay literal on purpose (colored, not elevation).
-	box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+	box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45);
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	color: white;
 
 	&:hover {
-		transform: translateY(-3px) scale(1.02);
-		box-shadow: 0 12px 40px rgba(102, 126, 234, 0.7);
+		transform: translateY(-2px);
+		box-shadow: 0 12px 32px rgba(99, 102, 241, 0.55);
 	}
 
 	&:active {

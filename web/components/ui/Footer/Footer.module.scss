@@ -6,9 +6,9 @@
 	flex-wrap: wrap;
 	justify-content: space-between;
 	flex-direction: row;
-	background: linear-gradient(135deg, rgba(26, 26, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
-	backdrop-filter: blur(25px);
-	-webkit-backdrop-filter: blur(25px);
+	background: rgba(16, 19, 28, 0.82);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
 	color: rgba(255, 255, 255, 0.6);
 	font-family: var(--theme-text-body-font-family);
 
@@ -21,22 +21,6 @@
 	// overflow the viewport (see the same note on the header).
 	box-sizing: border-box;
 	position: relative;
-
-	// Subtle gradient line at top
-	&::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: 1px;
-		background: linear-gradient(
-			90deg,
-			transparent 0%,
-			rgba(102, 126, 234, 0.2) 50%,
-			transparent 100%
-		);
-	}
 
 	@include mixins.screen(tablet) {
 		font-size: 10px;
@@ -68,7 +52,7 @@
 // Light theme: white translucent footer with dark text
 :global(:root[data-theme='light']) {
 	.footer {
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(243, 246, 252, 0.95) 100%);
+		background: rgba(255, 255, 255, 0.85);
 		color: rgba(0, 0, 0, 0.55);
 		border-top: 1px solid rgba(0, 0, 0, 0.06);
 

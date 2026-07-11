@@ -25,7 +25,7 @@ BUTTONS
 .ant-btn-default {
 	// Text color comes from the antd theme algorithm; only shape and the
 	// brand border are customised here. Surfaces use flipping overlay tokens.
-	border-width: 2px;
+	border-width: 1px;
 	border-color: var(--theme-color-components-primary-button-border);
 	border-radius: var(--theme-rounded-corners);
 	background-color: var(--color-overlay-faint);
@@ -39,7 +39,7 @@ BUTTONS
 .ant-btn-primary {
 	height: 2rem;
 	font-size: 0.85rem;
-	border-width: 2px;
+	border-width: 1px;
 	border-radius: var(--theme-rounded-corners);
 	color: var(--theme-color-components-primary-button-text);
 	border-color: var(--theme-color-components-primary-button-border);
@@ -138,10 +138,10 @@ DROPDOWN
 }
 
 .ant-tabs-tab {
-	padding: 0.8rem 1.2rem;
+	padding: 0.7rem 1.1rem;
 	background-color: transparent;
-	border-radius: 12px 12px 0 0;
-	font-weight: 700;
+	border-radius: var(--radius-md) var(--radius-md) 0 0;
+	font-weight: 600;
 	color: rgba(255, 255, 255, 0.6) !important;
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	font-size: 0.95rem;
@@ -156,17 +156,12 @@ DROPDOWN
 	}
 
 	&.ant-tabs-tab-active {
-		background: linear-gradient(
-			145deg,
-			rgba(255, 255, 255, 0.1) 0%,
-			rgba(255, 255, 255, 0.05) 100%
-		);
+		background: rgba(255, 255, 255, 0.06);
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-bottom: none;
 
 		.ant-tabs-tab-btn {
 			color: #ffffff !important;
-			text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
 
 			&:hover {
 				color: #c4b5fd !important;
@@ -206,9 +201,9 @@ DROPDOWN
 }
 
 .ant-tabs-ink-bar {
-	background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-	height: 3px !important;
-	border-radius: 3px;
+	background: var(--gradient-primary);
+	height: 2px !important;
+	border-radius: 2px;
 }
 
 .ant-tabs-nav:before {
@@ -285,8 +280,8 @@ th {
 [class*='ant-modal-content'] {
 	background: var(--color-panel-bg) !important;
 	background-color: var(--color-panel-bg) !important;
-	border: 1px solid rgba(102, 126, 234, 0.3) !important;
-	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
+	border: 1px solid var(--color-panel-border-soft) !important;
+	box-shadow: var(--shadow-panel) !important;
 	padding: 0 !important;
 }
 
