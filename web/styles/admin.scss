@@ -183,11 +183,38 @@
 	min-width: 50vw;
 }
 
-/* Phones: the desktop gutters eat most of the narrow viewport. */
+/* Phones: the desktop gutters eat most of the narrow viewport. The antd Row
+   gutters (negative margins) and fixed-width fields can poke a few px past
+   the viewport, which turns into a page-wide horizontal scrollbar. */
 @media (max-width: 767.98px) {
 	.app-container .main-content-container {
 		padding: 1.25em 1em 2.5em;
+		overflow-x: hidden;
 	}
+
+	/* The video variants table is wider than a phone; scroll it inside its
+	   own module instead of the whole page. */
+	.app-container .variants-table-module {
+		overflow-x: auto;
+	}
+}
+
+/* Admin pages scroll as one page. The viewer-oriented tab rules in
+   ant-overrides.scss (height: 100% + overflow: auto) otherwise create a
+   nested scroll area whose horizontal scrollbar (content is a hair wider
+   than the holder because of Row gutters) shows up at the bottom of tabbed
+   settings pages such as config-video and config/server. */
+.app-container .ant-tabs {
+	height: auto;
+}
+
+.app-container .ant-tabs .ant-tabs-content-holder {
+	height: auto;
+	padding: 0;
+}
+
+.app-container .ant-tabs .ant-tabs-content {
+	overflow: visible;
 }
 
 /* Constrain page content and give sections a consistent vertical rhythm.

@@ -87,10 +87,6 @@ const EditOutlined = dynamic(() => import('@ant-design/icons/EditOutlined'), {
 	ssr: false,
 });
 
-const FediverseOutlined = dynamic(() => import('../../assets/images/icons/fediverse.svg?react'), {
-	ssr: false,
-});
-
 export type MainLayoutProps = {
 	children: ReactNode;
 };
@@ -163,6 +159,10 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 		</div>
 	);
 
+	// Fediverse lives as a labelled group inside Integrations & API (it is a
+	// rarely-used integration, not a daily destination). The follower/action
+	// pages appear once federation is enabled; the settings page is always
+	// reachable so the feature can be turned on at all.
 	const integrationsMenu = [
 		{
 			label: <Link href="/admin/webhooks">Webhook</Link>,
@@ -175,6 +175,37 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 		{
 			label: <Link href="/admin/actions">{t('admin.layout.mainLayout.menu.externalActions')}</Link>,
 			key: '/admin/actions',
+		},
+		{
+			type: 'group' as const,
+			key: 'integrations-group-fediverse',
+			label: t('admin.layout.mainLayout.menu.fediverse'),
+			children: [
+				federationEnabled && {
+					label: (
+						<Link href="/admin/federation/followers">
+							{t('admin.layout.mainLayout.menu.followers')}
+						</Link>
+					),
+					key: '/admin/federation/followers',
+				},
+				federationEnabled && {
+					label: (
+						<Link href="/admin/federation/actions">
+							{t('admin.layout.mainLayout.menu.socialActions')}
+						</Link>
+					),
+					key: '/admin/federation/actions',
+				},
+				{
+					label: (
+						<Link href="/admin/config-federation">
+							{t('admin.layout.mainLayout.menu.federationSettings')}
+						</Link>
+					),
+					key: '/admin/config-federation',
+				},
+			].filter(Boolean),
 		},
 	];
 
@@ -323,36 +354,6 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 		},
 	].filter(Boolean);
 
-	// Fediverse: follower/action pages appear once federation is enabled; the
-	// settings page is always reachable so the feature can be turned on at all
-	// (it previously had no menu entry anywhere).
-	const fediverseMenu = [
-		federationEnabled && {
-			label: (
-				<Link href="/admin/federation/followers">
-					{t('admin.layout.mainLayout.menu.followers')}
-				</Link>
-			),
-			key: '/admin/federation/followers',
-		},
-		federationEnabled && {
-			label: (
-				<Link href="/admin/federation/actions">
-					{t('admin.layout.mainLayout.menu.socialActions')}
-				</Link>
-			),
-			key: '/admin/federation/actions',
-		},
-		{
-			label: (
-				<Link href="/admin/config-federation">
-					{t('admin.layout.mainLayout.menu.federationSettings')}
-				</Link>
-			),
-			key: '/admin/config-federation',
-		},
-	].filter(Boolean);
-
 	// Diagnostics only — content management lives under Broadcast.
 	const utilitiesMenu = [
 		{
@@ -430,22 +431,6 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 			label: t('admin.layout.mainLayout.menu.donations'),
 			icon: <GiftOutlined />,
 			children: donationsMenu,
-		},
-		{
-			key: 'fediverse',
-			label: t('admin.layout.mainLayout.menu.fediverse'),
-			icon: (
-				<span
-					role="img"
-					aria-label="fediverse"
-					className="anticon anticon-message ant-menu-item-icon"
-				>
-					{/* Wrapping the icon in span for consistency with other icons used
-            directly from antd */}
-					<FediverseOutlined />
-				</span>
-			),
-			children: fediverseMenu,
 		},
 		{
 			key: 'configuration',
