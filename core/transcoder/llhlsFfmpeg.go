@@ -91,6 +91,14 @@ func (t *LLHLSTranscoder) diskMirrorOutput() string {
 	return strings.Join([]string{
 		"-map 0:v:0 -map 0:a:0?",
 		"-c copy",
+		// Encoders like OBS NVENC carry SPS/PPS only in the FLV extradata and
+		// never repeat them in-band; ffmpeg 5.1's auto-inserted mp4toannexb
+		// only prepends them to the FIRST IDR, so every later segment is
+		// undecodable on its own (thumbnails, replay.mp4 remux and DVR all
+		// read these segments standalone). dump_extra (after mp4toannexb has
+		// converted the extradata to Annex B) re-injects the parameter sets
+		// at every keyframe; duplicates are legal and harmless.
+		"-bsf:v h264_mp4toannexb,dump_extra",
 		"-f hls",
 		"-hls_time 4",
 		"-hls_list_size 10" + t.getStartNumberString(),
@@ -110,7 +118,17 @@ func (t *LLHLSTranscoder) renditionMpegtsOutput(v HLSVariant, port int) string {
 	dest := fmt.Sprintf("-flush_packets 1 -f mpegts tcp://127.0.0.1:%d", port)
 
 	if v.isVideoPassthrough {
-		return strings.Join([]string{"-map 0:v:0 -map 0:a:0?", "-c:v copy", "-c:a copy", dest}, " ")
+		// Same parameter-set re-injection as the disk mirror (see
+		// diskMirrorOutput): gohlslib builds each rendition's init segment from
+		// the in-band SPS/PPS, which header-in-extradata-only encoders (OBS
+		// NVENC) otherwise provide exactly once per stream.
+		return strings.Join([]string{
+			"-map 0:v:0 -map 0:a:0?",
+			"-c:v copy",
+			"-bsf:v h264_mp4toannexb,dump_extra",
+			"-c:a copy",
+			dest,
+		}, " ")
 	}
 
 	preset := t.codec.GetPresetForLevel(v.cpuUsageLevel)

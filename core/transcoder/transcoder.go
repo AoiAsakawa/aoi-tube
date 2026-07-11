@@ -411,7 +411,11 @@ func (v *HLSVariant) SetVideoBitrate(bitrate int) {
 
 func (v *HLSVariant) getVideoQualityString(t *Transcoder) string {
 	if v.isVideoPassthrough {
-		return fmt.Sprintf("-map v:0 -c:v:%d copy", v.index)
+		// Re-inject SPS/PPS at every keyframe for encoders that only carry them
+		// in the FLV extradata (OBS NVENC): ffmpeg 5.1's auto mp4toannexb adds
+		// them to the first IDR only, leaving later segments undecodable
+		// standalone (thumbnails / replay remux). See llhlsFfmpeg.go.
+		return fmt.Sprintf("-map v:0 -c:v:%d copy -bsf:v:%d h264_mp4toannexb,dump_extra", v.index, v.index)
 	}
 
 	// Force an i-frame every segment. Use the fractional keyframe interval when

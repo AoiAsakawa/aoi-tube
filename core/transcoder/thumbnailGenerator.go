@@ -1,6 +1,8 @@
 package transcoder
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"path"
@@ -132,6 +134,16 @@ func fireThumbnailGenerator(segmentPath string, variantIndex int) error {
 
 	ffmpegCmd := strings.Join(thumbnailCmdFlags, " ")
 	if _, err := exec.Command("sh", "-c", ffmpegCmd).Output(); err != nil {
+		// "exit status 1" alone is undiagnosable; surface the tail of ffmpeg's
+		// stderr (exec.Output captures it on ExitError).
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && len(exitErr.Stderr) > 0 {
+			stderr := strings.TrimSpace(string(exitErr.Stderr))
+			if len(stderr) > 300 {
+				stderr = stderr[len(stderr)-300:]
+			}
+			return fmt.Errorf("%w: %s", err, strings.ReplaceAll(stderr, "\n", " | "))
+		}
 		return err
 	}
 
