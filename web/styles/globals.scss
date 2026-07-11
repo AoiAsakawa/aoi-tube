@@ -542,6 +542,26 @@ div.ant-modal-root div.ant-modal-wrap div.ant-modal div.ant-modal-content div.an
 	}
 }
 
+// antd 6.5: the modal panel element is .ant-modal-container — there is no
+// .ant-modal-content wrapper anymore. The broad
+// "[class*='ant-modal'] { background: transparent }" rule (ant-overrides.scss)
+// also strips the container's surface, leaving a transparent ring (the
+// container's own padding) around the header/body/footer with the close
+// button floating half outside the visible panel. Paint the panel chrome on
+// the container itself and drop its padding so the close button sits inside
+// the visible surface.
+.ant-modal .ant-modal-container,
+.ant-modal-root .ant-modal .ant-modal-container,
+div.ant-modal-container {
+	background: var(--color-panel-bg) !important;
+	background-color: var(--color-panel-bg) !important;
+	border: 1px solid var(--color-panel-border) !important;
+	border-radius: var(--radius-md) !important;
+	box-shadow: var(--shadow-panel) !important;
+	padding: 0 !important;
+	overflow: visible;
+}
+
 // Dark modal class for admin panels
 .dark-modal {
 	.ant-modal-content {
