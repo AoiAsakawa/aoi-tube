@@ -15,7 +15,7 @@ type MetamaskConfig struct {
 	// provider (Helius, QuickNode, Alchemy, ...). Empty falls back to the public
 	// node. The browser never talks to it directly — requests are proxied through
 	// /api/solana/rpc, so a URL containing an API key stays server-side.
-	SolanaRPCURL string `json:"solanaRpcUrl,omitempty"`
+	SolanaRPCURL  string `json:"solanaRpcUrl,omitempty"`
 	NetworkID     int64  `json:"networkId"`     // 1 = Mainnet, 11155111 = Sepolia, 137 = Polygon
 	NetworkName   string `json:"networkName"`   // Display name
 	ChainCurrency string `json:"chainCurrency"` // ETH, MATIC, BNB, etc.

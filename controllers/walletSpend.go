@@ -10,8 +10,8 @@ import (
 	"github.com/aoiasakawa/aoitube/core/webhooks"
 	"github.com/aoiasakawa/aoitube/models"
 	"github.com/aoiasakawa/aoitube/router/middleware"
-	"github.com/teris-io/shortid"
 	log "github.com/sirupsen/logrus"
+	"github.com/teris-io/shortid"
 )
 
 type spendCoinsRequest struct {
