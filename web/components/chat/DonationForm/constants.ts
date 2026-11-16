@@ -127,8 +127,8 @@ export const AVAILABLE_NETWORKS: NetworkOption[] = [
 		// Pseudo coin ID served by the backend's Coinpaprika tier (vbc-virbicoin).
 		coinGeckoId: 'virbicoin',
 		hexChainId: '0x149',
-		rpcUrl: 'https://rpc.digitalregion.jp',
-		blockExplorerUrl: 'https://explorer.digitalregion.jp',
+		rpcUrl: 'https://rpc.virbicoin.com',
+		blockExplorerUrl: 'https://explorer.virbicoin.com',
 		chainType: 'evm',
 	},
 	// MetaMask default networks (names must match exactly)
