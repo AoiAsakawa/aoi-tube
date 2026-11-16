@@ -41,20 +41,20 @@ const defaultSocialHandles = [
 	{
 		icon: '/img/platformlogos/github.svg',
 		platform: 'github',
-		url: 'https://github.com/AoiAsakawa/aoitube',
+		url: 'https://github.com/AoiAsakawa/aoi-tube',
 	},
 ];
 const defaultSocialHandlesAdmin = [
 	{
 		platform: 'github',
-		url: 'https://github.com/AoiAsakawa/aoitube',
+		url: 'https://github.com/AoiAsakawa/aoi-tube',
 	},
 ];
 const defaultForbiddenUsernames = ['aoitube', 'owncast', 'operator', 'admin', 'system'];
 const defaultPageContent = `<h1>Welcome to AoiTube!</h1>
 <ul>
 <li>
-<p>This is a live stream powered by <a href="https://github.com/AoiAsakawa/aoitube">AoiTube</a>, a free and open source live streaming server based on <a href="https://owncast.online">Owncast</a>.</p>
+<p>This is a live stream powered by <a href="https://github.com/AoiAsakawa/aoi-tube">AoiTube</a>, a free and open source live streaming server based on <a href="https://owncast.online">Owncast</a>.</p>
 </li>
 <li>
 <p>If you're the owner of this server you should visit the admin and customize the content on this page.</p>

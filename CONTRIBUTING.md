@@ -6,7 +6,7 @@ This repository is a customized fork of [Owncast](https://github.com/owncast/own
 
 ## About This Fork
 
-AoiTube (AoiAsakawa/aoitube) is a customized version with the following added features:
+AoiTube (AoiAsakawa/aoi-tube) is a customized version with the following added features:
 
 - 🇯🇵 Japanese-first UI with 5-language i18n (ja / en / zh / zh-TW / ko)
 - ⚡ LL-HLS (low-latency HLS) and experimental WebRTC delivery
@@ -24,7 +24,7 @@ See [README.md](README.md) for the full feature list and
 
 ### Bug Reports & Feature Requests
 
-1. Check the existing issues on [Issues](https://github.com/AoiAsakawa/aoitube/issues)
+1. Check the existing issues on [Issues](https://github.com/AoiAsakawa/aoi-tube/issues)
 2. Open a new issue to report
 
 ### Pull Requests
@@ -49,7 +49,7 @@ See [README.md](README.md) for the full feature list and
 
 ```bash
 # Clone the repository
-git clone https://github.com/AoiAsakawa/aoitube.git
+git clone https://github.com/AoiAsakawa/aoi-tube.git
 cd aoitube
 
 # Install frontend dependencies

@@ -77,7 +77,7 @@ func CreateSignedRequest(payload []byte, url *url.URL, fromActorIRI *url.URL) (*
 
 	req, _ := http.NewRequest("POST", url.String(), bytes.NewBuffer(payload))
 
-	ua := fmt.Sprintf("%s; https://github.com/AoiAsakawa/aoitube", config.GetReleaseString())
+	ua := fmt.Sprintf("%s; https://github.com/AoiAsakawa/aoi-tube", config.GetReleaseString())
 	req.Header.Set("User-Agent", ua)
 	req.Header.Set("Content-Type", "application/activity+json")
 

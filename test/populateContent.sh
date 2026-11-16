@@ -102,7 +102,7 @@ curl 'http://localhost:8080/api/admin/config/socialhandles' \
 	-H 'Sec-Fetch-Site: same-origin' \
 	-H 'Sec-GPC: 1' \
 	-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36' \
-	--data-raw '{"value":[{"platform":"github","url":"https://github.com/AoiAsakawa/aoitube"},{"url":"https://facebook.biz/facebook","platform":"facebook"},{"url":"https://linkedin.biz/linkedin","platform":"linkedin"},{"url":"https://twitter.biz/twitter","platform":"twitter"}]}' \
+	--data-raw '{"value":[{"platform":"github","url":"https://github.com/AoiAsakawa/aoi-tube"},{"url":"https://facebook.biz/facebook","platform":"facebook"},{"url":"https://linkedin.biz/linkedin","platform":"linkedin"},{"url":"https://twitter.biz/twitter","platform":"twitter"}]}' \
 	--compressed
 
 # External action buttons

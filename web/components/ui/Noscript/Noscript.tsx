@@ -14,7 +14,7 @@ export const Noscript: FC = () => {
 					<br />
 					<p>
 						{t('ui.noscript.poweredByPrefix')}&nbsp;
-						<a href="https://github.com/AoiAsakawa/aoitube" rel="noopener noreferrer" target="_blank">
+						<a href="https://github.com/AoiAsakawa/aoi-tube" rel="noopener noreferrer" target="_blank">
 							AoiTube
 						</a>
 						&nbsp;{t('ui.noscript.poweredBySuffix')}

@@ -14,7 +14,7 @@ Populated.args = {
 	links: [
 		{
 			platform: 'github',
-			url: 'https://github.com/AoiAsakawa/aoitube',
+			url: 'https://github.com/AoiAsakawa/aoi-tube',
 			icon: '/img/platformlogos/github.svg',
 		},
 		{

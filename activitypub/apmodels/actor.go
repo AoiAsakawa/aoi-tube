@@ -314,7 +314,7 @@ func MakeServiceForAccount(accountName string) vocab.ActivityStreamsService {
 	// Work around an issue where a single attachment will not serialize
 	// as an array, so add another item to the mix.
 	if len(data.GetSocialHandles()) == 1 {
-		addMetadataLinkToProfile(person, "AoiTube", "https://github.com/AoiAsakawa/aoitube")
+		addMetadataLinkToProfile(person, "AoiTube", "https://github.com/AoiAsakawa/aoi-tube")
 	}
 
 	return person

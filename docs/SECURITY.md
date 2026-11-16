@@ -8,7 +8,7 @@ for responsible disclosure and prompt mitigation.
 
 The latest version of AoiTube is seen as the supported version. As a small project we are unable to support previous versions and urge users of the software to stay up to date.
 
-## Security Posture (AoiTube (AoiAsakawa/aoitube) fork)
+## Security Posture (AoiTube (AoiAsakawa/aoi-tube) fork)
 
 The measures below are implemented in this fork and verified in code.
 
@@ -100,6 +100,6 @@ be allowed via `OWNCAST_ALLOWED_WS_ORIGINS` (comma-separated hostnames, or
 
 ## Reporting a Vulnerability
 
-To report a security issue with this fork, [open an issue](https://github.com/AoiAsakawa/aoitube/issues/new) on the GitHub repository and *do not* mention vulnerability details in the issue.
+To report a security issue with this fork, [open an issue](https://github.com/AoiAsakawa/aoi-tube/issues/new) on the GitHub repository and *do not* mention vulnerability details in the issue.
 
 For the original Owncast project, please report to the [upstream repository](https://github.com/owncast/owncast).

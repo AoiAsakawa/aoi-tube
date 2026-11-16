@@ -1,6 +1,6 @@
 # Development Guide
 
-Developer guide for the AoiTube (AoiAsakawa/aoitube) fork. It covers the tech stack,
+Developer guide for the AoiTube (AoiAsakawa/aoi-tube) fork. It covers the tech stack,
 repository layout, build/dev commands, UI and admin-form conventions, the i18n
 workflow, and hard-won engineering gotchas.
 

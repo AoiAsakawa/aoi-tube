@@ -154,7 +154,7 @@ export default function Help() {
 				<div>
 					{t('admin.pages.help.other.foundBugPre')}
 					<a
-						href="https://github.com/AoiAsakawa/aoitube/issues/new/choose"
+						href="https://github.com/AoiAsakawa/aoi-tube/issues/new/choose"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -178,7 +178,7 @@ export default function Help() {
 					</a>{' '}
 					{t('admin.pages.help.other.questionAnd')}
 					<a
-						href="https://github.com/AoiAsakawa/aoitube/discussions"
+						href="https://github.com/AoiAsakawa/aoi-tube/discussions"
 						target="_blank"
 						rel="noopener noreferrer"
 					>

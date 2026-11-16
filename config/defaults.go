@@ -55,7 +55,7 @@ func GetDefaults() Defaults {
 		PageBodyContent: `
 # Welcome to AoiTube!
 
-- This is a live stream powered by [AoiTube](https://github.com/AoiAsakawa/aoitube), a free and open source live streaming server based on [Owncast](https://owncast.online).
+- This is a live stream powered by [AoiTube](https://github.com/AoiAsakawa/aoi-tube), a free and open source live streaming server based on [Owncast](https://owncast.online).
 
 - If you're the owner of this server you should visit the admin and customize the content on this page.
 

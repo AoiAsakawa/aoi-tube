@@ -10,7 +10,7 @@ export type ComponentErrorProps = {
 
 const openBugReport = () => {
 	window.open(
-		'https://github.com/AoiAsakawa/aoitube/issues/new?assignees=&labels=&template=bug-report-feature-request.yml',
+		'https://github.com/AoiAsakawa/aoi-tube/issues/new?assignees=&labels=&template=bug-report-feature-request.yml',
 		'_blank',
 	);
 };

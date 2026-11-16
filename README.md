@@ -9,7 +9,7 @@
 [![Ant Design](https://img.shields.io/badge/Ant%20Design-6-0170FE?style=flat-square&logo=antdesign&logoColor=white)](https://ant.design/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://sqlite.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.3.0-blue?style=flat-square)](https://github.com/AoiAsakawa/aoitube/releases)
+[![Version](https://img.shields.io/badge/Version-0.3.0-blue?style=flat-square)](https://github.com/AoiAsakawa/aoi-tube/releases)
 
 **English** | [日本語](README.ja.md)
 
@@ -138,7 +138,7 @@ Protocols are configured in **Admin > Settings > Streaming Protocol**. See
 
 ```bash
 # Clone the repository
-git clone https://github.com/AoiAsakawa/aoitube.git
+git clone https://github.com/AoiAsakawa/aoi-tube.git
 cd aoitube
 
 # Build the frontend

@@ -29,7 +29,7 @@ After basic setup, you can look into setting WSL2 for development. Here is the l
 
 ## Installing AoiTube under WSL2
 
-Once you're running WSL2 in Windows you can install AoiTube the same way you would on any Linux distribution by following the [Quickstart](https://github.com/AoiAsakawa/aoitube/blob/main/README.md) guide.
+Once you're running WSL2 in Windows you can install AoiTube the same way you would on any Linux distribution by following the [Quickstart](https://github.com/AoiAsakawa/aoi-tube/blob/main/README.md) guide.
 
 ## Contributing to AoiTube by performing local development
 
@@ -47,7 +47,7 @@ Here is the list for all the prerequisites required ->
 
 ### Read more
 
-Once your local development environment is setup, you can read more about how to contribute to AoiTube [by reading the development document](https://github.com/AoiAsakawa/aoitube/blob/main/docs/development.md).
+Once your local development environment is setup, you can read more about how to contribute to AoiTube [by reading the development document](https://github.com/AoiAsakawa/aoi-tube/blob/main/docs/development.md).
 
 ## Some possible issues you can face while setting up WSL2
 
@@ -77,6 +77,6 @@ Example in OBS-Studio ->
 ## More resources
 
 - [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/)
-- [AoiTube development documentation](https://github.com/AoiAsakawa/aoitube/blob/main/docs/development.md)
-- [AoiTube quickstart guide](https://github.com/AoiAsakawa/aoitube/blob/main/README.md)
-- [AoiTube README](https://github.com/AoiAsakawa/aoitube/blob/main/README.md)
+- [AoiTube development documentation](https://github.com/AoiAsakawa/aoi-tube/blob/main/docs/development.md)
+- [AoiTube quickstart guide](https://github.com/AoiAsakawa/aoi-tube/blob/main/README.md)
+- [AoiTube README](https://github.com/AoiAsakawa/aoi-tube/blob/main/README.md)

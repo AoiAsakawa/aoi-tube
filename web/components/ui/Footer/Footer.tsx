@@ -44,7 +44,7 @@ export const Footer: FC = () => {
 	return (
 		<footer className={styles.footer} id="footer">
 			<span>
-				Powered by <a href="https://github.com/AoiAsakawa/aoitube">AoiTube v{versionNumber}</a>
+				Powered by <a href="https://github.com/AoiAsakawa/aoi-tube">AoiTube v{versionNumber}</a>
 			</span>
 			<span className={styles.links}>
 				{hasArchives && <Link href="/archives">{t('ui.footer.archives')}</Link>}
@@ -52,13 +52,13 @@ export const Footer: FC = () => {
 					<Link href="/tokushoho">{tokushohoTitle || t('ui.footer.tokushoho')}</Link>
 				)}
 				{faqEnabled && <Link href="/faq">{t('ui.footer.faq')}</Link>}
-				<a href="https://github.com/AoiAsakawa/aoitube/tree/main/docs" target="_blank" rel="noreferrer">
+				<a href="https://github.com/AoiAsakawa/aoi-tube/tree/main/docs" target="_blank" rel="noreferrer">
 					{t('ui.footer.documentation')}
 				</a>
-				<a href="https://github.com/AoiAsakawa/aoitube/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">
+				<a href="https://github.com/AoiAsakawa/aoi-tube/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">
 					{t('ui.footer.contribute')}
 				</a>
-				<a href="https://github.com/AoiAsakawa/aoitube" target="_blank" rel="noreferrer">
+				<a href="https://github.com/AoiAsakawa/aoi-tube" target="_blank" rel="noreferrer">
 					{t('ui.footer.sourceCode')}
 				</a>
 			</span>

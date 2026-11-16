@@ -18,7 +18,7 @@ Example.args = {
 	links: [
 		{
 			platform: 'github',
-			url: 'https://github.com/AoiAsakawa/aoitube',
+			url: 'https://github.com/AoiAsakawa/aoi-tube',
 			icon: 'https://watch.owncast.online/img/platformlogos/github.svg',
 		},
 		{
@@ -58,7 +58,7 @@ LongContent.args = {
 	links: [
 		{
 			platform: 'github',
-			url: 'https://github.com/AoiAsakawa/aoitube',
+			url: 'https://github.com/AoiAsakawa/aoi-tube',
 			icon: 'https://watch.owncast.online/img/platformlogos/github.svg',
 		},
 		{

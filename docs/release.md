@@ -1,6 +1,6 @@
 # Release & Deployment
 
-Release and deployment procedure for the AoiTube (AoiAsakawa/aoitube) fork. For build
+Release and deployment procedure for the AoiTube (AoiAsakawa/aoi-tube) fork. For build
 tooling, tests, and day-to-day development commands see
 [development.md](development.md).
 
