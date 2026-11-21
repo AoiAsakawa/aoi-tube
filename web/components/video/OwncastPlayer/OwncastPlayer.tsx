@@ -3,7 +3,8 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
-import Hls from 'hls.js';
+import type Hls from 'hls.js';
+import { loadHls, type HlsConstructor } from '../../../utils/loadHls';
 import ViewerPing from '../viewer-ping';
 import { VideoPoster } from '../VideoPoster/VideoPoster';
 import {
@@ -227,7 +228,24 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 		// with an incompatible latency profile on the fly.
 		const activeSource = dvrMode ? dvrSource : source;
 
-		if (Hls.isSupported()) {
+		// The browser's own HLS support (Safari), used when hls.js can't run or
+		// couldn't be fetched.
+		const playNatively = () => {
+			if (video.canPlayType('application/vnd.apple.mpegurl')) {
+				video.src = decorateHlsUrl(activeSource);
+				video.addEventListener('loadedmetadata', attemptPlay, { once: true });
+			}
+		};
+
+		// hls.js is fetched on demand (see loadHls). The effect may be torn down
+		// before it arrives.
+		let cancelled = false;
+
+		const startHls = (Hls: HlsConstructor) => {
+			if (!Hls.isSupported()) {
+				playNatively();
+				return;
+			}
 			const hls = new Hls(
 				dvrMode
 					? {
@@ -306,12 +324,24 @@ export const OwncastPlayer: FC<OwncastPlayerProps> = ({
 					console.error('hls.js fatal error', data);
 				}
 			});
-		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-			video.src = decorateHlsUrl(activeSource);
-			video.addEventListener('loadedmetadata', attemptPlay, { once: true });
-		}
+		};
+
+		loadHls().then(
+			Hls => {
+				if (!cancelled) {
+					startHls(Hls);
+				}
+			},
+			error => {
+				if (!cancelled) {
+					console.error('unable to load hls.js', error);
+					playNatively();
+				}
+			},
+		);
 
 		return () => {
+			cancelled = true;
 			hlsRef.current?.destroy();
 			hlsRef.current = null;
 			ping.stop();

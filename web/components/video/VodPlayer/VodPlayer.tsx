@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { ErrorBoundary } from 'react-error-boundary';
-import Hls from 'hls.js';
+import type Hls from 'hls.js';
+import { loadHls } from '../../../utils/loadHls';
 import { ComponentError } from '../../ui/ComponentError/ComponentError';
 import { PlayerChrome } from '../PlayerChrome/PlayerChrome';
 import styles from './VodPlayer.module.scss';
@@ -84,24 +85,49 @@ export const VodPlayer: FC<VodPlayerProps> = ({
 			sourceType === 'application/vnd.apple.mpegurl' ||
 			(!sourceType && source.includes('.m3u8'));
 
-		if (isHls && Hls.isSupported()) {
-			const hls = new Hls({
-				xhrSetup: (xhr: XMLHttpRequest, url: string) => {
-					const decorated = decorateArchiveUrl(url);
-					if (decorated !== url) {
-						xhr.open('GET', decorated, true);
+		// hls.js is fetched on demand (see loadHls), and only for an HLS source:
+		// the usual replay.mp4 never needs it. The effect may be torn down before
+		// it arrives.
+		let cancelled = false;
+
+		if (isHls) {
+			loadHls().then(
+				Hls => {
+					if (cancelled) {
+						return;
+					}
+					if (!Hls.isSupported()) {
+						// Native HLS (Safari).
+						video.src = source;
+						return;
+					}
+					const hls = new Hls({
+						xhrSetup: (xhr: XMLHttpRequest, url: string) => {
+							const decorated = decorateArchiveUrl(url);
+							if (decorated !== url) {
+								xhr.open('GET', decorated, true);
+							}
+						},
+					});
+					hlsRef.current = hls;
+					hls.attachMedia(video);
+					hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(source));
+				},
+				error => {
+					if (!cancelled) {
+						console.error('unable to load hls.js', error);
+						// The browser may still play the playlist itself.
+						video.src = source;
 					}
 				},
-			});
-			hlsRef.current = hls;
-			hls.attachMedia(video);
-			hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(source));
+			);
 		} else {
-			// MP4 (token already in the URL) or native HLS (Safari).
+			// MP4 (token already in the URL).
 			video.src = source;
 		}
 
 		return () => {
+			cancelled = true;
 			hlsRef.current?.destroy();
 			hlsRef.current = null;
 		};
