@@ -19,11 +19,61 @@ else
     npm --silent install
 fi
 
+# Bundles from earlier builds are kept next to the new ones (see
+# keep_recent_assets). Set AOITUBE_KEEP_OLD_ASSETS_DAYS=0 for a clean bundle.
+KEEP_OLD_ASSETS_DAYS="${AOITUBE_KEEP_OLD_ASSETS_DAYS:-14}"
+KEEP_OLD_ASSETS_MAX_KB="${AOITUBE_KEEP_OLD_ASSETS_MAX_KB:-20480}"
+
+# keep_recent_assets <previous assets dir> <new assets dir>
+#
+# Copies the bundles of earlier builds that the new build no longer contains
+# into the new assets directory, newest first, as long as they are younger than
+# KEEP_OLD_ASSETS_DAYS and fit in KEEP_OLD_ASSETS_MAX_KB.
+#
+# An HTML shell cached by a CDN, or a tab left open across a deploy, keeps
+# asking for the bundles of the build it came from. Without them the page (or
+# the part of it that loads lazily) breaks until it is reloaded. Bundle names
+# are content hashes, so files from different builds never clash.
+keep_recent_assets() {
+    local previous="$1" current="$2"
+    local name size_kb kept=0 kept_kb=0
+
+    [ -d "$previous" ] || return 0
+
+    # ls -t puts the most recent builds first, so they get the size budget.
+    # Bundle names never contain whitespace.
+    # shellcheck disable=SC2012
+    while IFS= read -r name; do
+        [ -f "$previous/$name" ] || continue
+        [ -e "$current/$name" ] && continue
+        # Listed newest first: the first file that is too old ends the walk.
+        [ -n "$(find "$previous/$name" -mtime "-$KEEP_OLD_ASSETS_DAYS" -print)" ] || break
+
+        size_kb="$(du -k "$previous/$name" | cut -f1)"
+        if [ $((kept_kb + size_kb)) -gt "$KEEP_OLD_ASSETS_MAX_KB" ]; then
+            break
+        fi
+        # -p keeps the build time, which is what ages a file out later.
+        cp -p "$previous/$name" "$current/$name"
+        kept=$((kept + 1))
+        kept_kb=$((kept_kb + size_kb))
+    done < <(ls -t "$previous")
+
+    echo "Kept $kept bundle files (${kept_kb} KB) from earlier builds."
+}
+
 echo "Building aoitube web (Vite)..."
 rm -rf out
 
 build_log_file="$(mktemp -t aoitube-web-build.XXXXXX.log)"
-trap 'rm -f "$build_log_file"' EXIT
+previous_assets=""
+cleanup() {
+    rm -f "$build_log_file"
+    if [ -n "$previous_assets" ]; then
+        rm -rf "$previous_assets"
+    fi
+}
+trap cleanup EXIT
 
 set +o errexit
 node_modules/.bin/vite build 2>&1 | tee "$build_log_file"
@@ -51,10 +101,20 @@ fi
 
 echo "Copying web project to dist directory..."
 
+# Set the current bundles aside before they are replaced.
+if [ "$KEEP_OLD_ASSETS_DAYS" -gt 0 ] && [ -d ../static/web/assets ]; then
+    previous_assets="$(mktemp -d -t aoitube-web-assets.XXXXXX)"
+    cp -pR ../static/web/assets/. "$previous_assets/"
+fi
+
 # Remove the old one
 rm -rf ../static/web
 
 # Copy over the new one
 mv ./out ../static/web
+
+if [ -n "$previous_assets" ]; then
+    keep_recent_assets "$previous_assets" ../static/web/assets
+fi
 
 echo "Done."

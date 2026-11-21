@@ -5,6 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" href="/logo" />
 		<title>AoiTube</title>
+		<!-- Must run before the app: reloads once when this shell turns out to
+		     be a stale cached copy whose bundles are gone. Served from public/
+		     under a fixed name, hence vite-ignore. -->
+		<script src="/asset-recovery.js" vite-ignore></script>
 		<style>
 			/* Critical CSS to prevent FOUC (formerly pages/_document.tsx) */
 			body {
