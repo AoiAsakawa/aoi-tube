@@ -46,7 +46,7 @@ func PopulateDefaults() {
 	_ = SetSocialHandles([]models.SocialHandle{
 		{
 			Platform: "github",
-			URL:      "https://github.com/aoiasakawa/aoitube",
+			URL:      "https://github.com/AoiAsakawa/aoi-tube",
 		},
 	})
 
