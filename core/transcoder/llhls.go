@@ -85,10 +85,18 @@ func (t *LLHLSTranscoder) Start() {
 		log.Panicln(err, command)
 	}
 
+	// This transcoder only ever runs on the live stream: measure it against
+	// real time (see encoderLoad.go).
+	liveEncoderMonitor.reset()
+	defer liveEncoderMonitor.reset()
+
 	go func() {
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
 			line := scanner.Text()
+			if liveEncoderMonitor.consumeLine(line) {
+				continue
+			}
 			handleTranscoderMessage(line)
 		}
 	}()

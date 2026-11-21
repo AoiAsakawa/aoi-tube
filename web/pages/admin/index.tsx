@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, ReactElement } from 'react';
-import { Skeleton, Card, Statistic, Row, Col } from 'antd';
+import { Alert, Skeleton, Card, Statistic, Row, Col } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow, formatRelative } from 'date-fns';
 import dynamic from '@components/compat/dynamic';
@@ -119,7 +119,7 @@ export default function Home() {
 	});
 
 	// inbound
-	const { viewerCount, sessionPeakViewerCount } = serverStatusData;
+	const { viewerCount, sessionPeakViewerCount, encoder: encoderLoad } = serverStatusData;
 
 	const streamAudioDetailString = `${streamDetails.audioCodec}, ${
 		streamDetails.audioBitrate || 'Unknown'
@@ -157,6 +157,19 @@ export default function Home() {
 								/>
 							</Col>
 						</Row>
+						{/* The server measures this itself, so it shows even when no
+						    viewer is reporting playback problems yet. */}
+						{encoderLoad?.fallingBehind && (
+							<Alert
+								type="warning"
+								showIcon
+								style={{ marginTop: 16 }}
+								title={t('admin.pages.home.encoderBehindTitle', {
+									percent: Math.round(encoderLoad.speed * 100),
+								})}
+								description={t('admin.pages.home.encoderBehindDescription')}
+							/>
+						)}
 						<StreamHealthOverview />
 					</Card>
 				</div>

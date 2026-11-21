@@ -1096,7 +1096,9 @@
 				"outboundDetails": "Outbound Stream Details",
 				"outboundVideoStream": "Outbound Video Stream",
 				"outboundAudioStream": "Outbound Audio Stream",
-				"streamStarted": "Stream started {{relative}}"
+				"streamStarted": "Stream started {{relative}}",
+				"encoderBehindTitle": "The encoder is not keeping up with the stream ({{percent}}% of real time)",
+				"encoderBehindDescription": "Viewers get a growing delay and buffering. If the server's CPU is busy, lower the output resolution or frame rate, or remove an output variant. If it is not, the stream is arriving late from the broadcaster."
 			},
 			"loginSettings": {
 				"title": "Login Settings",

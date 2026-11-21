@@ -137,6 +137,13 @@ const initialServerStatusState = {
 		message: '',
 		representation: 0,
 	},
+	// Whether the live transcode keeps up with real time. `speed` is seconds of
+	// output per second (1 is real time); see core/transcoder/encoderLoad.go.
+	encoder: {
+		monitored: false,
+		speed: 1,
+		fallingBehind: false,
+	},
 	error: {
 		type: null,
 		msg: null,

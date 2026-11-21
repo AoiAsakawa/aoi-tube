@@ -116,6 +116,12 @@ func (t *Transcoder) Stop() {
 	}
 }
 
+// isLive reports whether this transcoder is fed the broadcaster's stream over
+// its stdin, as opposed to reading a file such as the offline clip.
+func (t *Transcoder) isLive() bool {
+	return t.input == "pipe:0"
+}
+
 // Start will execute the transcoding process with the settings previously set.
 func (t *Transcoder) Start() {
 	_lastTranscoderLogMessage = ""
@@ -144,10 +150,21 @@ func (t *Transcoder) Start() {
 		log.Panicln(err, command)
 	}
 
+	// Only the live transcode (RTMP piped in) is measured against real time;
+	// the offline clip is a file ffmpeg reads as fast as it likes.
+	live := t.isLive()
+	if live {
+		liveEncoderMonitor.reset()
+		defer liveEncoderMonitor.reset()
+	}
+
 	go func() {
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
 			line := scanner.Text()
+			if live && liveEncoderMonitor.consumeLine(line) {
+				continue
+			}
 			handleTranscoderMessage(line)
 		}
 	}()
@@ -207,15 +224,19 @@ func (t *Transcoder) getString() string {
 	// probed instead — forcing FLV on them fails with "could not find codec
 	// parameters".
 	inputFormat := ""
-	if t.input == "pipe:0" {
+	// Progress reports feed the encoder speed monitor (see encoderLoad.go).
+	// Appended to the log level so a file input's command stays as it was.
+	logFlags := "-loglevel warning"
+	if t.isLive() {
 		inputFormat = "-f flv"
+		logFlags += " " + ProgressFlag
 	}
 
 	ffmpegFlags := []string{
 		fmt.Sprintf(`FFREPORT=file="%s":level=32`, logging.GetTranscoderLogFilePath()),
 		t.ffmpegPath,
 		"-hide_banner",
-		"-loglevel warning",
+		logFlags,
 		t.codec.GlobalFlags(),
 		"-fflags +genpts+discardcorrupt", // Generate presentation time stamp if missing, discard corrupt
 		"-flags +cgop",                   // Force closed GOPs

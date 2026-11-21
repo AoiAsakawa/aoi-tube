@@ -6,6 +6,7 @@ import (
 
 	"github.com/aoiasakawa/aoitube/core"
 	"github.com/aoiasakawa/aoitube/core/data"
+	"github.com/aoiasakawa/aoitube/core/transcoder"
 	"github.com/aoiasakawa/aoitube/metrics"
 	"github.com/aoiasakawa/aoitube/models"
 	"github.com/aoiasakawa/aoitube/router/middleware"
@@ -28,6 +29,7 @@ func Status(w http.ResponseWriter, r *http.Request) {
 		SessionPeakViewerCount: status.SessionMaxViewerCount,
 		VersionNumber:          status.VersionNumber,
 		StreamTitle:            data.GetStreamTitle(),
+		Encoder:                transcoder.GetEncoderLoad(),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -49,4 +51,6 @@ type adminStatusResponse struct {
 	StreamTitle            string                       `json:"streamTitle"`
 	Health                 *models.StreamHealthOverview `json:"health"`
 	VersionNumber          string                       `json:"versionNumber"`
+	// Encoder says whether the live transcode keeps up with real time.
+	Encoder transcoder.EncoderLoad `json:"encoder"`
 }

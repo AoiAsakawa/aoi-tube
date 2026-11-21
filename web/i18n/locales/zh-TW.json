@@ -1096,7 +1096,9 @@
 				"outboundDetails": "傳送串流詳細資訊",
 				"outboundVideoStream": "傳送影像串流",
 				"outboundAudioStream": "傳送音訊串流",
-				"streamStarted": "開始直播於{{relative}}"
+				"streamStarted": "開始直播於{{relative}}",
+				"encoderBehindTitle": "編碼速度跟不上直播（即時速度的 {{percent}}%）",
+				"encoderBehindDescription": "觀眾端的延遲會越來越大，並容易出現卡頓。如果伺服器 CPU 使用率偏高，請降低輸出解析度或幀率，或減少輸出畫質的數量。如果 CPU 仍有餘裕，則是推流端的畫面延遲到達。"
 			},
 			"loginSettings": {
 				"title": "登入設定",

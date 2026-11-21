@@ -1096,7 +1096,9 @@
 				"outboundDetails": "送信ストリーム詳細",
 				"outboundVideoStream": "送信ビデオストリーム",
 				"outboundAudioStream": "送信オーディオストリーム",
-				"streamStarted": "{{relative}}に配信開始"
+				"streamStarted": "{{relative}}に配信開始",
+				"encoderBehindTitle": "エンコードが配信に追いついていません（実時間の {{percent}}%）",
+				"encoderBehindDescription": "視聴者側で遅延が広がり、映像が止まりやすくなります。サーバーの CPU に余裕がない場合は、出力の解像度やフレームレートを下げるか、画質の種類を減らしてください。CPU に余裕がある場合は、配信元からの映像が遅れて届いています。"
 			},
 			"loginSettings": {
 				"title": "ログイン設定",

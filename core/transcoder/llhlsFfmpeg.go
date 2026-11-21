@@ -42,6 +42,8 @@ func (t *LLHLSTranscoder) getLLHLSMpegtsString(ports []int) string {
 		t.ffmpegPath,
 		"-hide_banner",
 		"-loglevel warning",
+		// Progress reports feed the encoder speed monitor (see encoderLoad.go).
+		ProgressFlag,
 		t.codec.GlobalFlags(),
 		"-fflags +genpts+discardcorrupt",
 		"-flags +cgop",

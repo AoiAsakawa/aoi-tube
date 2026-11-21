@@ -1096,7 +1096,9 @@
 				"outboundDetails": "出站流详情",
 				"outboundVideoStream": "出站视频流",
 				"outboundAudioStream": "出站音频流",
-				"streamStarted": "开始直播于{{relative}}"
+				"streamStarted": "开始直播于{{relative}}",
+				"encoderBehindTitle": "编码速度跟不上直播（实时速度的 {{percent}}%）",
+				"encoderBehindDescription": "观众端的延迟会越来越大，并容易出现卡顿。如果服务器 CPU 占用较高，请降低输出分辨率或帧率，或减少输出画质的数量。如果 CPU 仍有余量，则是推流端的画面延迟到达。"
 			},
 			"loginSettings": {
 				"title": "登录设置",
