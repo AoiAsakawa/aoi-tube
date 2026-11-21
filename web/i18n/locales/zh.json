@@ -115,7 +115,21 @@
 			"label": "画质",
 			"auto": "自动"
 		},
-		"tapForSound": "点击开启声音"
+		"tapForSound": "点击开启声音",
+		"chrome": {
+			"play": "播放",
+			"pause": "暂停",
+			"mute": "静音",
+			"unmute": "取消静音",
+			"volume": "音量",
+			"live": "直播",
+			"backToLive": "返回直播",
+			"settings": "设置",
+			"quality": "画质",
+			"playbackSpeed": "播放速度",
+			"normalSpeed": "正常",
+			"fullscreen": "全屏"
+		}
 	},
 	"chat": {
 		"anonymous": "匿名",

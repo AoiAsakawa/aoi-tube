@@ -115,7 +115,21 @@
 			"label": "화질",
 			"auto": "자동"
 		},
-		"tapForSound": "탭하여 소리 켜기"
+		"tapForSound": "탭하여 소리 켜기",
+		"chrome": {
+			"play": "재생",
+			"pause": "일시정지",
+			"mute": "음소거",
+			"unmute": "음소거 해제",
+			"volume": "음량",
+			"live": "라이브",
+			"backToLive": "라이브로 돌아가기",
+			"settings": "설정",
+			"quality": "화질",
+			"playbackSpeed": "재생 속도",
+			"normalSpeed": "보통",
+			"fullscreen": "전체 화면"
+		}
 	},
 	"chat": {
 		"anonymous": "익명",

@@ -115,7 +115,21 @@
 			"label": "画質",
 			"auto": "自動"
 		},
-		"tapForSound": "タップして音声をON"
+		"tapForSound": "タップして音声をON",
+		"chrome": {
+			"play": "再生",
+			"pause": "一時停止",
+			"mute": "ミュート",
+			"unmute": "ミュート解除",
+			"volume": "音量",
+			"live": "ライブ",
+			"backToLive": "ライブに戻る",
+			"settings": "設定",
+			"quality": "画質",
+			"playbackSpeed": "再生速度",
+			"normalSpeed": "標準",
+			"fullscreen": "全画面"
+		}
 	},
 	"chat": {
 		"anonymous": "匿名",

@@ -115,7 +115,21 @@
 			"label": "Quality",
 			"auto": "Auto"
 		},
-		"tapForSound": "Tap for sound"
+		"tapForSound": "Tap for sound",
+		"chrome": {
+			"play": "Play",
+			"pause": "Pause",
+			"mute": "Mute",
+			"unmute": "Unmute",
+			"volume": "Volume",
+			"live": "Live",
+			"backToLive": "Back to live",
+			"settings": "Settings",
+			"quality": "Quality",
+			"playbackSpeed": "Playback speed",
+			"normalSpeed": "Normal",
+			"fullscreen": "Fullscreen"
+		}
 	},
 	"chat": {
 		"anonymous": "Anonymous",

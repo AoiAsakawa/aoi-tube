@@ -1,5 +1,6 @@
 import React, { FC, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import styles from './PlayerChrome.module.scss';
 
 export interface QualityOption {
@@ -84,6 +85,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 	onSeekDvr,
 	onGoLive,
 }) => {
+	const { t } = useTranslation();
 	const rootRef = useRef<HTMLDivElement>(null);
 	const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const scrubbing = useRef(false);
@@ -335,9 +337,9 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 
 			{/* Center big play / buffering spinner. */}
 			{!playing && !waiting && (
-				<button type="button" className={styles.bigPlay} onClick={togglePlay} aria-label="再生">
+				<button type="button" className={styles.bigPlay} onClick={togglePlay} aria-label={t('video.chrome.play')}>
 					<span className={styles.bigPlayGlyph}>
-						<Icon path={P.play} label="再生" />
+						<Icon path={P.play} label={t('video.chrome.play')} />
 					</span>
 				</button>
 			)}
@@ -357,12 +359,12 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 
 				<div className={styles.controls}>
 					<div className={styles.left}>
-						<button type="button" className={styles.iconBtn} onClick={togglePlay} aria-label={playing ? '一時停止' : '再生'}>
+						<button type="button" className={styles.iconBtn} onClick={togglePlay} aria-label={playing ? t('video.chrome.pause') : t('video.chrome.play')}>
 							<Icon path={playing ? P.pause : P.play} />
 						</button>
 
 						<div className={styles.volume}>
-							<button type="button" className={styles.iconBtn} onClick={toggleMute} aria-label={muted ? 'ミュート解除' : 'ミュート'}>
+							<button type="button" className={styles.iconBtn} onClick={toggleMute} aria-label={muted ? t('video.chrome.unmute') : t('video.chrome.mute')}>
 								<Icon path={muted || volume === 0 ? P.volMute : P.volHigh} />
 							</button>
 							<input
@@ -373,7 +375,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 								step={0.05}
 								value={volPct}
 								onChange={e => setVol(Number(e.target.value))}
-								aria-label="音量"
+								aria-label={t('video.chrome.volume')}
 							/>
 						</div>
 
@@ -386,15 +388,15 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 									[styles.liveBehind]: !atLiveEdge,
 								})}
 								onClick={() => onGoLive?.()}
-								aria-label="ライブに戻る"
+								aria-label={t('video.chrome.backToLive')}
 							>
 								<span className={styles.liveDot} />
-								{atLiveEdge ? 'ライブ' : `-${formatTime(behindLiveSeconds)}`}
+								{atLiveEdge ? t('video.chrome.live') : `-${formatTime(behindLiveSeconds)}`}
 							</button>
 						) : isLive ? (
 							<span className={styles.live}>
 								<span className={styles.liveDot} />
-								ライブ
+								{t('video.chrome.live')}
 							</span>
 						) : (
 							<span className={styles.time}>
@@ -410,7 +412,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 									type="button"
 									className={styles.iconBtn}
 									onClick={openSettings}
-									aria-label="設定"
+									aria-label={t('video.chrome.settings')}
 									aria-expanded={menu !== null}
 								>
 									<Icon path={P.settings} />
@@ -422,13 +424,13 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 											<>
 												{qualities && qualities.length > 0 && (
 													<button type="button" className={styles.menuRow} onClick={() => setMenu('quality')}>
-														<span>画質</span>
+														<span>{t('video.chrome.quality')}</span>
 														<span className={styles.menuValue}>{qualityLabel}</span>
 													</button>
 												)}
 												{rates && rates.length > 0 && (
 													<button type="button" className={styles.menuRow} onClick={() => setMenu('speed')}>
-														<span>再生速度</span>
+														<span>{t('video.chrome.playbackSpeed')}</span>
 														<span className={styles.menuValue}>{playbackRate}x</span>
 													</button>
 												)}
@@ -439,7 +441,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 											<>
 												{multiCategory && (
 													<button type="button" className={styles.menuBack} onClick={() => setMenu('root')}>
-														‹ 画質
+														‹ {t('video.chrome.quality')}
 													</button>
 												)}
 												{qualities.map(q => (
@@ -464,7 +466,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 											<>
 												{multiCategory && (
 													<button type="button" className={styles.menuBack} onClick={() => setMenu('root')}>
-														‹ 再生速度
+														‹ {t('video.chrome.playbackSpeed')}
 													</button>
 												)}
 												{rates.map(r => (
@@ -479,7 +481,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 															setMenu(null);
 														}}
 													>
-														{r === 1 ? '標準' : `${r}x`}
+														{r === 1 ? t('video.chrome.normalSpeed') : `${r}x`}
 													</button>
 												))}
 											</>
@@ -489,7 +491,7 @@ export const PlayerChrome: FC<PlayerChromeProps> = ({
 							</div>
 						)}
 
-						<button type="button" className={styles.iconBtn} onClick={toggleFullscreen} aria-label="全画面">
+						<button type="button" className={styles.iconBtn} onClick={toggleFullscreen} aria-label={t('video.chrome.fullscreen')}>
 							<Icon path={fullscreen ? P.fsExit : P.fsEnter} />
 						</button>
 					</div>
