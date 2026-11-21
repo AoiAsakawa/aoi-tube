@@ -6,7 +6,7 @@ import cn from 'classnames';
 import dynamic from '@components/compat/dynamic';
 import Link from '@components/compat/Link';
 import styles from './Header.module.scss';
-import { SUPPORTED_LANGUAGES } from '../../../i18n';
+import { SUPPORTED_LANGUAGES, changeLanguage } from '../../../i18n';
 import { useSiteTheme } from '../../../utils/useSiteTheme';
 import { useServerStatus } from '../../stores/zustand-store';
 
@@ -116,7 +116,7 @@ export const Header: FC<HeaderComponentProps> = ({
 						items: SUPPORTED_LANGUAGES.map(l => ({ key: l.code, label: l.label })),
 						selectable: true,
 						selectedKeys: [currentLanguage],
-						onClick: ({ key }) => i18n.changeLanguage(key),
+						onClick: ({ key }) => changeLanguage(key),
 					}}
 					trigger={['click']}
 					placement="bottomRight"

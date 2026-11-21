@@ -13,7 +13,7 @@ import '../styles/globals.scss';
 import '../styles/ant-overrides.scss';
 import '../styles/admin.scss';
 
-import '../i18n';
+import { i18nReady } from '../i18n';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -21,10 +21,15 @@ import { RouterProvider } from 'react-router-dom';
 import { App } from './App';
 import { adminRouter } from './routes/admin';
 
-createRoot(document.getElementById('root')!).render(
-	<StrictMode>
-		<App>
-			<RouterProvider router={adminRouter} />
-		</App>
-	</StrictMode>,
-);
+// Only Japanese ships in the bundle; wait for the visitor's catalog so the
+// page doesn't flash Japanese first. i18nReady never rejects and gives up
+// waiting after a moment.
+i18nReady.then(() => {
+	createRoot(document.getElementById('root')!).render(
+		<StrictMode>
+			<App>
+				<RouterProvider router={adminRouter} />
+			</App>
+		</StrictMode>,
+	);
+});

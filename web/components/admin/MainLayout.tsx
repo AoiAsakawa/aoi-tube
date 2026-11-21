@@ -19,7 +19,7 @@ import { ComposeFederatedPost } from './ComposeFederatedPost';
 import { UpdateArgs } from '../../types/config-section';
 import { FatalErrorStateModal } from '../modals/FatalErrorStateModal/FatalErrorStateModal';
 import { useSiteTheme } from '../../utils/useSiteTheme';
-import { SUPPORTED_LANGUAGES } from '../../i18n';
+import { SUPPORTED_LANGUAGES, changeLanguage } from '../../i18n';
 
 // Lazy loaded components
 
@@ -598,7 +598,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
 								selectedKeys: [currentLanguage],
 								// The language detector caches the choice in
 								// localStorage ('owncastLanguage'), shared with the viewer UI.
-								onClick: ({ key }) => i18n.changeLanguage(key),
+								onClick: ({ key }) => changeLanguage(key),
 							}}
 							trigger={['click']}
 							placement="bottomRight"
