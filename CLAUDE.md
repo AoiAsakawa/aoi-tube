@@ -71,6 +71,8 @@ AoiTubeはセルフホスト型のライブストリーミングサーバーで�
 ./start.sh                          # 開発起動
 ./build/web/bundleWeb.sh            # フロントビルド → static/web（go:embed）
 go build -o aoitube main.go         # 本番ビルド
+./aoitube -version                  # 版とビルドIDを表示して終了（サーバーは起動しない）
+./build/deploy.sh                   # ビルド→サーバーへ転送→入れ替え→検証（設定は .deploy.env）
 cd web && npm run dev               # フロント開発サーバー（:3000、プロキシ→:8080）
 
 # ゲート（コミット/デプロイ前に全部）
@@ -81,6 +83,8 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 - **バージョン更新**: `config/constants.go` の `StaticVersionNumber`
 - **新規API**: `router/router.go` で登録、管理APIは `RequireAdminAuth` 必須
 - デプロイ・リリース手順は `docs/release.md`、バックアップ・移行は `docs/backup-and-migration.md` 参照
+- **デプロイは `build/deploy.sh`**: 設定はリポジトリ直下の `.deploy.env`（gitignore済み。サーバーのアドレスを含むのでコミットしない）。配信中なら中止（`--force`で続行）→ `aoitube.new` を転送しサーバー上で `-version` を実行して動くことを確認 → バックアップ・入れ替え・再起動（30秒応答が無ければ自動で前の版に戻す）→ 古いバックアップ掃除 → 公開URLでHTMLが参照する全バンドルが200か確認。`--skip-checks` でゲート省略、`--skip-web` でフロント再ビルド省略
+- **古いHTMLが残っても壊れない2つの仕組み**（CDNがHTMLをキャッシュしていて、デプロイ後にトップが真っ白になった事故への対策）: ①`bundleWeb.sh` は直近14日・最大20MBぶんの**過去ビルドのバンドルを `static/web/assets` に残す**（ハッシュ名なので衝突しない。同じcloneで続けてビルドした場合のみ効く。`AOITUBE_KEEP_OLD_ASSETS_DAYS=0` で無効）②`web/public/asset-recovery.js`（両方のHTMLシェルの `<head>` で最初に読む固定名の素のスクリプト）が、`/assets/` 配下のscript/stylesheetの読み込み失敗と `vite:preloadError` を捕まえ、`?_fresh=…` を付けて**1回だけ**読み直す。テストは `web/tests/assetRecovery.test.ts`
 - 合成RTMPテスト入力例: `ffmpeg -re -f lavfi -i testsrc2 ... -f flv rtmp://localhost:1935/live/<streamkey>`（`test/ocTestStream.sh` 参照）
 
 ## 機能リファレンス（キー実装と設定キー）

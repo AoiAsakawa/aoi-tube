@@ -55,6 +55,39 @@ server or elsewhere for the same OS/arch), back up the running binary, swap,
 restart the service. Use absolute paths throughout — the service's working
 directory contains the `data/` directory it must keep.
 
+### With `build/deploy.sh`
+
+`build/deploy.sh` does all of it from the development machine over ssh:
+
+```bash
+# .deploy.env in the repository root (git-ignored)
+DEPLOY_SSH=deploy@stream.example.com
+DEPLOY_DIR=/srv/aoitube
+DEPLOY_LOCAL_URL=http://127.0.0.1:8080
+DEPLOY_PUBLIC_URL=https://stream.example.com
+```
+
+```bash
+./build/deploy.sh
+```
+
+It builds the frontend and the binary, runs the gates from section 3, and
+then, on the server:
+
+1. refuses to continue while a broadcast is live (`--force` overrides);
+2. uploads the binary as `aoitube.new` and runs `aoitube.new -version` there,
+   so a binary the server can't execute is caught before anything changes;
+3. backs up the running binary, swaps the new one in and restarts the
+   service, putting the previous binary back if the new one doesn't answer
+   within 30 seconds;
+4. removes old backups (two are kept by default);
+5. when `DEPLOY_PUBLIC_URL` is set, fetches the page through it and checks
+   that every bundle the page references loads.
+
+`./build/deploy.sh --help` lists the remaining settings and flags.
+
+### By hand
+
 ```bash
 # On the server, from the checkout (example path: /srv/aoitube)
 cd /srv/aoitube
@@ -74,19 +107,44 @@ Notes:
   (`contrib/aoitube-systemd-service.md`).
 - Deploying while a stream is live restarts the stream; the broadcaster's
   encoder (OBS) will reconnect automatically, but prefer deploying while
-  offline when possible.
+  offline when possible. The recording survives the restart: on SIGTERM the
+  server closes it into an archive, and the next start finishes its MP4 remux
+  and S3 offload. The broadcast continues as a new recording once the encoder
+  reconnects.
 - Roll back by restoring the `.bak-*` binary and restarting.
-- `update.sh` in the repository root is the operator's own updater script: it
-  cleans `static/web/`, pulls the latest commit, and rebuilds the web bundle.
-  It does **not** rebuild the Go binary or restart the service — do those
-  steps yourself afterwards.
+- `update.sh` in the repository root is the operator's own updater script (it
+  is git-ignored); what it does is up to the operator. A checkout kept on a
+  server that receives prebuilt binaries only needs `git pull --ff-only`.
+
+### Caches in front of the server
+
+The server sends the HTML shell with `Cache-Control: no-store`, because the
+shell names its bundles by content hash and every frontend change produces
+new names. A CDN or proxy that is configured to cache HTML anyway keeps
+serving the previous shell after a deploy. Two things keep such a page
+working:
+
+- `bundleWeb.sh` keeps the bundles of builds from the last 14 days (up to
+  20 MB) next to the new ones, so a shell from a recent build still finds its
+  files. This only works when consecutive builds happen in the same checkout;
+  a fresh clone or CI build has no earlier bundles to keep. Set
+  `AOITUBE_KEEP_OLD_ASSETS_DAYS=0` for a clean bundle.
+- `asset-recovery.js`, loaded by the shell before the app, reloads the page
+  once with a cache-busting query when a bundle fails to load.
+
+Neither is a reason to cache HTML: configure the CDN to cache `/assets/` and
+leave the pages alone.
 
 ## 6. Post-deploy verification
 
-1. **Version check** — confirm the new binary is live:
+`build/deploy.sh` covers 1 and 2. A real browser (3) is still on you.
+
+1. **Version check** — confirm the new binary is live. The binary reports
+   its version and build without starting the server:
 
    ```bash
-   curl -s http://localhost:8080/api/status | grep versionNumber
+   /srv/aoitube/aoitube -version
+   journalctl -u aoitube -n 50 | grep 'AoiTube v'
    ```
 
 2. **Bundle check** — Vite emits content-hashed assets (e.g.

@@ -1,6 +1,9 @@
 # Environment variables (contains secrets)
 .env
 
+# Settings for build/deploy.sh (your server's address and paths)
+.deploy.env
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

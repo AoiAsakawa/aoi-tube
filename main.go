@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"os/signal"
 	"strconv"
@@ -33,6 +34,7 @@ var (
 	webServerPortOverride = flag.String("webserverport", "", "Force the web server to listen on a specific port")
 	webServerIPOverride   = flag.String("webserverip", "", "Force web server to listen on this IP address")
 	rtmpPortOverride      = flag.Int("rtmpport", 0, "Set listen port for the RTMP server")
+	showVersion           = flag.Bool("version", false, "Print the version and exit")
 )
 
 // nolint:cyclop
@@ -44,6 +46,13 @@ func main() {
 	}
 
 	flag.Parse()
+
+	// Answer before anything touches the working directory: a deploy asks the
+	// freshly uploaded binary for its version before swapping it in.
+	if *showVersion {
+		fmt.Println(config.GetReleaseString())
+		return
+	}
 
 	if *logDirectory != "" {
 		config.LogDirectory = *logDirectory
