@@ -140,6 +140,7 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 - bcrypt(+SHA-512事前圧縮で72バイト制限回避)、認証レート制限（5回/5分→15分ロック）、`crypto/rand`のstate/PKCE
 - **信頼プロキシ検証**（`utils/clientId.go`）: CF-Connecting-IP等は信頼プロキシ経由のみ採用。`OWNCAST_TRUSTED_PROXIES`
+- **公開APIの流量制限**（`router/middleware/ratelimit.go`）: クライアント単位のトークンバケット。接続元は上の信頼プロキシ検証を通したIPで、IPv6は/64でまとめる。超過は429+`Retry-After`、OPTIONSは数えない。対象と枠（同時 / 以後1分あたり）: 決済の作成4種 `/api/payments/create`・`/api/paypay/create`・`/api/paypal/create`・`/api/stripe/create`（**4つで共有**、10 / 30）、`/api/metamask/confirm`（5 / 10。1回で最大約40秒ノードをポーリングするため）、`/api/solana/rpc`（60 / 120。運営者のRPC枠を消費するため）。**外部のAPIや有料枠を消費する公開エンドポイントを足すときは `RateLimiter.Wrap` を付ける**（`router/router.go` で登録時に包む）
 - 管理APIのシークレットは GET で `********` マスク・マスク値保存時は既存値維持
 - HLS/アーカイブ/WebRTCの全メディア要求にサーバー側ゲート（silent/socialAuth/PPV）。パストラバーサル対策・WS Originチェック・JSON body 15MB上限
 - 決済のサンドボックス/テストは `is_test` 記録で売上集計から除外

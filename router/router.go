@@ -402,13 +402,26 @@ func Start() error {
 	http.HandleFunc("/api/admin/config/basecurrency", middleware.RequireAdminAuth(admin.GetBaseCurrency))
 	http.HandleFunc("/api/admin/config/basecurrency/set", middleware.RequireAdminAuth(admin.SetBaseCurrency))
 
+	// Per-client limits on the public endpoints that make the server spend
+	// something that isn't its own (see middleware.RateLimiter). The numbers
+	// leave a lot of room for real use: a purchase is one or two calls, a
+	// wallet payment a handful of RPC calls.
+	//
+	// Creating a payment calls the provider's API. The four create endpoints
+	// share one budget of 10 at once, then 30 a minute.
+	paymentCreateLimit := middleware.NewRateLimiter(30, 10)
+	// Confirming a crypto payment polls a blockchain node for up to 40 seconds.
+	onchainVerifyLimit := middleware.NewRateLimiter(10, 5)
+	// The Solana proxy spends the operator's RPC plan.
+	solanaRPCLimit := middleware.NewRateLimiter(120, 60)
+
 	// PayPay integration
 	http.HandleFunc("/api/admin/config/paypay", middleware.RequireAdminAuth(admin.GetPayPayConfig))
 	http.HandleFunc("/api/admin/config/paypay/set", middleware.RequireAdminAuth(admin.SetPayPayConfig))
 
 	// PayPay public endpoints
 	http.HandleFunc("/api/paypay/status", controllers.GetPayPayStatus)
-	http.HandleFunc("/api/paypay/create", controllers.PayPayCreatePayment)
+	http.HandleFunc("/api/paypay/create", paymentCreateLimit.Wrap(controllers.PayPayCreatePayment))
 	http.HandleFunc("/api/paypay/webhook", controllers.PayPayWebhook)
 	http.HandleFunc("/donation/paypay/complete", controllers.PayPayCompletePayment)
 
@@ -428,10 +441,10 @@ func Start() error {
 
 	// Metamask public endpoints
 	http.HandleFunc("/api/metamask/status", controllers.GetMetamaskStatus)
-	http.HandleFunc("/api/metamask/confirm", controllers.MetamaskConfirmDonation)
+	http.HandleFunc("/api/metamask/confirm", onchainVerifyLimit.Wrap(controllers.MetamaskConfirmDonation))
 	// Same-origin Solana JSON-RPC proxy: the public node rejects browser-origin
 	// requests, and a private node's URL carries an API key. Method-allowlisted.
-	http.HandleFunc("/api/solana/rpc", controllers.SolanaRPCProxy)
+	http.HandleFunc("/api/solana/rpc", solanaRPCLimit.Wrap(controllers.SolanaRPCProxy))
 
 	// Doneru integration
 	http.HandleFunc("/api/admin/config/doneru", middleware.RequireAdminAuth(admin.GetDoneruConfig))
@@ -450,7 +463,7 @@ func Start() error {
 
 	// Aggregated payments endpoints (avoid provider names in URL path)
 	http.HandleFunc("/api/payments/status", controllers.GetPaymentsStatus)
-	http.HandleFunc("/api/payments/create", controllers.CreatePayment)
+	http.HandleFunc("/api/payments/create", paymentCreateLimit.Wrap(controllers.CreatePayment))
 
 	// PayPal integration
 	http.HandleFunc("/api/admin/config/paypal", middleware.RequireAdminAuth(admin.GetPayPalConfig))
@@ -458,7 +471,7 @@ func Start() error {
 
 	// PayPal public endpoints
 	http.HandleFunc("/api/paypal/status", controllers.GetPayPalStatus)
-	http.HandleFunc("/api/paypal/create", controllers.PayPalCreatePayment)
+	http.HandleFunc("/api/paypal/create", paymentCreateLimit.Wrap(controllers.PayPalCreatePayment))
 	http.HandleFunc("/api/paypal/webhook", controllers.PayPalWebhook)
 	http.HandleFunc("/donation/paypal/complete", controllers.PayPalCompletePayment)
 	http.HandleFunc("/donation/paypal/cancel", controllers.PayPalCancelPayment)
@@ -469,7 +482,7 @@ func Start() error {
 
 	// Stripe public endpoints
 	http.HandleFunc("/api/stripe/status", controllers.GetStripeStatus)
-	http.HandleFunc("/api/stripe/create", controllers.StripeCreatePayment)
+	http.HandleFunc("/api/stripe/create", paymentCreateLimit.Wrap(controllers.StripeCreatePayment))
 	http.HandleFunc("/api/stripe/webhook", controllers.StripeWebhook)
 	http.HandleFunc("/donation/stripe/complete", controllers.StripeCompletePayment)
 	http.HandleFunc("/donation/stripe/cancel", controllers.StripeCancelPayment)
