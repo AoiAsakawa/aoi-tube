@@ -33,9 +33,17 @@ import { Modal } from '../Modal/Modal';
 import { DesktopContent } from './DesktopContent';
 import { ContentHeader } from '../../common/ContentHeader/ContentHeader';
 import { MobileContent } from './MobileContent';
-import { ChatModal } from '../../modals/ChatModal/ChatModal';
+import type { ChatModalProps } from '../../modals/ChatModal/ChatModal';
 
 // Lazy loaded components
+
+// The mobile chat sheet. A static import here pulled the whole chat (message
+// list, slate editor) into the first bundle and made the sidebar's own lazy
+// import of it pointless.
+const ChatModal = dynamic<ChatModalProps>(
+	() => import('../../modals/ChatModal/ChatModal').then(mod => mod.ChatModal),
+	{ ssr: false },
+);
 
 const FollowModal = dynamic(
 	() => import('../../modals/FollowModal/FollowModal').then(mod => mod.FollowModal),

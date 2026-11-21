@@ -1,4 +1,4 @@
-import { Popover } from 'antd';
+import { Popover, Spin } from 'antd';
 import React, { FC, useMemo, useState, useEffect } from 'react';
 import { Transforms, createEditor, BaseEditor, Text, Descendant, Editor } from 'slate';
 import {
@@ -26,7 +26,8 @@ import {
 	PAYMENTS_STATUS,
 } from '../../../utils/apis';
 import styles from './ChatTextField.module.scss';
-import { PayPalConfig, StripeConfig } from '../DonationForm';
+import type { PayPalConfig, StripeConfig } from '../DonationForm/types';
+import type { DonationFormProps } from '../DonationForm/DonationForm';
 
 // Lazy loaded components
 
@@ -46,7 +47,16 @@ const GiftOutlined = dynamic(() => import('@ant-design/icons/GiftOutlined'), {
 	ssr: false,
 });
 
-import { DonationForm } from '../DonationForm';
+// The purchase form brings the wallet code with it (bitcoinjs-lib and
+// friends, a few hundred KB). It is fetched when the viewer first opens it,
+// not with the chat.
+const DonationForm = dynamic<DonationFormProps>(
+	() => import('../DonationForm/DonationForm').then(mod => mod.DonationForm),
+	{
+		ssr: false,
+		loading: () => <Spin fullscreen />,
+	},
+);
 
 type CustomElement = { type: 'paragraph' | 'span'; children: CustomText[] } | ImageNode;
 type CustomText = { text: string };
@@ -160,6 +170,9 @@ export const ChatTextField: FC<ChatTextFieldProps> = ({
 	const { t } = useTranslation();
 	const [showEmojis, setShowEmojis] = useState(false);
 	const [showDonationForm, setShowDonationForm] = useState(false);
+	// The purchase form is mounted (and its code fetched) on first open, then
+	// kept mounted so what the viewer entered survives closing it.
+	const [donationFormRequested, setDonationFormRequested] = useState(false);
 	const [characterCount, setCharacterCount] = useState(defaultText?.length);
 	const [paypayEnabled, setPaypayEnabled] = useState<boolean>(false);
 	const [metamaskEnabled, setMetamaskEnabled] = useState<boolean>(false);
@@ -416,7 +429,10 @@ export const ChatTextField: FC<ChatTextFieldProps> = ({
 								type="button"
 								className={styles.donationButton}
 								title={t('chat.sendDonation')}
-								onClick={() => setShowDonationForm(true)}
+								onClick={() => {
+									setDonationFormRequested(true);
+									setShowDonationForm(true);
+								}}
 							>
 								<GiftOutlined />
 							</button>
@@ -432,21 +448,23 @@ export const ChatTextField: FC<ChatTextFieldProps> = ({
 					</div>
 				)}
 			</div>
-			<DonationForm
-				visible={showDonationForm}
-				onClose={() => setShowDonationForm(false)}
-				defaultDisplayName={displayName}
-				paypayEnabled={paypayEnabled}
-				metamaskEnabled={metamaskEnabled}
-				doneruEnabled={doneruEnabled}
-				kofiEnabled={kofiEnabled}
-				paypalEnabled={paypalEnabled}
-				paypalConfig={paypalConfig}
-				stripeEnabled={stripeEnabled}
-				stripeConfig={stripeConfig}
-				coinEnabled={coinEnabled}
-				coinBonusPercent={coinBonusPercent}
-			/>
+			{donationFormRequested && (
+				<DonationForm
+					visible={showDonationForm}
+					onClose={() => setShowDonationForm(false)}
+					defaultDisplayName={displayName}
+					paypayEnabled={paypayEnabled}
+					metamaskEnabled={metamaskEnabled}
+					doneruEnabled={doneruEnabled}
+					kofiEnabled={kofiEnabled}
+					paypalEnabled={paypalEnabled}
+					paypalConfig={paypalConfig}
+					stripeEnabled={stripeEnabled}
+					stripeConfig={stripeConfig}
+					coinEnabled={coinEnabled}
+					coinBonusPercent={coinBonusPercent}
+				/>
+			)}
 		</div>
 	);
 };

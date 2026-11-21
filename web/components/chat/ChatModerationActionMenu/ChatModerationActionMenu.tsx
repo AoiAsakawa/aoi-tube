@@ -3,13 +3,24 @@ import { FC, useState } from 'react';
 import dynamic from '@components/compat/dynamic';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../../ui/Modal/Modal';
-import { ChatModerationDetailsModal } from '../ChatModerationDetailsModal/ChatModerationDetailsModal';
+import type { ChatModerationDetailsModalProps } from '../ChatModerationDetailsModal/ChatModerationDetailsModal';
 import styles from './ChatModerationActionMenu.module.scss';
 import ChatModeration from '../../../services/moderation-service';
 
 const { confirm } = AntModal;
 
 // Lazy loaded components
+
+// Only moderators ever open this, and it is the one part of the viewer that
+// uses antd's Table: keep both out of the bundle everyone downloads. The
+// modal mounts its content on first open, which is when this is fetched.
+const ChatModerationDetailsModal = dynamic<ChatModerationDetailsModalProps>(
+	() =>
+		import('../ChatModerationDetailsModal/ChatModerationDetailsModal').then(
+			mod => mod.ChatModerationDetailsModal,
+		),
+	{ ssr: false },
+);
 
 const CloseCircleOutlined = dynamic(() => import('@ant-design/icons/CloseCircleOutlined'), {
 	ssr: false,
