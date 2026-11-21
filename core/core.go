@@ -92,6 +92,11 @@ func Start() error {
 		return nil
 	})
 
+	// Repair recordings a previous run left unfinished: a session cut off
+	// mid-broadcast, or one whose remux/offload never completed. This has to
+	// happen before the RTMP server below can begin a new session.
+	recording.RecoverInterruptedSessions()
+
 	user.SetupUsers()
 	auth.Setup(data.GetDatastore())
 

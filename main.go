@@ -3,7 +3,10 @@ package main
 import (
 	"flag"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
+	"time"
 
 	"github.com/aoiasakawa/aoitube/logging"
 	"github.com/joho/godotenv"
@@ -128,9 +131,38 @@ func main() {
 
 	go metrics.Start(core.GetStatus)
 
+	go waitForShutdownSignal()
+
 	if err := router.Start(); err != nil {
 		log.Fatalln("failed to start/run the router", err)
 	}
+}
+
+// shutdownTimeout bounds how long the shutdown work may take before the
+// process exits anyway.
+const shutdownTimeout = 10 * time.Second
+
+// waitForShutdownSignal exits the process on SIGINT or SIGTERM, after giving
+// the core the chance to save in-flight state. Without it a restart in the
+// middle of a broadcast left the recording unfinished.
+func waitForShutdownSignal() {
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
+	sig := <-signals
+	log.Infof("Received %s, shutting down.", sig)
+
+	done := make(chan struct{})
+	go func() {
+		core.Shutdown()
+		close(done)
+	}()
+
+	select {
+	case <-done:
+	case <-time.After(shutdownTimeout):
+		log.Warnln("Shutdown is taking too long, exiting without waiting for it.")
+	}
+	os.Exit(0)
 }
 
 func handleCommandLineFlags() {
