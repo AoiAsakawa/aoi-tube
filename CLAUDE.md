@@ -156,7 +156,7 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 ## 開発の教訓・既知の地雷（重要度順）
 
-1. **依存の壊れ物ピン**: `CAFxX/httpcompression` は **v0.0.8固定**（v0.0.9はContent-Typeを落とし全ページがプレーンテキスト化）。aws-sdk-go-v2 はR2向けにチェックサム `WhenRequired`
+1. **依存の壊れ物ピン**: `CAFxX/httpcompression` は **v0.0.8固定**（v0.0.9はContent-Typeを落とし全ページがプレーンテキスト化）。正確には、ハンドラがContent-Typeを明示しない応答で、圧縮後のバイト列から種類を推測してしまう（`application/x-gzip`/`application/octet-stream`）。**`router/compression_test.go` がこれを検出する**（本番と同じアダプタ `newCompressionAdapter` を通し、明示/推測/JSON/静的ファイルの各応答でContent-Typeが変わらないことを見る。v0.0.9で実際に失敗することを確認済み）。ピンを外すのは新しい版がこのテストを通ったとき。aws-sdk-go-v2 はR2向けにチェックサム `WhenRequired`
 2. **antdはminor更新でもSelect内部DOMを変える**（`.ant-select-input`が外枠→内側inputに変化した前例）。テーマ上書きは新旧クラス併記+**スクリーンショット検証必須**（computed styleが正常でも視覚は壊れうる）
 3. **プレイヤーはvideo.js撤去済み・全てプレーン`<video>`+共通YouTube風UI**: 3プレイヤー（ライブLL-HLS=`OwncastPlayer`、ライブWebRTC=`WebRTCPlayer`、VOD=`VodPlayer`）は**プレーン`<video>`＋共有オーバーレイ`PlayerChrome`**（自作のシークバー/音量/設定メニュー/全画面/自動フェード）で統一。エンジンはライブHLS/VOD-HLS=**hls.js**、VOD-MP4=ネイティブ、WebRTC=`srcObject`。**video.jsは廃止（依存も削除）**：外部MediaSource/MediaStreamを追跡できずスピナー固着したため。教訓: ①hls.jsのトークンは`xhrSetup`でURL decorate（`/hls/`と`/api/archives/`のみ、外部CDNには付けない）②`<img>`/plain fetchはURL構築時に`withAccessToken`③メディアシーケンス後退クラッシュ回避にffmpeg `-start_number <epoch>` 単調増加は継続 ④コンテナは3つとも厳密16:9（`--player-container-height`から幅上限化。固定高さ+aspect-ratio併用は縦長化して黒帯が出る）⑤設定メニューは項目1種なら歯車で直接リスト展開（中間メニュー省略で1クリック）
 4. **自動再生は「音あり」にできない**: ブラウザはユーザー操作前の**unmuted autoplayをブロック**する。音ありで`play()`を試し、拒否されたら**ミュートで自動再生にフォールバック**し「タップして音声をON」を出すのが唯一の解（`OwncastPlayer.attemptPlay`）。ミュートフォールバックを外すと**配信中にトップページを開いても再生が始まらない**（過去バグ）。またポスターの▶とPlayerChromeの中央再生ボタンが同時に出ないよう、**PlayerChromeは`started`後のみマウント**する

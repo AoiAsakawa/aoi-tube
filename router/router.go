@@ -698,7 +698,10 @@ func Start() error {
 		}
 	})
 
-	compress, _ := httpcompression.DefaultAdapter() // Use the default configuration
+	compress, err := newCompressionAdapter()
+	if err != nil {
+		return err
+	}
 	server := &http.Server{
 		Addr:              fmt.Sprintf("%s:%d", ip, port),
 		ReadHeaderTimeout: 4 * time.Second,
@@ -709,4 +712,17 @@ func Start() error {
 	log.Infoln("The web admin interface is available at /admin.")
 
 	return server.ListenAndServe()
+}
+
+// newCompressionAdapter returns the middleware that compresses every response
+// of the web server.
+//
+// github.com/CAFxX/httpcompression is pinned to v0.0.8 in go.mod. With v0.0.9
+// a response whose handler doesn't set Content-Type is typed from its
+// compressed bytes (application/x-gzip, application/octet-stream) instead of
+// its content, which broke the pages. compression_test.go runs responses
+// through this adapter and checks their headers; it fails against v0.0.9, so
+// the pin can be lifted the day a release passes it.
+func newCompressionAdapter() (func(http.Handler) http.Handler, error) {
+	return httpcompression.DefaultAdapter() // Use the default configuration
 }
