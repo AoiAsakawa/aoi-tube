@@ -127,6 +127,7 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 - **監査ログ**: append-only `auth_events`（`auth/audit.go`、link/unlink/reactivate/overwrite/merge/deleted、actor=self/admin）。統合(`MergeUsers`)は**単一トランザクション**（auth/donations/tokens/messages移動+ソース無効化+マーカー、auth_eventsは移動せず相互参照）。`GetUserAuthDetailsForAdmin` はtoken含む（管理のみ）
 - 管理: ユーザーデータ画面(`web/pages/admin/chat/user-data.tsx`)で認証履歴・失効履歴表示、モデレーター付与/解除、手動復活、アカウント統合。API: `/api/admin/chat/users/{auth-events,auth/reactivate,merge,setmoderator}`
 - WebSocket: onclose登録+送信バッファ（切断中のチャットは再接続後に自動送信）。チャット入力はslateエディタ。接続情報イベントは本人にのみ連携ハンドルを含む
+- **チャット接続は1ページ1本**: `ClientConfigStore` が接続を `useRef` で持ち、アクセストークン1つにつき1本だけ開き、アンマウントで閉じる。匿名登録（オープンチャット時）は `registeringRef` で同時実行を1回に絞る。以前は接続をコンポーネント本体の `let` に入れていたため再描画のたびに忘れられ、さらに登録effectが設定オブジェクトの更新で2回走ったので、**初回訪問のたびに匿名ユーザーが2人登録され、接続が2本残り、全メッセージが2回表示されていた**（ソーシャル認証必須の構成では表に出にくい）。**再描画をまたいで保持するもの（接続・タイマー・進行中フラグ）をコンポーネント本体のローカル変数に置かない**
 
 ### ストレージ・バックアップ
 - `core/storageproviders/archiveS3.go`: ライブS3設定流用（`Enabled`非依存）、`archives/`・`backups/` プレフィックス。`PrefixUsage`/`DeleteRawPrefix`/multipart管理

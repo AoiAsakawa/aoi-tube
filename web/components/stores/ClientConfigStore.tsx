@@ -75,7 +75,24 @@ export const ClientConfigStore: FC = () => {
 
 	const [hasLoadedConfig, setHasLoadedConfig] = useState(false);
 
-	let ws: WebsocketService;
+	// The chat socket and the access token it was opened with. These live in
+	// refs because they have to survive re-renders: as a plain local the socket
+	// was forgotten on the next render, so a second run of the effect below
+	// opened a second socket without closing the first, and every chat message
+	// arrived (and was shown) twice.
+	const wsRef = useRef<WebsocketService | null>(null);
+	const wsTokenRef = useRef<string | null>(null);
+	// True while a registration request is in flight (see handleUserRegistration).
+	const registeringRef = useRef(false);
+
+	const stopChat = () => {
+		if (wsRef.current) {
+			wsRef.current.shutdown();
+			wsRef.current = null;
+			wsTokenRef.current = null;
+			setWebsocketService(null);
+		}
+	};
 
 	const setGlobalFatalError = (title: string, message: string) => {
 		setGlobalFatalErrorMessage({
@@ -197,6 +214,15 @@ export const ClientConfigStore: FC = () => {
 			return;
 		}
 
+		// The effect that calls this re-runs whenever the client config object
+		// changes, which happens while the first request is still on its way
+		// (hydration, then the config fetch). Without this guard every first
+		// visit registered two anonymous users and kept a socket open for each.
+		if (registeringRef.current) {
+			return;
+		}
+		registeringRef.current = true;
+
 		try {
 			sendEvent([AppStateEvent.NeedsRegister]);
 			const response = await ChatService.registerUser(optionalDisplayName);
@@ -215,13 +241,15 @@ export const ClientConfigStore: FC = () => {
 		} catch (e) {
 			sendEvent([AppStateEvent.Fail]);
 			console.error(`ChatService -> registerUser() ERROR: \n${e}`);
+		} finally {
+			registeringRef.current = false;
 		}
 	};
 
 	const resetAndReAuth = () => {
 		setLocalStorage(ACCESS_TOKEN_KEY, '');
 		setAccessToken(null);
-		ws?.shutdown();
+		stopChat();
 		handleUserRegistration();
 	};
 
@@ -271,6 +299,11 @@ export const ClientConfigStore: FC = () => {
 				break;
 			case MessageType.USER_JOINED:
 				setChatMessages(currentState => [...currentState, message as ChatEvent]);
+				break;
+			case MessageType.USER_PARTED:
+				// A viewer leaving isn't announced in the live chat. Named here so
+				// it stops being reported as an unknown message type every time
+				// someone closes the page.
 				break;
 			case MessageType.SYSTEM:
 				setChatMessages(currentState => [...currentState, message as ChatEvent]);
@@ -329,11 +362,9 @@ export const ClientConfigStore: FC = () => {
 
 	const startChat = async () => {
 		try {
-			if (ws) {
-				ws?.shutdown();
-				setWebsocketService(null);
-				ws = null;
-			}
+			// A socket for another token (the viewer logged in or re-registered)
+			// is closed before the new one opens.
+			stopChat();
 
 			const { socketHostOverride } = clientConfig;
 
@@ -342,10 +373,12 @@ export const ClientConfigStore: FC = () => {
 			const location = l.toString().replaceAll('#', '');
 			const host = socketHostOverride || location;
 
-			ws = new WebsocketService(accessToken, '/ws', host);
+			const ws = new WebsocketService(accessToken, '/ws', host);
 			ws.handleMessage = handleMessage;
 			ws.socketDisconnected = handleSocketDisconnect;
 			ws.socketConnected = handleSocketConnected;
+			wsRef.current = ws;
+			wsTokenRef.current = accessToken;
 			setWebsocketService(ws);
 		} catch (error) {
 			console.error(`ChatService -> startChat() ERROR: \n${error}`);
@@ -388,12 +421,19 @@ export const ClientConfigStore: FC = () => {
 			return;
 		}
 
-		if (ws) {
+		// One socket per access token: running again for the token that is
+		// already connected must not open another.
+		if (wsRef.current && wsTokenRef.current === accessToken) {
 			return;
 		}
 
 		startChat();
 	}, [hasLoadedConfig, accessToken]);
+
+	// Close the socket when this store unmounts. The home page and the other
+	// pages each mount their own store, so without this every client-side
+	// navigation left a socket behind that kept delivering messages.
+	useEffect(() => stopChat, []);
 
 	// Open-chat mode (social auth NOT required) needs a token just to read the
 	// live chat over the websocket, so keep the historical eager registration
