@@ -16,7 +16,9 @@ export type DesktopContentProps = {
 
 // lazy loaded components
 
-const Tabs: ComponentType<TabsProps> = dynamic(() => import('antd').then(mod => mod.Tabs), {
+// From its own module: `import('antd')` would fetch every antd component the
+// page hasn't loaded yet just to get this one.
+const Tabs: ComponentType<TabsProps> = dynamic(() => import('antd/es/tabs'), {
 	ssr: false,
 });
 

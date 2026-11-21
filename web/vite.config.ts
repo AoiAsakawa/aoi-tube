@@ -5,6 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { antdDeepImports } from './vite-plugins/antdDeepImports';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -145,6 +146,10 @@ export default defineConfig(({ mode }) => {
 			tsconfigPaths(),
 			serverMetadataPlugin(),
 			mpaFallbackPlugin(),
+			// Production builds import antd components one by one instead of
+			// through the barrel, which keeps the ones the viewer never shows
+			// (Table, Tree, DatePicker...) out of its first bundle.
+			antdDeepImports(__dirname),
 		],
 		define: {
 			// Node's `global` is not defined in the browser. Next.js/webpack
