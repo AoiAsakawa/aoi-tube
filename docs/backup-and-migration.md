@@ -20,6 +20,23 @@ If archives are offloaded to S3 (Server → Storage, "Store recordings on S3")
 and backups go to S3, the only thing tied to a specific machine is the running
 binary — everything else can be pulled from the bucket.
 
+> **Keep the bucket private.** There is a single S3 configuration, and live
+> distribution, recordings and backups all use its bucket. A backup is the whole
+> database: stream keys, the admin password hash, payment provider secrets,
+> OAuth client secrets, the S3 credentials themselves, users and their tokens.
+> Its object name (`backups/owncast-backup-<timestamp>.bak`) is guessable. Never
+> make that bucket publicly readable — no public custom domain, no `r2.dev`
+> URL, no public-read ACL or bucket policy. AoiTube reads archives and backups
+> through the S3 API with its credentials and needs no public access.
+>
+> Live S3 distribution (Server → Storage, "Enabled" with a serving endpoint)
+> does need a publicly readable bucket, and only works with classic HLS:
+> LL-HLS is always served by AoiTube itself. With the current single
+> configuration it can't be combined safely with S3 backups or recordings. If
+> you need it, point it at a separate account or bucket that holds nothing
+> else, and keep backups and recordings off S3 or in a different, private
+> setup.
+
 ## Automatic backups
 
 Scheduled backups are on by default. Configure them under

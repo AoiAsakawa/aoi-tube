@@ -132,6 +132,7 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 
 ### ストレージ・バックアップ
 - `core/storageproviders/archiveS3.go`: ライブS3設定流用（`Enabled`非依存）、`archives/`・`backups/` プレフィックス。`PrefixUsage`/`DeleteRawPrefix`/multipart管理
+- **【重要・セキュリティ】S3 のバケットは非公開にする**: S3 設定は1つしかなく、ライブ配信・録画・バックアップが同じバケットを使う。バックアップは DB 丸ごと（配信キー、管理者パスワードのハッシュ、決済サービスの秘密鍵、OAuth の秘密情報、S3 の鍵自体、ユーザーとトークン）で、オブジェクト名 `backups/owncast-backup-<日時>.bak` は推測できる。2026-11-23 に、本番の R2 バケットへ公開カスタムドメイン（cdn.fiume.co・content.fiume.co）が付いていて、**バックアップが誰でもダウンロードできる状態**だったのを見つけ、ドメインを外して非公開にした。AoiTube 自身はアーカイブもバックアップも S3 API（鍵つき）で読むので公開は不要。**ライブ S3 配信（Enabled＋公開URL）は公開バケットが前提で、しかも通常 HLS でしか使えない（LL-HLS は常に AoiTube が配信）**ので、バックアップ・録画の S3 退避と同じ設定で併用してはいけない（本番では無効化済み）。運用者向けの説明は `docs/backup-and-migration.md`
 - 管理API: `/api/admin/storage/usage`（プレフィックス別内訳）・`/cleanup`（livehls=オフライン時のみ/orphan-archives/multipart）。**配信終了60秒後にhls/自動掃除**（ライブセグメントがバケットに無限蓄積するのを防ぐ）
 - バックアップ: `core/backup.go`（`backup_enabled`既定ON/24h/保持7/S3退避オプション）。新ノード移行=`OWNCAST_S3_*` env+`-restoreFromS3`
 - 互換性のため内部名は維持: DBファイル `data/owncast.db`、バックアップ接頭辞 `owncast-backup-`、環境変数 `OWNCAST_*`
