@@ -1,6 +1,7 @@
 package storageproviders
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -28,14 +29,15 @@ const archiveObjectPrefix = "archives"
 // DeleteObjects call accepts.
 const deleteObjectsBatchSize = 1000
 
-// ArchiveS3 uploads, downloads and deletes recording media in the configured
-// S3 bucket. It reuses the same credentials as live HLS distribution but,
-// unlike S3Storage, is independent of the live-distribution Enabled flag so
-// recordings can be offloaded even when live segments are served locally.
+// ArchiveS3 uploads, downloads and deletes recording media and database
+// backups in the configured S3 bucket. It uses the same connection settings as
+// live HLS distribution but, unlike S3Storage, is independent of the
+// live-distribution Enabled flag: recordings and backups go to S3 while live
+// segments are served by AoiTube itself.
 //
-// Serving is always proxied through the owncast server (never a public CDN
-// redirect), so the archive visibility gate keeps hidden recordings private
-// regardless of bucket ACL.
+// Serving is always proxied through the AoiTube server (never a public CDN
+// redirect), so the archive visibility gate keeps hidden recordings private,
+// and the bucket itself should stay private.
 type ArchiveS3 struct {
 	bucket string
 	// feature/s3/manager is deprecated in favor of feature/s3/transfermanager,
@@ -44,6 +46,9 @@ type ArchiveS3 struct {
 	uploader *manager.Uploader //nolint:staticcheck
 	client   *s3.Client
 	acl      string
+	// secret is the S3 secret access key; backup encryption keys are
+	// derived from it (see backupCrypto.go).
+	secret string
 }
 
 // newArchiveS3Client builds the S3 client used for archive/backup transfers,
@@ -75,6 +80,7 @@ func NewArchiveS3() (*ArchiveS3, error) {
 		uploader: manager.NewUploader(client), //nolint:staticcheck // see uploader field
 		client:   client,
 		acl:      cfg.ACL,
+		secret:   cfg.Secret,
 	}, nil
 }
 
@@ -322,21 +328,27 @@ func archiveContentType(filePath string) string {
 	}
 }
 
-// backupObjectPrefix is the S3 key prefix for database backups.
-const backupObjectPrefix = "backups"
+// BackupObjectPrefix is the S3 key prefix for database backups.
+const BackupObjectPrefix = "backups/"
 
-// UploadBackup stores a database backup file under the backups/ prefix.
+// UploadBackup encrypts a database backup file and stores it under the
+// backups/ prefix as name. Backups never go to the bucket unencrypted: see
+// backupCrypto.go.
 func (a *ArchiveS3) UploadBackup(localPath, name string) error {
-	file, err := os.Open(localPath) // nolint:gosec
+	plain, err := os.ReadFile(localPath) // nolint:gosec
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	encrypted, err := EncryptBackup(plain, a.secret)
+	if err != nil {
+		return err
+	}
 
 	input := &s3.PutObjectInput{
 		Bucket:       aws.String(a.bucket),
-		Key:          aws.String(backupObjectPrefix + "/" + name),
-		Body:         file,
+		Key:          aws.String(BackupObjectPrefix + name),
+		Body:         bytes.NewReader(encrypted),
+		ContentType:  aws.String("application/octet-stream"),
 		CacheControl: aws.String("no-cache, no-store, must-revalidate"),
 	}
 	if a.acl != "" {
@@ -346,14 +358,12 @@ func (a *ArchiveS3) UploadBackup(localPath, name string) error {
 	return err
 }
 
-// ListBackups returns the backup object keys in the bucket, newest last
-// (keys embed a sortable timestamp).
+// ListBackups returns the object keys under the backups/ prefix, sorted.
 func (a *ArchiveS3) ListBackups() ([]string, error) {
-	prefix := backupObjectPrefix + "/"
 	var keys []string
 	paginator := s3.NewListObjectsV2Paginator(a.client, &s3.ListObjectsV2Input{
 		Bucket: aws.String(a.bucket),
-		Prefix: aws.String(prefix),
+		Prefix: aws.String(BackupObjectPrefix),
 	})
 	for paginator.HasMorePages() {
 		page, err := paginator.NextPage(context.Background())
@@ -370,8 +380,12 @@ func (a *ArchiveS3) ListBackups() ([]string, error) {
 	return keys, nil
 }
 
-// DownloadBackupObject writes the S3 object at key to destPath.
-func (a *ArchiveS3) DownloadBackupObject(key, destPath string) error {
+// DownloadBackup fetches the backup at key and writes its plaintext, a
+// gzip-compressed SQL dump, to destPath. An encrypted backup is decrypted with
+// this connection's secret key or, for one made before the key was replaced,
+// with one of previousSecrets. A backup from before encryption is written
+// unchanged.
+func (a *ArchiveS3) DownloadBackup(key, destPath string, previousSecrets ...string) error {
 	out, err := a.client.GetObject(context.Background(), &s3.GetObjectInput{
 		Bucket: aws.String(a.bucket),
 		Key:    aws.String(key),
@@ -381,13 +395,45 @@ func (a *ArchiveS3) DownloadBackupObject(key, destPath string) error {
 	}
 	defer out.Body.Close()
 
-	f, err := os.Create(destPath) // nolint:gosec
+	raw, err := io.ReadAll(out.Body)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
-	_, err = io.Copy(f, out.Body)
-	return err
+	plain, err := DecodeBackup(raw, append([]string{a.secret}, previousSecrets...)...)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(destPath, plain, 0o600)
+}
+
+// DeleteBackups removes the given backup objects. Keys outside the backups/
+// prefix are refused, so a caller's mistake can't reach recordings or other
+// data in the bucket.
+func (a *ArchiveS3) DeleteBackups(keys []string) error {
+	identifiers := make([]types.ObjectIdentifier, 0, len(keys))
+	for _, key := range keys {
+		if !strings.HasPrefix(key, BackupObjectPrefix) || strings.Contains(key, "..") {
+			return fmt.Errorf("refusing to delete %q: not a backup object", key)
+		}
+		identifiers = append(identifiers, types.ObjectIdentifier{Key: aws.String(key)})
+	}
+
+	for start := 0; start < len(identifiers); start += deleteObjectsBatchSize {
+		end := min(start+deleteObjectsBatchSize, len(identifiers))
+		out, err := a.client.DeleteObjects(context.Background(), &s3.DeleteObjectsInput{
+			Bucket: aws.String(a.bucket),
+			Delete: &types.Delete{Objects: identifiers[start:end]},
+		})
+		if err != nil {
+			return err
+		}
+		if len(out.Errors) > 0 {
+			first := out.Errors[0]
+			return fmt.Errorf("failed to delete %d backup object(s) (first: %s: %s)",
+				len(out.Errors), aws.ToString(first.Key), aws.ToString(first.Message))
+		}
+	}
+	return nil
 }
 
 // NewArchiveS3FromEnv builds an ArchiveS3 from environment variables instead
@@ -421,5 +467,6 @@ func NewArchiveS3FromEnv() (*ArchiveS3, error) {
 		uploader: manager.NewUploader(client), //nolint:staticcheck // see uploader field
 		client:   client,
 		acl:      os.Getenv("OWNCAST_S3_ACL"),
+		secret:   secret,
 	}, nil
 }

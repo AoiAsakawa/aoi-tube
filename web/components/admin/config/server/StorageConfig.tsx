@@ -1,3 +1,4 @@
+import { Alert } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import EditStorage from './EditStorage';
@@ -18,8 +19,13 @@ export default function ConfigStorageInfo() {
 				</a>
 				.
 			</p>
-			<p className="description">{t('admin.sections.storage.warning')}</p>
-			<p className="description">{t('admin.sections.storage.liveOnly')}</p>
+			<p className="description">{t('admin.sections.storage.usage')}</p>
+			<Alert
+				className="storage-keep-private"
+				type="warning"
+				showIcon
+				message={t('admin.sections.storage.keepPrivate')}
+			/>
 			<EditStorage />
 		</>
 	);

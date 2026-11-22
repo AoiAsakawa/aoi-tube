@@ -101,7 +101,7 @@ func GetServerConfig(w http.ResponseWriter, r *http.Request) {
 			Enabled:     data.GetDirectoryEnabled(),
 			InstanceURL: data.GetServerURL(),
 		},
-		S3:                 data.GetS3Config(),
+		S3:                 maskS3Secret(data.GetS3Config()),
 		ExternalActions:    data.GetExternalActions(),
 		SupportedCodecs:    transcoder.GetCodecs(ffmpeg),
 		VideoCodec:         data.GetVideoCodec(),
@@ -160,6 +160,16 @@ func maskOAuthSecret[T models.DiscordAuthConfiguration | models.XAuthConfigurati
 			c.ClientSecret = maskedSecretValue
 		}
 		return any(c).(T)
+	}
+	return cfg
+}
+
+// maskS3Secret blanks the S3 secret access key for the admin GET response.
+// Backups in the bucket are encrypted with a key derived from it, so it is
+// kept out of the browser like the other secrets.
+func maskS3Secret(cfg models.S3) models.S3 {
+	if cfg.Secret != "" {
+		cfg.Secret = maskedSecretValue
 	}
 	return cfg
 }

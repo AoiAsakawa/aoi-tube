@@ -139,6 +139,25 @@ func SetUploaderFactory(f func() (ArchiveUploader, error)) {
 	uploaderFactory = f
 }
 
+// offloadBlocker says why finished recordings must stay on local disk even
+// though S3 offload is configured, or returns "" when they may go. Wired by
+// the core package; nil never blocks. Deleting media that is already in S3 is
+// not affected.
+var offloadBlocker func() string
+
+// SetOffloadBlocker wires the check that can keep recordings off S3.
+func SetOffloadBlocker(f func() string) {
+	offloadBlocker = f
+}
+
+// offloadBlockReason returns why offloading is blocked right now, or "".
+func offloadBlockReason() string {
+	if offloadBlocker == nil {
+		return ""
+	}
+	return offloadBlocker()
+}
+
 // currentUploader resolves the uploader for this operation, or nil to keep
 // recordings on local disk.
 func currentUploader() ArchiveUploader {
@@ -678,7 +697,11 @@ func finalizeSessionMedia(sessionID, sessionDir string) {
 		}
 
 		if uploader := currentUploader(); uploader != nil {
-			offloadSessionToS3(sessionID, sessionDir, uploader)
+			if reason := offloadBlockReason(); reason != "" {
+				log.Warnln("recording: keeping", sessionID, "on local disk instead of S3:", reason)
+			} else {
+				offloadSessionToS3(sessionID, sessionDir, uploader)
+			}
 		}
 	}
 

@@ -1,4 +1,4 @@
-import { Col, Collapse, Row, Tabs, Typography } from 'antd';
+import { Alert, Col, Collapse, Row, Tabs, Typography } from 'antd';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CodecSelector as VideoCodecSelector } from '../../components/admin/CodecSelector';
@@ -25,7 +25,7 @@ const RecordingTab = () => {
 	const { t } = useTranslation();
 	const serverStatusData = useContext(ServerStatusContext);
 	const { serverConfig } = serverStatusData || {};
-	const { recordingEnabled, recordingStoreOnS3, recordingRetentionCount } = serverConfig;
+	const { recordingEnabled, recordingStoreOnS3, recordingRetentionCount, s3 } = serverConfig;
 
 	// TextFieldWithSubmit is a controlled input: the parent must own the
 	// edited value and update it via onChange. Binding `value` straight to
@@ -42,6 +42,16 @@ const RecordingTab = () => {
 			    the tabs. Level 3 matches the sibling streaming tab's heading. */}
 			<Title level={3}>{t('admin.config.recording.title')}</Title>
 			<p className="description">{t('admin.config.recording.description')}</p>
+			{/* The server keeps recordings off S3 while live distribution from
+			    S3 is on, because that bucket has to be public. */}
+			{recordingStoreOnS3 && s3?.enabled && (
+				<Alert
+					type="warning"
+					showIcon
+					style={{ marginBottom: '1em' }}
+					message={t('admin.config.recording.s3PausedByLiveDistribution')}
+				/>
+			)}
 
 			<Row>
 				<Col span={20} className="form-module" style={{ margin: '5px' }}>

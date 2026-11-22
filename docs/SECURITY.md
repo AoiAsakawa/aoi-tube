@@ -45,7 +45,8 @@ prevents header forgery from defeating per-IP rate limits and bans.
   recorded purchase entitlement (`HasPurchasedArchive`, test payments
   excluded). Archive media offloaded to S3 is **proxied through the
   server**, never linked directly, so the gate stays authoritative with a
-  private bucket.
+  private bucket. Recordings are not offloaded while live S3 distribution is
+  on, because that needs a publicly readable bucket.
 - **Path traversal**: the HLS and archive handlers reject `..` and enforce
   path prefixes; file paths are sanitized with `filepath.Base()`.
 
@@ -77,9 +78,16 @@ prevents header forgery from defeating per-IP rate limits and bans.
 ### Secret handling
 
 Admin GET APIs mask stored secrets (OAuth client secrets, API secrets,
-webhook secrets, verification tokens) as `********`; submitting the masked
-value back preserves the stored secret (`controllers/admin/serverConfig.go`
-and the payment config handlers).
+webhook secrets, verification tokens, the S3 secret key) as `********`;
+submitting the masked value back preserves the stored secret
+(`controllers/admin/serverConfig.go` and the payment config handlers).
+
+Database backups uploaded to S3 are encrypted with AES-256-GCM under a key
+derived (HKDF-SHA256) from the S3 secret key, with a fresh salt and nonce
+per file (`core/storageproviders/backupCrypto.go`). A backup holds every
+secret in the database, and object names are predictable, so a bucket that
+becomes readable through a public domain, an ACL or a policy must not expose
+it. S3 backups are pruned to the same retention count as local ones.
 
 ### Input validation & headers
 

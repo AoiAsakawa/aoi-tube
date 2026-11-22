@@ -782,7 +782,8 @@
 			"recording": {
 				"title": "Recording",
 				"tabLabel": "Recording",
-				"description": "Automatically record streams and save them as archives (VOD). Recordings are saved unpublished, so review them (and optionally set pricing) before publishing from Utilities > Archives. Published recordings appear on the viewer-facing list page (/archives)."
+				"description": "Automatically record streams and save them as archives (VOD). Recordings are saved unpublished, so review them (and optionally set pricing) before publishing from Utilities > Archives. Published recordings appear on the viewer-facing list page (/archives).",
+				"s3PausedByLiveDistribution": "\"Serve live video from S3\" (Server Settings > S3 Object Storage) is on, so recordings stay on this server's disk instead of going to S3."
 			},
 			"backup": {
 				"title": "Backup",
@@ -1940,11 +1941,15 @@
 					"beforeLink": "AoiTube can also broadcast using an external storage provider. For details, see the ",
 					"linkText": "storage documentation"
 				},
-				"warning": "Incorrect settings may prevent your video from playing. Be sure to check your storage provider's documentation for how to configure the bucket you created for AoiTube.",
-				"liveOnly": "This is a setting for live streaming, not for archiving, recording, or VOD purposes.",
+				"usage": "The S3 storage configured here holds database backups (Server Settings > Backup) and recordings (Video & Streaming > Recording). AoiTube reads and writes them with these keys, so the bucket does not need to be public.",
+				"keepPrivate": "Keep the bucket private. A public domain, an r2.dev URL, or an ACL or policy that lets anyone read the bucket would let anyone download the recordings.",
+				"liveDistribution": {
+					"label": "Serve live video from S3",
+					"tip": "With classic HLS, viewers fetch the video segments from S3. Not used with LL-HLS.",
+					"warning": "Serving from S3 requires a public bucket. While this is on, recordings are not stored on S3, and recordings already in the bucket can be downloaded by anyone once the bucket is public (backups are encrypted). A wrong bucket setup can make the stream unplayable."
+				},
 				"updated": "Updated.",
-				"restartNote": "Changes to your storage settings will take effect the next time you start streaming.",
-				"useS3": "Use an S3 storage provider",
+				"restartNote": "Live distribution settings take effect from the next stream.",
 				"optionalSettings": "Optional settings",
 				"save": "Save"
 			},
@@ -2465,7 +2470,7 @@
 			},
 			"recordingStoreS3": {
 				"label": "Store recordings on S3",
-				"tip": "When enabled, recording media is offloaded to S3 object storage (same bucket as live distribution, under archives/) after a stream ends, freeing local disk. Playback is proxied through the server so hidden-archive protection is preserved. Configure S3 credentials first under Server Settings > Storage."
+				"tip": "When enabled, recording media is moved to S3 (under archives/ in the bucket set up in Server Settings > S3 Object Storage) after a stream ends, freeing local disk. Playback always goes through the server, so private, members-only and paid restrictions still apply. While \"Serve live video from S3\" is on, recordings are not moved, because that bucket has to be public."
 			},
 			"backupEnabled": {
 				"label": "Enable automatic backups",
@@ -2476,12 +2481,12 @@
 				"tip": "How often to run a backup, in hours. Minimum 1, default 24."
 			},
 			"backupRetention": {
-				"label": "Local retention",
-				"tip": "Maximum number of local backup files to keep; older ones are pruned automatically. 0 keeps all."
+				"label": "Retention",
+				"tip": "How many backups to keep, locally and on S3 separately. Older ones are deleted. 0 keeps all."
 			},
 			"backupStoreS3": {
 				"label": "Store backups on S3",
-				"tip": "Also upload each backup to S3 object storage (same bucket as live distribution, under backups/). Survives disk loss and eases node migration. Configure S3 credentials first."
+				"tip": "Also store each backup on S3 (under backups/ in the bucket set up in Server Settings > S3 Object Storage). Backups on S3 are encrypted with a key derived from the S3 secret key, so restoring one needs the secret key that was configured when it was made. Protects against disk failure and helps when moving to another server."
 			},
 			"streamSchedule": {
 				"label": "Stream schedule",

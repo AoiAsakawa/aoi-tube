@@ -91,14 +91,15 @@ func main() {
 	configureLogging(*enableDebugOptions, *enableVerboseLogging)
 	log.Infoln(config.GetReleaseString())
 
-	// Allows a user to restore a specific database backup
+	// Allows a user to restore a specific database backup, including an
+	// encrypted one downloaded from the S3 bucket.
 	if *restoreDatabaseFile != "" {
 		databaseFile := config.DatabaseFilePath
 		if *dbFile != "" {
 			databaseFile = *dbFile
 		}
 
-		if err := utils.Restore(*restoreDatabaseFile, databaseFile); err != nil {
+		if err := core.RestoreDatabaseFile(*restoreDatabaseFile, databaseFile); err != nil {
 			log.Fatalln(err)
 		}
 

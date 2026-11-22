@@ -996,6 +996,19 @@ func SetS3Configuration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// The admin page receives the secret masked (maskS3Secret) and sends the
+	// mask back unless the operator typed a new one.
+	if newS3Config.Value.Secret == maskedSecretValue {
+		newS3Config.Value.Secret = data.GetS3Config().Secret
+	}
+
+	// The connection can be saved without live distribution: backups and
+	// recordings use it on their own.
+	if newS3Config.Value.Endpoint != "" && !utils.IsValidURL(newS3Config.Value.Endpoint) {
+		controllers.WriteSimpleResponse(w, false, "the s3 endpoint must be a full URL")
+		return
+	}
+
 	if newS3Config.Value.Enabled {
 		if newS3Config.Value.Endpoint == "" || !utils.IsValidURL((newS3Config.Value.Endpoint)) {
 			controllers.WriteSimpleResponse(w, false, "s3 support requires an endpoint")

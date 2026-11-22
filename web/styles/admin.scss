@@ -611,11 +611,16 @@
 	padding: 1em;
 }
 .edit-storage-container .form-fields {
-	display: none;
 	margin-bottom: 1em;
 }
-.edit-storage-container.enabled .form-fields {
-	display: block;
+.edit-storage-container .live-distribution {
+	margin-top: 1.5em;
+}
+.edit-storage-container .live-distribution-warning {
+	margin: 0.5em 0 1em 0;
+}
+.storage-keep-private {
+	margin: 1em 0;
 }
 .edit-storage-container .button-container {
 	margin: 2em 0 1em 0;

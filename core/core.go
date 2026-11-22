@@ -72,6 +72,16 @@ func Start() error {
 		return storageproviders.NewArchiveS3()
 	})
 
+	// Live S3 distribution needs a bucket anyone can read, so recordings
+	// stay on local disk while it is on: in that bucket, paid and
+	// members-only archives would be readable without the access check.
+	recording.SetOffloadBlocker(func() string {
+		if data.GetS3Config().Enabled {
+			return "live S3 distribution is on, which needs a publicly readable bucket"
+		}
+		return ""
+	})
+
 	// Wire the purchase lookup that shields sold archives from retention
 	// pruning (same injection pattern, avoiding a recording→data import).
 	recording.SetEntitlementChecker(func(archiveID string) bool {

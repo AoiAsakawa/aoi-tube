@@ -1,9 +1,11 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -20,6 +22,27 @@ const (
 	backupFilePrefix = "owncast-backup-"
 	backupFileExt    = ".bak"
 )
+
+// previousBackupSecretEnv names the environment variable that holds the S3
+// secret key a backup was made with, for restoring a backup that is older than
+// the current S3 key.
+const previousBackupSecretEnv = "OWNCAST_BACKUP_SECRET"
+
+// backupObjectPattern matches the backups this server stores in S3, capturing
+// their timestamp: encrypted ones (.bak.enc) and those uploaded before
+// encryption (.bak). Pruning and restoring look at nothing else under the
+// backups/ prefix.
+var backupObjectPattern = regexp.MustCompile("^" +
+	regexp.QuoteMeta(storageproviders.BackupObjectPrefix+backupFilePrefix) +
+	`(\d{8}-\d{6})` +
+	regexp.QuoteMeta(backupFileExt) +
+	"(?:" + regexp.QuoteMeta(storageproviders.EncryptedBackupSuffix) + ")?$")
+
+// backupBucket is the part of the S3 connection that pruning uses.
+type backupBucket interface {
+	ListBackups() ([]string, error)
+	DeleteBackups(keys []string) error
+}
 
 // startBackupScheduler runs periodic database backups on a timer while
 // enabled. The database holds all config, users and — now — purchase
@@ -58,24 +81,101 @@ func runScheduledBackup() {
 	}
 	log.Infoln("backup: database backed up to", localPath)
 
+	retention := data.GetBackupRetentionCount()
 	if data.GetBackupStoreOnS3() {
-		if err := uploadBackupToS3(localPath, name); err != nil {
+		if err := uploadBackupToS3(localPath, name, retention); err != nil {
 			log.Warnln("backup: unable to upload backup to S3:", err)
-		} else {
-			log.Infoln("backup: uploaded to S3:", name)
 		}
 	}
 
-	pruneLocalBackups(data.GetBackupRetentionCount())
+	pruneLocalBackups(retention)
 }
 
-// uploadBackupToS3 offloads a backup file to the configured bucket.
-func uploadBackupToS3(localPath, name string) error {
+// uploadBackupToS3 encrypts a backup file into the configured bucket, then
+// prunes the bucket's backups to keepCount.
+func uploadBackupToS3(localPath, name string, keepCount int) error {
 	s3, err := storageproviders.NewArchiveS3()
 	if err != nil {
 		return err
 	}
-	return s3.UploadBackup(localPath, name)
+	objectName := name + storageproviders.EncryptedBackupSuffix
+	if err := s3.UploadBackup(localPath, objectName); err != nil {
+		return err
+	}
+	log.Infoln("backup: uploaded encrypted backup to S3:", objectName)
+
+	// Only after a successful upload, so a failing bucket never loses the
+	// copies it still has.
+	pruneS3Backups(s3, keepCount)
+	return nil
+}
+
+// pruneS3Backups keeps only the newest keepCount backups in the bucket.
+// keepCount <= 0 keeps everything. Objects that are not this server's backups
+// are never touched.
+func pruneS3Backups(bucket backupBucket, keepCount int) {
+	if keepCount <= 0 {
+		return
+	}
+	keys, err := bucket.ListBackups()
+	if err != nil {
+		log.Warnln("backup: unable to list S3 backups for pruning:", err)
+		return
+	}
+	old := backupObjectsToPrune(keys, keepCount)
+	if len(old) == 0 {
+		return
+	}
+	if err := bucket.DeleteBackups(old); err != nil {
+		log.Warnln("backup: unable to prune old S3 backups:", err)
+		return
+	}
+	log.Infof("backup: removed %d old backup(s) from S3", len(old))
+}
+
+// backupObjectsToPrune returns the backup objects to delete so that the newest
+// keepCount remain, oldest first. keepCount <= 0 keeps everything.
+func backupObjectsToPrune(keys []string, keepCount int) []string {
+	if keepCount <= 0 {
+		return nil
+	}
+	backups := sortedBackupObjects(keys)
+	if len(backups) <= keepCount {
+		return nil
+	}
+	return backups[:len(backups)-keepCount]
+}
+
+// latestBackupObject returns the newest backup object among keys.
+func latestBackupObject(keys []string) (string, bool) {
+	backups := sortedBackupObjects(keys)
+	if len(backups) == 0 {
+		return "", false
+	}
+	return backups[len(backups)-1], true
+}
+
+// sortedBackupObjects returns the keys that name this server's backups,
+// oldest first.
+func sortedBackupObjects(keys []string) []string {
+	type backup struct{ key, timestamp string }
+	backups := make([]backup, 0, len(keys))
+	for _, key := range keys {
+		if m := backupObjectPattern.FindStringSubmatch(key); m != nil {
+			backups = append(backups, backup{key: key, timestamp: m[1]})
+		}
+	}
+	sort.Slice(backups, func(i, j int) bool {
+		if backups[i].timestamp != backups[j].timestamp {
+			return backups[i].timestamp < backups[j].timestamp
+		}
+		return backups[i].key < backups[j].key
+	})
+	sorted := make([]string, len(backups))
+	for i, b := range backups {
+		sorted[i] = b.key
+	}
+	return sorted
 }
 
 // pruneLocalBackups keeps only the newest keepCount backup files on disk.
@@ -121,10 +221,10 @@ func RestoreFromS3(databaseFile string) error {
 	if err != nil {
 		return fmt.Errorf("listing S3 backups: %w", err)
 	}
-	if len(keys) == 0 {
-		return fmt.Errorf("no backups found in the S3 bucket under backups/")
+	latest, ok := latestBackupObject(keys)
+	if !ok {
+		return fmt.Errorf("no backups found in the S3 bucket under %s", storageproviders.BackupObjectPrefix)
 	}
-	latest := keys[len(keys)-1] // ListBackups returns keys sorted ascending.
 
 	tmp, err := os.CreateTemp("", "owncast-restore-*.bak")
 	if err != nil {
@@ -135,8 +235,8 @@ func RestoreFromS3(databaseFile string) error {
 	defer os.Remove(tmpPath)
 
 	log.Infoln("restore: downloading", latest, "from S3")
-	if err := s3.DownloadBackupObject(latest, tmpPath); err != nil {
-		return fmt.Errorf("downloading %s: %w", latest, err)
+	if err := s3.DownloadBackup(latest, tmpPath, os.Getenv(previousBackupSecretEnv)); err != nil {
+		return fmt.Errorf("reading %s: %w", latest, explainBackupKeyError(err, "OWNCAST_S3_SECRET"))
 	}
 
 	if err := utils.Restore(tmpPath, databaseFile); err != nil {
@@ -144,4 +244,50 @@ func RestoreFromS3(databaseFile string) error {
 	}
 	log.Infoln("restore: database restored from S3 backup", latest)
 	return nil
+}
+
+// RestoreDatabaseFile restores a backup file for the `-restoreDatabase` CLI
+// flag. A backup downloaded from the bucket is encrypted; it is decrypted with
+// the S3 secret key from OWNCAST_S3_SECRET or OWNCAST_BACKUP_SECRET.
+func RestoreDatabaseFile(backupFile, databaseFile string) error {
+	raw, err := os.ReadFile(backupFile) // nolint:gosec
+	if err != nil {
+		return err
+	}
+	if !storageproviders.IsEncryptedBackup(raw) {
+		return utils.Restore(backupFile, databaseFile)
+	}
+
+	secrets := []string{os.Getenv("OWNCAST_S3_SECRET"), os.Getenv(previousBackupSecretEnv)}
+	if secrets[0] == "" && secrets[1] == "" {
+		return fmt.Errorf("%s is an encrypted backup: set OWNCAST_S3_SECRET (or %s) to the S3 secret key that was configured when it was made", backupFile, previousBackupSecretEnv)
+	}
+	plain, err := storageproviders.DecryptBackup(raw, secrets...)
+	if err != nil {
+		return explainBackupKeyError(err, "OWNCAST_S3_SECRET or "+previousBackupSecretEnv)
+	}
+
+	tmp, err := os.CreateTemp("", "owncast-restore-*.bak")
+	if err != nil {
+		return err
+	}
+	tmpPath := tmp.Name()
+	defer os.Remove(tmpPath)
+	_, writeErr := tmp.Write(plain)
+	if closeErr := tmp.Close(); writeErr == nil {
+		writeErr = closeErr
+	}
+	if writeErr != nil {
+		return writeErr
+	}
+	return utils.Restore(tmpPath, databaseFile)
+}
+
+// explainBackupKeyError tells the operator what to do when no given secret
+// matches a backup. tried names the environment variable(s) that were used.
+func explainBackupKeyError(err error, tried string) error {
+	if errors.Is(err, storageproviders.ErrBackupKeyMismatch) {
+		return fmt.Errorf("%w than %s; set %s to the S3 secret key that was configured when the backup was made", err, tried, previousBackupSecretEnv)
+	}
+	return err
 }

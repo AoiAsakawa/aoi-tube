@@ -16,26 +16,33 @@ offloaded to S3.
 | Live HLS segments | ephemeral (regenerated) | n/a |
 | Emoji, logo, offline media | `data/` | copy the directory |
 
-If archives are offloaded to S3 (Server → Storage, "Store recordings on S3")
-and backups go to S3, the only thing tied to a specific machine is the running
-binary — everything else can be pulled from the bucket.
+If archives are offloaded to S3 (Video & Streaming → Recording, "Store
+recordings on S3") and backups go to S3, the only thing tied to a specific
+machine is the running binary — everything else can be pulled from the bucket.
 
-> **Keep the bucket private.** There is a single S3 configuration, and live
-> distribution, recordings and backups all use its bucket. A backup is the whole
-> database: stream keys, the admin password hash, payment provider secrets,
-> OAuth client secrets, the S3 credentials themselves, users and their tokens.
-> Its object name (`backups/owncast-backup-<timestamp>.bak`) is guessable. Never
-> make that bucket publicly readable — no public custom domain, no `r2.dev`
-> URL, no public-read ACL or bucket policy. AoiTube reads archives and backups
-> through the S3 API with its credentials and needs no public access.
+> **Keep the bucket private.** There is one S3 connection (Server Settings →
+> S3 Object Storage), and backups, recordings and, when switched on, live
+> distribution all use its bucket. AoiTube reads and writes backups and
+> recordings through the S3 API with its keys and needs no public access.
+> Never make the bucket publicly readable: no public custom domain, no
+> `r2.dev` URL, no public-read ACL or bucket policy.
 >
-> Live S3 distribution (Server → Storage, "Enabled" with a serving endpoint)
-> does need a publicly readable bucket, and only works with classic HLS:
-> LL-HLS is always served by AoiTube itself. With the current single
-> configuration it can't be combined safely with S3 backups or recordings. If
-> you need it, point it at a separate account or bucket that holds nothing
-> else, and keep backups and recordings off S3 or in a different, private
-> setup.
+> Backups are encrypted before they are uploaded (see below), so a readable
+> bucket does not expose them. Recordings are stored as they are: in a public
+> bucket, paid and members-only archives can be downloaded without the access
+> check.
+>
+> Live S3 distribution ("Serve live video from S3") is the exception. It needs
+> a publicly readable bucket, and it only works with classic HLS: LL-HLS is
+> always served by AoiTube itself. While it is on, AoiTube keeps new
+> recordings on local disk, but recordings already in the bucket become public
+> along with it. Only use it with a bucket that holds no recordings.
+>
+> Up to and including 0.3.0-beta.5, the connection could only be saved with
+> live distribution switched on, so backing up to S3 meant setting up a public
+> bucket, and the backups in it were not encrypted. If you set it up that way,
+> remove public access from the bucket and replace the keys and secrets the
+> backups contained (see [Replacing the S3 keys](#replacing-the-s3-keys)).
 
 ## Automatic backups
 
@@ -44,10 +51,11 @@ Scheduled backups are on by default. Configure them under
 
 - **Enabled** — run scheduled backups (default on).
 - **Interval (hours)** — how often to back up (default 24).
-- **Retention** — how many local backup files to keep (default 7; 0 keeps all).
-- **Store backups on S3** — also upload each backup to the configured S3
-  bucket under the `backups/` prefix (reuses the same S3 credentials as live
-  distribution / recordings). Off by default.
+- **Retention** — how many backups to keep (default 7; 0 keeps all). It
+  applies to the local directory and, separately, to the bucket.
+- **Store backups on S3** — also upload each backup, encrypted, to the bucket
+  set up under Server Settings → S3 Object Storage, as
+  `backups/owncast-backup-<UTC-timestamp>.bak.enc`. Off by default.
 
 Backups are written to `data/backup/owncast-backup-<UTC-timestamp>.bak`
 (gzip-compressed SQL dumps; override the directory with the `-backupdir`
@@ -61,11 +69,42 @@ has a recent copy.
 > the `archives/` prefix by the recording feature (Admin → Video → Recording)
 > and is *not* inside the `.bak` files.
 
+### Encryption of S3 backups
+
+Backups are encrypted before they leave the server: AES-256-GCM, with a key
+derived from the S3 secret key (HKDF-SHA256, a fresh salt and nonce for every
+file). There is no separate key to keep: whoever restores from the bucket
+needs the S3 credentials anyway, and making the bucket public does not reveal
+them. An encrypted file starts with the line `AoiTube encrypted backup v1`.
+
+This has one consequence: a backup can only be decrypted with the S3 secret
+key that was configured when it was made. Backups uploaded before encryption
+(`.bak`, plain gzip) restore as before, and pruning removes them as new
+backups arrive.
+
+### Replacing the S3 keys
+
+1. Create the new key with your storage provider.
+2. Enter the new access key and secret key under Server Settings → S3 Object
+   Storage and save. The secret key is shown as `********`; leave it as it is
+   to keep the stored one.
+3. Restart AoiTube (a backup runs two minutes after start) or wait for the next
+   scheduled backup, so that the newest backup in the bucket uses the new key.
+4. Revoke the old key.
+
+Backups made before the change can still be restored by setting
+`OWNCAST_BACKUP_SECRET` to the old secret key (see below). They are deleted
+as new backups take their place.
+
 ### Manual / CLI
 
 ```bash
 # Restore a specific local backup file, then restart AoiTube.
 ./aoitube -restoreDatabase data/backup/owncast-backup-20260107-030000.bak
+
+# An encrypted backup downloaded from the bucket needs the S3 secret key it
+# was made with.
+OWNCAST_S3_SECRET=<secret> ./aoitube -restoreDatabase owncast-backup-20260107-030000.bak.enc
 ```
 
 ## Migrating to another node
@@ -100,6 +139,11 @@ export OWNCAST_S3_FORCE_PATH_STYLE=true   # true for most S3-compatible provider
 required; `-restoreFromS3` exits with an error naming them otherwise. After a
 successful restore, restart AoiTube **without** the flag.
 
+The newest backup is decrypted with `OWNCAST_S3_SECRET`. If it was made with a
+different secret key (the keys were replaced and no backup has run since),
+the restore stops and says so; set `OWNCAST_BACKUP_SECRET` to the secret key
+that was configured when the backup was made and run it again.
+
 The restored database already contains the S3 configuration, so recordings and
 future backups continue to use the same bucket with no further setup.
 
@@ -116,6 +160,10 @@ future backups continue to use the same bucket with no further setup.
   failure otherwise loses the purchase records (and thus buyers' access).
 - Keep the S3 bucket private; archive media is always served **through** the
   AoiTube server (never a public CDN redirect), so the access gate — including
-  paid-archive entitlements — stays authoritative regardless of bucket ACL.
+  paid-archive entitlements — only protects recordings that the bucket does
+  not hand out by itself.
+- Use one bucket per AoiTube instance. Pruning keeps the newest backups in
+  `backups/`, whichever instance wrote them, and `-restoreFromS3` takes the
+  newest one.
 - Verify a restore periodically: `-restoreDatabase` into a throwaway path and
   start a test instance.

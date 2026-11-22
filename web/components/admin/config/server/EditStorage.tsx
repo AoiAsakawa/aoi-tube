@@ -1,5 +1,4 @@
-import { Button, Collapse } from 'antd';
-import classNames from 'classnames';
+import { Alert, Button, Collapse } from 'antd';
 import React, { useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UpdateArgs } from '../../../../types/config-section';
@@ -26,82 +25,88 @@ import { ToggleSwitch } from '../../ToggleSwitch';
 
 const { Panel } = Collapse;
 
-// we could probably add more detailed checks here
-// `currentValues` is what's currently in the global store and in the db
-function checkSaveable(formValues: any, currentValues: any) {
-	const {
-		endpoint,
-		accessKey,
-		secret,
-		bucket,
-		region,
-		enabled,
-		servingEndpoint,
-		acl,
-		forcePathStyle,
-	} = formValues;
-	// if fields are filled out and different from what's in store, then return true
-	if (enabled) {
-		if (!!endpoint && isValidUrl(endpoint) && !!accessKey && !!secret && !!bucket && !!region) {
-			if (
-				enabled !== currentValues.enabled ||
-				endpoint !== currentValues.endpoint ||
-				accessKey !== currentValues.accessKey ||
-				secret !== currentValues.secret ||
-				bucket !== currentValues.bucket ||
-				region !== currentValues.region ||
-				(!currentValues.servingEndpoint && servingEndpoint !== '') ||
-				(!!currentValues.servingEndpoint && servingEndpoint !== currentValues.servingEndpoint) ||
-				(!currentValues.acl && acl !== '') ||
-				(!!currentValues.acl && acl !== currentValues.acl) ||
-				forcePathStyle !== currentValues.forcePathStyle
-			) {
-				return true;
-			}
+// The server sends the stored secret as this mask and keeps the stored secret
+// when it receives the mask back (controllers/admin: maskS3Secret).
+export const MASKED_S3_SECRET = '********';
+
+export type S3FormValues = {
+	accessKey: string;
+	acl: string;
+	bucket: string;
+	enabled: boolean;
+	endpoint: string;
+	forcePathStyle: boolean;
+	region: string;
+	secret: string;
+	servingEndpoint: string;
+};
+
+const EMPTY_S3: S3FormValues = {
+	accessKey: '',
+	acl: '',
+	bucket: '',
+	enabled: false,
+	endpoint: '',
+	forcePathStyle: false,
+	region: '',
+	secret: '',
+	servingEndpoint: '',
+};
+
+const S3_FIELDS = Object.keys(EMPTY_S3) as (keyof S3FormValues)[];
+
+// withS3Defaults fills in the fields the server leaves out when they are empty.
+export function withS3Defaults(values?: Partial<S3FormValues> | null): S3FormValues {
+	const filled = { ...EMPTY_S3 };
+	S3_FIELDS.forEach(key => {
+		const value = values?.[key];
+		if (value !== undefined && value !== null) {
+			(filled as Record<string, unknown>)[key] = value;
 		}
-	} else if (enabled !== currentValues.enabled) {
+	});
+	return filled;
+}
+
+// The S3 connection is used by database backups and recordings on its own, so
+// it can be saved while live distribution (`enabled`) is off. Before, the
+// fields were only shown and saved with live distribution on, which needs a
+// public bucket: the only way to set up backups to S3 was to make the bucket
+// public as well.
+export function checkSaveable(
+	formValues: S3FormValues,
+	currentValues?: Partial<S3FormValues> | null,
+): boolean {
+	const current = withS3Defaults(currentValues);
+	if (!S3_FIELDS.some(key => formValues[key] !== current[key])) {
+		return false;
+	}
+
+	const { endpoint, accessKey, secret, bucket, region, enabled } = formValues;
+	const complete =
+		!!endpoint && isValidUrl(endpoint) && !!accessKey && !!secret && !!bucket && !!region;
+	if (complete) {
 		return true;
 	}
-	return false;
+
+	// Clearing the connection is allowed while live distribution is off.
+	const cleared = !endpoint && !accessKey && !secret && !bucket && !region;
+	return cleared && !enabled;
 }
 
 export default function EditStorage() {
 	const { t } = useTranslation();
-	const [formDataValues, setFormDataValues] = useState(null);
+	const [formDataValues, setFormDataValues] = useState<S3FormValues>(null);
 	const [submitStatus, setSubmitStatus] = useState<StatusState>(null);
 
-	const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
 	const serverStatusData = useContext(ServerStatusContext);
 	const { serverConfig, setFieldInConfigState } = serverStatusData || {};
 
 	const { setMessage: setAlertMessage } = useContext(AlertMessageContext);
 
 	const { s3 } = serverConfig || {};
-	const {
-		accessKey = '',
-		acl = '',
-		bucket = '',
-		enabled = false,
-		endpoint = '',
-		region = '',
-		secret = '',
-		servingEndpoint = '',
-		forcePathStyle = false,
-	} = s3 || {};
 
 	useEffect(() => {
-		setFormDataValues({
-			accessKey,
-			acl,
-			bucket,
-			enabled,
-			endpoint,
-			region,
-			secret,
-			servingEndpoint,
-			forcePathStyle,
-		});
-		setShouldDisplayForm(enabled);
+		setFormDataValues(withS3Defaults(s3));
 	}, [s3]);
 
 	if (!formDataValues) {
@@ -126,16 +131,18 @@ export default function EditStorage() {
 	// posts the whole state
 	const handleSave = async () => {
 		setSubmitStatus(createInputStatus(STATUS_PROCESSING));
-		const postValue = formDataValues;
-		if (postValue?.servingEndpoint) {
-			postValue.servingEndpoint = postValue?.servingEndpoint?.replace(/\/+$/g, '');
-		}
+		const postValue = {
+			...formDataValues,
+			servingEndpoint: formDataValues.servingEndpoint.replace(/\/+$/g, ''),
+		};
 
 		await postConfigUpdateToAPI({
 			apiPath: API_S3_INFO,
 			data: { value: postValue },
 			onSuccess: () => {
-				setFieldInConfigState({ fieldName: 's3', value: postValue, path: '' });
+				// Keep what a reload would show: the mask, not a typed secret.
+				const stored = { ...postValue, secret: postValue.secret ? MASKED_S3_SECRET : '' };
+				setFieldInConfigState({ fieldName: 's3', value: stored, path: '' });
 				setSubmitStatus(createInputStatus(STATUS_SUCCESS, t('admin.sections.storage.updated')));
 				resetTimer = setTimeout(resetStates, RESET_TIMEOUT);
 				setAlertMessage(t('admin.sections.storage.restartNote'));
@@ -147,44 +154,18 @@ export default function EditStorage() {
 		});
 	};
 
-	// toggle switch.
-	const handleSwitchChange = (storageEnabled: boolean) => {
-		setShouldDisplayForm(storageEnabled);
-		handleFieldChange({ fieldName: 'enabled', value: storageEnabled });
+	const handleLiveDistributionChange = (liveEnabled: boolean) => {
+		handleFieldChange({ fieldName: 'enabled', value: liveEnabled });
 	};
 
 	const handleForcePathStyleSwitchChange = (forcePathStyleEnabled: boolean) => {
 		handleFieldChange({ fieldName: 'forcePathStyle', value: forcePathStyleEnabled });
 	};
 
-	const containerClass = classNames({
-		'edit-storage-container': true,
-		'form-module': true,
-		enabled: shouldDisplayForm,
-	});
-
 	const isSaveable = checkSaveable(formDataValues, s3);
 
 	return (
-		<div className={containerClass}>
-			<div className="enable-switch">
-				<ToggleSwitch
-					apiPath=""
-					fieldName="enabled"
-					label={t('admin.sections.storage.useS3')}
-					checked={formDataValues.enabled}
-					onChange={handleSwitchChange}
-				/>
-				{/* <Switch
-          checked={formDataValues.enabled}
-          defaultChecked={formDataValues.enabled}
-          onChange={handleSwitchChange}
-          checkedChildren="ON"
-          unCheckedChildren="OFF"
-        />{' '}
-        Enabled */}
-			</div>
-
+		<div className="edit-storage-container form-module">
 			<div className="form-fields">
 				<div className="field-container">
 					<TextField
@@ -231,13 +212,6 @@ export default function EditStorage() {
 								onChange={handleFieldChange}
 							/>
 						</div>
-						<div className="field-container">
-							<TextField
-								{...S3_TEXT_FIELDS_INFO.servingEndpoint}
-								value={formDataValues.servingEndpoint}
-								onChange={handleFieldChange}
-							/>
-						</div>
 						<div className="enable-switch">
 							<ToggleSwitch
 								{...S3_TEXT_FIELDS_INFO.forcePathStyle}
@@ -248,6 +222,34 @@ export default function EditStorage() {
 						</div>
 					</Panel>
 				</Collapse>
+			</div>
+
+			<div className="live-distribution">
+				<ToggleSwitch
+					apiPath=""
+					fieldName="enabled"
+					label={t('admin.sections.storage.liveDistribution.label')}
+					tip={t('admin.sections.storage.liveDistribution.tip')}
+					checked={formDataValues.enabled}
+					onChange={handleLiveDistributionChange}
+				/>
+				{formDataValues.enabled && (
+					<>
+						<Alert
+							className="live-distribution-warning"
+							type="warning"
+							showIcon
+							message={t('admin.sections.storage.liveDistribution.warning')}
+						/>
+						<div className="field-container">
+							<TextField
+								{...S3_TEXT_FIELDS_INFO.servingEndpoint}
+								value={formDataValues.servingEndpoint}
+								onChange={handleFieldChange}
+							/>
+						</div>
+					</>
+				)}
 			</div>
 
 			<div className="button-container">

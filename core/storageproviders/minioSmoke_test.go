@@ -2,18 +2,32 @@
 
 package storageproviders
 
-// Real-traffic smoke test against a local MinIO instance. It is excluded from
-// normal `go test ./...` runs by the build tag. To run it:
+// Real-traffic smoke test against a local S3-compatible server. It is excluded
+// from normal `go test ./...` runs by the build tag. To run it:
 //
 //	docker run -d --name minio-test -p 9000:9000 \
 //	  -e MINIO_ROOT_USER=testkey -e MINIO_ROOT_PASSWORD=testsecret123 \
 //	  minio/minio server /data
 //	go test -tags miniosmoke -run TestMinioSmoke -v ./core/storageproviders/
 //	docker rm -f minio-test
+//
+// MinIO images are no longer published on Docker Hub. SeaweedFS works too,
+// with the credentials in a JSON file ({"identities": [{"name": "smoke",
+// "credentials": [{"accessKey": "testkey", "secretKey": "testsecret123"}],
+// "actions": ["Admin", "Read", "Write", "List", "Tagging"]}]}):
+//
+//	docker run -d --name s3-test -p 127.0.0.1:19000:8333 \
+//	  -v $PWD/s3.json:/etc/seaweedfs/s3.json:ro chrislusf/seaweedfs:3.80 \
+//	  server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data
+//	MINIO_SMOKE_ENDPOINT=http://127.0.0.1:19000 go test -tags miniosmoke ...
+//
+// SeaweedFS drops Cache-Control on multipart uploads, so the check on the
+// 8 MiB archive object reports an error there; everything else passes.
 
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -150,25 +164,78 @@ func TestMinioSmoke(t *testing.T) {
 		t.Fatalf("ListArchiveSessionPrefixes = %v, %v; want [%s]", ids, err, sessionID)
 	}
 
-	// Backup roundtrip.
+	// Backup roundtrip: the bucket holds ciphertext, the restore the original.
 	backupContent := []byte("-- owncast backup smoke --\n")
-	backupPath := filepath.Join(tmpDir, "owncast-backup-20260708-000000.bak")
+	backupName := "owncast-backup-20260708-000000.bak"
+	backupPath := filepath.Join(tmpDir, backupName)
 	if err := os.WriteFile(backupPath, backupContent, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := a.UploadBackup(backupPath, filepath.Base(backupPath)); err != nil {
+	backupKey := BackupObjectPrefix + backupName + EncryptedBackupSuffix
+	if err := a.UploadBackup(backupPath, backupName+EncryptedBackupSuffix); err != nil {
 		t.Fatalf("UploadBackup: %v", err)
 	}
 	keys, err := a.ListBackups()
-	if err != nil || len(keys) != 1 || keys[0] != "backups/"+filepath.Base(backupPath) {
+	if err != nil || len(keys) != 1 || keys[0] != backupKey {
 		t.Fatalf("ListBackups = %v, %v", keys, err)
 	}
+	storedObj, err := raw.GetObject(ctx, &s3.GetObjectInput{Bucket: aws.String(bucket), Key: aws.String(backupKey)})
+	if err != nil {
+		t.Fatalf("GetObject(backup): %v", err)
+	}
+	storedBody, err := io.ReadAll(storedObj.Body)
+	_ = storedObj.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !IsEncryptedBackup(storedBody) || bytes.Contains(storedBody, backupContent) {
+		t.Fatalf("the bucket holds the backup unencrypted: %q", storedBody)
+	}
 	restorePath := filepath.Join(tmpDir, "restored.bak")
-	if err := a.DownloadBackupObject(keys[0], restorePath); err != nil {
-		t.Fatalf("DownloadBackupObject: %v", err)
+	if err := a.DownloadBackup(backupKey, restorePath); err != nil {
+		t.Fatalf("DownloadBackup: %v", err)
 	}
 	if restored, err := os.ReadFile(restorePath); err != nil || !bytes.Equal(restored, backupContent) {
 		t.Fatalf("backup roundtrip mismatch: %q, %v", restored, err)
+	}
+
+	// A backup uploaded before encryption restores unchanged.
+	legacyKey := BackupObjectPrefix + "owncast-backup-20260707-000000.bak"
+	if _, err := raw.PutObject(ctx, &s3.PutObjectInput{Bucket: aws.String(bucket), Key: aws.String(legacyKey), Body: bytes.NewReader(backupContent)}); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.DownloadBackup(legacyKey, restorePath); err != nil {
+		t.Fatalf("DownloadBackup(legacy): %v", err)
+	}
+	if restored, err := os.ReadFile(restorePath); err != nil || !bytes.Equal(restored, backupContent) {
+		t.Fatalf("legacy backup mismatch: %q, %v", restored, err)
+	}
+
+	// One made under a previous S3 secret needs that secret.
+	rotatedKey := BackupObjectPrefix + "owncast-backup-20260706-000000.bak" + EncryptedBackupSuffix
+	rotated, err := EncryptBackup(backupContent, "previous-secret")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := raw.PutObject(ctx, &s3.PutObjectInput{Bucket: aws.String(bucket), Key: aws.String(rotatedKey), Body: bytes.NewReader(rotated)}); err != nil {
+		t.Fatal(err)
+	}
+	if err := a.DownloadBackup(rotatedKey, restorePath); !errors.Is(err, ErrBackupKeyMismatch) {
+		t.Fatalf("DownloadBackup(rotated) err = %v, want ErrBackupKeyMismatch", err)
+	}
+	if err := a.DownloadBackup(rotatedKey, restorePath, "previous-secret"); err != nil {
+		t.Fatalf("DownloadBackup(rotated, previous secret): %v", err)
+	}
+
+	// DeleteBackups refuses keys outside backups/ and removes the rest.
+	if err := a.DeleteBackups([]string{"archives/" + sessionID + "/0/seg-1.m4s"}); err == nil {
+		t.Fatal("DeleteBackups accepted a key outside backups/")
+	}
+	if err := a.DeleteBackups([]string{legacyKey, rotatedKey}); err != nil {
+		t.Fatalf("DeleteBackups: %v", err)
+	}
+	if keys, err := a.ListBackups(); err != nil || len(keys) != 1 || keys[0] != backupKey {
+		t.Fatalf("ListBackups after DeleteBackups = %v, %v", keys, err)
 	}
 
 	// Live-HLS S3Storage.Save path: media segment, init segment and playlist,

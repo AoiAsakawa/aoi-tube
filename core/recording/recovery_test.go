@@ -15,12 +15,13 @@ import (
 // unwires the injected remuxer and uploader for the duration of a test.
 func useTempArchive(t *testing.T) {
 	t.Helper()
-	origBase, origRemuxer, origFactory := ArchiveBasePath, remuxer, uploaderFactory
+	origBase, origRemuxer, origFactory, origBlocker := ArchiveBasePath, remuxer, uploaderFactory, offloadBlocker
 	ArchiveBasePath = t.TempDir()
 	remuxer = nil
 	uploaderFactory = nil
+	offloadBlocker = nil
 	t.Cleanup(func() {
-		ArchiveBasePath, remuxer, uploaderFactory = origBase, origRemuxer, origFactory
+		ArchiveBasePath, remuxer, uploaderFactory, offloadBlocker = origBase, origRemuxer, origFactory, origBlocker
 	})
 }
 
@@ -426,5 +427,74 @@ func TestWriteManifestLeavesNoTemporaryFiles(t *testing.T) {
 
 	if err := WriteManifest("20990101-000000-missing0", Manifest{}); err == nil {
 		t.Error("writing a manifest for a session that does not exist should fail")
+	}
+}
+
+func TestFinalizeSessionMediaKeepsMediaLocalWhileOffloadIsBlocked(t *testing.T) {
+	useTempArchive(t)
+	stubRemuxer()
+	up := &fakeUploader{}
+	SetUploaderFactory(func() (ArchiveUploader, error) { return up, nil })
+
+	const sessionID = "20261123-010000-abcdabcd"
+	sessionDir := writeInterruptedSession(t, sessionID, 3)
+	if err := WriteManifest(sessionID, Manifest{ID: sessionID, Variants: []int{0}, FinishedOk: true, PendingMedia: true}); err != nil {
+		t.Fatal(err)
+	}
+
+	SetOffloadBlocker(func() string { return "live S3 distribution is on" })
+	finalizeSessionMedia(sessionID, sessionDir)
+
+	if len(up.uploaded) != 0 {
+		t.Errorf("uploaded %v while offload was blocked", up.uploaded)
+	}
+	m := mustReadManifest(t, sessionID)
+	if m.RemoteMedia || m.PendingMedia || m.Mp4 != "replay.mp4" {
+		t.Errorf("manifest = %+v, want a finished local recording", m)
+	}
+	if _, err := os.Stat(filepath.Join(sessionDir, "0", "stream-abc-0.ts")); err != nil {
+		t.Errorf("media must stay on disk: %v", err)
+	}
+}
+
+func TestFinalizeSessionMediaOffloadsWhenNotBlocked(t *testing.T) {
+	useTempArchive(t)
+	stubRemuxer()
+	up := &fakeUploader{}
+	SetUploaderFactory(func() (ArchiveUploader, error) { return up, nil })
+	SetOffloadBlocker(func() string { return "" })
+
+	const sessionID = "20261123-020000-abcdabcd"
+	sessionDir := writeInterruptedSession(t, sessionID, 3)
+	if err := WriteManifest(sessionID, Manifest{ID: sessionID, Variants: []int{0}, FinishedOk: true}); err != nil {
+		t.Fatal(err)
+	}
+
+	finalizeSessionMedia(sessionID, sessionDir)
+
+	if len(up.uploaded) == 0 {
+		t.Fatal("nothing was uploaded")
+	}
+	if m := mustReadManifest(t, sessionID); !m.RemoteMedia {
+		t.Errorf("manifest = %+v, want remote media", m)
+	}
+}
+
+func TestOffloadBlockerDoesNotStopRemoteDeletion(t *testing.T) {
+	useTempArchive(t)
+	up := &fakeUploader{}
+	SetOffloadBlocker(func() string { return "live S3 distribution is on" })
+
+	const sessionID = "20261123-030000-abcdabcd"
+	if err := os.MkdirAll(filepath.Join(ArchiveBasePath, sessionID), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := WriteManifest(sessionID, Manifest{ID: sessionID, RemoteMedia: true}); err != nil {
+		t.Fatal(err)
+	}
+
+	DeleteRemoteMedia(sessionID, up)
+	if len(up.deleted) != 1 || up.deleted[0] != sessionID {
+		t.Errorf("deleted = %v, want the session's S3 objects removed", up.deleted)
 	}
 }

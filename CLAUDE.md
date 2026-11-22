@@ -131,10 +131,10 @@ cd web && npx tsc --noEmit && npx eslint . && npx vitest run && npm run check:i1
 - **チャット接続は1ページ1本**: `ClientConfigStore` が接続を `useRef` で持ち、アクセストークン1つにつき1本だけ開き、アンマウントで閉じる。匿名登録（オープンチャット時）は `registeringRef` で同時実行を1回に絞る。以前は接続をコンポーネント本体の `let` に入れていたため再描画のたびに忘れられ、さらに登録effectが設定オブジェクトの更新で2回走ったので、**初回訪問のたびに匿名ユーザーが2人登録され、接続が2本残り、全メッセージが2回表示されていた**（ソーシャル認証必須の構成では表に出にくい）。**再描画をまたいで保持するもの（接続・タイマー・進行中フラグ）をコンポーネント本体のローカル変数に置かない**
 
 ### ストレージ・バックアップ
-- `core/storageproviders/archiveS3.go`: ライブS3設定流用（`Enabled`非依存）、`archives/`・`backups/` プレフィックス。`PrefixUsage`/`DeleteRawPrefix`/multipart管理
-- **【重要・セキュリティ】S3 のバケットは非公開にする**: S3 設定は1つしかなく、ライブ配信・録画・バックアップが同じバケットを使う。バックアップは DB 丸ごと（配信キー、管理者パスワードのハッシュ、決済サービスの秘密鍵、OAuth の秘密情報、S3 の鍵自体、ユーザーとトークン）で、オブジェクト名 `backups/owncast-backup-<日時>.bak` は推測できる。2026-11-23 に、本番の R2 バケットへ公開カスタムドメイン（cdn.fiume.co・content.fiume.co）が付いていて、**バックアップが誰でもダウンロードできる状態**だったのを見つけ、ドメインを外して非公開にした。AoiTube 自身はアーカイブもバックアップも S3 API（鍵つき）で読むので公開は不要。**ライブ S3 配信（Enabled＋公開URL）は公開バケットが前提で、しかも通常 HLS でしか使えない（LL-HLS は常に AoiTube が配信）**ので、バックアップ・録画の S3 退避と同じ設定で併用してはいけない（本番では無効化済み）。運用者向けの説明は `docs/backup-and-migration.md`
+- `core/storageproviders/archiveS3.go`: ライブS3設定流用（`Enabled`非依存）、`archives/`・`backups/` プレフィックス。`PrefixUsage`/`DeleteRawPrefix`/multipart管理。**バックアップは `UploadBackup` が必ず暗号化して上げる**（`backupCrypto.go`）
+- **【重要・セキュリティ】S3 のバケットは非公開にする**: S3 の接続設定は1つで、バックアップ・録画・（有効なら）ライブ配信が同じバケットを使う。2026-11-23 に、本番の R2 バケットへ公開カスタムドメイン（cdn.fiume.co・content.fiume.co）が付いていて、**DB 丸ごとのバックアップ（全秘密情報入り・名前は推測可能・暗号化なし・削除されず280個）が誰でもダウンロードできる状態**だったのを見つけ、ドメインを外した。根本原因は、管理画面が S3 の接続情報を「ライブ配信を S3 から行う」（`Enabled`。公開バケットが前提）を ON にしないと表示も保存もできない作りだったこと。対策: ①S3 のバックアップは必ず暗号化（AES-256-GCM、鍵は S3 シークレットキーから HKDF、ファイルごとに salt/nonce、名前は `.bak.enc`。復元は `OWNCAST_S3_SECRET`、鍵を替える前のものは `OWNCAST_BACKUP_SECRET`）②S3 のバックアップにも保持数を適用（`pruneS3Backups`。対象は `backups/owncast-backup-<日時>.bak(.enc)` だけ、アップロード成功後のみ）③ライブ S3 配信が有効な間は録画を S3 に移さない（`recording.SetOffloadBlocker`。削除は止めない）④管理画面で接続情報とライブ配信を分離し、S3 シークレットキーは GET で `********`。**ライブ S3 配信は公開バケットが前提で、しかも通常 HLS でしか使えない（LL-HLS は常に AoiTube が配信）**。運用者向けの説明（鍵の入れ替え手順を含む）は `docs/backup-and-migration.md`
 - 管理API: `/api/admin/storage/usage`（プレフィックス別内訳）・`/cleanup`（livehls=オフライン時のみ/orphan-archives/multipart）。**配信終了60秒後にhls/自動掃除**（ライブセグメントがバケットに無限蓄積するのを防ぐ）
-- バックアップ: `core/backup.go`（`backup_enabled`既定ON/24h/保持7/S3退避オプション）。新ノード移行=`OWNCAST_S3_*` env+`-restoreFromS3`
+- バックアップ: `core/backup.go`（`backup_enabled`既定ON/24h/保持7=ローカルとS3それぞれ/S3退避オプション=暗号化）。新ノード移行=`OWNCAST_S3_*` env+`-restoreFromS3`（`-restoreDatabase` もバケットから落とした `.bak.enc` を受け付ける）
 - 互換性のため内部名は維持: DBファイル `data/owncast.db`、バックアップ接頭辞 `owncast-backup-`、環境変数 `OWNCAST_*`
 
 ## セキュリティ対策（詳細は docs/SECURITY.md）
