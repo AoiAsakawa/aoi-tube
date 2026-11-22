@@ -104,7 +104,12 @@ func (t *LLHLSTranscoder) diskMirrorOutput() string {
 		"-f hls",
 		"-hls_time 4",
 		"-hls_list_size 10" + t.getStartNumberString(),
-		"-hls_flags append_list+program_date_time",
+		// No append_list: it makes ffmpeg GET the existing playlist when it
+		// starts, and the file-writer listener only accepts PUT, so the GET
+		// always got 400 ("[http @ ...] HTTP error 400 Bad Request" in the log
+		// at every LL-HLS start) and nothing was ever appended. All it did was
+		// put a pointless #EXT-X-DISCONTINUITY before the first segment.
+		"-hls_flags program_date_time",
 		"-hls_segment_type mpegts",
 		fmt.Sprintf("-hls_segment_filename %s/%d/stream-%s-%%d.ts", addr, keep, t.segmentIdentifier),
 		"-method PUT",
