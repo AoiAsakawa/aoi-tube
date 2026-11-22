@@ -130,7 +130,10 @@ working:
   a fresh clone or CI build has no earlier bundles to keep. Set
   `AOITUBE_KEEP_OLD_ASSETS_DAYS=0` for a clean bundle.
 - `asset-recovery.js`, loaded by the shell before the app, reloads the page
-  once with a cache-busting query when a bundle fails to load.
+  once with a cache-busting query when a bundle fails to load. Like the
+  service worker it keeps its name across builds, so the server lets
+  browsers cache it for one hour only; the content-hashed bundles under
+  `/assets/` are cached for 30 days.
 
 Neither is a reason to cache HTML: configure the CDN to cache `/assets/` and
 leave the pages alone.

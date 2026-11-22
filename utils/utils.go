@@ -177,6 +177,11 @@ func RenderPageContentMarkdown(raw string) string {
 	return strings.TrimSpace(buf.String())
 }
 
+// fixedNameScriptCacheSeconds is how long browsers may keep a script or
+// stylesheet that is served under a fixed name, such as asset-recovery.js or
+// the service worker. A change to one reaches every browser within this time.
+const fixedNameScriptCacheSeconds = 60 * 60
+
 // GetCacheDurationSecondsForPath will return the number of seconds to cache an item.
 func GetCacheDurationSecondsForPath(filePath string) int {
 	filename := path.Base(filePath)
@@ -188,8 +193,14 @@ func GetCacheDurationSecondsForPath(filePath string) int {
 		// Thumbnails & preview gif re-generate during live
 		return 20
 	} else if fileExtension == ".js" || fileExtension == ".css" {
-		// Cache javascript & CSS
-		return 60 * 60 * 24 * defaultDaysCached
+		// The bundles under /assets/ are named by a hash of their content,
+		// so the file at a given URL never changes: cache them for long.
+		// Scripts with a fixed name change in place on a deploy, and a
+		// month-long cache kept browsers on the old copy for weeks.
+		if strings.HasPrefix(path.Clean("/"+filePath), "/assets/") {
+			return 60 * 60 * 24 * defaultDaysCached
+		}
+		return fixedNameScriptCacheSeconds
 	} else if fileExtension == ".ts" || fileExtension == ".woff2" {
 		// Cache video segments as long as you want. They can't change.
 		// This matters most for local hosting of segments for recordings
